@@ -1,3 +1,8 @@
+# App specific
+staticfiles/
+utils/PVEexports/
+files/attachments/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
