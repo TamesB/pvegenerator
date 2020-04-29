@@ -1,0 +1,93 @@
+{% extends "layout.html" %} {% load semanticui %} {% block main %}
+<h1 class="ui header center aligned">Bewerk Keuzematrix</h1>
+{% if bouwsoorten %}
+<input type="button" class="ui primary button d-inline" onclick="window.location.href='{% url 'kiesparametersview' %}';" value="< Klaar" />
+<br><br>
+<div>
+	<table class="ui fixed multiple line blue table">
+		<thead>
+			<tr>
+				<th>
+				  Bouwsoorten
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for bouwsoort in bouwsoorten %}
+				<tr>
+				<td> 
+					{{ bouwsoort.parameter }}
+					<div class="d-inline" style="float: right;">
+					<span><a href="{% url 'kiesparameterdelete' 1 bouwsoort.id %}"><button class="ui basic red button"><i class="icon trash alternate outline"></i></button></a></span>
+					</div>
+				</td>
+				</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+<p>Nog geen bouwsoorten!</p>
+<div class="d-inline" style="float: left;">
+	<span class="float right"><a href="{% url 'addkiesparameter' 1 %}"><button class="ui green button"><i class="icon plus"></i></button></a></span>
+					</div>
+{% endif %}
+{% if typeObjecten %}
+<div>
+	<table class="ui fixed multiple line blue table">
+		<thead>
+			<tr>
+				<th>
+				  Type Objecten
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for typeObject in typeObjecten %}
+				<tr>
+				<td> 
+					{{ typeObject.parameter }}
+					<div class="d-inline" style="float: right;">
+					<span><a href="{% url 'kiesparameterdelete' 2 typeObject.id %}"><button class="ui basic red button"><i class="icon trash alternate outline"></i></button></a></span>
+					</div>
+				</td>
+				</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+<p>Nog geen type objecten!</p>
+<div class="d-inline" style="float: left;">
+	<span class="float right"><a href="{% url 'addkiesparameter' 2 %}"><button class="ui green button"><i class="icon plus"></i></button></a></span>
+					</div>
+{% endif %}
+{% if doelgroepen %}
+<div>
+	<table class="ui fixed multiple line blue table">
+		<thead>
+			<tr>
+				<th>
+				  Doelgroepen
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for doelgroep in doelgroepen %}
+				<tr>
+				<td> 
+					{{ doelgroep.parameter }}
+					<div class="d-inline" style="float: right;">
+					<span><a href="{% url 'kiesparameterdelete' 3 doelgroep.id %}"><button class="ui basic red button"><i class="icon trash alternate outline"></i></button></a></span>
+					</div>
+				</td>
+				</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+<p>Nog geen doelgroepen!</p>
+<div class="d-inline" style="float: left;">
+	<span class="float right"><a href="{% url 'addkiesparameter' 3 %}"><button class="ui green button"><i class="icon plus"></i></button></a></span>
+					</div>
+{% endif %}
+{% block modal %}{% endblock %} 
+{% endblock %}

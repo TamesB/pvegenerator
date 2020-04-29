@@ -1,0 +1,43 @@
+{% extends "layout.html" %} {% load semanticui %} {% block main %}
+<h1 class="ui header center aligned">Bewerk Programma van Eisen</h1>
+<a href="{% url 'sectionview' %}"><input type="button" class="ui primary button d-inline" value="< Klaar" /></a>
+<br><br>
+{% if onderdelen %}
+<div>
+	{% for key, queryset in SectionQuerySets %}
+	<table class="ui fixed multiple line blue table">
+		<thead>
+			<tr>
+				<th>
+					{{ key.naam }} <!-- PVEHfst -->
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+        {% if queryset %}
+				{% for item in queryset %}
+				<tr>
+				<td> 
+					<a href="{% url 'viewParagraaf' item.id %}">{{ item.hoofdstuk}}</a> &nbsp; 
+					<div class="d-inline" style="float: right;">
+					<span><a href="{% url 'deletechapter' item.id %}"><button class="ui basic red button"><i class="icon trash alternate outline"></i></button></a></span>
+					</div>
+				</td>
+				</tr>
+				{% endfor %}
+        {% else %}
+				<tr>
+        <td>Nog geen hoofdstukken.</td>
+				</tr>
+        {% endif %}
+		</tbody>
+	</table>
+	{% endfor %}
+{% else %}
+<p>Nog geen PVE onderdelen!</p>
+<div class="d-inline" style="float: left;">
+	<span class="float right"><a href="{% url 'addsection' %}"><button class="ui green button"><i class="icon plus"></i>Voeg onderdeel toe</button></a></span>
+					</div>
+{% endif %}
+{% block modal %}{% endblock %} 
+{% endblock %}

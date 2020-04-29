@@ -1,0 +1,98 @@
+{% extends "layout.html" %} {% load semanticui %} {% block main %}
+<h1 class="ui header center aligned">Bewerk Keuzematrix</h1>
+{% if bouwsoorten %}
+<div class="d-inline" style="float: left;">
+	<a href="{% url 'kiesparametersviewedit' %}"><button class="ui basic button"><i class="icon edit"></i></button></a>
+</div>
+<div class="d-inline" style="float: right;">
+	<span><a href="{% url 'kiesparametersviewdelete' %}"><button class="ui basic red button"><i class="icon trash alternate outline"></i></button></a></span>
+</div>
+<br><br>
+<div>
+	<table class="ui fixed multiple line blue table">
+		<thead>
+			<tr>
+				<th>
+				  Bouwsoorten
+					<div class="d-inline" style="float: right;">
+					<span class="float right"><a href="{% url 'addkiesparameter' 1 %}"><button class="ui green button"><i class="icon plus"></i></button></a></span>
+					</div>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for bouwsoort in bouwsoorten %}
+				<tr>
+				<td> 
+					{{ bouwsoort.parameter }}
+				</td>
+				</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+<p>Nog geen bouwsoorten!</p>
+<div class="d-inline" style="float: left;">
+	<span class="float right"><a href="{% url 'addkiesparameter' 1 %}"><button class="ui green button"><i class="icon plus"></i></button></a></span>
+					</div>
+{% endif %}
+{% if typeObjecten %}
+<div>
+	<table class="ui fixed multiple line blue table">
+		<thead>
+			<tr>
+				<th>
+				  Type Objecten
+					<div class="d-inline" style="float: right;">
+					<span class="float right"><a href="{% url 'addkiesparameter' 2 %}"><button class="ui green button"><i class="icon plus"></i></button></a></span>
+					</div>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for typeObject in typeObjecten %}
+				<tr>
+				<td> 
+					{{ typeObject.parameter }}
+				</td>
+				</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+<p>Nog geen type objecten!</p>
+<div class="d-inline" style="float: left;">
+	<span class="float right"><a href="{% url 'addkiesparameter' 2 %}"><button class="ui green button"><i class="icon plus"></i></button></a></span>
+					</div>
+{% endif %}
+{% if doelgroepen %}
+<div>
+	<table class="ui fixed multiple line blue table">
+		<thead>
+			<tr>
+				<th>
+				  Doelgroepen
+					<div class="d-inline" style="float: right;">
+					<span class="float right"><a href="{% url 'addkiesparameter' 3 %}"><button class="ui green button"><i class="icon plus"></i></button></a></span>
+					</div>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for doelgroep in doelgroepen %}
+				<tr>
+				<td> 
+					{{ doelgroep.parameter }}
+				</td>
+				</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+<p>Nog geen doelgroepen!</p>
+<div class="d-inline" style="float: left;">
+	<span class="float right"><a href="{% url 'addkiesparameter' 3 %}"><button class="ui green button"><i class="icon plus"></i></button></a></span>
+					</div>
+{% endif %}
+{% block modal %}{% endblock %} 
+{% endblock %}

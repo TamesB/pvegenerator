@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+{% load semanticui %}{% load staticfiles %}
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
+    <style type="text/css">
+      body > .grid {
+        height: 100%;
+      }
+      .image {
+        margin-top: -100px;
+      }
+      .column {
+        max-width: 450px;
+      }
+    </style>
+    <title>PvE Generator</title>
+  </head>
+  <body>
+    <div class="ui middle aligned center aligned grid">
+      <div class="column">
+        <h2 class="ui medium image">
+          <img src="staticfiles/logo.png" class="image">
+          <br>
+          <div class="content">
+            <h2 class="ui header">Programma van Eisen</h2>
+            <h3 class"ui header">Generator / Bewerker</h3>
+          </div>
+        </h2>
+        <br><br>
+        <form action="{% url 'login' %}" class="ui form" method="post">
+            {% csrf_token %}
+            {% render_form form %}
+            <br>
+            <input type="submit" class="ui primary button" value="Login">
+        </form>
+      </div>
+    </div>
+    <footer>
+      <div class="ui center aligned">
+          <p class="centered">© 2020 Copyright <a href="mailto:info@tboon.nl">Tames Boon</a></p>
+      </div>
+    </footer>
+    <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'semantic.min.js' %}"></script>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+{% extends "PVEItemList.html" %}
+
+{% load semanticui %}
+
+{% load filename %}
+
+{% block modal %}
+<script>
+$('.mini.modal')
+  .modal('show')
+;
+</script>
+
+<div class="ui mini modal">
+  <div class="header">
+    Verwijder regel
+  </div>
+  <div class="content">
+    <p>Weet u het zeker?</p>
+  </div>
+  <div class="actions">
+    <div class="ui negative button">
+      Nee
+    </div>
+    <div class="ui positive right labeled icon button">
+      Ja
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

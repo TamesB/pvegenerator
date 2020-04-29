@@ -1,0 +1,27 @@
+{% extends "kiesparameters.html" %}
+
+{% load semanticui %}
+
+{% load filename %}
+
+{% block modal %}
+<script>
+$('.mini.modal')
+  .modal('show')
+;
+</script>
+
+<div class="ui mini modal">
+  <div class="header">
+    Voeg parameter toe
+  </div>
+  <div class="content">
+    <form action="{% url 'addkiesparameter' type_id %}" class="ui form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% render_form form %}
+        <input type="submit" class="ui green button" value="Bewerk">
+    </form>  
+  </div>
+</div>
+
+{% endblock %}

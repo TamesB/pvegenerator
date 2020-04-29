@@ -1,0 +1,43 @@
+{% extends "layout.html" %} {% load semanticui %} {% block main %}
+<div class="ui big breadcrumb">
+  <a class="section" href="{% url 'sectionview' %}">Overzicht</a>
+  <i class="right chevron icon divider"></i>
+  <a class="active section">{{ sectie }}</a>
+</div>
+<br><br>
+{% if paragraven %}
+<input type="button" class="ui primary button d-inline" onclick="window.location.href='{% url 'viewParagraaf' id %}';" value="< Klaar" />
+<br><br>
+<div>
+	<table class="ui fixed multiple line blue table">
+		<thead>
+			<tr>
+				<th>
+          Paragraven
+			</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for item in paragraven %}
+				<tr>
+				<td> 
+					<a href="{% url 'itemlistview' item.hoofdstuk.id item.id %}">{{ item.paragraaf }}</a> &nbsp; 
+					<div class="d-inline" style="float: right;">
+					<span><a href="{% url 'deleteparagraph' item.id %}"><button class="ui basic red button"><i class="icon trash alternate outline"></i></button></a></span>
+					</div>
+				</td>
+				</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+<p>Nog geen paragraven of items!</p>
+<div class="d-inline" style="float: left;">
+	<span class="float right"><a href="{% url 'addparagraph' sectie.id %}"><button class="ui green button"><i class="icon plus"></i>Voeg paragraaf toe</button></a></span>
+					</div>
+          <div class="d-inline" style="float: left;">
+          	<span class="float right"><a href="{% url 'additem' sectie.id 0 %}"><button class="ui green button"><i class="icon plus"></i>Voeg item toe</button></a></span>
+          					</div>
+{% endif %}
+{% block modal %}{% endblock %} 
+{% endblock %}

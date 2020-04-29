@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html lang="nl">
+    <head>
+        <meta name="viewport" content="initial-scale=1, width=device-width">
+        {% load staticfiles %}
+        <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
+        <title>PvE Generator</title>
+    </head>
+    <body>
+      {% if request.user.is_staff %}
+        <nav class="ui blue fixed three item top menu">
+          <a class="item" href="{% url 'generate' %}">Exporteer</a>
+          <div class="ui pointing dropdown link item">
+            <span class="text">Bewerker</span>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+              <div class="header">Bewerk</div>
+                <a class="item" href="{% url 'kiesparametersview' %}">Keuzematrix</a>
+                <a class="item" href="{% url 'sectionview' %}">Programma van Eisen</a>
+              </div>
+            </div>
+          <a class="item" href="{% url 'logout' %}">Logout</a>
+        </nav>
+      {% else %}
+        <nav class="ui blue fixed two item top menu">
+          <a class="item" href="{% url 'generate' %}">Exporteer</a>
+          <a class="item" href="{% url 'logout' %}">Logout</a>
+        </nav>
+      {% endif %}
+      <div id="main" class="ui raised very padded text container segment">
+        <article>
+          {% if messages %}
+            <div class="ui info floating message">
+              <i class="close icon"></i>
+                <div class="header">
+                  Info
+                </div>
+                  <ul class="list">
+                    {% for message in messages %}
+                      <li>{{ message }}</li>
+                    {% endfor %}
+                  </ul>
+            </div>
+            {% endif %}
+            {% block main %}{% endblock %}
+          </article>
+        </div>
+      <footer>
+        <div class="ui center aligned">
+            <span class="float center">© 2020 Copyright <a href="mailto:info@tboon.nl">Tames Boon</a></span>
+        </div>
+      </footer>
+      <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
+      <script src="{% static 'semantic.min.js' %}"></script>
+      <script src="{% static 'scripts.js' %}"></script>
+    </body>
+</html>
