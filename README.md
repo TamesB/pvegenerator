@@ -1,4 +1,4 @@
-# Web application for PvE generation
+# Introduction
 A Django web-application for generating, sharing and editing PvE's.\
 A PvE in this context is a set of rules that govern the requirements for construction of buildings in the Netherlands. This application was built for the VBR Groep, ultimately for SAREF, with the intention of creating a central platform to help clients to create projects, edit and discuss PvE requirements with each other, and generate the ending PvE PDF file with all its attachments in a quick and easy way, without the hassle of e-mailing Excel worksheets around.
 
