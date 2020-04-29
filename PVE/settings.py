@@ -30,6 +30,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -56,9 +57,6 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'PVE.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -106,11 +104,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATIC_URL = '/staticfiles/'
+STATIC_URL = '/static/'
 
-STATICFILES_DIRS = ( os.path.join('staticfiles'), )
+STATICFILES_DIRS = ( os.path.join('static'), )
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Uploading attachments
 MEDIA_URL = '/files/'
@@ -123,3 +123,20 @@ EXPORTS_ROOT = os.path.join(BASE_DIR, 'utils/PVEexports')
 # @login_required url redirect
 LOGIN_URL = "/"
 LOGIN_REDIRECT_URL = "/home"
+
+# Security
+CSRF_COOKIE_SECURE = True
+CSRF_USE_SESSIONS = True
+
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+SESSION_COOKIE_SECURE = True
+
+X_FRAME_OPTIONS = 'DENY'
+
+# Use ONLY for proxy
+SECURE_HSTS_PRELOAD = True
+SECURE_HSTS_SECONDS = 20
+SECURE_REFERRER_POLICY = 'same-origin'
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

@@ -3,3 +3,6 @@ reportlab==3.5.42
 django-semanticui-forms==1.6.5
 pypdf2==1.26.0
 django-environ==0.4.5
+whitenoise==5.0.1
+django-referrer-policy==1.0
+django-csp
