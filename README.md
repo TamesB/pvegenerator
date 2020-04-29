@@ -1,5 +1,5 @@
 # Platform for PvE generation
-A Django platform for generating, sharing and editing PvE's.
+A Django application for generating, sharing and editing PvE's.\
 A PvE is a set of rules that govern the requirements of construction of buildings in the Netherlands. This application was built for SAREF with the help of the VBR Groep, with the intention of creating a central platform to help clients to create projects and generate PvE's in an easy way, without the hassle of e-mailing Excel worksheets around.
 
 # Initiating for Windows
