@@ -31,10 +31,7 @@
 		</tbody>
 	</table>
 {% else %}
-<p>Nog geen bouwsoorten!</p>
-<div class="d-inline" style="float: left;">
-	<span class="float right"><a href="{% url 'addkiesparameter' 1 %}"><button class="ui green button"><i class="icon plus"></i></button></a></span>
-					</div>
+<p>Nog geen bouwsoorten!	<span class="float right"><a href="{% url 'addkiesparameter' 1 %}"><button class="ui green button"><i class="icon plus"></i></button></a></span></p>
 {% endif %}
 {% if typeObjecten %}
 <div>
@@ -60,10 +57,7 @@
 		</tbody>
 	</table>
 {% else %}
-<p>Nog geen type objecten!</p>
-<div class="d-inline" style="float: left;">
-	<span class="float right"><a href="{% url 'addkiesparameter' 2 %}"><button class="ui green button"><i class="icon plus"></i></button></a></span>
-					</div>
+<p>Nog geen type objecten!	<span class="float right"><a href="{% url 'addkiesparameter' 2 %}"><button class="ui green button"><i class="icon plus"></i></button></a></span></p>
 {% endif %}
 {% if doelgroepen %}
 <div>
@@ -89,10 +83,7 @@
 		</tbody>
 	</table>
 {% else %}
-<p>Nog geen doelgroepen!</p>
-<div class="d-inline" style="float: left;">
-	<span class="float right"><a href="{% url 'addkiesparameter' 3 %}"><button class="ui green button"><i class="icon plus"></i></button></a></span>
-					</div>
+<p>Nog geen doelgroepen! 	<span class="float right"><a href="{% url 'addkiesparameter' 3 %}"><button class="ui green button"><i class="icon plus"></i></button></a></span></p>
 {% endif %}
 {% block modal %}{% endblock %} 
 {% endblock %}
