@@ -14,4 +14,8 @@ Requires `pip` installed.
 - Run `python manage.py runserver` to run the server locally.
 
 # Heroku
-- This application is also readymade for Heroku. Simply fork this GitHub project and link it to your Heroku app. Then add the environment variables `DATABASE_URL`, `DEBUG` and `SECRET_KEY` in the Config Vars, then deploy.
+- This application is also readymade for Heroku. 
+- Activate the heroku settings at the bottom of `PVE/settings.py`, switch `default` and `extra` in `DATABASES` too.
+- Link your GitHub project to your Heroku app.
+- Add the environment variables `DATABASE_URL`, `DEBUG` and `SECRET_KEY` in the Config Vars.
+- Deploy.
