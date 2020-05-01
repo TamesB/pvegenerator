@@ -6,3 +6,4 @@ django-environ==0.4.5
 whitenoise==5.0.1
 django-referrer-policy==1.0
 django-csp==3.6
+psycopg2==2.8.4
