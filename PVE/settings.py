@@ -61,13 +61,17 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+# switch 'default' and 'extra' to switch database options.
 DATABASES = {
-    'default': {
+    # environment variable database (Database URI's)
+    'default': env.db(),
+    
+    # Extra local database
+    'extra': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -129,11 +133,8 @@ LOGIN_REDIRECT_URL = "/home"
 #CSRF_USE_SESSIONS = True
 
 #SECURE_BROWSER_XSS_FILTER = True
-#SECURE_CONTENT_TYPE_NOSNIFF = True
 
 #SESSION_COOKIE_SECURE = True
-
-X_FRAME_OPTIONS = 'DENY'
 
 #SECURE_HSTS_PRELOAD = True
 #SECURE_HSTS_SECONDS = 20
