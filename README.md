@@ -4,7 +4,8 @@ A PvE in this context is a set of rules that govern the requirements for constru
 
 # Installation for Windows
 This application was written in `Django 3.0.5` with `Python 3.8.3rc1`.\
-Requires `pip` installed.\
+Requires `pip` installed.
+
 ## Instructions
 - Run `pip install -r requirements.txt` to install all of the required packages.
 - Add your Database URI by setting the `DATABASE_URL` environment variable in `PVE/.env`. The database can also be chosen to be local in the `db.sqlite3` file generated on the `manage.py` level. See `PVE/settings.py` for the options, both choices are in the `DATABASES` variable, choose your default.
@@ -15,7 +16,8 @@ Requires `pip` installed.\
 - Run `python manage.py runserver` to run the server locally.
 
 # Heroku
-This application is also readymade for Heroku. It can be ran almost right away.\
+This application is also readymade for Heroku. It can be ran almost right away.
+
 ## Instructions
 - Activate the heroku settings at the bottom of `PVE/settings.py`, choose the default database as the environment variable in the `DATABASES` section of the settings.
 - Fork this project, use that git for deployment in your Heroku app.
