@@ -2,6 +2,7 @@
 
 import os
 import environ
+import django_heroku
 
 root = environ.Path(__file__)
 env = environ.Env()
@@ -64,10 +65,10 @@ TEMPLATES = [
 # switch 'default' and 'extra' to switch database options.
 DATABASES = {
     # environment variable database (Database URI's)
-    'default': env.db(),
+    'extra': env.db(),
     
     # Extra local database
-    'extra': {
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
@@ -142,3 +143,6 @@ LOGIN_REDIRECT_URL = "/home"
 
 # Use ONLY for proxy
 #SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Heroku settings
+django_heroku.settings(locals())
