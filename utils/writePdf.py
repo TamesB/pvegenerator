@@ -100,7 +100,7 @@ class PDFMaker:
         canvas.drawInlineImage(self.logo, self.LeftPadding + 8, self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 3) - 8, self.PAGE_WIDTH / 3, (-self.OpmerkingBoxHeight / 3))
 
         canvas.setFillColorRGB(0, 0, 0)
-        canvas.setFont('Calibri-Oblique',8)
+        canvas.setFont('Calibri',8)
         canvas.drawString(self.LeftPadding + 1, self.OpmerkingBoxPadding + self.OpmerkingBoxHeight + 2, f"PROGRAMMA VAN EISEN {self.year}")
 
         # Blauwe Box voordat PVE begint
