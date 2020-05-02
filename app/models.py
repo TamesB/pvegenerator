@@ -63,13 +63,13 @@ class ProjectStatus(models.Model):
     projstatus = models.CharField(max_length=100, blank=True)
     
     def __str__(self):
-        return f"{self.status}"
+        return f"{self.projstatus}"
         
 class ContractStatus(models.Model):
     contrstatus = models.CharField(max_length=100, blank=True)
     
     def __str__(self):
-        return f"{self.status}"
+        return f"{self.contrstatus}"
 
 class ProjectFase(models.Model):
     fase = models.CharField(max_length=100, blank=True)
