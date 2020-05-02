@@ -21,10 +21,8 @@ ALLOWED_HOSTS = ["*"]
 # register pdf fonts
 pdfmetrics.registerFont(TTFont('Calibri', os.path.join(BASE_DIR, 'utils/calibri.ttf')))
 pdfmetrics.registerFont(TTFont('Calibri-Bold', os.path.join(BASE_DIR, 'utils/calibrib.ttf')))
-pdfmetrics.registerFont(TTFont('Calibri-Oblique', os.path.join(BASE_DIR, 'utils/calibrii.ttf')))
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
