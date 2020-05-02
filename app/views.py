@@ -113,7 +113,6 @@ def GeneratePVEView(request):
             )
 
             pdfmaker = writePdf.PDFMaker()
-            pdfmaker.registerCalibriFont()
             pdfmaker.makepdf(filename, query_set, parameters)
 
             # and render the result page

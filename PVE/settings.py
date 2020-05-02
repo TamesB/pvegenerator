@@ -3,6 +3,8 @@
 import os
 import environ
 import django_heroku
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 
 root = environ.Path(__file__)
 env = environ.Env()
@@ -16,6 +18,10 @@ DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = ["*"]
 
+# register pdf fonts
+pdfmetrics.registerFont(TTFont('Calibri', os.path.join(BASE_DIR, 'utils/calibri.ttf')))
+pdfmetrics.registerFont(TTFont('Calibri-Bold', os.path.join(BASE_DIR, 'utils/calibrib.ttf')))
+pdfmetrics.registerFont(TTFont('Calibri-Oblique', os.path.join(BASE_DIR, 'utils/calibrii.ttf')))
 
 # Application definition
 
@@ -63,16 +69,17 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-# switch 'default' and 'extra' to switch database options.
+# For Heroku hosting, switch 'default' and 'extra' to switch database options.
 DATABASES = {
     # environment variable database (Database URI's)
-    'extra': env.db(),
-    
+    'default': env.db(),
+
     # Extra local database
-    'default': {
+    'extra': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    },
+    
 }
 
 # Password validation
@@ -130,16 +137,16 @@ LOGIN_URL = "/"
 LOGIN_REDIRECT_URL = "/home"
 
 # Security
-#CSRF_COOKIE_SECURE = True
-#CSRF_USE_SESSIONS = True
+CSRF_COOKIE_SECURE = True
+CSRF_USE_SESSIONS = True
 
-#SECURE_BROWSER_XSS_FILTER = True
+SECURE_BROWSER_XSS_FILTER = True
 
-#SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
-#SECURE_HSTS_PRELOAD = True
-#SECURE_HSTS_SECONDS = 20
-#SECURE_REFERRER_POLICY = 'same-origin'
+SECURE_HSTS_PRELOAD = True
+SECURE_HSTS_SECONDS = 20
+SECURE_REFERRER_POLICY = 'same-origin'
 
 # Use ONLY for proxy
 #SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

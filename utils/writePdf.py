@@ -76,13 +76,7 @@ class PDFMaker:
                                 fontSize=8, 
                                 leftIndent=60
                         )
-    
-    def registerCalibriFont(self):
-        pdfmetrics.registerFont(TTFont('Calibri', 'calibri.ttf'))
-        pdfmetrics.registerFont(TTFont('Calibri-Bold', 'calibrib.ttf'))
-        pdfmetrics.registerFont(TTFont('Calibri-Oblique', 'calibrii.ttf'))
-        return
-            
+                
     def myFirstPage(self, canvas, doc):
         canvas.saveState()
         # eerste pagina: opmerkingen, logo, etc aan de top. Datum en paginanr onderaan.
