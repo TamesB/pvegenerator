@@ -19,7 +19,7 @@ $('.mini.modal')
     <form action="{% url 'addkiesparameter' type_id %}" class="ui form" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {% render_form form %}
-        <input type="submit" class="ui green button" value="Bewerk">
+        <input type="submit" class="ui green button" value="Voeg toe">
     </form>  
   </div>
 </div>
