@@ -280,14 +280,14 @@ def PVEedithoofdstukView(request, pk):
             onderdeel__naam=onderdeel.naam)
 
     # form, initial chapter in specific onderdeel
-    hoofdstuk = models.PVEHoofdstuk.objects.filter(id=id).first()
+    hoofdstuk = models.PVEHoofdstuk.objects.filter(id=pk).first()
     form = forms.ChapterForm(instance=hoofdstuk)
 
     context = {}
     context["SectionQuerySets"] = SectionQuerySets.items()
     context["onderdelen"] = Onderdelen
     context["form"] = form
-    context["chapter_id"] = id
+    context["chapter_id"] = pk
     return render(request, 'changechapterform.html', context)
 
 
@@ -306,7 +306,7 @@ def paragraaflistView(request, pk):
     # redirect to items
     if items:
         if items.first().paragraaf is None:
-            return redirect('itemlistview', chapter_id=id, paragraph_id=0)
+            return redirect('itemlistview', chapter_id=pk, paragraph_id=0)
 
     # otherwise, show paragraphs
     context = {}
@@ -331,14 +331,14 @@ def paragraaflistViewEdit(request, pk):
     # redirect to items
     if items:
         if items.first().paragraaf is None:
-            return redirect('itemlistviewedit', chapter_id=id, paragraph_id=0)
+            return redirect('itemlistviewedit', chapter_id=pk, paragraph_id=0)
 
     # otherwise, show paragraphs
     context = {}
     context["paragraven"] = models.PVEParagraaf.objects.filter(
         hoofdstuk=hoofdstuk)
     context["sectie"] = hoofdstuk
-    context["id"] = id
+    context["id"] = pk
     return render(request, 'PVEParagraphListEdit.html', context)
 
 
