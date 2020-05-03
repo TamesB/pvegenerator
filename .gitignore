@@ -1,5 +1,4 @@
 # App specific
-static/
 staticfiles/
 utils/PVEexports/
 files/attachments/
