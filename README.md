@@ -16,14 +16,15 @@ Requires `pip` installed.
 - Static files are served by the `whitenoise` package. Collect the staticfiles by running `python manage.py collectstatic`.
 - Run `python manage.py runserver` to run the server locally.
 
-## Installing on Heroku
-This application is also readymade for Heroku. It can be ran almost right away.
+## Heroku CI/CD
+This application is also readymade for continuous integration/delivery on Heroku.
 
 ### Instructions
 - Activate the heroku settings at the bottom of `PVE/settings.py`, choose the default database as the environment variable in the `DATABASES` section of the settings.
 - Fork this project, use that git for deployment in your Heroku app.
-- Add the environment variables `DATABASE_URL`, `DEBUG` and `SECRET_KEY` in the Config Vars in app Settings.
+- Add the environment variables `DATABASE_URL`, `DEBUG` and `SECRET_KEY` in the Config Vars in app Settings in your Heroku App.
 - Deploy.
+- When pushing new code to your git repo, it will automatically deploy.
 
 # Usage
 ## Starting off
