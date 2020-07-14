@@ -75,10 +75,10 @@ class PVEItemEditForm(ModelForm):
             ("Field", "bijlage"),
 
             ("Text", "<h2 class=\"ui dividing header\">Parameters</h2>"),
-            ("Text", "<i>Keuzeparameters die aangeven waar de regel tot behoort. De regel komt alleen in het PvE mits bij het genereren de overeenkomende parameter is gekozen waar de regel hier tot toegewezen is.</i>"),
+            ("Text", "<i>Keuzeparameters die aangeven waar de regel tot behoort. De regel komt alleen in het PvE als het tot de overeenkomende parameter behoort die bij het genereren gekozen is.</i>"),
 
             ("Text", "<h4 class=\"ui dividing header\">BASIS-Regel</h4>"),
-            ("Text", "<i>BASIS-Regels behoren altijd tot de uitkomende PvE, ongeacht de gekozen keuzeparameters. Vink de box aan als deze regel altijd tot het PvE behoort.</i><br>"),
+            ("Text", "<i>Vink aan als de regel tot de Basis PvE hoort. Deze regel komt altijd in het gegenereerde PvE.</i><br>"),
             ("Field", "basisregel"),
 
             ("Text", "<h4 class=\"ui dividing header\">Keuzematrix</h4>"),
