@@ -10,6 +10,12 @@ body {
   min-height: calc(100vh - 6vh);
 }
 
+#login-box {
+  display: flex;
+  margin: 15em 15em 15em 15em;
+  align: center;
+}
+
 #main > article {
   flex: 1;
 }

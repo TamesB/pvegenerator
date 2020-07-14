@@ -7,8 +7,6 @@ from . import views
 urlpatterns = [
     path('', views.LoginPageView, name='login'),
     path('logout', views.LogoutView, name='logout'),
-    path('generate', views.GeneratePVEView, name='generate'),
-    path('download/<str:filename>', views.download_file, name='download'),
         
     path('parameters', views.PVEsectionView, name='sectionview'),
     path('parameters/edit', views.PVEsectionViewEdit, name='sectionviewedit'),

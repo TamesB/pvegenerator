@@ -37,28 +37,6 @@ class ParagraafForm(ModelForm):
         labels = {
             'paragraaf':'Naam:',
         }
-
-class PVEParameterForm(ModelForm):
-    Bouwsoort = forms.ModelChoiceField(queryset=Bouwsoort.objects.all(), label='Bouwsoort')
-    TypeObject = forms.ModelChoiceField(queryset=TypeObject.objects.all(), label='Type Object')
-    Doelgroep = forms.ModelChoiceField(queryset=Doelgroep.objects.all(), label='Doelgroep')
-
-    widgets = {
-        'Bouwsoort': forms.Select(attrs={'class': 'ui dropdown'}),
-        'TypeObject': forms.Select(attrs={'class': 'ui dropdown'}),
-        'Doelgroep': forms.Select(attrs={'class': 'ui dropdown'}),
-    }
-
-    class Meta:
-        model = PVEItem
-        fields = ('Bouwsoort', 'TypeObject', 'Doelgroep', 'Smarthome', 'AED', 'EntreeUpgrade', 'Pakketdient', 'JamesConcept')
-        labels = {
-            'Smarthome':'Smarthome',
-            'AED':'AED',
-            'EntreeUpgrade':'Entree Upgrade',
-            'Pakketdient':'Pakketdient',
-            'JamesConcept':'James Concept',
-        }
         
 class PVEItemEditForm(ModelForm):
     bijlage = forms.FileField(required=False)
@@ -74,10 +52,11 @@ class PVEItemEditForm(ModelForm):
     
     class Meta:
         model = PVEItem
-        fields = ('inhoud', 'bijlage', 'Bouwsoort', 'TypeObject', 'Doelgroep', 'Smarthome', 'AED', 'EntreeUpgrade', 'Pakketdient', 'JamesConcept')
+        fields = ('inhoud', 'bijlage', 'basisregel', 'Bouwsoort', 'TypeObject', 'Doelgroep', 'Smarthome', 'AED', 'EntreeUpgrade', 'Pakketdient', 'JamesConcept')
         labels = {
             'inhoud':'Inhoud',
             'bijlage':'Bijlage',
+            'basisregel':'BASIS-regel',
             'Bouwsoort':'Bouwsoort',
             'TypeObject':'Type Object',
             'Doelgroep':'Doelgroep',
@@ -87,3 +66,36 @@ class PVEItemEditForm(ModelForm):
             'Pakketdient':'Pakketdient',
             'JamesConcept':'James Concept',
         }
+
+        layout = [
+            ("Text", "<h2 class=\"ui dividing header\">Regel</h2>"),
+            ("Text", "<i>De inhoud van de regel is wat te zien is in het uiteindelijke Programma van Eisen. Bijlages worden met referentie toegevoegd in het eindproduct.</i><br>"),
+        
+            ("Three Fields",
+                ("Field", "inhoud"),
+                ("Field", "bijlage"),
+            ),
+
+            ("Text", "<h2 class=\"ui dividing header\">Parameters</h2>"),
+            ("Text", "<i>Keuzeparameters die aangeven waar de regel tot behoort. De regel komt alleen in het PvE mits bij het genereren de overeenkomende parameter is gekozen waar de regel hier tot toegewezen is.</i>"),
+
+            ("Text", "<h4 class=\"ui dividing header\">BASIS-Regel</h4>"),
+            ("Text", "<i>BASIS-Regels behoren altijd tot de uitkomende PvE, ongeacht de gekozen keuzeparameters. Vink de box aan als deze regel altijd tot het PvE behoort.</i><br>"),
+            ("Field", "basisregel"),
+
+            ("Text", "<h4 class=\"ui dividing header\">Keuzematrix</h4>"),
+            ("Text", "<i>Mits de regel geen basisregel is; kies de parameters waartoe deze regel behoort. Een regel kan tot meerdere bouwsoorten, objecten, en doelgroepen behoren.</i><br>"),
+
+            ("Four Fields",
+                ("Field", "Bouwsoort"),
+                ("Field", "TypeObject"),
+                ("Field", "Doelgroep"),
+                ("Five Fields",
+                    ("Field", "Smarthome"),
+                    ("Field", "AED"),
+                    ("Field", "EntreeUpgrade"),
+                    ("Field", "Pakketdient"),
+                    ("Field", "JamesConcept"),
+                ),
+            ),
+        ]

@@ -24,6 +24,9 @@
 
     <div class="ui divider"></div>
     <h3 class="ui header">Parameters</h3>
+    {% if PVEItem.basisregel %}
+      <p><b>Deze regel is een BASIS-regel en behoort altijd tot het PvE.</b></p>
+    {% else %}
     {% if Bouwsoort %}<p><b>Bouwsoorten:</b> {% for item in Bouwsoort %}{{ item }}, {% endfor %}</p>{% endif %}
     {% if TypeObject %}<p><b>Type Objecten:</b> {% for item in TypeObject %}{{ item }}, {% endfor %}</p>{% endif %}
     {% if Doelgroep %}<p><b>Doelgroepen:</b> {% for item in Doelgroep %}{{ item }}, {% endfor %}</p>{% endif %}
@@ -32,6 +35,7 @@
       {% if PVEItem.EntreeUpgrade %}<b>Entree Upgrade:</b> <i class="icon check"></i>,{% endif %}
       {% if PVEItem.Pakketdient %}<b>Pakketdient:</b> <i class="icon check"></i>,{% endif %}
       {% if PVEItem.JamesConcept %}<b>James Concept:</b> <i class="icon check"></i>,{% endif %}</p>
+    {% endif %}
   </div>
   <div class="actions" style="margin-bottom: 1em;">
     <span><a href="{% url 'deleteitem' PVEItem.id %}"><button class="ui basic red button"><i class="icon trash alternate outline"></i>Verwijder</button></a></span>

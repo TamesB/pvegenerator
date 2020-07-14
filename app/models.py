@@ -59,47 +59,13 @@ class PVESubparagraaf(models.Model):
     def __str__(self):
         return self.subparagraaf
 
-class ProjectStatus(models.Model):
-    projstatus = models.CharField(max_length=100, blank=True)
-    
-    def __str__(self):
-        return f"{self.projstatus}"
-        
-class ContractStatus(models.Model):
-    contrstatus = models.CharField(max_length=100, blank=True)
-    
-    def __str__(self):
-        return f"{self.contrstatus}"
-
-class ProjectFase(models.Model):
-    fase = models.CharField(max_length=100, blank=True)
-    
-    def __str__(self):
-        return f"{self.fase}"
-
-class Project(models.Model):
-    projectnaam = models.CharField(max_length=500)
-    versienummer = models.CharField(max_length=100, blank=True)
-    datum = models.DateField(blank=True)
-    printdatum = models.DateField(blank=True)
-    acquisiteur = models.CharField(max_length=500, blank=True)
-    ontwikkelaar = models.CharField(max_length=500, blank=True)
-    statusproject = models.ForeignKey(ProjectStatus, on_delete=models.CASCADE)
-    statuscontract = models.ForeignKey(ContractStatus, on_delete=models.CASCADE)
-    leeswijze = models.TextField(max_length=5000, blank=True)
-    projectfase = models.ForeignKey(ProjectFase, on_delete=models.CASCADE) #?
-    opmerkingenAqcuisiteur = models.TextField(max_length=5000, blank=True)
-    illustratie = models.ImageField(blank=True, null=True, upload_to='images/%Y/%m/%d/')
-    
-    def __str__(self):
-        return f"{self.projectnaam}"
-
 class PVEItem(models.Model):
     hoofdstuk = models.ForeignKey(PVEHoofdstuk, on_delete=models.CASCADE, default=1)
     paragraaf = models.ForeignKey(PVEParagraaf, on_delete=models.CASCADE, blank=True, null=True)
     inhoud = models.TextField(max_length=5000)
     bijlage = models.FileField(blank=True, null=True, upload_to='attachments/%Y/%m/%d/')
 
+    basisregel = models.BooleanField(default=False)
     Bouwsoort = models.ManyToManyField(Bouwsoort, blank=True)
     TypeObject = models.ManyToManyField(TypeObject, blank=True)
     Doelgroep = models.ManyToManyField(Doelgroep, blank=True)
@@ -110,17 +76,10 @@ class PVEItem(models.Model):
     Pakketdient = models.BooleanField(default=False)
     JamesConcept = models.BooleanField(default=False)
     
-    projects = models.ManyToManyField(Project, blank=True)
+    projects = models.ManyToManyField('project.Project', blank=True)
 
     def __str__(self):
         if self.paragraaf:
             return f"Item: {self.id}, Paragraaf: {self.paragraaf}"
         
         return f"Item: {self.id}, Hoofdstuk: {self.hoofdstuk}"
-        
-class PVEItemAnnotation(models.Model):
-    item = models.ForeignKey(PVEItem, on_delete=models.CASCADE)
-    annotation = models.TextField(max_length=1000)
-    
-    def __str__(self):
-        return f"{self.item}"
