@@ -71,10 +71,8 @@ class PVEItemEditForm(ModelForm):
             ("Text", "<h2 class=\"ui dividing header\">Regel</h2>"),
             ("Text", "<i>De inhoud van de regel is wat te zien is in het uiteindelijke Programma van Eisen. Bijlages worden met referentie toegevoegd in het eindproduct.</i><br>"),
         
-            ("Three Fields",
-                ("Field", "inhoud"),
-                ("Field", "bijlage"),
-            ),
+            ("Field", "inhoud"),
+            ("Field", "bijlage"),
 
             ("Text", "<h2 class=\"ui dividing header\">Parameters</h2>"),
             ("Text", "<i>Keuzeparameters die aangeven waar de regel tot behoort. De regel komt alleen in het PvE mits bij het genereren de overeenkomende parameter is gekozen waar de regel hier tot toegewezen is.</i>"),
@@ -86,16 +84,19 @@ class PVEItemEditForm(ModelForm):
             ("Text", "<h4 class=\"ui dividing header\">Keuzematrix</h4>"),
             ("Text", "<i>Mits de regel geen basisregel is; kies de parameters waartoe deze regel behoort. Een regel kan tot meerdere bouwsoorten, objecten, en doelgroepen behoren.</i><br>"),
 
-            ("Four Fields",
+            ("Three Fields",
                 ("Field", "Bouwsoort"),
                 ("Field", "TypeObject"),
                 ("Field", "Doelgroep"),
-                ("Five Fields",
-                    ("Field", "Smarthome"),
-                    ("Field", "AED"),
-                    ("Field", "EntreeUpgrade"),
-                    ("Field", "Pakketdient"),
-                    ("Field", "JamesConcept"),
-                ),
+            ),
+
+            ("Text", "<b>Specifieke regels</b><br>"),
+
+            ("Five Fields",
+                ("Field", "Smarthome"),
+                ("Field", "AED"),
+                ("Field", "EntreeUpgrade"),
+                ("Field", "Pakketdient"),
+                ("Field", "JamesConcept"),
             ),
         ]
