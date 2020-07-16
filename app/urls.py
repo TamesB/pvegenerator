@@ -9,6 +9,7 @@ urlpatterns = [
     path('logout', views.LogoutView, name='logout'),
         
     path('parameters', views.PVEsectionView, name='sectionview'),
+    path('parameters/download', views.DownloadWorksheet, name='worksheetdownload'),
     path('parameters/edit', views.PVEsectionViewEdit, name='sectionviewedit'),
     path('parameters/delete', views.PVEsectionViewDelete, name='sectionviewdelete'),
     path('parameters/add', views.PVEaddsectionView, name='addsection'),

@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q
 from utils import writePdf
+from utils import writeExcel
 import datetime
 import os
 from django.conf import settings
@@ -62,6 +63,25 @@ def PVEsectionView(request):
     context["onderdelen"] = Onderdelen
 
     return render(request, 'PVEListHfst.html', context)
+
+@staff_member_required
+def DownloadWorksheet(request):
+    fl_path = settings.EXPORTS_ROOT
+
+    worksheet = writeExcel.ExcelMaker()
+    filename = worksheet.linewriter()
+
+    filename = f"/{filename}.xlsx"
+
+    try:
+        fl = open(fl_path + filename, 'rb')
+    except OSError:
+        raise Http404("404")
+
+    response = HttpResponse(fl, content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response['Content-Disposition'] = "inline; filename=%s" % filename
+
+    return response
 
 
 @staff_member_required
