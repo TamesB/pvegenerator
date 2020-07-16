@@ -3,9 +3,6 @@ import xlsxwriter
 from django.conf import settings
 import os.path
 import datetime
-import win32com.client as win32
-import pythoncom
-
 
 class ExcelMaker:
 
@@ -158,13 +155,4 @@ class ExcelMaker:
                             column = 0
 
         workbook.close()
-
-        pythoncom.CoInitialize()
-        excel = win32.gencache.EnsureDispatch('Excel.Application')
-        wb = excel.Workbooks.Open(f"{path}.xlsx")
-        ws = wb.Worksheets("Sheet1")
-        ws.Columns.AutoFit()
-        wb.Save()
-        excel.Application.Quit()
-
         return filename
