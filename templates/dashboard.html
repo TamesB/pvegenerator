@@ -1,0 +1,19 @@
+{% extends "PVEListHfst.html" %}
+
+{% load semanticui %}
+
+{% load filename %}
+
+{% block main %}
+
+<h1 class="ui header">Dashboard</h1>
+<i>{{ greeting }}, {{ request.user.name }}.</i>
+<div>
+{% if request.user.user_type == 'OG' %}
+<!-- Start project -->
+{% endif %}
+
+<!-- Overview own projects -->
+</div>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% load semanticui %}
+
+{% block main %}
+<input type="button" class="ui primary button d-inline" onclick="javascript:history.back();" value="< Terug" />
+<h1 class="ui header d-inline">Start Project</h1>
+
+<form action="{% url 'startproject' %}" class="ui form" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% render_form form %}
+    <button type="submit" class="ui primary button" value="start">Start</button>
+</form>
+{% endblock %}

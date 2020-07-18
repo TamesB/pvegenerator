@@ -16,12 +16,12 @@ from django.conf import settings
 import mimetypes
 from . import models
 from . import forms
-
+from users.models import CustomUser
 
 def LoginPageView(request):
     # cant see lander page if already logged in
     if request.user.is_authenticated:
-        return redirect('generate')
+        return redirect('dashboard')
 
     if request.method == "POST":
         form = forms.LoginForm(request.POST)
@@ -33,7 +33,7 @@ def LoginPageView(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('generate')
+                return redirect('dashboard')
             else:
                 messages.warning(request, 'Invalid login credentials')
 
@@ -48,6 +48,27 @@ def LoginPageView(request):
 def LogoutView(request):
     logout(request)
     return redirect('login')
+
+@login_required
+def DashboardView(request):
+    hour = datetime.datetime.utcnow().hour + 2 # UTC + 2 = CEST
+
+    if hour > 3 and hour < 12:
+        greeting = "Goedemorgen"
+    elif hour > 12 and hour < 18:
+        greeting = "Goedemiddag"
+    elif hour > 18 and hour < 24:
+        greeting = "Goedenavond"
+    elif hour < 3:
+        greeting = "Goedenacht"
+
+    context = {}
+    context["greeting"] = greeting
+
+    if request.user.user_type == 'B':
+        return render(request, 'adminDashboard.html', context)
+    
+    return render(request, 'dashboard.html', context)
 
 @staff_member_required
 def PVEsectionView(request):

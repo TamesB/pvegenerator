@@ -6,8 +6,9 @@ from . import views
 # Urls for the specific app
 urlpatterns = [
     path('', views.LoginPageView, name='login'),
+    path('dashboard', views.DashboardView, name='dashboard'),
     path('logout', views.LogoutView, name='logout'),
-        
+    
     path('parameters', views.PVEsectionView, name='sectionview'),
     path('parameters/download', views.DownloadWorksheet, name='worksheetdownload'),
     path('parameters/edit', views.PVEsectionViewEdit, name='sectionviewedit'),

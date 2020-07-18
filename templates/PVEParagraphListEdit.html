@@ -15,7 +15,7 @@
 				<th>
           Paragraven		
 					<div class="d-inline" style="float: right;">
-						<span class="float right"><a href="{% url 'addparagraph' sectie.id %}"><button class="ui green button"><i class="icon plus"></i></button></a></span>
+						<span class="float right"><a href="{% url 'addparagraph' sectie.id %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
 					</div>		
 			</th>
 			</tr>
@@ -26,7 +26,7 @@
 				<td> 
 					<a href="{% url 'itemlistview' item.hoofdstuk.id item.id %}">{{ item.paragraaf }}</a> &nbsp; 
 					<div class="d-inline" style="float: right;">
-					<a href="{% url 'editparagraph' item.id %}"><button class="ui basic button"><i class="icon edit"></i></button></a>
+					<a href="{% url 'editparagraph' item.id %}"><button class="ui icon button"><i class="icon edit"></i></button></a>
 					</div>
 				</td>
 				</tr>

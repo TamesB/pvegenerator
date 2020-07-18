@@ -1,0 +1,25 @@
+{% extends "PVEListHfst.html" %}
+
+{% load semanticui %}
+
+{% load filename %}
+
+{% block main %}
+
+<h1 class="ui header">Admin Dashboard</h1>
+<i>{{ greeting }}, {{ request.user.name }}.</i>
+<div class="ui divider"></div>
+<div>
+<h2 class="ui header">Programma van Eisen</h2>
+	<a href="{% url 'generate' %}"><button class="ui basic button"><i class="icon download"></i>Genereer voorbeeld PvE</button></a><br><br>
+	<a href="{% url 'sectionview' %}"><button class="ui basic button"><i class="icon edit"></i>Bewerk Programma van Eisen</button></a><br><br>
+	<a href="{% url 'kiesparametersview' %}"><button class="ui basic button"><i class="icon edit"></i>Bewerk Keuzematrix</button></a>
+<div class="ui divider"></div>
+<!-- Manually generate pve -->
+<!-- Edit PvE workbook and keuzeparameters -->
+<!-- account configurations (view, add account, delete account etc) -->
+<!-- project configurations (list all, delete, add, edit etc) -->
+<!-- Future: analytics dashboard -->
+</div>
+
+{% endblock %}

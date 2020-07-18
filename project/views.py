@@ -25,8 +25,13 @@ def StartProjectView(request):
         # check whether it's valid:
         if form.is_valid():
             project = models.Project()
-            project.projectnaam = form.cleaned_data["projectnaam"]
-            project.userspermitted = request.user
+            project.naam = form.cleaned_data["naam"]
+            project.nummer = form.cleaned_data["nummer"]
+            project.plaats = form.cleaned_data["plaats"]
+            project.vhe = form.cleaned_data["vhe"]
+            project.pensioenfonds = form.cleaned_data["pensioenfonds"]
+            project.statuscontract = form.cleaned_data["statuscontract"]
+            project.permitted = request.user
             project.save()
 
             context = {}

@@ -1,6 +1,7 @@
 # Author: Tames Boon
 
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 class Bouwsoort(models.Model):
     parameter = models.CharField(max_length=256)

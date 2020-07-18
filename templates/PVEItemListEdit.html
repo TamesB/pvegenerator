@@ -26,7 +26,7 @@
 					Regels
 				</th>
         <th><div class="d-inline" style="float: right;">
-					<span class="float right"><a href="{% url 'additem' hoofdstuk_id paragraaf_id %}"><button class="ui green button"><i class="icon plus"></i></button></a></span>
+					<span class="float right"><a href="{% url 'additem' hoofdstuk_id paragraaf_id %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
         					</div></th>
 			</tr>
 		</thead>
@@ -36,7 +36,7 @@
 				<td>{{ item.inhoud|linebreaks }}</td>
         <td>
 					<div class="d-inline" style="float: right;">
-						<a href="{% url 'edititem' item.id %}"><button class="ui basic button"><i class="icon edit"></i></button></a>										
+						<a href="{% url 'edititem' item.id %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a>										
 				</td>
 			</tr>
       {% endfor %}

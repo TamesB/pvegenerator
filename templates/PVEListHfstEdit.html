@@ -11,7 +11,7 @@
 				<th>
 					{{ key.naam }} <!-- PVEHfst -->
 					<div class="d-inline" style="float: right;">
-					<span class="float right"><a href="{% url 'addchapter' key.id %}"><button class="ui green button"><i class="icon plus"></i></button></a></span>
+					<span class="float right"><a href="{% url 'addchapter' key.id %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
 					</div>
 				</th>
 			</tr>
@@ -23,7 +23,7 @@
 				<td> 
 					<a href="{% url 'viewParagraaf' item.id %}">{{ item.hoofdstuk}}</a> &nbsp; 
 					<div class="d-inline" style="float: right;">
-					<a href="{% url 'editchapter' item.id %}"><button class="ui basic button"><i class="icon edit"></i></button></a>
+					<a href="{% url 'editchapter' item.id %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a>
 					</div>
 				</td>
 				</tr>
