@@ -17,7 +17,7 @@ class Project(models.Model):
     statuscontract = models.ForeignKey(ContractStatus, on_delete=models.CASCADE)
     datum = models.DateTimeField(auto_now=True)
 
-    permitted = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, default=None)
+    #permitted = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, default=None)
 
     def __str__(self):
         return f"{self.naam}"

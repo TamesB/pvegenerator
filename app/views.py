@@ -16,7 +16,6 @@ from django.conf import settings
 import mimetypes
 from . import models
 from . import forms
-from users.models import CustomUser
 
 def LoginPageView(request):
     # cant see lander page if already logged in

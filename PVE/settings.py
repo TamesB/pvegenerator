@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'app',
     'generator',
     'project',
-    #'users',
+    'users',
     'semanticuiforms',
 ]
 
@@ -73,13 +73,13 @@ TEMPLATES = [
 # For Heroku hosting, switch 'default' and 'extra' to switch database options.
 DATABASES = {
     # Extra local database
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    },
+    #'extra': {
+    #    'ENGINE': 'django.db.backends.sqlite3',
+    #    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    #},
     
     # environment variable database (Database URI's)
-    'extra': env.db(),
+    'default': env.db(),
 }
 
 # Password validation
@@ -115,7 +115,7 @@ USE_L10N = True
 USE_TZ = True
 
 # Custom user stuff
-#AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = 'users.CustomUser'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
