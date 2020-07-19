@@ -139,7 +139,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'files')
 EXPORTS_URL = '/PVEexports/'
 EXPORTS_ROOT = os.path.join(BASE_DIR, 'utils/PVEexports')
 
-# @login_required url redirect
+# @login_required url  redirect
 LOGIN_URL = "/"
 LOGIN_REDIRECT_URL = "/home"
 
