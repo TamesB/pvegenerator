@@ -1,5 +1,5 @@
 from django import forms
-from project.models import Project, ProjectStatus, ContractStatus, ProjectFase
+from project.models import Project, ContractStatus
 from django.forms import ModelForm
 
 class StartProjectForm(ModelForm):

@@ -8,12 +8,35 @@
 
 <h1 class="ui header">Dashboard</h1>
 <i>{{ greeting }}, {{ request.user.name }}.</i>
+<div class="ui divider"></div>
 <div>
 {% if request.user.user_type == 'OG' %}
 <!-- Start project -->
+<a href="{% url 'startproject' %}"><button class="ui basic button">Start Project</button></a>
 {% endif %}
-
-<!-- Overview own projects -->
+{% if projects %}
+<div class="ui divider"></div>
+<div>
+	<table class="ui fixed multiple line blue table">
+		<thead>
+			<tr>
+				<th>
+				  Mijn projecten
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for project in projects %}
+				<tr>
+				<td> 
+					<a href="{% url 'projectview' project.id %}">{{ project.naam }}</a>
+				</td>
+				</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endif %}
 </div>
 
 {% endblock %}

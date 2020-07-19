@@ -73,7 +73,7 @@ TEMPLATES = [
 # For Heroku hosting, switch 'default' and 'extra' to switch database options.
 DATABASES = {
     # Extra local database
-    #'extra': {
+    #'default': {
     #    'ENGINE': 'django.db.backends.sqlite3',
     #    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     #},
@@ -155,4 +155,4 @@ LOGIN_REDIRECT_URL = "/home"
 #SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Heroku settings
-django_heroku.settings(locals())
+#django_heroku.settings(locals())

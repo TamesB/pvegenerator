@@ -15,6 +15,7 @@ import os
 from django.conf import settings
 import mimetypes
 from . import models
+from project.models import Project
 from . import forms
 
 def LoginPageView(request):
@@ -67,6 +68,10 @@ def DashboardView(request):
     if request.user.user_type == 'B':
         return render(request, 'adminDashboard.html', context)
     
+    if Project.objects.filter(permitted__name__contains=request.user.name):
+        projects = Project.objects.filter(permitted__name__contains=request.user.name)
+        context["projects"] = projects
+
     return render(request, 'dashboard.html', context)
 
 @staff_member_required

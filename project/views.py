@@ -14,11 +14,6 @@ from . import models
 from . import forms
 
 @login_required
-def ProjectHomepageView(request):
-    context = {}
-    return render(request, 'projectstartpage.html', context)
-
-@login_required
 def StartProjectView(request):
     if request.method == 'POST':
         form = forms.StartProjectForm(request.POST)
@@ -30,7 +25,7 @@ def StartProjectView(request):
             project.plaats = form.cleaned_data["plaats"]
             project.vhe = form.cleaned_data["vhe"]
             project.pensioenfonds = form.cleaned_data["pensioenfonds"]
-            project.statuscontract = form.cleaned_data["statuscontract"]
+            project.statuscontract = models.ContractStatus.objects.filter(contrstatus="TKO").first()
             project.permitted = request.user
             project.save()
 
@@ -47,11 +42,11 @@ def StartProjectView(request):
 
 @login_required
 def ProjectOverviewView(request):
-    if not models.Project.objects.filter(userspermitted__contains=request.user):
+    if not models.Project.objects.filter(permitted__name__contains=request.user.name):
         return Http404("Je heb geen projecten waar je toegang tot heb.")
     
     context = {}
-    context["projects"] = models.Project.objects.filter(userspermitted__contains=request.user)
+    context["projects"] = models.Project.objects.filter(permitted__name__contains=request.user.name)
     return render(request, 'projectoverview.html', context)
 
 @login_required
@@ -61,11 +56,11 @@ def ProjectViewView(request, pk):
     if not models.Project.objects.filter(id=pk):
         return Http404('404')
 
-    if not models.Project.objects.filter(id=pk, userspermitted__contains=request.user):
+    if not models.Project.objects.filter(id=pk, permitted__name__contains=request.user.name):
         return Http404('Geen toegang tot dit project')
 
     project = models.Project.objects.filter(id=pk).first()
 
     context = {}
     context["project"] = project
-    return render(request, 'projectview.html', context)
+    return render(request, 'viewproject.html', context)
