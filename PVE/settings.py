@@ -128,8 +128,8 @@ STATICFILES_DIRS = ( os.path.join('static'), )
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
-GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
+GDAL_LIBRARY_PATH = env.str('GDAL_LIBRARY_PATH')
+GEOS_LIBRARY_PATH = env.str('GEOS_LIBRARY_PATH')
 
 # Uploading attachments
 MEDIA_URL = '/files/'
