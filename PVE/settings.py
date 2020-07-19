@@ -155,4 +155,4 @@ LOGIN_REDIRECT_URL = "/home"
 #SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Heroku settings
-#django_heroku.settings(locals())
+django_heroku.settings(locals())
