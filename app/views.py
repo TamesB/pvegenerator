@@ -54,9 +54,9 @@ def DashboardView(request):
 
     if hour > 3 and hour < 12:
         greeting = "Goedemorgen"
-    if hour > 12 and hour < 18:
+    if hour >= 12 and hour < 18:
         greeting = "Goedemiddag"
-    if hour > 18 and hour < 24:
+    if hour >= 18 and hour <= 24:
         greeting = "Goedenavond"
     if hour <= 3:
         greeting = "Goedenacht"
