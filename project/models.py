@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.gis.db import models
         
 class ContractStatus(models.Model):
     contrstatus = models.CharField(max_length=100, blank=True)
@@ -11,7 +12,7 @@ class ContractStatus(models.Model):
 class Project(models.Model):
     nummer = models.FloatField(max_length=100, default=None)
     naam = models.CharField(max_length=500, default=None)
-    plaats = models.CharField(max_length=100, blank=True)
+    plaats = models.PointField()
     vhe = models.FloatField(max_length=100, default=None)
     pensioenfonds = models.CharField(max_length=100, default=None)
     statuscontract = models.ForeignKey(ContractStatus, on_delete=models.CASCADE)

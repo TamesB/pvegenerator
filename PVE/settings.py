@@ -6,6 +6,7 @@ import django_heroku
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 import platform
+import dj_database_url
 
 root = environ.Path(__file__)
 env = environ.Env()
@@ -93,7 +94,10 @@ DATABASES = {
     #},
     
     # environment variable database (Database URI's)
-    'default': env.db(),
+    'default': {
+        'NAME': env.db,
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+    }
 }
 
 # Password validation
