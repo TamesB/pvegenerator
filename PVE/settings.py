@@ -128,8 +128,8 @@ STATICFILES_DIRS = ( os.path.join('static'), )
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-GDAL_LIBRARY_PATH = env.str('GDAL_LIBRARY_PATH')
-GEOS_LIBRARY_PATH = env.str('GEOS_LIBRARY_PATH')
+GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
+GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
 
 # Uploading attachment
 MEDIA_URL = '/files/'
@@ -139,7 +139,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'files')
 EXPORTS_URL = '/PVEexports/'
 EXPORTS_ROOT = os.path.join(BASE_DIR, 'utils/PVEexports')
 
-# @login_required url  redirect
+# @login_required url   redirect
 LOGIN_URL = "/"
 LOGIN_REDIRECT_URL = "/home"
 
