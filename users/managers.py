@@ -1,32 +1,28 @@
-from django.contrib.auth.base_user import BaseUserManager
-from django.utils.translation import ugettext_lazy as _
-
+from django.contrib.auth.models import BaseUserManager
+import datetime
 
 class CustomUserManager(BaseUserManager):
-    """
-    Custom user model manager where name is the unique identifiers
-    """
-    def create_user(self, name, password, **extra_fields):
+
+    def _create_user(self, username, password,
+                     is_staff, is_superuser, **extra_fields):
         """
-        Create and save a User with the given name and password.
+        Creates and saves a User with the given email and password.
         """
-        if not name:
-            raise ValueError(_('The name must be set'))
-        user = self.model(name=name, **extra_fields)
+        now = datetime.datetime.now()
+        if not username:
+            raise ValueError('The given username must be set')
+        user = self.model(username=username,
+                          is_staff=is_staff, is_active=True,
+                          is_superuser=is_superuser, last_login=now,
+                          date_joined=now, **extra_fields)
         user.set_password(password)
-        user.save()
+        user.save(using=self._db)
         return user
 
-    def create_superuser(self, name, password, **extra_fields):
-        """
-        Create and save a SuperUser with the given name and password.
-        """
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
+    def create_user(self, username, password=None, **extra_fields):
+        return self._create_user(username, password, False, False,
+                                 **extra_fields)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError(_('Superuser must have is_staff=True.'))
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError(_('Superuser must have is_superuser=True.'))
-        return self.create_user(name, password, **extra_fields)
+    def create_superuser(self, username, password, **extra_fields):
+        return self._create_user(username, password, True, True,
+                                 **extra_fields)

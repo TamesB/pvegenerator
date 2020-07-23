@@ -1,17 +1,29 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin
-from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
-
-from .managers import CustomUserManager
-
+from django.utils.http import urlquote
+from django.utils.translation import ugettext_lazy as _
+from django.core.mail import send_mail
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from users.managers import CustomUserManager
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    name = models.CharField(_('Gebruikersnaam'), unique=True, max_length=100)
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    date_joined = models.DateTimeField(default=timezone.now)
+    """
+    A fully featured User model with admin-compliant permissions that uses
+    a full-length email field as the username.
+
+    Email and password are required. Other fields are optional.
+    """
+    username = models.CharField(_('username'), max_length=254, unique=True)
+    email = models.EmailField(_('email field'), max_length=254)
+    first_name = models.CharField(_('first name'), max_length=30, blank=True)
+    last_name = models.CharField(_('last name'), max_length=30, blank=True)
+    is_staff = models.BooleanField(_('staff status'), default=False,
+        help_text=_('Designates whether the user can log into this admin '
+                    'site.'))
+    is_active = models.BooleanField(_('active'), default=True,
+        help_text=_('Designates whether this user should be treated as '
+                    'active. Unselect this instead of deleting accounts.'))
+    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     type_choices = (
         ('B', 'Beheerder'),
@@ -19,14 +31,35 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         ('D', 'Derden'),
     )
 
-    user_type = models.CharField(max_length=2,
+    type_user = models.CharField(max_length=2,
                                  choices=type_choices,
                                  default='D')
 
-    USERNAME_FIELD = 'name'
-    REQUIRED_FIELDS = ['user_type']
-
     objects = CustomUserManager()
 
-    def __str__(self):
-        return f"{self.name}: Type: {self.user_type}"
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['type_user']
+
+    class Meta:
+        verbose_name = _('user')
+        verbose_name_plural = _('users')
+
+    def get_absolute_url(self):
+        return "/users/%s/" % urlquote(self.username)
+
+    def get_full_name(self):
+        """
+        Returns the first_name plus the last_name, with a space in between.
+        """
+        full_name = '%s %s' % (self.first_name, self.last_name)
+        return full_name.strip()
+
+    def get_short_name(self):
+        "Returns the short name for the user."
+        return self.first_name
+
+    def email_user(self, subject, message, from_email=None):
+        """
+        Sends an email to this User.
+        """
+        send_mail(subject, message, from_email, [self.email])

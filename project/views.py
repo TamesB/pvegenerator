@@ -42,11 +42,11 @@ def StartProjectView(request):
 
 @login_required
 def ProjectOverviewView(request):
-    if not models.Project.objects.filter(permitted__name__contains=request.user.name):
+    if not models.Project.objects.filter(permitted__username__contains=request.user.username):
         return Http404("Je heb geen projecten waar je toegang tot heb.")
     
     context = {}
-    context["projects"] = models.Project.objects.filter(permitted__name__contains=request.user.name)
+    context["projects"] = models.Project.objects.filter(permitted__username__contains=request.user.username)
     return render(request, 'projectoverview.html', context)
 
 @login_required
@@ -56,7 +56,7 @@ def ProjectViewView(request, pk):
     if not models.Project.objects.filter(id=pk):
         return Http404('404')
 
-    if not models.Project.objects.filter(id=pk, permitted__name__contains=request.user.name):
+    if not models.Project.objects.filter(id=pk, permitted__username__contains=request.user.username):
         return Http404('Geen toegang tot dit project')
 
     project = models.Project.objects.filter(id=pk).first()

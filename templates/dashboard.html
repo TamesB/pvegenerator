@@ -7,7 +7,7 @@
 {% block main %}
 
 <h1 class="ui header">Dashboard</h1>
-<i>{{ greeting }}, {{ request.user.name }}.</i>
+<i>{{ greeting }}, {{ request.user.username }}.</i>
 <div class="ui divider"></div>
 <div>
 {% if request.user.user_type == 'OG' %}

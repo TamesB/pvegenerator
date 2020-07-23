@@ -15,13 +15,15 @@ import os
 from django.conf import settings
 import mimetypes
 from . import models
+from users.models import CustomUser
 from project.models import Project
 from . import forms
 
 def LoginPageView(request):
     # cant see lander page if already logged in
-    if request.user.is_authenticated:
-        return redirect('dashboard')
+    if request.user:
+        if request.user.is_authenticated:
+            return redirect('dashboard')
 
     if request.method == "POST":
         form = forms.LoginForm(request.POST)
@@ -65,11 +67,11 @@ def DashboardView(request):
     context = {}
     context["greeting"] = greeting
 
-    if request.user.user_type == 'B':
+    if request.user.type_user == 'B':
         return render(request, 'adminDashboard.html', context)
     
-    if Project.objects.filter(permitted__name__contains=request.user.name):
-        projects = Project.objects.filter(permitted__name__contains=request.user.name)
+    if Project.objects.filter(permitted__username__contains=request.user.username):
+        projects = Project.objects.filter(permitted__username__contains=request.user.username)
         context["projects"] = projects
 
     return render(request, 'dashboard.html', context)
