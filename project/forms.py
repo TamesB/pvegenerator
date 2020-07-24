@@ -4,7 +4,7 @@ from django.forms import ModelForm
 from django.contrib.gis import forms
 
 class StartProjectForm(ModelForm):
-    plaats = forms.PointField(widget=forms.OSMWidget(attrs={'map_width': 800, 'map_height': 500}))
+    plaats = forms.PointField(widget=forms.OSMWidget(attrs={'map_width': 600, 'map_height': 400, 'default_lat': 52.37, 'default_lon': 4.895,}))
 
     class Meta:
         model = Project
@@ -13,4 +13,13 @@ class StartProjectForm(ModelForm):
         labels = {
             'naam':'Projectnaam:', 'nummer':'Projectnummer:', 'plaats':'Plaats:', 'vhe':'Aantal verhuureenheden:', 
             'pensioenfonds':'Pensioenfonds:',
+        }
+        widgets = {
+            'point': forms.OSMWidget(
+                attrs={
+                  'map_width': 600,
+                    'map_height': 400,
+                    'default_lat': 52.37,
+                    'default_lon': 4.895,
+                })
         }

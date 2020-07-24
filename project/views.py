@@ -27,6 +27,7 @@ def StartProjectView(request):
             project.pensioenfonds = form.cleaned_data["pensioenfonds"]
             project.statuscontract = models.ContractStatus.objects.filter(contrstatus="TKO").first()
             project.permitted = request.user
+            print(form.cleaned_data["plaats"])
             project.save()
 
             context = {}

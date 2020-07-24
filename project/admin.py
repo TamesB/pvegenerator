@@ -9,8 +9,8 @@ class CustomGeoAdmin(GeoModelAdmin):
             'fillColor': '#ffff00',
             'strokeWidth': 5,
         },
-        'defaultLon': -72,
-        'defaultLat': 44,
+        'defaultLon': 4.89,
+        'defaultLat': 52,
         'defaultZoom': 4,
     }
 
