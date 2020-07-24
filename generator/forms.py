@@ -24,3 +24,15 @@ class PVEParameterForm(ModelForm):
             'Pakketdient':'Pakketdient',
             'JamesConcept':'James Concept',
         }
+
+class SpecificPVEParameterForm(ModelForm):
+    class Meta:
+        model = PVEItem
+        fields = ('Bouwsoort', 'TypeObject', 'Doelgroep', 'Smarthome', 'AED', 'EntreeUpgrade', 'Pakketdient', 'JamesConcept')
+        labels = {
+            'Smarthome':'Smarthome',
+            'AED':'AED',
+            'EntreeUpgrade':'Entree Upgrade',
+            'Pakketdient':'Pakketdient',
+            'JamesConcept':'James Concept',
+        }

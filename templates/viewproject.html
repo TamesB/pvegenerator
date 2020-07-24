@@ -4,4 +4,8 @@
 
 {% block main %}
 <h1 class="ui header">Project: {{ project.naam }}</h1>
+<div class"ui divider"></div>
+<div>
+<h3 class="ui header">Locatie</h3>
+<p> {{ project.plaats.y }}, {{ project.plaats.x }}</p>
 {% endblock %}

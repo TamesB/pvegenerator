@@ -14,7 +14,7 @@ class Project(models.Model):
     nummer = models.FloatField(max_length=100, default=None)
     naam = models.CharField(max_length=500, default=None)
     plaats = models.PointField()
-    plaatsnaam = models.CharField(max_length=500, default=None)
+    plaatsnamen = models.CharField(max_length=250, default=None, null=True)
     vhe = models.FloatField(max_length=100, default=None)
     pensioenfonds = models.CharField(max_length=100, default=None)
     statuscontract = models.ForeignKey(ContractStatus, on_delete=models.CASCADE)

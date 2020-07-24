@@ -61,7 +61,12 @@ def ProjectViewView(request, pk):
         return Http404('Geen toegang tot dit project')
 
     project = models.Project.objects.filter(id=pk).first()
+    
+    transformer = Transformer.from_crs("EPSG:3857", "EPSG:4326")
+    x,y = transformer.transform(project.plaats.x, project.plaats.y)
 
     context = {}
     context["project"] = project
+    context["x"] = x
+    context["y"] = y
     return render(request, 'viewproject.html', context)
