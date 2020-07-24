@@ -112,42 +112,42 @@ class ExcelMaker:
 
                                 row += 1
                                 column = 0
-                    else:
-                        items = [item for item in PVEItems if item.hoofdstuk == hoofdstuk]
+                else:
+                    items = [item for item in PVEItems if item.hoofdstuk == hoofdstuk]
 
-                        for item in items:
-                            inhoud = ("%s" % item.inhoud)
-                            worksheet.write(row, column, inhoud, cell_format)
+                    for item in items:
+                        inhoud = ("%s" % item.inhoud)
+                        worksheet.write(row, column, inhoud, cell_format)
+                        column += 1
+
+                        if item.basisregel:
+                            worksheet.write(row, column, "x")
+                            column += 1
+                        else:
                             column += 1
 
-                            if item.basisregel:
+                        for bouwsrt in Bouwsoorten:
+                            if bouwsrt in item.Bouwsoort.all():
                                 worksheet.write(row, column, "x")
                                 column += 1
                             else:
                                 column += 1
 
-                            for bouwsrt in Bouwsoorten:
-                                if bouwsrt in item.Bouwsoort.all():
-                                    worksheet.write(row, column, "x")
-                                    column += 1
-                                else:
-                                    column += 1
+                        for typeobj in TypeObjecten:
+                            if typeobj in item.TypeObject.all():
+                                worksheet.write(row, column, "x")
+                                column += 1
+                            else:
+                                column += 1
+                        
+                        for doelgrp in Doelgroepen:
+                            if doelgrp in item.Doelgroep.all():
+                                worksheet.write(row, column, "x")
+                                column += 1
+                            else:
+                                column += 1
 
-                            for typeobj in TypeObjecten:
-                                if typeobj in item.TypeObject.all():
-                                    worksheet.write(row, column, "x")
-                                    column += 1
-                                else:
-                                    column += 1
-                            
-                            for doelgrp in Doelgroepen:
-                                if doelgrp in item.Doelgroep.all():
-                                    worksheet.write(row, column, "x")
-                                    column += 1
-                                else:
-                                    column += 1
-
-                            row += 1
-                            column = 0
+                        row += 1
+                        column = 0
         workbook.close()
         return filename
