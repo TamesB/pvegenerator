@@ -54,15 +54,18 @@ def LogoutView(request):
 @login_required
 def DashboardView(request):
     hour = datetime.datetime.utcnow().hour + 2 # UTC + 2 = CEST
-
+    greeting = ""
     if hour > 3 and hour < 12:
         greeting = "Goedemorgen"
     if hour >= 12 and hour < 18:
         greeting = "Goedemiddag"
     if hour >= 18 and hour <= 24:
         greeting = "Goedenavond"
-    if hour <= 3:
+    if hour <= 3 and hour >= 0:
         greeting = "Goedenacht"
+
+    if greeting == "":
+        greeting = "Goedendag"
 
     context = {}
     context["greeting"] = greeting
@@ -90,6 +93,17 @@ def PVEsectionView(request):
     context["onderdelen"] = Onderdelen
 
     return render(request, 'PVEListHfst.html', context)
+
+@staff_member_required
+def deleteSection(request, pk):
+    if not models.PVEOnderdeel.objects.filter(pk=pk):
+        return Http404("404")
+
+    onderdeel = models.PVEOnderdeel.objects.filter(pk=pk).first()
+    onderdeel.delete()
+
+    return redirect('sectionviewdelete')
+
 
 @staff_member_required
 def DownloadWorksheet(request):
@@ -126,6 +140,40 @@ def PVEsectionViewEdit(request):
 
     return render(request, 'PVEListHfstEdit.html', context)
 
+@staff_member_required
+def PVEsectionEdit(request, pk):
+    if not models.PVEOnderdeel.objects.filter(pk=pk):
+        return Http404("404")
+
+    onderdeel = models.PVEOnderdeel.objects.filter(pk=pk).first()
+
+    if request.method == 'POST':
+        form = forms.SectionForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            onderdeel = models.PVEOnderdeel.objects.filter(pk=pk).first()
+            onderdeel.naam = form.cleaned_data["naam"]
+            onderdeel.save()
+            return redirect('sectionviewedit')
+
+    # View below modal
+    Onderdelen = models.PVEOnderdeel.objects.all()
+    SectionQuerySets = {}
+
+    for onderdeel in Onderdelen:
+        SectionQuerySets[onderdeel] = models.PVEHoofdstuk.objects.filter(
+            onderdeel__naam=onderdeel.naam)
+
+    # form, initial chapter in specific onderdeel
+    form = forms.SectionForm(initial={'naam': onderdeel.naam})
+
+    context = {}
+    context["SectionQuerySets"] = SectionQuerySets.items()
+    context["onderdelen"] = Onderdelen
+    context["onderdeel_id"] = onderdeel.id
+    context["form"] = form
+    return render(request, 'changeonderdeel.html', context)
+
 
 @staff_member_required
 def PVEsectionViewDelete(request):
@@ -142,6 +190,26 @@ def PVEsectionViewDelete(request):
 
     return render(request, 'PVEListHfstDelete.html', context)
 
+@staff_member_required
+def PVEsectionDelete(request, pk):
+    if not models.PVEOnderdeel.objects.filter(pk=pk):
+        return Http404("404")
+
+    onderdeel = models.PVEOnderdeel.objects.filter(pk=pk).first()
+
+    if request.method == 'POST':
+        form = forms.SectionForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            onderdeel = models.PVEOnderdeel.objects.filter(pk=pk).first()
+            onderdeel.naam = form.cleaned_data["naam"]
+            onderdeel.save()
+            return redirect('sectionviewdelete')
+
+    context = {}
+    context["form"] = forms.SectionForm(initial={'naam': naam})
+
+    return redirect('sectiondelete')
 
 @staff_member_required
 def PVEaddsectionView(request):

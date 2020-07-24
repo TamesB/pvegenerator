@@ -10,6 +10,8 @@
 			<tr>
 				<th>
 					{{ key.naam }} <!-- PVEHfst -->
+					<span class="float right"><a href="{% url 'editonderdeel' key.id %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a></span>
+
 					<div class="d-inline" style="float: right;">
 					<span class="float right"><a href="{% url 'addchapter' key.id %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
 					</div>

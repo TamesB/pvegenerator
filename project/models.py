@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.gis.db import models
+from django.contrib.gis import forms
         
 class ContractStatus(models.Model):
     contrstatus = models.CharField(max_length=100, blank=True)

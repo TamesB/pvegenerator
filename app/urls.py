@@ -12,7 +12,9 @@ urlpatterns = [
     path('parameters', views.PVEsectionView, name='sectionview'),
     path('parameters/download', views.DownloadWorksheet, name='worksheetdownload'),
     path('parameters/edit', views.PVEsectionViewEdit, name='sectionviewedit'),
+    path('parameters/edit/<int:pk>', views.PVEsectionEdit, name='editonderdeel'),
     path('parameters/delete', views.PVEsectionViewDelete, name='sectionviewdelete'),
+    path('parameters/delete/<int:pk>', views.deleteSection, name='sectiondelete'),
     path('parameters/add', views.PVEaddsectionView, name='addsection'),
     
     path('parameters/<int:pk>/addchapter', views.PVEaddhoofdstukView, name='addchapter'),

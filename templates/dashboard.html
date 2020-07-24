@@ -10,7 +10,7 @@
 <i>{{ greeting }}, {{ request.user.username }}.</i>
 <div class="ui divider"></div>
 <div>
-{% if request.user.user_type == 'OG' %}
+{% if request.user.type_user == 'OG' %}
 <!-- Start project -->
 <a href="{% url 'startproject' %}"><button class="ui basic button">Start Project</button></a>
 {% endif %}
