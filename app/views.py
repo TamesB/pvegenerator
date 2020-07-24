@@ -156,6 +156,9 @@ def PVEsectionEdit(request, pk):
             onderdeel.save()
             return redirect('sectionviewedit')
 
+    # form, initial chapter in specific onderdeel
+    form = forms.SectionForm(initial={'naam': onderdeel.naam})
+
     # View below modal
     Onderdelen = models.PVEOnderdeel.objects.all()
     SectionQuerySets = {}
@@ -163,10 +166,7 @@ def PVEsectionEdit(request, pk):
     for onderdeel in Onderdelen:
         SectionQuerySets[onderdeel] = models.PVEHoofdstuk.objects.filter(
             onderdeel__naam=onderdeel.naam)
-
-    # form, initial chapter in specific onderdeel
-    form = forms.SectionForm(initial={'naam': onderdeel.naam})
-
+            
     context = {}
     context["SectionQuerySets"] = SectionQuerySets.items()
     context["onderdelen"] = Onderdelen
@@ -196,20 +196,8 @@ def PVEsectionDelete(request, pk):
         return Http404("404")
 
     onderdeel = models.PVEOnderdeel.objects.filter(pk=pk).first()
-
-    if request.method == 'POST':
-        form = forms.SectionForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            onderdeel = models.PVEOnderdeel.objects.filter(pk=pk).first()
-            onderdeel.naam = form.cleaned_data["naam"]
-            onderdeel.save()
-            return redirect('sectionviewdelete')
-
-    context = {}
-    context["form"] = forms.SectionForm(initial={'naam': naam})
-
-    return redirect('sectiondelete')
+    onderdeel.delete()
+    return redirect('sectionviewdelete')
 
 @staff_member_required
 def PVEaddsectionView(request):
