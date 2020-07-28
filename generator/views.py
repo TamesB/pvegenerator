@@ -24,10 +24,11 @@ def GeneratePVEView(request):
         if form.is_valid():
 
             # get parameters, find all pveitems with that
-            (Bouwsoort, TypeObject, Doelgroep, Smarthome,
+            (Bouwsoort1, TypeObject1, Doelgroep1, Bouwsoort2, TypeObject2, Doelgroep2, Smarthome,
              AED, EntreeUpgrade, Pakketdient, JamesConcept) = (
-                form.cleaned_data["Bouwsoort"], form.cleaned_data["TypeObject"],
-                form.cleaned_data["Doelgroep"], form.cleaned_data["Smarthome"],
+                form.cleaned_data["Bouwsoort1"], form.cleaned_data["TypeObject1"],
+                form.cleaned_data["Doelgroep1"], form.cleaned_data["Bouwsoort2"], form.cleaned_data["TypeObject2"],
+                form.cleaned_data["Doelgroep2"], form.cleaned_data["Smarthome"],
                 form.cleaned_data["AED"], form.cleaned_data["EntreeUpgrade"],
                 form.cleaned_data["Pakketdient"], form.cleaned_data["JamesConcept"] )
 
@@ -36,40 +37,64 @@ def GeneratePVEView(request):
                 basisregel=True)
             basic_PVE = basic_PVE.union(
                 models.PVEItem.objects.filter(
-                    Bouwsoort__parameter__contains=Bouwsoort))
-            basic_PVE = basic_PVE.union(
-                models.PVEItem.objects.filter(
-                    TypeObject__parameter__contains=TypeObject))
-            query_set = basic_PVE.union(
-                models.PVEItem.objects.filter(
-                    Doelgroep__parameter__contains=Doelgroep))
+                    Bouwsoort__parameter__contains=Bouwsoort1))
+
+            if Bouwsoort2:
+                basic_PVE = basic_PVE.union(
+                    models.PVEItem.objects.filter(
+                        Bouwsoort__parameter__contains=Bouwsoort2))
+            if TypeObject1:
+                basic_PVE = basic_PVE.union(
+                    models.PVEItem.objects.filter(
+                        TypeObject__parameter__contains=TypeObject1))
+            if TypeObject2:
+                basic_PVE = basic_PVE.union(
+                    models.PVEItem.objects.filter(
+                        TypeObject__parameter__contains=TypeObject2))
+            if Doelgroep1:
+                basic_PVE = basic_PVE.union(
+                    models.PVEItem.objects.filter(
+                        Doelgroep__parameter__contains=Doelgroep1))
+            if Doelgroep2:
+                basic_PVE = basic_PVE.union(
+                    models.PVEItem.objects.filter(
+                        Doelgroep__parameter__contains=Doelgroep2))
 
             # If line is extra (AED, Smarthome, Entree Upgrade); Always include
             # if box checked
             if AED:
-                query_set = query_set.union(
+                basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(Q(AED=True)))
             if Smarthome:
-                query_set = query_set.union(
+                basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(Q(Smarthome=True)))
             if EntreeUpgrade:
-                query_set = query_set.union(
+                basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(Q(EntreeUpgrade=True)))
             if Pakketdient:
-                query_set = query_set.union(
+                basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(Q(Pakketdient=True)))
             if JamesConcept:
-                query_set = query_set.union(
+                basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(Q(JamesConcept=True)))
 
-            query_set.order_by('id')
+            basic_PVE.order_by('id')
 
             # make pdf
-            parameters = [
-                f"Bouwsoort: {Bouwsoort.parameter}",
-                f"Object: {TypeObject.parameter}",
-                f"Doelgroep: {Doelgroep.parameter}"
-            ]
+            parameters = []
+
+            if Bouwsoort1:
+                parameters += f"{Bouwsoort1.parameter} (Hoofd)",
+            if Bouwsoort2:
+                parameters += f"{Bouwsoort2.parameter} (Sub)",
+            if TypeObject1:
+                parameters += f"{TypeObject1.parameter} (Hoofd)",
+            if TypeObject2:
+                parameters += f"{TypeObject2.parameter} (Sub)",
+            if Doelgroep1:
+                parameters += f"{Doelgroep1.parameter} (Hoofd)",
+            if Doelgroep2:
+                parameters += f"{Doelgroep2.parameter} (Sub)",
 
             date = datetime.datetime.now()
             filename = "PVE-%s%s%s%s%s%s" % (
@@ -82,11 +107,11 @@ def GeneratePVEView(request):
             )
 
             pdfmaker = writePdf.PDFMaker()
-            pdfmaker.makepdf(filename, query_set, parameters)
+            pdfmaker.makepdf(filename, basic_PVE, parameters)
 
             # and render the result page
             context = {}
-            context["itemsPVE"] = query_set
+            context["itemsPVE"] = basic_PVE
             context["filename"] = filename
             return render(request, 'PVEResult.html', context)
         else:
