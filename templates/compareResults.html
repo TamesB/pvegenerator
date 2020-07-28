@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% load semanticui %}
+
+{% block main %}
+<input type="button" class="ui primary button d-inline" onclick="javascript:history.back();" value="< Terug" />
+<div class="ui divider"></div>
+{% if result %}
+
+{% for rule in result %}
+{{ rule.inhoud }}
+{% endfor %}
+
+{% else %}
+<p>Geen verschillen!</p>
+{% endif %}
+
+{% endblock %}

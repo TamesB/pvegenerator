@@ -88,3 +88,68 @@ class SpecificPVEParameterForm(ModelForm):
             'Pakketdient':'Pakketdient',
             'JamesConcept':'James Concept',
         }
+
+class CompareFormBouwsoort(forms.Form):
+    Bouwsoort1 = forms.ModelChoiceField(queryset=Bouwsoort.objects.all(), label='Bouwsoort')
+    Bouwsoort2 = forms.ModelChoiceField(queryset=Bouwsoort.objects.all(), label='Bouwsoort')
+
+    class Meta:
+        model = PVEItem
+        fields = ('Bouwsoort1','Bouwsoort2')
+        labels = {
+            'Bouwsoort1':'Bouwsoort 1',
+            'Bouwsoort2':'Bouwsoort 2',        
+            }
+
+        layout = [
+            ("Text", "<h2 class=\"ui dividing header\">Vergelijk twee bouwsoorten</h2>"),
+
+            ("Two Fields",
+                ("Field", "Bouwsoort1"),
+                ("Field", "Bouwsoort2"),
+            ),
+
+        ]
+
+class CompareFormTypeObject(forms.Form):
+    TypeObject1 = forms.ModelChoiceField(queryset=TypeObject.objects.all(), label='Type Object')
+    TypeObject2 = forms.ModelChoiceField(queryset=TypeObject.objects.all(), label='Type Object')
+
+    class Meta:
+        model = PVEItem
+        fields = ('TypeObject1','TypeObject2')
+        labels = {
+            'TypeObject1':'Type Object 1',
+            'TypeObject2':'Type Object 2',        
+            }
+
+        layout = [
+            ("Text", "<h2 class=\"ui dividing header\">Vergelijk twee type objecten</h2>"),
+
+            ("Two Fields",
+                ("Field", "TypeObject1"),
+                ("Field", "TypeObject2"),
+            ),
+
+        ]
+class CompareFormDoelgroep(forms.Form):
+    Doelgroep1 = forms.ModelChoiceField(queryset=Doelgroep.objects.all(), label='Doelgroep')
+    Doelgroep2 = forms.ModelChoiceField(queryset=Doelgroep.objects.all(), label='Doelgroep')
+
+    class Meta:
+        model = PVEItem
+        fields = ('Doelgroep1','Doelgroep2')
+        labels = {
+            'Doelgroep1':'Doelgroep 1',
+            'Doelgroep2':'Doelgroep 2',        
+            }
+
+        layout = [
+            ("Text", "<h2 class=\"ui dividing header\">Vergelijk twee doelgroepen</h2>"),
+
+            ("Two Fields",
+                ("Field", "Doelgroep1"),
+                ("Field", "Doelgroep2"),
+            ),
+
+        ]

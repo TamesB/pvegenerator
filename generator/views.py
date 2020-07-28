@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q
 from utils import writePdf
 from django.contrib import messages
@@ -138,3 +139,60 @@ def download_file(request, filename):
     response['Content-Disposition'] = "inline; filename=%s" % filename
 
     return response
+
+@staff_member_required
+def compareView(request):
+    context = {}
+    return render(request, 'compare.html', context)
+
+
+@staff_member_required
+def compareFormView(request, pk):
+    pk = int(pk)
+    context = {}
+    context["pk"] = pk
+
+    if request.method == "POST":
+        if pk == 1:
+            # get user entered form
+            form = forms.CompareFormBouwsoort(request.POST)
+        if pk == 2:
+            form = forms.CompareFormTypeObject(request.POST)
+        if pk == 3:
+            form = forms.CompareFormDoelgroep(request.POST)
+
+        # check validity
+        if form.is_valid():
+            if pk == 1:
+                (keuze1, keuze2) = (form.cleaned_data["Bouwsoort1"], form.cleaned_data["Bouwsoort2"])
+                PvE1 = models.PVEItem.objects.filter(Bouwsoort__parameter__contains=keuze1)
+                PvE2 = models.PVEItem.objects.filter(Bouwsoort__parameter__contains=keuze2)
+
+                context["result"] = PvE1.difference(PvE2)
+                return render(request, 'compareResults.html', context)
+
+            if pk == 2:
+                (keuze1, keuze2) = (form.cleaned_data["TypeObject1"], form.cleaned_data["TypeObject2"])
+                PvE1 = models.PVEItem.objects.filter(TypeObject__parameter__contains=keuze1)
+                PvE2 = models.PVEItem.objects.filter(TypeObject__parameter__contains=keuze2)
+                context["result"] = PvE1.difference(PvE2)
+
+                return render(request, 'compareResults.html', context)
+
+            if pk == 3:
+                (keuze1, keuze2) = (form.cleaned_data["Doelgroep1"], form.cleaned_data["Doelgroep2"])
+                PvE1 = models.PVEItem.objects.filter(Doelgroep__parameter__contains=keuze1)
+                PvE2 = models.PVEItem.objects.filter(Doelgroep__parameter__contains=keuze2)
+                context["result"] = PvE1.difference(PvE2)
+
+                return render(request, 'compareResults.html', context)
+
+    # if get method, just render the empty form
+    if pk == 1:
+        context["form"] = forms.CompareFormBouwsoort()
+    if pk == 2:
+        context["form"] = forms.CompareFormTypeObject()
+    if pk == 3:
+        context["form"] = forms.CompareFormDoelgroep()
+
+    return render(request, 'compareForm.html', context)

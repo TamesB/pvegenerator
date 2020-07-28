@@ -1,0 +1,18 @@
+{% extends "PVEListHfst.html" %}
+
+{% load semanticui %}
+
+{% load filename %}
+
+{% block main %}
+
+<h1 class="ui header">Vergelijk verschillende parameters</h1>
+<div class="ui divider"></div>
+<div>
+	<a href="{% url 'compareform' 1 %}"><button class="ui basic button"><i class="icon edit"></i>Op Bouwsoort</button></a><br><br>
+	<a href="{% url 'compareform' 2 %}"><button class="ui basic button"><i class="icon edit"></i>Op Type Object</button></a><br><br>
+	<a href="{% url 'compareform' 3 %}"><button class="ui basic button"><i class="icon edit"></i>Op Doelgroep</button></a>
+<div class="ui divider"></div>
+</div>
+
+{% endblock %}
