@@ -79,7 +79,7 @@ def GeneratePVEView(request):
                 basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(Q(JamesConcept=True)))
 
-            basic_PVE.order_by('id')
+            basic_PVE = basic_PVE.order_by('id')
 
             # make pdf
             parameters = []

@@ -4,11 +4,12 @@
 
 {% block main %}
 <input type="button" class="ui primary button d-inline" onclick="javascript:history.back();" value="< Terug" />
+<p>Nog als test, PDF output to come</p>
 <div class="ui divider"></div>
 {% if result %}
 
 {% for rule in result %}
-{{ rule.inhoud }}
+{{ rule.inhoud }}<br><br>
 {% endfor %}
 
 {% else %}
