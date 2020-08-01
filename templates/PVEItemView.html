@@ -15,7 +15,7 @@
     <div class="ui divider"></div>
     <h3 class="ui header">Bijlage</h3>
     {% if PVEItem.bijlage %}
-    <span><a href="{{ HTTP_ROOT }}/files/{{ PVEItem.bijlage }}"><button class="ui basic button"><i class="icon download"></i>{{ PVEItem.bijlage|filename }}</button></a></span>
+    <span><a href="{% url 'downloadbijlage' PVEItem.id %}"><button class="ui basic button"><i class="icon download"></i>{{ PVEItem.bijlage|filename }}</button></a></span>
     {% elif PVEItem.bijlage == false %}
     <p>Geen bijlage bij deze regel.<p>
     {% else %}

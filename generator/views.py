@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q
-from utils import writePdf
+from utils import writePdf, writeDiffPdf
 from django.contrib import messages
 import datetime
 import os
@@ -12,6 +12,7 @@ import mimetypes
 from . import models
 from app import models
 from . import forms
+import zipfile
 
 # Create your views here.
 @login_required
@@ -110,6 +111,13 @@ def GeneratePVEView(request):
             pdfmaker = writePdf.PDFMaker()
             pdfmaker.makepdf(filename, basic_PVE, parameters)
 
+
+            # get bijlagen
+            bijlagen = [item.bijlage for item in basic_PVE if item.bijlage]
+            #remove duplicates
+            bijlagen = list(dict.fromkeys(bijlagen))
+
+
             # and render the result page
             context = {}
             context["itemsPVE"] = basic_PVE
@@ -140,6 +148,45 @@ def download_file(request, filename):
 
     return response
 
+@login_required
+def download_bijlagen(request, bijlagen):
+    filenames = bijlagen
+
+    BASE = os.path.dirname(os.path.abspath(__file__))
+
+    # Folder name in ZIP archive which contains the above files
+    # E.g [thearchive.zip]/somefiles/file2.txt
+    # FIXME: Set this to something better
+    zip_subdir = "bijlagen"
+    zip_filename = "%s.zip" % zip_subdir
+
+    path = BASE + settings.EXPORTS_URL + zip_filename
+
+    # Open StringIO to grab in-memory ZIP contents
+    s = io.StringIO.StringIO()
+
+    # The zip compressor
+    zf = zipfile.ZipFile(s, "w")
+
+    for fpath in filenames:
+        # Calculate path for file in zip
+        fdir, fname = os.path.split(fpath)
+        zip_path = os.path.join(zip_subdir, fname)
+
+        # Add file, at correct path
+        zf.write(fpath, zip_path)
+
+    # Must close zip for all contents to be written
+    zf.close()
+
+    # Grab ZIP file from in-memory, make response with correct MIME-type
+    resp = HttpResponse(s.getvalue(), mimetype = "application/x-zip-compressed")
+    # ..and correct content-disposition
+    resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
+
+    return resp
+
+
 @staff_member_required
 def compareView(request):
     context = {}
@@ -163,29 +210,47 @@ def compareFormView(request, pk):
 
         # check validity
         if form.is_valid():
+            parameters = []
+
             if pk == 1:
                 (keuze1, keuze2) = (form.cleaned_data["Bouwsoort1"], form.cleaned_data["Bouwsoort2"])
                 PvE1 = models.PVEItem.objects.filter(Bouwsoort__parameter__contains=keuze1)
                 PvE2 = models.PVEItem.objects.filter(Bouwsoort__parameter__contains=keuze2)
 
-                context["result"] = PvE1.difference(PvE2)
-                return render(request, 'compareResults.html', context)
-
             if pk == 2:
                 (keuze1, keuze2) = (form.cleaned_data["TypeObject1"], form.cleaned_data["TypeObject2"])
                 PvE1 = models.PVEItem.objects.filter(TypeObject__parameter__contains=keuze1)
                 PvE2 = models.PVEItem.objects.filter(TypeObject__parameter__contains=keuze2)
-                context["result"] = PvE1.difference(PvE2)
-
-                return render(request, 'compareResults.html', context)
 
             if pk == 3:
                 (keuze1, keuze2) = (form.cleaned_data["Doelgroep1"], form.cleaned_data["Doelgroep2"])
                 PvE1 = models.PVEItem.objects.filter(Doelgroep__parameter__contains=keuze1)
                 PvE2 = models.PVEItem.objects.filter(Doelgroep__parameter__contains=keuze2)
-                context["result"] = PvE1.difference(PvE2)
 
-                return render(request, 'compareResults.html', context)
+            afwijkingen = PvE1.difference(PvE2)
+            afwijkingen = afwijkingen.order_by('id')
+
+            # make pdf
+            if afwijkingen:
+                parameters += f"{keuze1} t.o.v. {keuze2}"
+
+                date = datetime.datetime.now()
+                filename = "AFWIJKINGEN-%s%s%s%s%s%s" % (
+                    date.strftime("%H"),
+                    date.strftime("%M"),
+                    date.strftime("%S"),
+                    date.strftime("%d"),
+                    date.strftime("%m"),
+                    date.strftime("%Y")
+                )
+
+                pdfmaker = writeDiffPdf.PDFMaker()
+                pdfmaker.makepdf(filename, afwijkingen, parameters)
+                context["filename"] = filename
+
+            context["afwijkingen"] = afwijkingen
+            return render(request, 'compareResults.html', context)
+
 
     # if get method, just render the empty form
     if pk == 1:

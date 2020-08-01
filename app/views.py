@@ -624,6 +624,23 @@ def viewItemView(request, pk):
 
     return render(request, 'PVEItemView.html', context)
 
+@staff_member_required
+def downloadBijlageView(request, pk):
+    fl_path = settings.MEDIA_ROOT
+
+    item = models.PVEItem.objects.filter(id=pk).first()
+    filename = item.bijlage
+
+    try:
+        fl = open(fl_path + filename, 'rb')
+    except OSError:
+        raise Http404("404")
+
+    response = HttpResponse(fl, content_type="application/pdf")
+    response['Content-Disposition'] = "inline; filename=%s" % filename
+
+    return response
+
 
 @staff_member_required
 def editItemView(request, pk):

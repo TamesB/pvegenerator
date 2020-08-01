@@ -36,6 +36,7 @@ urlpatterns = [
     path('parameters/item/<int:pk>', views.viewItemView, name='viewitem'),
     path('parameters/item/<int:pk>/edit', views.editItemView, name='edititem'),
     path('parameters/item/<int:pk>/delete', views.deleteItemView, name='deleteitem'),
+    path('parameters/item/<int:pk>/bijlage', views.downloadBijlageView, name='downloadbijlage'),
     
     path('kiesparameters', views.kiesparametersView, name='kiesparametersview'),
     path('kiesparameters/edit', views.kiesparametersViewEdit, name='kiesparametersviewedit'),

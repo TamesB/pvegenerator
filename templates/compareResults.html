@@ -3,17 +3,12 @@
 {% load semanticui %}
 
 {% block main %}
-<input type="button" class="ui primary button d-inline" onclick="javascript:history.back();" value="< Terug" />
-<p>Nog als test, PDF output to come</p>
-<div class="ui divider"></div>
-{% if result %}
-
-{% for rule in result %}
-{{ rule.inhoud }}<br><br>
-{% endfor %}
-
-{% else %}
-<p>Geen verschillen!</p>
-{% endif %}
+<input type="button" class="ui primary button d-inline" onclick="window.location.href='{% url 'generate' %}';" value="< Terug" />
+    <h1 class="ui header">Afwijkingen lijst</h1>
+    {% if afwijkingen %}
+    <p><span><a href="{% url 'download' filename %}"><button class="ui basic button"><i class="icon download"></i>Open als PDF</button></a></span></p>
+    {% else %}
+    <p>Geen afwijkingen tussen deze parameters.</p>
+    {% endif %}
 
 {% endblock %}
