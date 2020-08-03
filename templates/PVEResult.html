@@ -7,7 +7,10 @@
     <h1 class="ui header">Programma van Eisen</h1>
     {% if itemsPVE %}
     <p><span><a href="{% url 'download' filename %}"><button class="ui basic button"><i class="icon download"></i>Open als PDF</button></a></span></p>
-      {% else %}
+    {% if zipFilename %}
+    <p><span><a href="{% url 'downloadbijlagen' zipFilename %}"><button class="ui basic button"><i class="icon download"></i>Download Bijlagen</button></a></span></p>
+    {% endif %}
+    {% else %}
       <p>Geen regels met deze parameters. Bewerk de parameters of neem contact op met de systeembeheerder.</p>
       {% endif %}
 {% endblock %}

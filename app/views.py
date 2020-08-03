@@ -18,6 +18,7 @@ from . import models
 from users.models import CustomUser
 from project.models import Project
 from . import forms
+import magic
 
 def LoginPageView(request):
     # cant see lander page if already logged in
@@ -626,17 +627,20 @@ def viewItemView(request, pk):
 
 @staff_member_required
 def downloadBijlageView(request, pk):
-    fl_path = settings.MEDIA_ROOT
-
     item = models.PVEItem.objects.filter(id=pk).first()
-    filename = item.bijlage
+    filename = str(item.bijlage)
+
+    path = settings.MEDIA_ROOT + "/" + filename
 
     try:
-        fl = open(fl_path + filename, 'rb')
+        fl = open(path, 'rb')
     except OSError:
         raise Http404("404")
+    
+    # get mimetype
+    mime = magic.Magic(mime=True)
 
-    response = HttpResponse(fl, content_type="application/pdf")
+    response = HttpResponse(fl, content_type=mime.from_file(path))
     response['Content-Disposition'] = "inline; filename=%s" % filename
 
     return response

@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q
-from utils import writePdf, writeDiffPdf
+from utils import writePdf, writeDiffPdf, createBijlageZip
 from django.contrib import messages
 import datetime
 import os
@@ -99,7 +99,8 @@ def GeneratePVEView(request):
                 parameters += f"{Doelgroep2.parameter} (Sub)",
 
             date = datetime.datetime.now()
-            filename = "PVE-%s%s%s%s%s%s" % (
+
+            fileExt = "%s%s%s%s%s%s" % (
                 date.strftime("%H"),
                 date.strftime("%M"),
                 date.strftime("%S"),
@@ -108,20 +109,28 @@ def GeneratePVEView(request):
                 date.strftime("%Y")
             )
 
+            filename = f"PVE-{fileExt}"
+            zipFilename = f"BIJLAGEN-{fileExt}"
+
             pdfmaker = writePdf.PDFMaker()
             pdfmaker.makepdf(filename, basic_PVE, parameters)
 
-
             # get bijlagen
-            bijlagen = [item.bijlage for item in basic_PVE if item.bijlage]
+            bijlagen = [str(item.bijlage) for item in basic_PVE if item.bijlage]
             #remove duplicates
             bijlagen = list(dict.fromkeys(bijlagen))
 
+            if bijlagen:
+                zipmaker = createBijlageZip.ZipMaker()
+                zipmaker.makeZip(zipFilename, bijlagen)
+            else:
+                zipFilename = False
 
             # and render the result page
             context = {}
             context["itemsPVE"] = basic_PVE
             context["filename"] = filename
+            context["zipFilename"] = zipFilename
             return render(request, 'PVEResult.html', context)
         else:
             messages.warning(request, "Vul de verplichte keuzes in.")
@@ -149,41 +158,20 @@ def download_file(request, filename):
     return response
 
 @login_required
-def download_bijlagen(request, bijlagen):
-    filenames = bijlagen
+def download_bijlagen(request, zipFilename):
+    fl_path = settings.EXPORTS_ROOT
 
-    BASE = os.path.dirname(os.path.abspath(__file__))
+    filename = f"/{zipFilename}.zip"
 
-    # Folder name in ZIP archive which contains the above files
-    # E.g [thearchive.zip]/somefiles/file2.txt
-    # FIXME: Set this to something better
-    zip_subdir = "bijlagen"
-    zip_filename = "%s.zip" % zip_subdir
-
-    path = BASE + settings.EXPORTS_URL + zip_filename
-
-    # Open StringIO to grab in-memory ZIP contents
-    s = io.StringIO.StringIO()
-
-    # The zip compressor
-    zf = zipfile.ZipFile(s, "w")
-
-    for fpath in filenames:
-        # Calculate path for file in zip
-        fdir, fname = os.path.split(fpath)
-        zip_path = os.path.join(zip_subdir, fname)
-
-        # Add file, at correct path
-        zf.write(fpath, zip_path)
-
-    # Must close zip for all contents to be written
-    zf.close()
+    try:
+        fl = open(fl_path + filename, 'rb')
+    except OSError:
+        raise Http404("404")
 
     # Grab ZIP file from in-memory, make response with correct MIME-type
-    resp = HttpResponse(s.getvalue(), mimetype = "application/x-zip-compressed")
+    resp = HttpResponse(fl, content_type = "application/x-zip-compressed")
     # ..and correct content-disposition
-    resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
-
+    resp['Content-Disposition'] = 'attachment; filename=%s' % filename
     return resp
 
 

@@ -13,3 +13,4 @@ XlsxWriter==1.2.9
 dj_database_url==0.5.0
 pyproj
 pandas
+python-magic-bin==0.4.14

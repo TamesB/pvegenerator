@@ -7,6 +7,7 @@ from . import views
 urlpatterns = [
     path('generate', views.GeneratePVEView, name='generate'),
     path('download/<str:filename>', views.download_file, name='download'),
+    path('download/b/<str:zipFilename>', views.download_bijlagen, name='downloadbijlagen'),
     path('compare', views.compareView, name='compare'),
     path('compare/<int:pk>', views.compareFormView, name='compareform'),
 ]
