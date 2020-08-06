@@ -3,6 +3,7 @@
 {% load semanticui %}
 
 {% block main %}
+<h1 class="ui header">Genereer proef PvE</h1>
 
 <form action="{% url 'generate' %}" class="ui form" method="POST">
     {% csrf_token %}

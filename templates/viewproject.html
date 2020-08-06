@@ -5,7 +5,17 @@
 {% block main %}
 <h1 class="ui header">Project: {{ project.naam }}</h1>
 <div class"ui divider"></div>
-<div>
+<h3 class="ui header">Programma van Eisen</h1>
+{% if project.pveconnected %}
+<p><span><a href="{% url 'downloadpve' project.id %}"><button class="ui basic button"><i class="icon download"></i>Download huidige staat PvE</button></a></span></p>
+{% else %}
+<p>Nog geen bouwsoort toegevoegd.</p>
+    {% if request.user.type_user == 'OG' or request.user.type_user == 'B' %}
+    <a href="{% url 'connectpve' project.id %}"><input type="button" class="ui primary button d-inline" value="Voeg toe" /></a>
+    {% endif %}
+{% endif %}
+<div class"ui divider"></div>
 <h3 class="ui header">Locatie</h3>
 <p> {{ project.plaats.y }}, {{ project.plaats.x }}</p>
+
 {% endblock %}

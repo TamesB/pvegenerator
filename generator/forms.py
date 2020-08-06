@@ -41,8 +41,6 @@ class PVEParameterForm(ModelForm):
         }
 
         layout = [
-            ("Text", "<h2 class=\"ui dividing header\">Genereer proef PvE</h2>"),
-
             ("Two Fields",
                 ("Field", "Bouwsoort1"),
                 ("Field", "Bouwsoort2"),

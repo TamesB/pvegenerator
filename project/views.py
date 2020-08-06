@@ -11,11 +11,26 @@ import os
 from django.conf import settings
 import mimetypes
 from . import models
+from app.models import PVEItem, Bouwsoort, TypeObject, Doelgroep
+from generator.forms import PVEParameterForm
 from . import forms
+
 from pyproj import CRS, Transformer
+
+from utils import writePdf, writeDiffPdf, createBijlageZip
+from django.contrib import messages
+import datetime
+import os
+from django.conf import settings
+import mimetypes
+import zipfile
 
 @login_required
 def StartProjectView(request):
+
+    if request.user.type_user != 'OG' and request.user.type_user != 'B':
+        raise Http404("404.")
+
     if request.method == 'POST':
         form = forms.StartProjectForm(request.POST)
         # check whether it's valid:
@@ -28,12 +43,9 @@ def StartProjectView(request):
             project.pensioenfonds = form.cleaned_data["pensioenfonds"]
             project.statuscontract = models.ContractStatus.objects.filter(contrstatus="TKO").first()
             project.permitted = request.user
-            print(form.cleaned_data["plaats"])
             project.save()
 
-            context = {}
-            context["project"] = project
-            return render(request, 'viewproject.html', context)
+            return HttpResponseRedirect(reverse('connectpve', args=(project.id,)))
 
     # form
     form = forms.StartProjectForm()
@@ -43,9 +55,124 @@ def StartProjectView(request):
     return render(request, 'startproject.html', context)
 
 @login_required
+def ConnectPVEView(request, pk):
+    if request.user.type_user != 'OG' and request.user.type_user != 'B':
+        raise Http404("404.")
+
+    project = models.Project.objects.filter(id=pk).first()
+
+    if project.pveconnected == True:
+        context = {}
+        context["project"] = project
+        return render(request, 'viewproject.html', context)
+
+    if request.method == 'POST':
+        form = PVEParameterForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # get parameters, find all pveitems with that
+            (Bouwsoort1, TypeObject1, Doelgroep1, Bouwsoort2, TypeObject2, Doelgroep2, Smarthome,
+             AED, EntreeUpgrade, Pakketdient, JamesConcept) = (
+                form.cleaned_data["Bouwsoort1"], form.cleaned_data["TypeObject1"],
+                form.cleaned_data["Doelgroep1"], form.cleaned_data["Bouwsoort2"], form.cleaned_data["TypeObject2"],
+                form.cleaned_data["Doelgroep2"], form.cleaned_data["Smarthome"],
+                form.cleaned_data["AED"], form.cleaned_data["EntreeUpgrade"],
+                form.cleaned_data["Pakketdient"], form.cleaned_data["JamesConcept"] )
+
+            # add bouwsoort to the project
+            project.bouwsoort1 = Bouwsoort.objects.filter(parameter=Bouwsoort1).first()
+
+            # Entered parameters are in the manytomany parameters of the object
+            basic_PVE = PVEItem.objects.filter(
+                basisregel=True)
+            basic_PVE = basic_PVE.union(
+                PVEItem.objects.filter(
+                    Bouwsoort__parameter__contains=Bouwsoort1))
+
+            if Bouwsoort2:
+                basic_PVE = basic_PVE.union(
+                    PVEItem.objects.filter(
+                        Bouwsoort__parameter__contains=Bouwsoort2))
+                project.bouwsoort2 = Bouwsoort.objects.filter(parameter=Bouwsoort2).first()
+
+            if TypeObject1:
+                basic_PVE = basic_PVE.union(
+                    PVEItem.objects.filter(
+                        TypeObject__parameter__contains=TypeObject1))
+                project.typeObject1 = TypeObject.objects.filter(parameter=TypeObject1).first()
+
+            if TypeObject2:
+                basic_PVE = basic_PVE.union(
+                    PVEItem.objects.filter(
+                        TypeObject__parameter__contains=TypeObject2))
+                project.typeObject2 = TypeObject.objects.filter(parameter=TypeObject2).first()
+
+            if Doelgroep1:
+                basic_PVE = basic_PVE.union(
+                    PVEItem.objects.filter(
+                        Doelgroep__parameter__contains=Doelgroep1))
+                project.doelgroep1 = Doelgroep.objects.filter(parameter=Doelgroep1).first()
+
+            if Doelgroep2:
+                basic_PVE = basic_PVE.union(
+                    PVEItem.objects.filter(
+                        Doelgroep__parameter__contains=Doelgroep2))
+                project.doelgroep2 = Doelgroep.objects.filter(parameter=Doelgroep2).first()
+
+
+            # If line is extra (AED, Smarthome, Entree Upgrade); Always include
+            # if box checked
+            if AED:
+                basic_PVE = basic_PVE.union(
+                    PVEItem.objects.filter(Q(AED=True)))
+                
+                project.AED = True
+
+            if Smarthome:
+                basic_PVE = basic_PVE.union(
+                    PVEItem.objects.filter(Q(Smarthome=True)))
+                # add the parameter to the project
+                project.Smarthome = True
+
+            if EntreeUpgrade:
+                basic_PVE = basic_PVE.union(
+                    PVEItem.objects.filter(Q(EntreeUpgrade=True)))
+                project.EntreeUpgrade = True
+
+            if Pakketdient:
+                basic_PVE = basic_PVE.union(
+                    PVEItem.objects.filter(Q(Pakketdient=True)))
+                project.Pakketdient = True
+
+            if JamesConcept:
+                basic_PVE = basic_PVE.union(
+                    PVEItem.objects.filter(Q(JamesConcept=True)))
+                project.JamesConcept = True
+
+            # add the project to all the pve items
+            for item in basic_PVE:
+                item.projects.add(project)
+
+            # succesfully connected, save the project
+            project.pveconnected = True
+            project.save()
+
+            context = {}
+            context["project"] = project
+            return render(request, 'viewproject.html', context)
+
+    # form
+    form = PVEParameterForm()
+
+    context = {}
+    context["form"] = form
+    context["project"] = project
+    return render(request, 'connectpve.html', context)
+
+@login_required
 def ProjectOverviewView(request):
     if not models.Project.objects.filter(permitted__username__contains=request.user.username):
-        return Http404("Je heb geen projecten waar je toegang tot heb.")
+        raise Http404("Je heb geen projecten waar je toegang tot heb.")
     
     context = {}
     context["projects"] = models.Project.objects.filter(permitted__username__contains=request.user.username)
@@ -56,11 +183,11 @@ def ProjectViewView(request, pk):
     pk = int(pk)
 
     if not models.Project.objects.filter(id=pk):
-        return Http404('404')
+        raise Http404('404')
 
     if request.user.type_user != 'B':
         if not models.Project.objects.filter(id=pk, permitted__username__contains=request.user.username):
-            return Http404('Geen toegang tot dit project')
+            raise Http404('Geen toegang tot dit project')
 
     project = models.Project.objects.filter(id=pk).first()
     
@@ -72,3 +199,59 @@ def ProjectViewView(request, pk):
     context["x"] = x
     context["y"] = y
     return render(request, 'viewproject.html', context)
+
+@login_required
+def download_pve(request, pk):
+    project = models.Project.objects.filter(id=pk).first()
+    basic_PVE = PVEItem.objects.filter(projects__id__contains=pk)
+
+    # make pdf
+    parameters = []
+
+    if project.bouwsoort1:
+        parameters += f"{project.bouwsoort1.parameter} (Hoofd)",
+    if project.bouwsoort2:
+        parameters += f"{project.bouwsoort2.parameter} (Sub)",
+    if project.typeObject1:
+        parameters += f"{project.typeObject1.parameter} (Hoofd)",
+    if project.typeObject2:
+        parameters += f"{project.typeObject2.parameter} (Sub)",
+    if project.doelgroep1:
+        parameters += f"{project.doelgroep1.parameter} (Hoofd)",
+    if project.doelgroep2:
+        parameters += f"{project.doelgroep2.parameter} (Sub)",
+
+    date = datetime.datetime.now()
+
+    fileExt = "%s%s%s%s%s%s" % (
+        date.strftime("%H"),
+        date.strftime("%M"),
+        date.strftime("%S"),
+        date.strftime("%d"),
+        date.strftime("%m"),
+        date.strftime("%Y")
+    )
+
+    filename = f"PVE-{fileExt}"
+    zipFilename = f"BIJLAGEN-{fileExt}"
+
+    pdfmaker = writePdf.PDFMaker()
+    pdfmaker.makepdf(filename, basic_PVE, parameters)
+
+    # get bijlagen
+    bijlagen = [str(item.bijlage) for item in basic_PVE if item.bijlage]
+    #remove duplicates
+    bijlagen = list(dict.fromkeys(bijlagen))
+
+    if bijlagen:
+        zipmaker = createBijlageZip.ZipMaker()
+        zipmaker.makeZip(zipFilename, bijlagen)
+    else:
+        zipFilename = False
+
+    # and render the result page
+    context = {}
+    context["itemsPVE"] = basic_PVE
+    context["filename"] = filename
+    context["zipFilename"] = zipFilename
+    return render(request, 'PVEResult.html', context)

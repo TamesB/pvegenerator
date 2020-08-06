@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% load semanticui %}
+
+{% block main %}
+<h1 class="ui header">Voeg de soorten toe</h1>
+
+<form action="{% url 'connectpve' project.id %}" class="ui form" method="POST">
+    {% csrf_token %}
+    {% render_form form %}
+    <button type="submit" class="ui primary button" value="generate">Bevestig</button>
+</form>
+<br>
+<a href="{% url 'projectview' project.id %}"><input type="button" class="ui primary button" value="Sla over" /></a>
+{% endblock %}
