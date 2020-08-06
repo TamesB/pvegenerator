@@ -13,7 +13,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ("username",)
+        fields = ("type_user", "omschrijving", "username", "password1")
 
 class CustomUserChangeForm(UserChangeForm):
     """A form for updating users. Includes all the fields on

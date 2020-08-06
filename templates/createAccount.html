@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% load semanticui %}
+
+{% block main %}
+<input type="button" class="ui primary button d-inline" onclick="window.location.href='{% url 'dashboard' %}';" value="< Terug" />
+
+<h1 class="ui header">Maak account aan</h1>
+
+<form action="{% url 'acccreate' %}" class="ui form" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% render_form form %}
+    <button type="submit" class="ui primary button" value="generate">Bevestig</button>
+</form>
+{% endblock %}

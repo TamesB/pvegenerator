@@ -8,8 +8,9 @@ from django.conf import settings
 urlpatterns = [
     path('', include('app.urls')),
     path('project/', include('project.urls')),
-    path('admin/', admin.site.urls),
     path('generator/', include('generator.urls')),
+    path('users/', include('users.urls')),
+    path('admin/', admin.site.urls),
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,54 @@
+{% extends "PVEListHfst.html" %}
+
+{% load semanticui %}
+
+{% load filename %}
+
+{% block main %}
+<a href="{% url 'accoverview' %}"><input type="button" class="ui primary button d-inline" value="< Gebruiker overview" /></a>
+<h1 class="ui header">Gebruiker: {{ user.username }}</h1>
+<h4 class="ui header">Rang:                         
+                        {% if user.type_user == 'D' %}
+                            Derde
+                        {% elif user.type_user == 'OG' %}
+                            Opdrachtgever
+                        {% else %}
+                            Beheerder
+                        {% endif %}
+</h4>
+{% if user.omschrijving %}
+<p>Omschrijving: <i>{{ user.omschrijving }}</i></p>
+{% else %}
+<p>Omschrijving: <i>Deze gebruiker heeft geen omschrijving</i></p>
+{% endif %}
+<div class="ui divider"></div>
+<div>
+{% if projects %}
+<div>
+	<table class="ui fixed multiple line blue table">
+		<thead>
+			<tr>
+				<th>
+				  Projecten
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for project in projects %}
+				<tr>
+				<td> 
+					<a href="{% url 'projectview' project.id %}">{{ project.naam }}</a>
+				</td>
+				</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% else %}
+<h2 class="ui header">Projecten</h2>
+<i>Deze gebruiker heeft nog geen projecten.</i>
+{% endif %}
+<div class="ui divider"></div>
+</div>
+
+{% endblock %}

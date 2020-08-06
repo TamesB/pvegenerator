@@ -58,8 +58,9 @@ def ProjectViewView(request, pk):
     if not models.Project.objects.filter(id=pk):
         return Http404('404')
 
-    if not models.Project.objects.filter(id=pk, permitted__username__contains=request.user.username):
-        return Http404('Geen toegang tot dit project')
+    if request.user.type_user != 'B':
+        if not models.Project.objects.filter(id=pk, permitted__username__contains=request.user.username):
+            return Http404('Geen toegang tot dit project')
 
     project = models.Project.objects.filter(id=pk).first()
     

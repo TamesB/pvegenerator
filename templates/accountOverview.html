@@ -1,0 +1,44 @@
+{% extends "layout.html" %} {% load semanticui %} {% block main %}
+<h1 class="ui header center aligned">Gebruikers</h1>
+<a href="{% url 'dashboard' %}"><input type="button" class="ui primary button d-inline" value="< Dashboard" /></a>
+<div class="d-inline" style="float: right;">
+<span class="float right"><a href="{% url 'acccreate' %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
+</div>
+<br><br>
+{% if users %}
+<div>
+	<table class="ui fixed multiple line blue table">
+		<thead>
+			<tr>
+				<th>
+					Gebruikersnaam
+				</th>
+				<th>
+					Rang
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for user in users %}
+				<tr>
+                    <td> 
+					<a href="{% url 'accprofile' user.id %}">{{ user.username }}</a> &nbsp; 
+                    </td>
+                    <td> 
+                        {% if user.type_user == 'D' %}
+                            Derde
+                        {% elif user.type_user == 'OG' %}
+                            Opdrachtgever
+                        {% else %}
+                            Beheerder
+                        {% endif %}
+                    </td>
+				</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+<p>Nog geen gebruikers (?)</p>
+{% endif %}
+{% block modal %}{% endblock %} 
+{% endblock %}

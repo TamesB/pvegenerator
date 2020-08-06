@@ -35,6 +35,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
                                  choices=type_choices,
                                  default='D')
 
+    omschrijving = models.TextField(max_length=1000, default=None, blank=True, null=True)
+
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'username'
