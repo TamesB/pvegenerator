@@ -179,6 +179,15 @@ def ProjectOverviewView(request):
     return render(request, 'projectoverview.html', context)
 
 @login_required
+def AllProjectsView(request):
+    if request.user.type_user != 'B':
+        raise Http404("404.")
+    
+    context = {}
+    context["projects"] = models.Project.objects.all()
+    return render(request, 'allprojectoverview.html', context)
+
+@login_required
 def ProjectViewView(request, pk):
     pk = int(pk)
 
