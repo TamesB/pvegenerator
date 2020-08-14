@@ -12,24 +12,28 @@
 <div>
 {% if project.pveconnected %}
     {% if project.bouwsoort1 %}
-    <p><b>Bouwsoort:</b><i>{{ project.bouwsoort1 }}</i></p>
+    <p><b>Bouwsoort: </b><i>{{ project.bouwsoort1 }}</i></p>
     {% endif %}
     {% if project.bouwsoort2 %}
-    <p><b>Bouwsoort (Sub):</b><i>{{ project.bouwsoort2 }}</i></p>
+    <p><b>Bouwsoort (Sub): </b><i>{{ project.bouwsoort2 }}</i></p>
     {% endif %}
     {% if project.typeObject1 %}
-    <p><b>Type Object:</b><i>{{ project.typeObject1 }}</i></p>
+    <p><b>Type Object: </b><i>{{ project.typeObject1 }}</i></p>
     {% endif %}
     {% if project.typeObject2 %}
-    <p><b>Type Object (Sub):</b><i>{{ project.typeObject2 }}</i></p>
+    <p><b>Type Object (Sub): </b><i>{{ project.typeObject2 }}</i></p>
     {% endif %}
     {% if project.doelgroep1 %}
-    <p><b>Doelgroep:</b><i>{{ project.doelgroep1 }}</i></p>
+    <p><b>Doelgroep: </b><i>{{ project.doelgroep1 }}</i></p>
     {% endif %}
     {% if project.doelgroep2 %}
-    <p><b>Doelgroep (Sub):</b><i>{{ project.doelgroep2 }}</i></p>
+    <p><b>Doelgroep (Sub): </b><i>{{ project.doelgroep2 }}</i></p>
     {% endif %}
 {% endif %}
+<p><b>Aantal verhuureenheden: </b><i>{{ project.vhe }}</i></p>
+<p><b>Contractstatus: </b><i>{{ project.statuscontract }}</i></p>
+<p><b>Aangemaakt op: </b><i>{{ project.datum }}</i></p>
+
 </div>
 <div class="ui divider"></div>
 <div>
@@ -48,8 +52,6 @@
 {% endif %}
 </div>
 <div class="ui divider"></div>
-<div class="card">
-</div>
 
 <div class="card">
     <h3>Locatie</h3>

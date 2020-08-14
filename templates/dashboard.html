@@ -9,13 +9,12 @@
 <h1 class="ui header">Dashboard</h1>
 <i>{{ greeting }}, {{ request.user.username }}.</i>
 <div class="ui divider"></div>
-<div>
 {% if request.user.type_user == 'OG' %}
 <!-- Start project -->
 <a href="{% url 'startproject' %}"><button class="ui basic button">Start Project</button></a>
+<div class="ui divider"></div>
 {% endif %}
 {% if projects %}
-<div class="ui divider"></div>
 <div>
 	<table class="ui fixed multiple line blue table">
 		<thead>
