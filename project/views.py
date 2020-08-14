@@ -14,14 +14,11 @@ from . import models
 from app.models import PVEItem, Bouwsoort, TypeObject, Doelgroep
 from generator.forms import PVEParameterForm
 from . import forms
+from users.forms import KoppelDerdeUser
+from users.models import CustomUser
 
 from pyproj import CRS, Transformer
-
 from utils import writePdf, writeDiffPdf, createBijlageZip
-from django.contrib import messages
-import datetime
-import os
-from django.conf import settings
 import mimetypes
 import zipfile
 
@@ -209,6 +206,30 @@ def ProjectViewView(request, pk):
     context["y"] = y
     return render(request, 'viewproject.html', context)
 
+@login_required
+def koppelDerdeView(request, pk):
+    pk = int(pk)
+
+    if not models.Project.objects.filter(id=pk):
+        raise Http404('404')
+    
+    project = models.Project.objects.filter(id=pk).first()
+
+    if request.method == 'POST':
+        form = KoppelDerdeUser(request.POST)
+        if form.is_valid():
+            form.save()
+            user = CustomUser.objects.filter(username=form.cleaned_data["username"]).first()
+            project.permitted.add(user)
+            messages.warning(request, 'Derde gekoppeld aan project. Stuur een email met de credenties naar uw klant.')
+            return HttpResponseRedirect(reverse('projectview', args=(project.id,)))
+    else:
+        form = KoppelDerdeUser()
+
+    context = {}
+    context["form"] = form
+    context["project"] = project
+    return render(request, 'koppelDerdeForm.html', context)
 @login_required
 def download_pve(request, pk):
     project = models.Project.objects.filter(id=pk).first()

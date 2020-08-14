@@ -1,11 +1,37 @@
 {% extends "layout.html" %}
 
 {% load semanticui %}
+{% load leaflet_tags %}
+{% leaflet_css %}
+{% leaflet_js %}
 
 {% block main %}
 <h1 class="ui header">Project: {{ project.naam }}</h1>
-<div class"ui divider"></div>
-<h3 class="ui header">Programma van Eisen</h1>
+<div>
+{% if project.pveconnected %}
+    {% if project.bouwsoort1 %}
+    <p><b>Bouwsoort:</b><i>{{ project.bouwsoort1 }}</i></p>
+    {% endif %}
+    {% if project.bouwsoort2 %}
+    <p><b>Bouwsoort (Sub):</b><i>{{ project.bouwsoort2 }}</i></p>
+    {% endif %}
+    {% if project.typeObject1 %}
+    <p><b>Type Object:</b><i>{{ project.typeObject1 }}</i></p>
+    {% endif %}
+    {% if project.typeObject2 %}
+    <p><b>Type Object (Sub):</b><i>{{ project.typeObject2 }}</i></p>
+    {% endif %}
+    {% if project.doelgroep1 %}
+    <p><b>Doelgroep:</b><i>{{ project.doelgroep1 }}</i></p>
+    {% endif %}
+    {% if project.doelgroep2 %}
+    <p><b>Doelgroep (Sub):</b><i>{{ project.doelgroep2 }}</i></p>
+    {% endif %}
+{% endif %}
+</div>
+<div class="ui divider"></div>
+<div>
+<h3 class="ui header">Basis handelingen</h1>
 {% if project.pveconnected %}
 <p><span><a href="{% url 'downloadpve' project.id %}"><button class="ui basic button"><i class="icon download"></i>Download huidige staat PvE</button></a></span></p>
 {% else %}
@@ -14,8 +40,24 @@
     <a href="{% url 'connectpve' project.id %}"><input type="button" class="ui primary button d-inline" value="Voeg toe" /></a>
     {% endif %}
 {% endif %}
-<div class"ui divider"></div>
-<h3 class="ui header">Locatie</h3>
-<p> {{ project.plaats.y }}, {{ project.plaats.x }}</p>
+{% if request.user.type_user == 'OG' or request.user.type_user == 'B' %}
+<p><span><a href="{% url 'koppelderde' project.id %}"><button class="ui basic button"><i class="icon plus"></i>Voeg derde toe</button></a></span></p>
+{% endif %}
+</div>
+<div class="ui divider"></div>
+<script type="text/javascript">
+    function map_init(map, options) {
+        var lon = {{ project.plaats.x }};
+        var lat = {{ project.plaats.y }};
+
+        map.setView([lat, lon], 12);
+        L.marker([lat, lon]).addTo(map);
+    }
+</script>
+<div>
+    <h3>Locatie</h3>
+    {% leaflet_map "main_map" callback="window.map_init" %}
+</div>
+
 
 {% endblock %}
