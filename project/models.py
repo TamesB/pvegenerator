@@ -20,7 +20,7 @@ class Project(models.Model):
     statuscontract = models.ForeignKey(ContractStatus, on_delete=models.CASCADE)
     datum = models.DateTimeField(auto_now=True)
 
-    permitted = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, default=None)
+    permitted = models.ManyToManyField('users.CustomUser', default=None)
     pveconnected = models.BooleanField(blank=True, null=True, default=False)
 
     bouwsoort1 = models.ForeignKey('app.Bouwsoort', on_delete=models.CASCADE, default=None, null=True)
