@@ -35,10 +35,11 @@
 {% if project.pveconnected %}
 <p><span><a href="{% url 'downloadpve' project.id %}"><button class="ui basic button"><i class="icon download"></i>Download huidige staat PvE</button></a></span></p>
 {% else %}
-<p>Nog geen bouwsoort toegevoegd.</p>
+<p>
     {% if request.user.type_user == 'OG' or request.user.type_user == 'B' %}
-    <a href="{% url 'connectpve' project.id %}"><input type="button" class="ui primary button d-inline" value="Voeg toe" /></a>
+    <a href="{% url 'connectpve' project.id %}"><input type="button" class="ui primary button d-inline" value="Koppel PvE" /></a>
     {% endif %}
+</p>
 {% endif %}
 {% if request.user.type_user == 'OG' or request.user.type_user == 'B' %}
 <p><span><a href="{% url 'koppelderde' project.id %}"><button class="ui basic button"><i class="icon plus"></i>Voeg derde toe</button></a></span></p>

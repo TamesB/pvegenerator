@@ -39,8 +39,8 @@ def StartProjectView(request):
             project.vhe = form.cleaned_data["vhe"]
             project.pensioenfonds = form.cleaned_data["pensioenfonds"]
             project.statuscontract = models.ContractStatus.objects.filter(contrstatus="TKO").first()
-            project.permitted = request.user
             project.save()
+            project.permitted.add(request.user)
 
             return HttpResponseRedirect(reverse('connectpve', args=(project.id,)))
 
