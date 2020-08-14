@@ -8,6 +8,7 @@
         <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
         <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
+        {% block head %}{% endblock %}
         <title>PvE Generator</title>
     </head>
     <body>
@@ -58,5 +59,6 @@
       <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
       <script src="{% static 'semantic.min.js' %}"></script>
       <script src="{% static 'scripts.js' %}"></script>
+            {% block scripts %}{% endblock %}
     </body>
 </html>

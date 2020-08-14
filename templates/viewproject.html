@@ -2,9 +2,11 @@
 
 {% load semanticui %}
 {% load leaflet_tags %}
+{% block head %}
 {% leaflet_css %}
 {% leaflet_js %}
 
+{% endblock %}
 {% block main %}
 <h1 class="ui header">Project: {{ project.naam }}</h1>
 <div>
@@ -46,19 +48,25 @@
 {% endif %}
 </div>
 <div class="ui divider"></div>
-<script type="text/javascript">
-    function map_init(map, options) {
-        var lon = {{ project.plaats.x }};
-        var lat = {{ project.plaats.y }};
-
-        map.setView([lat, lon], 12);
-        L.marker([lat, lon]).addTo(map);
-    }
-</script>
-<div>
-    <h3>Locatie</h3>
-    {% leaflet_map "main_map" callback="window.map_init" %}
+<div class="card">
 </div>
 
+<div class="card">
+    <h3>Locatie</h3>
+   {% leaflet_map "card" callback="map_init" %}
+</div>
 
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+function map_init(map, options) {
+    // get point lat and lon
+    var lon = "{{ project.plaats.x }}";
+    var lat = "{{ project.plaats.y }}";
+    // zoom to point & add it to map
+    map.setView([lat, lon], 12);
+    L.marker([lat, lon]).addTo(map);
+
+}</script>
 {% endblock %}

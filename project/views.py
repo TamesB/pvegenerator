@@ -200,10 +200,13 @@ def ProjectViewView(request, pk):
     transformer = Transformer.from_crs("EPSG:3857", "EPSG:4326")
     x,y = transformer.transform(project.plaats.x, project.plaats.y)
 
+    location = {}
+    location["type"] = "Point"
+    location["coordinates"] = [x, y]
+
     context = {}
     context["project"] = project
-    context["x"] = x
-    context["y"] = y
+    context["location"] = location
     return render(request, 'viewproject.html', context)
 
 @login_required
