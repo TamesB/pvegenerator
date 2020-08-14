@@ -243,6 +243,8 @@ def download_pve(request, pk):
     project = models.Project.objects.filter(id=pk).first()
     basic_PVE = PVEItem.objects.filter(projects__id__contains=pk)
 
+    # make sure pve is ordered
+    basic_PVE = basic_PVE.order_by('id')
     # make pdf
     parameters = []
 
