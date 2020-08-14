@@ -1,4 +1,12 @@
-{% extends "layout.html" %} {% load semanticui %} {% block main %}
+{% extends "layout.html" %} 
+{% load semanticui %} 
+{% load leaflet_tags %}
+{% block head %}
+{% leaflet_css %}
+{% leaflet_js %}
+{% endblock %}
+
+{% block main %}
 <h1 class="ui header center aligned">Projecten</h1>
 <a href="{% url 'dashboard' %}"><input type="button" class="ui primary button d-inline" value="< Dashboard" /></a>
 <br><br>
@@ -31,5 +39,24 @@
 {% else %}
 <p>Nog geen projecten</p>
 {% endif %}
+
+<div class="card">
+    <h3>Locaties</h3>
+   {% leaflet_map "card" callback="map_init" %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+function map_init(map, options) {
+    map.setView([52.37, 4.895], 7);
+
+	{% for project in projects %}
+	marker = new L.marker(["{{ project.plaats.y }}", "{{ project.plaats.x }}"]).bindPopup("<h3><b><a href='{% url 'projectview' project.id %}'>{{ project.naam }}</a></h3></b>").addTo(map);
+	{% endfor %}
+}
+</script>
+
 {% block modal %}{% endblock %} 
 {% endblock %}

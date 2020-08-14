@@ -180,8 +180,12 @@ def AllProjectsView(request):
     if request.user.type_user != 'B':
         raise Http404("404.")
     
+    projects = models.Project.objects.all()
+    locations = [[project.naam, project.plaats.x, project.plaats.y] for project in projects]
+
     context = {}
     context["projects"] = models.Project.objects.all()
+    context["locations"] = locations
     return render(request, 'allprojectoverview.html', context)
 
 @login_required
@@ -233,6 +237,7 @@ def koppelDerdeView(request, pk):
     context["form"] = form
     context["project"] = project
     return render(request, 'koppelDerdeForm.html', context)
+    
 @login_required
 def download_pve(request, pk):
     project = models.Project.objects.filter(id=pk).first()

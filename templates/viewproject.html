@@ -68,7 +68,7 @@ function map_init(map, options) {
     var lat = "{{ project.plaats.y }}";
     // zoom to point & add it to map
     map.setView([lat, lon], 12);
-    L.marker([lat, lon]).addTo(map);
+    var point = L.marker([lat, lon]).addTo(map);
 
 }</script>
 {% endblock %}
