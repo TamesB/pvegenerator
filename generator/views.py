@@ -15,7 +15,7 @@ from . import forms
 import zipfile
 
 # Create your views here.
-@login_required
+@staff_member_required
 def GeneratePVEView(request):
     if request.method == "POST":
 
@@ -141,7 +141,7 @@ def GeneratePVEView(request):
     return render(request, 'GeneratePVE.html', context)
 
 
-@login_required
+@staff_member_required
 def download_file(request, filename):
     fl_path = settings.EXPORTS_ROOT
 
@@ -157,7 +157,7 @@ def download_file(request, filename):
 
     return response
 
-@login_required
+@staff_member_required
 def download_bijlagen(request, zipFilename):
     fl_path = settings.EXPORTS_ROOT
 

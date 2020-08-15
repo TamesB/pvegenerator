@@ -197,7 +197,7 @@ def ProjectViewView(request, pk):
 
     if request.user.type_user != 'B':
         if not models.Project.objects.filter(id=pk, permitted__username__contains=request.user.username):
-            raise Http404('Geen toegang tot dit project')
+            raise Http404('404')
 
     project = models.Project.objects.filter(id=pk).first()
     
@@ -218,6 +218,9 @@ def koppelDerdeView(request, pk):
     pk = int(pk)
 
     if not models.Project.objects.filter(id=pk):
+        raise Http404('404')
+
+    if not request.user.type_user == 'OG' and not request.user.type_user == 'B':
         raise Http404('404')
     
     project = models.Project.objects.filter(id=pk).first()
@@ -240,6 +243,13 @@ def koppelDerdeView(request, pk):
     
 @login_required
 def download_pve(request, pk):
+    if not models.Project.objects.filter(id=pk):
+        raise Http404('404')
+    
+    if request.user.type_user != 'B':
+        if not models.Project.objects.filter(id=pk, permitted__username__contains=request.user.username):
+            raise Http404('404')
+
     project = models.Project.objects.filter(id=pk).first()
     basic_PVE = PVEItem.objects.filter(projects__id__contains=pk)
 
