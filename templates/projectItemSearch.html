@@ -3,7 +3,7 @@
 {% load semanticui %}
 
 {% block main %}
-<input type="button" class="ui primary button d-inline" onclick="javascript:history.back();" value="< Terug" />
+<a href="{% url 'projectview' project_id %}"><input type="button" class="ui primary button d-inline" value="< Project" /></a>
 <h1 class="ui header">Zoek PvE item</h1>
 <i>Vul een deel in van de regel waar u een opmerking aan wil toevoegen.</i>
 <div class="ui divider"></div>
