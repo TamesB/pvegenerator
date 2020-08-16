@@ -15,7 +15,7 @@
     <div class="ui divider"></div>
     <h3 class="ui header">Opmerking(en)</h3>
     {% for annotation in annotationsitem %}
-    <p style="word-wrap: break-word;"><i>{{ annotation.annotation|linebreaks }}</i> -{{annotation.gebruiker}}</p>
+    <p style="word-wrap: break-word;"><i>{{ annotation.annotation|linebreaks }}</i> -{{annotation.gebruiker}}, {{ annotation.datum }}</p>
     {% endfor %}
     <div class="ui divider"></div>
     <h3 class="ui header">Bijlage</h3>
