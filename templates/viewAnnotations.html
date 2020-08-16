@@ -1,0 +1,42 @@
+{% extends "layout.html" %} 
+{% load semanticui %} 
+
+{% block main %}
+<h1 class="ui header center aligned">PvE Opmerkingen</h1>
+<a href="{% url 'projectview' project_id %}"><input type="button" class="ui primary button d-inline" value="< Project" /></a>
+<br><br>
+{% if annotations %}
+<div>
+	<table class="ui fixed multiple line blue table">
+		<thead>
+			<tr>
+				<th>
+					Item
+				</th>
+				<th>
+					Opmerking
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for annotation in annotations %}
+				<tr>
+                    <td> 
+					<a href="{% url 'viewitemannotations' project_id annotation.item.id %}">Bekijk</a> &nbsp; 
+                    </td>
+                    <td> 
+                        <i>{{ annotation.annotation }}</i><br>
+						-{{ annotation.gebruiker }}
+                    </td>
+				</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+<p>Nog geen opmerkingen op het Programma van Eisen.</p>
+{% endif %}
+{% block modal %}
+
+{% endblock %}
+{% endblock %}
+

@@ -50,6 +50,9 @@
 {% if request.user.type_user == 'OG' or request.user.type_user == 'B' %}
 <p><span><a href="{% url 'koppelderde' project.id %}"><button class="ui basic button"><i class="icon plus"></i>Voeg derde toe</button></a></span></p>
 {% endif %}
+<p><span><a href="{% url 'viewannotations' project.id %}"><button class="ui basic button"><i class="icon edit"></i>PvE Opmerkingen</button></a></span></p>
+<p><span><a href="{% url 'searchpveitem' project.id %}"><button class="ui basic button"><i class="icon plus"></i>Voeg opmerking toe aan PvE item</button></a></span></p>
+
 </div>
 <div class="ui divider"></div>
 

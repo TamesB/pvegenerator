@@ -43,6 +43,7 @@ class PVEItemAnnotation(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, default=None)
     item = models.ForeignKey('app.PVEItem', on_delete=models.CASCADE, default=None)
     annotation = models.TextField(max_length=1000, default=None)
+    gebruiker = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, default=None)
     
     def __str__(self):
         return f"{self.annotation} | {self.project.naam}"

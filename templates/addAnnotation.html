@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% load semanticui %}
+
+{% block main %}
+<input type="button" class="ui primary button d-inline" onclick="javascript:history.back();" value="< Terug" />
+<h1 class="ui header">Opmerking toevoegen</h1>
+<form action="{% url 'addannotation' project_id item_id %}" class="ui form" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% render_form form %}
+    <button type="submit" class="ui primary button" value="generate">Gereed</button>
+</form>
+{% endblock %}

@@ -19,7 +19,6 @@ from users.models import CustomUser
 
 from pyproj import CRS, Transformer
 from utils import writePdf, writeDiffPdf, createBijlageZip
-import mimetypes
 import zipfile
 
 @login_required
@@ -305,3 +304,104 @@ def download_pve(request, pk):
     context["filename"] = filename
     context["zipFilename"] = zipFilename
     return render(request, 'PVEResult.html', context)
+
+@login_required
+def searchProjectPveItem(request, project_id):
+    if not models.Project.objects.filter(id=project_id):
+        raise Http404("404")
+
+    if request.user.type_user != 'B':
+        if not models.Project.objects.filter(id=project_id, permitted__username__contains=request.user.username):
+            raise Http404('404')
+
+    if request.method == 'POST':
+        form = forms.SearchPVEItemForm(request.POST)
+        if form.is_valid():
+            inhoud = form.cleaned_data["inhoud"]
+
+            items = PVEItem.objects.filter(inhoud__contains=inhoud)
+
+            context = {}
+            context["items"] = items
+            context["project_id"] = project_id
+            return render(request, "projectItemResults.html", context)
+    else:
+        form = forms.SearchPVEItemForm()
+
+    context = {}
+    context["project_id"] = project_id
+    context["form"] = form
+    return render(request, 'projectItemSearch.html', context)
+
+
+@login_required
+def viewAnnotations(request, project_id):
+    if not models.Project.objects.filter(id=project_id):
+        raise Http404("404")
+
+    if request.user.type_user != 'B':
+        if not models.Project.objects.filter(id=project_id, permitted__username__contains=request.user.username):
+            raise Http404('404')
+    
+    annotations = models.PVEItemAnnotation.objects.filter(project__id=project_id)
+
+    context = {}
+    context["annotations"] = annotations
+    context["project_id"] = project_id
+    return render(request, 'viewAnnotations.html', context)
+
+@login_required
+def viewItemAnnotations(request, project_id, item_id):
+    if not models.Project.objects.filter(id=project_id):
+        raise Http404("404")
+
+    if request.user.type_user != 'B':
+        if not models.Project.objects.filter(id=project_id, permitted__username__contains=request.user.username):
+            raise Http404('404')
+    
+    if not PVEItem.objects.filter(id=item_id):
+        raise Http404("404")
+
+    item = PVEItem.objects.filter(id=item_id).first()
+    annotations = models.PVEItemAnnotation.objects.filter(project__id=project_id)
+    annotationsitem = models.PVEItemAnnotation.objects.filter(project__id=project_id, item__id=item_id)
+    annotationsitem = annotationsitem.order_by('id')
+    context = {}
+    context["PVEItem"] = item
+    context["annotations"] = annotations
+    context["annotationsitem"] = annotationsitem
+    context["project_id"] = project_id
+    return render(request, 'annotationItemView.html', context)
+
+@login_required
+def addAnnotationPve(request, project_id, item_id):
+    if not models.Project.objects.filter(id=project_id):
+        raise Http404("404")
+
+    if request.user.type_user != 'B':
+        if not models.Project.objects.filter(id=project_id, permitted__username__contains=request.user.username):
+            raise Http404('404')
+
+    if not PVEItem.objects.filter(id=item_id):
+        raise Http404("404") 
+
+    if request.method == 'POST':
+        form = forms.PVEItemAnnotationForm(request.POST)
+        if form.is_valid():
+            annotation = models.PVEItemAnnotation()
+            annotation.gebruiker = request.user
+            annotation.project = models.Project.objects.filter(id=project_id).first()
+            annotation.annotation = form.cleaned_data["annotation"]
+            annotation.item = PVEItem.objects.filter(id=item_id).first()
+            annotation.save()
+
+            messages.warning(request, 'Opmerking toegevoegd.')
+            return HttpResponseRedirect(reverse('viewannotations', args=(project_id,)))
+    else:
+        form = forms.PVEItemAnnotationForm()
+
+    context = {}
+    context["form"] = form
+    context["project_id"] = project_id
+    context["item_id"] = item_id
+    return render(request, 'addAnnotation.html', context)
