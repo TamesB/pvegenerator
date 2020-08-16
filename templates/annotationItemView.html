@@ -28,6 +28,7 @@
     {% endif %}
   </div>
   <div class="actions" style="margin-bottom: 1em;">
+    <span class="float right"><a href="{% url 'addannotation' project_id PVEItem.id %}"><button class="ui basic button"><i class="icon plus"></i>Voeg opmerking toe</button></a></span>
     <span class="float right"><a href="{% url 'viewannotations' project_id %}"><button class="ui green button"><i class="icon check"></i>Gereed</button></a></span>
   </div>
 </div>

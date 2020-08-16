@@ -366,6 +366,7 @@ def viewItemAnnotations(request, project_id, item_id):
     annotations = models.PVEItemAnnotation.objects.filter(project__id=project_id)
     annotationsitem = models.PVEItemAnnotation.objects.filter(project__id=project_id, item__id=item_id)
     annotationsitem = annotationsitem.order_by('id')
+
     context = {}
     context["PVEItem"] = item
     context["annotations"] = annotations
@@ -396,7 +397,7 @@ def addAnnotationPve(request, project_id, item_id):
             annotation.save()
 
             messages.warning(request, 'Opmerking toegevoegd.')
-            return HttpResponseRedirect(reverse('viewannotations', args=(project_id,)))
+            return HttpResponseRedirect(reverse('searchpveitem', args=(project_id,)))
     else:
         form = forms.PVEItemAnnotationForm()
 
