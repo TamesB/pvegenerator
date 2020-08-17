@@ -22,10 +22,10 @@
 				{% for annotation in annotations %}
 				<tr>
                     <td> 
-					<a href="{% url 'viewitemannotations' project_id annotation.item.id %}">Bekijk</a> &nbsp; 
+					<a href="{% url 'viewitemannotations' project_id annotation.item.id %}">{% if annotation.item.inhoud|length > 100 %}{{ annotation.item.inhoud|slice:":100" }}...{% else %}{{ annotation.item.inhoud }}{% endif %}</a> &nbsp; 
                     </td>
                     <td> 
-                        <i>{{ annotation.annotation }}</i><br>
+                        <i>"{{ annotation.annotation }}"</i><br>
 						-{{ annotation.gebruiker }}, {{ annotation.datum }}
                     </td>
 				</tr>

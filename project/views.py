@@ -37,7 +37,7 @@ def StartProjectView(request):
             project.plaats = form.cleaned_data["plaats"]
             project.vhe = form.cleaned_data["vhe"]
             project.pensioenfonds = form.cleaned_data["pensioenfonds"]
-            project.statuscontract = models.ContractStatus.objects.filter(contrstatus="TKO").first()
+            project.statuscontract = models.ContractStatus.objects.filter(contrstatus="LOI").first()
             project.save()
             project.permitted.add(request.user)
 
@@ -343,8 +343,7 @@ def viewAnnotations(request, project_id):
         if not models.Project.objects.filter(id=project_id, permitted__username__contains=request.user.username):
             raise Http404('404')
     
-    annotations = models.PVEItemAnnotation.objects.filter(project__id=project_id)
-
+    annotations = models.PVEItemAnnotation.objects.filter(project__id=project_id).order_by('-datum')
     context = {}
     context["annotations"] = annotations
     context["project_id"] = project_id
@@ -363,9 +362,9 @@ def viewItemAnnotations(request, project_id, item_id):
         raise Http404("404")
 
     item = PVEItem.objects.filter(id=item_id).first()
-    annotations = models.PVEItemAnnotation.objects.filter(project__id=project_id)
+    annotations = models.PVEItemAnnotation.objects.filter(project__id=project_id).order_by('-datum')
     annotationsitem = models.PVEItemAnnotation.objects.filter(project__id=project_id, item__id=item_id)
-    annotationsitem = annotationsitem.order_by('id')
+    annotationsitem = annotationsitem.order_by('datum')
 
     context = {}
     context["PVEItem"] = item
