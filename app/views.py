@@ -949,3 +949,13 @@ def deletekiesparameterView(request, type_id, item_id):
     messages.success(request, f"{parameter} verwijderd.")
 
     return HttpResponseRedirect(reverse('kiesparametersviewdelete'))
+
+@staff_member_required
+def projectHeatmap(request):
+    context = {}
+
+    projects = Project.objects.all()
+
+    data = [[project.plaats.y, project.plaats.x, 1000] for project in projects]
+    context["data"] = data
+    return render(request, 'heatmapProjects.html', context)

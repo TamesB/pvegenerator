@@ -1,4 +1,4 @@
-{% extends "PVEListHfst.html" %}
+{% extends "layout.html" %}
 
 {% load semanticui %}
 
@@ -24,6 +24,10 @@
 	<a href="{% url 'accoverview' %}"><button class="ui basic button"><i class="icon edit"></i>Gebruikers overview</button></a><br><br>
 	<a href="{% url 'acccreate' %}"><button class="ui basic button"><i class="icon plus"></i>Maak gebruiker aan</button></a>
 <div class="ui divider"></div>
+<h2 class="ui header">Analyse</h2>
+	<a href="{% url 'projectheatmap' %}"><button class="ui basic button"><i class="icon edit"></i>Project Heatmap</button></a><br><br>
+<div class="ui divider"></div>
+
 <!-- Manually generate pve -->
 <!-- Edit PvE workbook and keuzeparameters -->
 <!-- account configurations (view, add account, delete account etc) -->

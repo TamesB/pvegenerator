@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% load semanticui %}
+
+{% load leaflet_tags %}
+{% load static %}
+
+{% block head %}
+{% leaflet_css %}
+{% leaflet_js %}
+<script src="{% static 'leaflet-heat.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+<a href="{% url 'dashboard' %}"><input type="button" class="ui primary button d-inline" value="< Dashboard" /></a>
+<h1 class="ui header center aligned">Heatmap Projecten</h1>
+
+<div class="card">
+{% leaflet_map "card" callback="map_init" %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function map_init(map, options) {
+    map.setView([52.37, 4.895], 7);
+    
+    var addressPoints = {{ data }}
+    var heat = L.heatLayer(addressPoints, {radius: 25}).addTo(map);
+}
+</script>{% endblock %}

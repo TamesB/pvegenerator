@@ -45,4 +45,6 @@ urlpatterns = [
     path('kiesparameters/<int:type_id>/<int:item_id>/edit', views.bewerkkiesparameterView, name='kiesparameteredit'),
     path('kiesparameters/<int:type_id>/<int:item_id>/delete', views.deletekiesparameterView, name='kiesparameterdelete'),
 
+    path('heatmap', views.projectHeatmap, name='projectheatmap'),
+
 ]
