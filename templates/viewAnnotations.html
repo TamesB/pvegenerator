@@ -4,7 +4,18 @@
 {% block main %}
 <h1 class="ui header center aligned">PvE Opmerkingen</h1>
 <a href="{% url 'projectview' project_id %}"><input type="button" class="ui primary button d-inline" value="< Project" /></a>
-<br><br>
+<div class="d-inline" style="float: right;">
+	<span class="float right">
+		<h3 class="ui header">Totale kosten:</h3>
+		<div class="ui labeled input">
+		<div class="ui blue label">
+			&euro;
+		</div>
+			<div class="ui label">{{ totale_kosten }}</div>
+		</div>
+	</span>
+</div>
+<br><br><br>
 {% if annotations %}
 <div>
 	<table class="ui fixed multiple line blue table">

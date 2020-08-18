@@ -344,9 +344,16 @@ def viewAnnotations(request, project_id):
             raise Http404('404')
     
     annotations = models.PVEItemAnnotation.objects.filter(project__id=project_id).order_by('-datum')
+
+    totale_kosten = 0
+    for annotation in annotations:
+        if annotation.kostenConsequenties:
+            totale_kosten += annotation.kostenConsequenties
+    
     context = {}
     context["annotations"] = annotations
     context["project_id"] = project_id
+    context["totale_kosten"] = totale_kosten
     return render(request, 'viewAnnotations.html', context)
 
 @login_required
@@ -366,11 +373,17 @@ def viewItemAnnotations(request, project_id, item_id):
     annotationsitem = models.PVEItemAnnotation.objects.filter(project__id=project_id, item__id=item_id)
     annotationsitem = annotationsitem.order_by('datum')
 
+    totale_kosten = 0
+    for annotation in annotations:
+        if annotation.kostenConsequenties:
+            totale_kosten += annotation.kostenConsequenties
+    
     context = {}
     context["PVEItem"] = item
     context["annotations"] = annotations
     context["annotationsitem"] = annotationsitem
     context["project_id"] = project_id
+    context["totale_kosten"] = totale_kosten
     return render(request, 'annotationItemView.html', context)
 
 @login_required

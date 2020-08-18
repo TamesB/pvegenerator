@@ -40,7 +40,7 @@
 <h3 class="ui header">Basis handelingen</h1>
 {% if project.pveconnected %}
 <p><span><a href="{% url 'downloadpve' project.id %}"><button class="ui basic button"><i class="icon download"></i>Download huidige staat PvE</button></a></span></p>
-<p><span><a href="{% url 'viewannotations' project.id %}"><button class="ui basic button"><i class="icon edit"></i>PvE Opmerkingen</button></a></span></p>
+<p><span><a href="{% url 'viewannotations' project.id %}"><button class="ui basic button"><i class="icon edit"></i>PvE Opmerkingen / Extra Kosten</button></a></span></p>
 <p><span><a href="{% url 'searchpveitem' project.id %}"><button class="ui basic button"><i class="icon plus"></i>Voeg opmerking toe aan PvE item</button></a></span></p>
 {% else %}
 <p>
