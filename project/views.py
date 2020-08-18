@@ -393,6 +393,8 @@ def addAnnotationPve(request, project_id, item_id):
             annotation.project = models.Project.objects.filter(id=project_id).first()
             annotation.annotation = form.cleaned_data["annotation"]
             annotation.item = PVEItem.objects.filter(id=item_id).first()
+            if form.cleaned_data["kostenConsequenties"]:
+                annotation.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
             annotation.save()
 
             messages.warning(request, 'Opmerking toegevoegd.')

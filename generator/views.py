@@ -141,7 +141,7 @@ def GeneratePVEView(request):
     return render(request, 'GeneratePVE.html', context)
 
 
-@staff_member_required
+@login_required
 def download_file(request, filename):
     fl_path = settings.EXPORTS_ROOT
 
@@ -157,7 +157,7 @@ def download_file(request, filename):
 
     return response
 
-@staff_member_required
+@login_required
 def download_bijlagen(request, zipFilename):
     fl_path = settings.EXPORTS_ROOT
 

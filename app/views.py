@@ -52,6 +52,9 @@ def LogoutView(request):
     logout(request)
     return redirect('login')
 
+def FourOhFourView(request):
+    return render(request, '404.html')
+
 @login_required
 def DashboardView(request):
     hour = datetime.datetime.utcnow().hour + 2 # UTC + 2 = CEST
@@ -80,7 +83,7 @@ def DashboardView(request):
 
     return render(request, 'dashboard.html', context)
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def PVEsectionView(request):
     Onderdelen = models.PVEOnderdeel.objects.all()
     SectionQuerySets = {}
@@ -95,7 +98,7 @@ def PVEsectionView(request):
 
     return render(request, 'PVEListHfst.html', context)
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def deleteSection(request, pk):
     if not models.PVEOnderdeel.objects.filter(pk=pk):
         return Http404("404")
@@ -106,7 +109,7 @@ def deleteSection(request, pk):
     return redirect('sectionviewdelete')
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def DownloadWorksheet(request):
     fl_path = settings.EXPORTS_ROOT
 
@@ -126,7 +129,7 @@ def DownloadWorksheet(request):
     return response
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def PVEsectionViewEdit(request):
     Onderdelen = models.PVEOnderdeel.objects.all()
     SectionQuerySets = {}
@@ -141,7 +144,7 @@ def PVEsectionViewEdit(request):
 
     return render(request, 'PVEListHfstEdit.html', context)
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def PVEsectionEdit(request, pk):
     if not models.PVEOnderdeel.objects.filter(pk=pk):
         return Http404("404")
@@ -176,7 +179,7 @@ def PVEsectionEdit(request, pk):
     return render(request, 'changeonderdeel.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def PVEsectionViewDelete(request):
     Onderdelen = models.PVEOnderdeel.objects.all()
     SectionQuerySets = {}
@@ -191,7 +194,7 @@ def PVEsectionViewDelete(request):
 
     return render(request, 'PVEListHfstDelete.html', context)
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def PVEsectionDelete(request, pk):
     if not models.PVEOnderdeel.objects.filter(pk=pk):
         return Http404("404")
@@ -200,7 +203,7 @@ def PVEsectionDelete(request, pk):
     onderdeel.delete()
     return redirect('sectionviewdelete')
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def PVEaddsectionView(request):
     if request.method == 'POST':
         form = forms.SectionForm(request.POST)
@@ -229,7 +232,7 @@ def PVEaddsectionView(request):
     return render(request, 'addsectionform.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def PVEaddhoofdstukView(request, pk):
     if not models.PVEOnderdeel.objects.filter(id=pk):
         return Http404("404")
@@ -265,7 +268,7 @@ def PVEaddhoofdstukView(request, pk):
     return render(request, 'addchapterform.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def PVEedithoofdstukView(request, pk):
     if not models.PVEHoofdstuk.objects.filter(id=pk):
         return Http404("404")
@@ -299,7 +302,7 @@ def PVEedithoofdstukView(request, pk):
     return render(request, 'changechapterform.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def paragraaflistView(request, pk):
     pk = int(pk)
 
@@ -324,7 +327,7 @@ def paragraaflistView(request, pk):
     return render(request, 'PVEParagraphList.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def paragraaflistViewEdit(request, pk):
     pk = int(pk)
 
@@ -350,7 +353,7 @@ def paragraaflistViewEdit(request, pk):
     return render(request, 'PVEParagraphListEdit.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def paragraaflistViewDelete(request, pk):
     pk = int(pk)
 
@@ -379,7 +382,7 @@ def paragraaflistViewDelete(request, pk):
     return render(request, 'PVEParagraphListDelete.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def PVEaddparagraafView(request, pk):
     pk = int(pk)
 
@@ -418,7 +421,7 @@ def PVEaddparagraafView(request, pk):
     return render(request, 'addparagraphform.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def PVEeditparagraafView(request, pk):
     pk = int(pk)
 
@@ -464,7 +467,7 @@ def PVEeditparagraafView(request, pk):
     return render(request, 'changeparagraphform.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def itemListView(request, chapter_id, paragraph_id):
     paragraph_id = int(paragraph_id)
     chapter_id = int(chapter_id)
@@ -507,7 +510,7 @@ def itemListView(request, chapter_id, paragraph_id):
     return render(request, 'PVEItemList.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def itemListViewEdit(request, chapter_id, paragraph_id):
     paragraph_id = int(paragraph_id)
     chapter_id = int(chapter_id)
@@ -550,7 +553,7 @@ def itemListViewEdit(request, chapter_id, paragraph_id):
     return render(request, 'PVEItemListEdit.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def itemListViewDelete(request, chapter_id, paragraph_id):
     paragraph_id = int(paragraph_id)
     chapter_id = int(chapter_id)
@@ -593,7 +596,7 @@ def itemListViewDelete(request, chapter_id, paragraph_id):
     return render(request, 'PVEItemListDelete.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def viewItemView(request, pk):
     pk = int(pk)
 
@@ -625,7 +628,7 @@ def viewItemView(request, pk):
 
     return render(request, 'PVEItemView.html', context)
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def downloadBijlageView(request, pk):
     item = models.PVEItem.objects.filter(id=pk).first()
     filename = str(item.bijlage)
@@ -646,7 +649,7 @@ def downloadBijlageView(request, pk):
     return response
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def editItemView(request, pk):
     pk = int(pk)
 
@@ -688,7 +691,7 @@ def editItemView(request, pk):
     return render(request, 'PVEItemEdit.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def addItemView(request, chapter_id, paragraph_id):
     paragraph_id = int(paragraph_id)
 
@@ -735,7 +738,7 @@ def addItemView(request, chapter_id, paragraph_id):
     return render(request, 'PVEAddItem.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def deleteItemView(request, pk):
     pk = int(pk)
 
@@ -766,7 +769,7 @@ def deleteItemView(request, pk):
                 paragraaf.id)))
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def PVEdeletehoofdstukView(request, pk):
     pk = int(pk)
 
@@ -783,7 +786,7 @@ def PVEdeletehoofdstukView(request, pk):
     return redirect('sectionview')
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def PVEdeleteparagraafView(request, pk):
     pk = int(pk)
 
@@ -801,7 +804,7 @@ def PVEdeleteparagraafView(request, pk):
     return HttpResponseRedirect(reverse('viewParagraaf', args=(hoofdstuk.id,)))
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def kiesparametersView(request):
     context = {}
     context["bouwsoorten"] = models.Bouwsoort.objects.all()
@@ -810,7 +813,7 @@ def kiesparametersView(request):
     return render(request, 'kiesparameters.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def kiesparametersViewEdit(request):
     context = {}
     context["bouwsoorten"] = models.Bouwsoort.objects.all()
@@ -819,7 +822,7 @@ def kiesparametersViewEdit(request):
     return render(request, 'kiesparametersEdit.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def kiesparametersViewDelete(request):
     context = {}
     context["bouwsoorten"] = models.Bouwsoort.objects.all()
@@ -828,7 +831,7 @@ def kiesparametersViewDelete(request):
     return render(request, 'kiesparametersDelete.html', context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def addkiesparameterView(request, type_id):
     type_id = int(type_id)
 
@@ -869,7 +872,7 @@ def addkiesparameterView(request, type_id):
     return render(request, "addkiesparameter.html", context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def bewerkkiesparameterView(request, type_id, item_id):
     type_id = int(type_id)
     item_id = int(item_id)
@@ -917,7 +920,7 @@ def bewerkkiesparameterView(request, type_id, item_id):
     return render(request, "bewerkkiesparameter.html", context)
 
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def deletekiesparameterView(request, type_id, item_id):
     type_id = int(type_id)
     item_id = int(item_id)
@@ -950,7 +953,7 @@ def deletekiesparameterView(request, type_id, item_id):
 
     return HttpResponseRedirect(reverse('kiesparametersviewdelete'))
 
-@staff_member_required
+@staff_member_required(login_url='/404')
 def projectHeatmap(request):
     context = {}
 
