@@ -1,0 +1,50 @@
+{% extends "layout.html" %} 
+{% load semanticui %} 
+
+{% block main %}
+<h1 class="ui header center aligned">Mijn recente opmerkingen</h1>
+<a href="{% url 'dashboard' %}"><input type="button" class="ui primary button d-inline" value="< Dashboard" /></a>
+<br><br>
+{% if annotations %}
+<div>
+	<table class="ui fixed multiple line blue table">
+		<thead>
+			<tr>
+				<th>
+					Item
+				</th>
+				<th>
+					Project
+				</th>
+				<th>
+					Mijn Opmerking
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for annotation in annotations %}
+				<tr>
+                    <td> 
+					<a href="{% url 'viewitemannotations' annotation.project.id annotation.item.id %}">{% if annotation.item.inhoud|length > 100 %}{{ annotation.item.inhoud|slice:":100" }}...{% else %}{{ annotation.item.inhoud }}{% endif %}</a> &nbsp; 
+                    </td>
+                    <td>
+					<a href="{% url 'projectview' annotation.project.id %}">{{ annotation.project }}</a> &nbsp;
+                    </td>
+                    <td> 
+                        <i>"{{ annotation.annotation }}"</i><br>
+						-{{ annotation.datum }}
+                    <a href="{% url 'editannotation' annotation.project.id annotation.id %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a>
+					<a href="{% url 'deleteannotation' annotation.project.id annotation.id %}"><button class="ui icon basic red button"><i class="icon trash"></i></button></a>
+
+                    </td>
+				</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+<p>U heeft nog geen opmerkingen geplaatst.</p>
+{% endif %}
+{% block modal %}
+
+{% endblock %}
+{% endblock %}

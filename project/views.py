@@ -387,6 +387,14 @@ def viewItemAnnotations(request, project_id, item_id):
     return render(request, 'annotationItemView.html', context)
 
 @login_required
+def viewOwnAnnotations(request):
+    annotations = models.PVEItemAnnotation.objects.filter(gebruiker=request.user).order_by('-datum')
+
+    context = {}
+    context["annotations"] = annotations
+    return render(request, 'viewOwnAnnotations.html', context)
+
+@login_required
 def addAnnotationPve(request, project_id, item_id):
     if not models.Project.objects.filter(id=project_id):
         raise Http404("404")
@@ -420,3 +428,73 @@ def addAnnotationPve(request, project_id, item_id):
     context["project_id"] = project_id
     context["item_id"] = item_id
     return render(request, 'addAnnotation.html', context)
+
+@login_required
+def editAnnotationPve(request, project_id, ann_id):
+    # check if project exists
+    if not models.Project.objects.filter(id=project_id):
+        raise Http404("404")
+    
+    # check if user is authorized to project
+    if request.user.type_user != 'B':
+        if not models.Project.objects.filter(id=project_id, permitted__username__contains=request.user.username):
+            raise Http404('404')
+    
+    # check if user placed that annotation
+    if not models.PVEItemAnnotation.objects.filter(id=ann_id, gebruiker=request.user):
+        raise Http404("404")
+    
+    annotation = models.PVEItemAnnotation.objects.filter(id=ann_id, gebruiker=request.user).first()
+    annotations = models.PVEItemAnnotation.objects.filter(gebruiker=request.user)
+
+    if request.method == 'POST':
+        form = forms.PVEItemAnnotationForm(request.POST)
+        if form.is_valid():
+            annotation.annotation = form.cleaned_data["annotation"]
+            annotation.datum = datetime.datetime.now()
+            if form.cleaned_data["kostenConsequenties"]:
+                annotation.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+            annotation.save()
+
+            messages.warning(request, 'Opmerking bewerkt.')
+            return HttpResponseRedirect(reverse('myannotations'))
+    else:
+        form = forms.PVEItemAnnotationForm(initial={
+            'annotation': f'{annotation.annotation}',
+            'kostenConsequenties': f'{annotation.kostenConsequenties}',
+            })
+
+    context = {}
+    context["annotation"] = annotation
+    context["form"] = form
+    context["annotations"] = annotations
+    return render(request, 'editAnnotationModal.html', context)
+
+
+@login_required
+def deleteAnnotationPve(request, project_id, ann_id):
+    # check if project exists
+    if not models.Project.objects.filter(id=project_id):
+        raise Http404("404")
+    
+    # check if user is authorized to project
+    if request.user.type_user != 'B':
+        if not models.Project.objects.filter(id=project_id, permitted__username__contains=request.user.username):
+            raise Http404('404')
+    
+    # check if user placed that annotation
+    if not models.PVEItemAnnotation.objects.filter(id=ann_id, gebruiker=request.user):
+        raise Http404("404")
+
+    annotations = models.PVEItemAnnotation.objects.filter(gebruiker=request.user)
+    annotation = models.PVEItemAnnotation.objects.filter(id=ann_id).first()
+
+    if request.method == "POST":
+        messages.warning(request, f'Opmerking van {annotation.project} verwijderd.')
+        annotation.delete()
+        return HttpResponseRedirect(reverse('myannotations'))
+
+    context = {}
+    context["annotation"] = annotation
+    context["annotations"] = annotations
+    return render(request, 'deleteAnnotationModal.html', context)

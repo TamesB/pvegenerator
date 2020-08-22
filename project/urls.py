@@ -16,5 +16,9 @@ urlpatterns = [
     path('<int:project_id>/annotations/<int:item_id>/add', views.addAnnotationPve, name="addannotation"),
     path('<int:project_id>/searchitem', views.searchProjectPveItem, name="searchpveitem"),
 
+    path('myannotations', views.viewOwnAnnotations, name="myannotations"),
+    path('myannotations/<int:project_id>/<int:ann_id>/edit', views.editAnnotationPve, name="editannotation"),
+    path('myannotations/<int:project_id>/<int:ann_id>/delete', views.deleteAnnotationPve, name="deleteannotation"),
+
     path('<int:pk>/pve', views.download_pve, name='downloadpve'),
 ]

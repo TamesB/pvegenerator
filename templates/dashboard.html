@@ -12,8 +12,9 @@
 {% if request.user.type_user == 'OG' %}
 <!-- Start project -->
 <a href="{% url 'startproject' %}"><button class="ui basic button">Start Project</button></a>
-<div class="ui divider"></div>
 {% endif %}
+<a href="{% url 'myannotations' %}"><button class="ui basic button">Mijn recente opmerkingen</button></a>
+<div class="ui divider"></div>
 {% if projects %}
 <div>
 	<table class="ui fixed multiple line blue table">

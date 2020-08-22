@@ -1,0 +1,26 @@
+{% extends "viewOwnAnnotations.html" %}
+
+{% load semanticui %}
+
+{% load filename %}
+
+{% block modal %}
+<script>
+$('.mini.modal')
+  .modal('show')
+;
+</script>
+
+<div class="ui mini modal">
+  <div class="header">
+    Weet u het zeker?
+  </div>
+  <div class="content">
+    <form action="{% url 'deleteannotation' annotation.project.id annotation.id %}" class="ui form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="submit" style="float: right;" class="ui red button" value="Verwijder">
+    </form>  
+  </div>
+</div>
+
+{% endblock %}
