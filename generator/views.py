@@ -109,8 +109,8 @@ def GeneratePVEView(request):
                 date.strftime("%Y")
             )
 
-            filename = f"PVE-{fileExt}"
-            zipFilename = f"BIJLAGEN-{fileExt}"
+            filename = f"PvE-{fileExt}"
+            zipFilename = f"PvE_Compleet-{fileExt}"
 
             pdfmaker = writePdf.PDFMaker()
             pdfmaker.makepdf(filename, basic_PVE, parameters)
@@ -120,7 +120,7 @@ def GeneratePVEView(request):
 
             if bijlagen:
                 zipmaker = createBijlageZip.ZipMaker()
-                zipmaker.makeZip(zipFilename, bijlagen)
+                zipmaker.makeZip(zipFilename, filename, bijlagen)
             else:
                 zipFilename = False
 

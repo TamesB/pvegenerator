@@ -8,7 +8,7 @@
     {% if itemsPVE %}
     <p><span><a href="{% url 'download' filename %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>Open als PDF</button></a></span></p>
     {% if zipFilename %}
-    <p><span><a href="{% url 'downloadbijlagen' zipFilename %}"><button class="ui basic button"><i class="icon download"></i>Download Bijlagen</button></a></span></p>
+    <p><span><a href="{% url 'downloadbijlagen' zipFilename %}"><button class="ui basic button"><i class="icon download"></i>Download PvE + Bijlagen (.zip)</button></a></span></p>
     {% endif %}
     {% else %}
       <p>Geen regels met deze parameters. Bewerk de parameters of neem contact op met de systeembeheerder.</p>
