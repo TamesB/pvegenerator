@@ -288,9 +288,7 @@ def download_pve(request, pk):
     pdfmaker.makepdf(filename, basic_PVE, parameters)
 
     # get bijlagen
-    bijlagen = [str(item.bijlage) for item in basic_PVE if item.bijlage]
-    #remove duplicates
-    bijlagen = list(dict.fromkeys(bijlagen))
+    bijlagen = [item for item in basic_PVE if item.bijlage]
 
     if bijlagen:
         zipmaker = createBijlageZip.ZipMaker()
