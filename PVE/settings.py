@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'project',
     'users',
     'semanticuiforms',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -152,10 +153,6 @@ GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
 # django admin site
 ADMIN_ENABLED = True
 
-# Uploading attachment
-MEDIA_URL = '/files/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'files')
-
 # making exports
 EXPORTS_URL = '/PVEexports/'
 EXPORTS_ROOT = os.path.join(BASE_DIR, 'utils/PVEexports')
@@ -178,6 +175,17 @@ LOGIN_REDIRECT_URL = "/home"
 
 # Use ONLY for proxy
 #SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+AWS_ACCESS_KEY_ID = 'AKIAQFT3FNKYFLJ43K6C'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'pvegenerator'
+
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_S3_REGION_NAME = 'eu-central-1' #change to your region
+AWS_S3_SIGNATURE_VERSION = 's3v4'
 
 # Heroku settings
 django_heroku.settings(locals())

@@ -15,3 +15,5 @@ python-magic
 pyproj
 pandas
 django-leaflet
+boto3
+django-storages

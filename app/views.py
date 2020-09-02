@@ -748,7 +748,7 @@ def deleteItemView(request, pk):
         paragraaf = PVEItem.paragraaf
     else:
         raise Http404("404.")
-
+    
     PVEItem.delete()
 
     messages.success(request, f"Regel {pk} verwijderd.")

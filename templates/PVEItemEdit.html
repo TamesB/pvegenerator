@@ -3,7 +3,7 @@
 {% load semanticui %}
 
 {% block main %}
-<input type="button" class="ui primary button d-inline" onclick="window.location.href='{% url 'viewitem' id %}';" value="< Itemnummer {{ id }}" />
+<input type="button" class="ui primary button d-inline" onclick="javascript:history.back();" value="< Terug" />
 
 <h1 class="ui header">Bewerk PvE Itemnummer {{ id }}</h1>
 

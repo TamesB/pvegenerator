@@ -64,7 +64,7 @@ class PVEItem(models.Model):
     hoofdstuk = models.ForeignKey(PVEHoofdstuk, on_delete=models.CASCADE, default=1)
     paragraaf = models.ForeignKey(PVEParagraaf, on_delete=models.CASCADE, blank=True, null=True)
     inhoud = models.TextField(max_length=5000)
-    bijlage = models.FileField(blank=True, null=True, upload_to='attachments/%Y/%m/%d/')
+    bijlage = models.FileField(blank=True, null=True, upload_to='attachments')
 
     basisregel = models.BooleanField(default=False)
     Bouwsoort = models.ManyToManyField(Bouwsoort, blank=True)

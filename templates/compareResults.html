@@ -6,7 +6,34 @@
 <input type="button" class="ui primary button d-inline" onclick="javascript:history.back();" value="< Terug" />
     <h1 class="ui header">Afwijkingen lijst</h1>
     {% if afwijkingen %}
-    <p><span><a href="{% url 'download' filename %}"><button class="ui basic button"><i class="icon download"></i>Open als PDF</button></a></span></p>
+    <p><span><a href="{% url 'download' filename %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>Open als PDF</button></a></span></p>
+    
+<div>
+	<table class="ui fixed multiple line blue table">
+		<thead>
+			<tr>
+				<th>
+					Item
+				</th>
+				<th>
+					&nbsp;
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for item in afwijkingen %}
+				<tr>
+                    <td> 
+                        {{ item.inhoud }}
+                    </td>
+                    <td> 
+					<a href="{% url 'edititem' item.id %}">Bewerk</a> &nbsp; 
+                    </td>
+				</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+
     {% else %}
     <p>Geen afwijkingen tussen deze parameters.</p>
     {% endif %}
