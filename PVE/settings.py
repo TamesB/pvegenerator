@@ -38,6 +38,7 @@ pdfmetrics.registerFont(TTFont('Calibri-Bold', os.path.join(BASE_DIR, 'utils/cal
 
 # Application definition
 INSTALLED_APPS = [
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,7 +53,11 @@ INSTALLED_APPS = [
     'users',
     'semanticuiforms',
     'storages',
+    'invitations',
 ]
+
+SITE_ID = 1
+ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -194,7 +199,10 @@ EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL")
 EMAIL_HOST_USER =  os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER")
+SERVER_EMAIL = os.getenv("EMAIL_HOST_USER")
 
+#invitations
 
 # Heroku settings
 django_heroku.settings(locals())

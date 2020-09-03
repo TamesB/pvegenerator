@@ -6,7 +6,7 @@
 <input type="button" class="ui primary button d-inline" onclick="javascript:history.back();" value="< Terug" />
 
 <h1 class="ui header">Koppel derde aan uw project</h1>
-<p>Maak de login credenties en stuur deze naar uw klant voor toegang aan dit project.</p>
+<p>Stuur een email naar de gewenste derde voor een uitnodiging naar dit project</p>
 
 <form action="{% url 'koppelderde' project.id %}" class="ui form" method="POST" enctype="multipart/form-data">
     {% csrf_token %}

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
+from django.db import IntegrityError
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -20,6 +21,7 @@ from users.models import CustomUser
 from pyproj import CRS, Transformer
 from utils import writePdf, writeDiffPdf, createBijlageZip
 import zipfile
+from invitations.utils import get_invitation_model
 
 @login_required
 def StartProjectView(request):
@@ -227,10 +229,20 @@ def koppelDerdeView(request, pk):
     if request.method == 'POST':
         form = KoppelDerdeUser(request.POST)
         if form.is_valid():
-            form.save()
-            user = CustomUser.objects.filter(username=form.cleaned_data["username"]).first()
-            project.permitted.add(user)
-            messages.warning(request, 'Derde gekoppeld aan project. Stuur een email met de credenties naar uw klant.')
+            try:
+                Invitation = get_invitation_model()
+                invite = Invitation.create(f'{form.cleaned_data["email"]}', inviter=request.user)
+                context = {}
+                context["project"] = project
+                context["sender"] = request.user
+                invite.send_invitation(request)
+                messages.warning(request, 'Uitnodiging verstuurd. U krijgt een melding als de derde het geaccepteerd heeft.')
+            except IntegrityError:
+                messages.warning(request, 'Een uitnodiging is al verstuurd naar deze email.')
+                return HttpResponseRedirect(reverse('koppelderde', args=(project.id,)))
+
+            #user = CustomUser.objects.filter(username=form.cleaned_data["username"]).first()
+            #project.permitted.add(user)
             return HttpResponseRedirect(reverse('projectview', args=(project.id,)))
     else:
         form = KoppelDerdeUser()

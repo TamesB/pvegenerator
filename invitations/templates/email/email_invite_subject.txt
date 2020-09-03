@@ -1,0 +1,4 @@
+{% load i18n %}
+{% autoescape off %}
+{% blocktrans %}PvE Generator - Uitnodiging tot project{% endblocktrans %}
+{% endautoescape %}

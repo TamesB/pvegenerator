@@ -17,3 +17,4 @@ pandas
 django-leaflet
 boto3
 django-storages
+django-invitations
