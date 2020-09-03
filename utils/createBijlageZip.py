@@ -20,7 +20,7 @@ class ZipMaker:
             # open attachment in AWS S3 server
             page = urllib.request.urlopen(item.bijlage.url)  # Change to website
             # put in this map of the zip with this name
-            attachname = f"BasisBijlagen/{item.bijlage}"
+            attachname = f"{item.bijlage}"
             zipf.writestr(attachname, page.read())
 
         # write the pdf in the root of zip
