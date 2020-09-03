@@ -22,7 +22,6 @@ class Invitation(AbstractBaseInvitation):
                               max_length=app_settings.EMAIL_MAX_LENGTH)
     created = models.DateTimeField(verbose_name=_('created'),
                                    default=timezone.now)
-
     @classmethod
     def create(cls, email, inviter=None, **kwargs):
         key = get_random_string(64).lower()
@@ -30,6 +29,7 @@ class Invitation(AbstractBaseInvitation):
             email=email,
             key=key,
             inviter=inviter,
+            project=project,
             **kwargs)
         return instance
 
