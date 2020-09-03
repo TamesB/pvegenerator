@@ -19,6 +19,7 @@ from users.models import CustomUser
 from project.models import Project
 from . import forms
 import magic
+from django.core.mail import send_mail
 
 def LoginPageView(request):
     # cant see lander page if already logged in
