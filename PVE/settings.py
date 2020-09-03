@@ -196,6 +196,6 @@ DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER")
 SERVER_EMAIL = os.getenv("EMAIL_HOST_USER")
 
 #invitations
-
+INVITATIONS_SIGNUP_REDIRECT = 'accept_invitation'
 # Heroku settings
 django_heroku.settings(locals())

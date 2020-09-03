@@ -11,6 +11,7 @@ urlpatterns = [
     path('overview/all', views.AllProjectsView, name="allprojects"),
     path('<int:pk>', views.ProjectViewView, name="projectview"),
     path('<int:pk>/koppelderde', views.koppelDerdeView, name="koppelderde"),
+    path('<int:pk>/acceptinvitation', views.AcceptInvitation, name="accept_invitation"),
     path('<int:project_id>/annotations', views.viewAnnotations, name="viewannotations"),
     path('<int:project_id>/items/<int:item_id>/view', views.viewItemAnnotations, name="viewitemannotations"),
     path('<int:project_id>/annotations/<int:item_id>/add', views.addAnnotationPve, name="addannotation"),

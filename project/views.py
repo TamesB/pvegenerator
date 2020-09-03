@@ -15,9 +15,8 @@ from . import models
 from app.models import PVEItem, Bouwsoort, TypeObject, Doelgroep
 from generator.forms import PVEParameterForm
 from . import forms
-from users.forms import KoppelDerdeUser
+from users.forms import KoppelDerdeUser, AcceptInvitationForm
 from users.models import CustomUser
-
 from pyproj import CRS, Transformer
 from utils import writePdf, writeDiffPdf, createBijlageZip
 import zipfile
@@ -231,7 +230,8 @@ def koppelDerdeView(request, pk):
         if form.is_valid():
             try:
                 Invitation = get_invitation_model()
-                invite = Invitation.create(f'{form.cleaned_data["email"]}', inviter=request.user)
+                invite = Invitation.create(f'{form.cleaned_data["email"]}', inviter=request.user, project=project)
+
                 context = {}
                 context["project"] = project
                 context["sender"] = request.user
@@ -240,9 +240,6 @@ def koppelDerdeView(request, pk):
             except IntegrityError:
                 messages.warning(request, 'Een uitnodiging is al verstuurd naar deze email.')
                 return HttpResponseRedirect(reverse('koppelderde', args=(project.id,)))
-
-            #user = CustomUser.objects.filter(username=form.cleaned_data["username"]).first()
-            #project.permitted.add(user)
             return HttpResponseRedirect(reverse('projectview', args=(project.id,)))
     else:
         form = KoppelDerdeUser()
@@ -251,7 +248,29 @@ def koppelDerdeView(request, pk):
     context["form"] = form
     context["project"] = project
     return render(request, 'koppelDerdeForm.html', context)
-    
+
+def AcceptInvitation(request, key):
+    if request.method == 'POST':
+        form = AcceptInvitationForm(request.POST)
+        if form.is_valid():
+            Invitation = get_invitation_model()
+            invite = Invitation(key=key).first()
+            user = CustomUser()
+            form.email = invite.email
+            form.save()
+            project = invite.project
+            project.permitted.add(user)
+
+            form.save()
+            messages.warning(request, 'Account aangemaakt.')
+            
+            return HttpResponseRedirect(reverse('projectview', args=(project.id,)))
+    else:
+        form = AcceptInvitationForm()
+
+    return render(request, 'createAccount.html', {'form': form})
+
+
 @login_required
 def download_pve(request, pk):
     if not models.Project.objects.filter(id=pk):
