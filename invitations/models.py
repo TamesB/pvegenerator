@@ -23,7 +23,7 @@ class Invitation(AbstractBaseInvitation):
     created = models.DateTimeField(verbose_name=_('created'),
                                    default=timezone.now)
     @classmethod
-    def create(cls, email, inviter=None, **kwargs):
+    def create(cls, email, project, inviter=None, **kwargs):
         key = get_random_string(64).lower()
         instance = cls._default_manager.create(
             email=email,

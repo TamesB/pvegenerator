@@ -228,6 +228,7 @@ def koppelDerdeView(request, pk):
     if request.method == 'POST':
         form = KoppelDerdeUser(request.POST)
         if form.is_valid():
+            # BIG TODO
             try:
                 Invitation = get_invitation_model()
                 invite = Invitation.create(f'{form.cleaned_data["email"]}', inviter=request.user, project=project)
@@ -250,20 +251,21 @@ def koppelDerdeView(request, pk):
     return render(request, 'koppelDerdeForm.html', context)
 
 def AcceptInvitation(request, key):
+    # BIG TODO
     if request.method == 'POST':
         form = AcceptInvitationForm(request.POST)
         if form.is_valid():
             Invitation = get_invitation_model()
-            invite = Invitation(key=key).first()
-            user = CustomUser()
-            form.email = invite.email
+            invite = Invitation(email=form.cleaned_data["email"]).first()
             form.save()
+
             project = invite.project
             project.permitted.add(user)
-
-            form.save()
-            messages.warning(request, 'Account aangemaakt.')
-            
+            project.save()
+            (username, password) = (
+                form.cleaned_data["username"], form.cleaned_data["password1"])
+            user = authenticate(request, username=username, password=password)
+            login(request, user)            
             return HttpResponseRedirect(reverse('projectview', args=(project.id,)))
     else:
         form = AcceptInvitationForm()

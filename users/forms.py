@@ -24,7 +24,11 @@ class AcceptInvitationForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ("password1", "password2")
+        fields = ("username", "password1", "password2")
+        labels = {
+            'username':'E-Mail', 'password1':'Wachtwoord', 'password2':'Herhaal wachtwoord:'
+        }
+
 
 class CustomUserChangeForm(UserChangeForm):
     """A form for updating users. Includes all the fields on
