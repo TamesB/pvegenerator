@@ -281,6 +281,7 @@ body, html {
 
 #main .layerOneInner .menu_and_article .article .project_overview .project_overview_content {
   width: 100%;
+  height: 100%;
   padding-top: 5em;
   padding-bottom: 2em;
   padding-left: 3em;

@@ -219,7 +219,7 @@ def AddProject(request):
         return render(request, '404_syn.html')
 
     context = {}
-    return render(request, 'plusproject_syn.html', context)
+    return render(request, 'plusProject_syn.html', context)
 
 @login_required
 def AddDerde(request):
