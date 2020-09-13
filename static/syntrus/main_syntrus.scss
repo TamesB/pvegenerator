@@ -18,7 +18,34 @@ body, html {
     -webkit-animation: spin 0.3s linear infinite; /* Safari */
     animation: spin 0.3s linear infinite;
 }
+.centered_div {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background-image: linear-gradient(top left, #FFFFFF, #D1D1D1);
 
+    .centered_box {
+        width: 40em;
+        height: 30em;
+        padding: 8em;
+        background: white;
+        border-radius: 1.6vh;
+        -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+        -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+        box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+
+        p {
+            margin-top: 3em;
+            font-family: 'Montserrat';
+            font-weight: bold;
+            color: black;
+            font-size: 2em;
+            text-align: center;
+        }
+    }
+}
 
 .centered_login {
     display: flex;
@@ -43,7 +70,7 @@ body, html {
 
         img {
             padding: 1.5em;
-            max-width: size;
+            width: 15em;
         }
 
         .login-button {

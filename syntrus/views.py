@@ -57,8 +57,9 @@ def DashboardView(request):
     context = {}
 
     if Project.objects.filter(permitted__username__contains=request.user.username, belegger__naam='Syntrus'):
-        projects = Project.objects.filter(permitted__username__contains=request.user.username, belegger__naam='Syntrus')
+        projects = Project.objects.filter(belegger__naam='Syntrus').filter(permitted__username__contains=request.user.username).distinct()
         context["projects"] = projects
+        print(projects)
         #geolocator = Nominatim(user_agent="pvegenerator")
         #locations = {}
         #for project in projects:

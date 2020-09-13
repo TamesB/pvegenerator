@@ -4,12 +4,14 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls.static import static
 from django.conf import settings
+from PVE.views import LandingView
 
 urlpatterns = [
-    path('', include('app.urls')),
-    path('project/', include('project.urls')),
-    path('generator/', include('generator.urls')),
-    path('users/', include('users.urls')),
+    path('', LandingView, name="landingpage"),
+    path('beheer/', include('app.urls')),
+    path('beheer/project/', include('project.urls')),
+    path('beheer/generator/', include('generator.urls')),
+    path('beheer/users/', include('users.urls')),
     path('admin/', admin.site.urls),
     path('syntrus/', include('syntrus.urls'))
 ]

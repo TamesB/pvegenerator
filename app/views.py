@@ -47,7 +47,6 @@ def LoginPageView(request):
 
     return render(request, 'login.html', context)
 
-
 @login_required
 def LogoutView(request):
     logout(request)

@@ -20,6 +20,41 @@ body, html {
   animation: spin 0.3s linear infinite;
 }
 
+.centered_div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background-image: -webkit-gradient(linear, left top, right bottom, from(#FFFFFF), to(#D1D1D1));
+  background-image: linear-gradient(top left, #FFFFFF, #D1D1D1);
+}
+
+.centered_div .centered_box {
+  width: 40em;
+  height: 30em;
+  padding: 8em;
+  background: white;
+  border-radius: 1.6vh;
+  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+}
+
+.centered_div .centered_box p {
+  margin-top: 3em;
+  font-family: 'Montserrat';
+  font-weight: bold;
+  color: black;
+  font-size: 2em;
+  text-align: center;
+}
+
 .centered_login {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -52,7 +87,7 @@ body, html {
 
 .centered_login .login_box img {
   padding: 1.5em;
-  max-width: size;
+  width: 15em;
 }
 
 .centered_login .login_box .login-button {

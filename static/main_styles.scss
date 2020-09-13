@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css?family=Monsterrat:400,700');
+
+.landing-flex {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    justify-content: space-evenly;
+    background-image: linear-gradient(top left, #FFFFFF, #D1D1D1);
+                      
+    .landing-flex-item {
+        width: 32em;
+        height: 12em;
+        padding: 4em;
+        background: white;
+        border-radius: 1.6vh;
+        -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+        -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+        box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+        cursor: pointer;
+        transition-duration: .5s;
+
+        p {
+            font-family: 'Montserrat';
+            font-weight: 900;
+            font-size: 3em;
+        }
+    
+    }
+
+    .landing-flex-item:hover {
+        opacity: 0.7;
+    }    
+    .landing-flex-item:active {
+        transition-duration: .1s;
+        transform: translateY(4px);
+    }
+
+}

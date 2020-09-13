@@ -1,0 +1,47 @@
+@import url("https://fonts.googleapis.com/css?family=Monsterrat:400,700");
+.landing-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  background-image: -webkit-gradient(linear, left top, right bottom, from(#FFFFFF), to(#D1D1D1));
+  background-image: linear-gradient(top left, #FFFFFF, #D1D1D1);
+}
+
+.landing-flex .landing-flex-item {
+  width: 32em;
+  height: 12em;
+  padding: 4em;
+  background: white;
+  border-radius: 1.6vh;
+  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  cursor: pointer;
+  -webkit-transition-duration: .5s;
+          transition-duration: .5s;
+}
+
+.landing-flex .landing-flex-item p {
+  font-family: 'Montserrat';
+  font-weight: 900;
+  font-size: 3em;
+}
+
+.landing-flex .landing-flex-item:hover {
+  opacity: 0.7;
+}
+
+.landing-flex .landing-flex-item:active {
+  -webkit-transition-duration: .1s;
+          transition-duration: .1s;
+  -webkit-transform: translateY(4px);
+          transform: translateY(4px);
+}
+/*# sourceMappingURL=main_styles.css.map */
