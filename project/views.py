@@ -33,6 +33,7 @@ def StartProjectView(request):
         # check whether it's valid:
         if form.is_valid():
             project = models.Project()
+            project.belegger = form.cleaned_data["belegger"]
             project.naam = form.cleaned_data["naam"]
             project.nummer = form.cleaned_data["nummer"]
             project.plaats = form.cleaned_data["plaats"]

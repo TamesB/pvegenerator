@@ -8,12 +8,14 @@
 <a href="{% url 'accoverview' %}"><input type="button" class="ui primary button d-inline" value="< Gebruiker overview" /></a>
 <h1 class="ui header">Gebruiker: {{ user.username }}</h1>
 <h4 class="ui header">Rang:                         
-                        {% if user.type_user == 'D' %}
-                            Derde
-                        {% elif user.type_user == 'OG' %}
-                            Opdrachtgever
-                        {% else %}
-                            Beheerder
+                        {% if user.type_user == 'SD' %}
+                            Syntrus Derde
+                        {% elif user.type_user == 'SOG' %}
+                            Syntrus Projectmanager
+                        {% elif user.type_user == 'SB' %}
+                            Syntrus Beheerder
+						{% else %}
+							Beheerder
                         {% endif %}
 </h4>
 {% if user.omschrijving %}

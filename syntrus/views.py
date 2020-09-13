@@ -67,7 +67,9 @@ def DashboardView(request):
         #    else:
         #        locations[project] = geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}").raw['address']['town']
         #context["locations"] = locations
-
+        
+    if request.user.type_user == 'B':
+        return render(request, 'dashboardBeheerder_syn.html', context)
     if request.user.type_user == 'SB':
         return render(request, 'dashboardBeheerder_syn.html', context)
     if request.user.type_user == "SOG":
@@ -83,7 +85,8 @@ def LogoutView(request):
 # Create your views here.
 @login_required
 def GeneratePVEView(request):
-    if request.user.type_user != ('SB' or 'SOG'):
+    allowed_users = ["B", "SB"]
+    if request.user.type_user not in allowed_users:
         return render(request, '404_syn.html')
 
     if request.method == "POST":
@@ -211,7 +214,8 @@ def ViewProject(request, pk):
 
 @login_required
 def AddProject(request):
-    if request.user.type_user != ('SB' or 'SOG'):
+    allowed_users = ["B", "SB"]
+    if request.user.type_user not in allowed_users:
         return render(request, '404_syn.html')
 
     context = {}
@@ -219,7 +223,8 @@ def AddProject(request):
 
 @login_required
 def AddDerde(request):
-    if request.user.type_user != ('SB' or 'SOG'):
+    allowed_users = ["B", "SB", "SOG", "SD"]
+    if request.user.type_user not in allowed_users:
         return render(request, '404_syn.html')
 
     if request.method == "POST":

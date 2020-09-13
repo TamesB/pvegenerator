@@ -25,12 +25,14 @@
 					<a href="{% url 'accprofile' user.id %}">{{ user.username }}</a> &nbsp; 
                     </td>
                     <td> 
-                        {% if user.type_user == 'D' %}
-                            Derde
-                        {% elif user.type_user == 'OG' %}
-                            Opdrachtgever
-                        {% else %}
-                            Beheerder
+                        {% if user.type_user == 'SD' %}
+                            Syntrus Derde
+                        {% elif user.type_user == 'SOG' %}
+                            Syntrus Projectmanager
+                        {% elif user.type_user == 'SB' %}
+                            Syntrus Beheerder
+						{% else %}
+							Beheerder
                         {% endif %}
                     </td>
 				</tr>

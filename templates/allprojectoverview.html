@@ -17,6 +17,9 @@
 			<tr>
 				<th>
 					Project
+				</th>				
+				<th>
+					Belegger
 				</th>
 				<th>
 					Fase
@@ -28,6 +31,9 @@
 				<tr>
                     <td> 
 					<a href="{% url 'projectview' project.id %}">{{ project.naam }}</a> &nbsp; 
+                    </td>
+                    <td> 
+                        {{ project.belegger }}
                     </td>
                     <td> 
                         {{ project.statuscontract }}

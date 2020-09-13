@@ -8,10 +8,10 @@ class StartProjectForm(ModelForm):
 
     class Meta:
         model = Project
-        fields = ('naam', 'nummer', 'vhe', 'pensioenfonds', 'plaats')
+        fields = ('belegger', 'projectmanager', 'naam', 'nummer', 'vhe', 'pensioenfonds', 'plaats')
         geom = forms.PointField()
         labels = {
-            'naam':'Projectnaam:', 'nummer':'Projectnummer:', 'plaats':'Plaats:', 'vhe':'Aantal verhuureenheden:', 
+            'belegger':'Belegger:', 'projectmanager':"Projectmanager:", 'naam':'Projectnaam:', 'nummer':'Projectnummer:', 'plaats':'Plaats:', 'vhe':'Aantal verhuureenheden:', 
             'pensioenfonds':'Pensioenfonds:',
         }
         widgets = {
