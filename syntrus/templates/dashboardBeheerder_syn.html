@@ -1,0 +1,55 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+{% block menu %}
+<div class="menu_item"><a href="{% url 'dashboard_syn' %}" class="active">Dashboard</a></div>
+<div class="menu_item"><a href="{% url 'plusproject_syn' %}">+ Project</a></div>
+<div class="menu_item"><a href="#">+ Accounts</a></div>
+<div class="menu_item"><a href="{% url 'generate_syn' %}">Genereer PVE</a></div>
+{% endblock %}
+{% block main %}
+<div class="flex-container">
+  <div class="flex-item" onClick="javascript:location.href='{% url 'plusproject_syn' %}';">
+    <img class="flex-img" src="{% static 'syntrus/img/plusproject.png' %}"></img>
+    <p>+ Project</p>
+  </div>
+  <div class="flex-item" onClick="javascript:location.href='#';">
+    <img class="flex-img" src="{% static 'syntrus/img/accountsderden.png' %}"></img>
+    <p>+ Account</p>
+  </div>
+  <div class="flex-item" onClick="javascript:location.href='{% url 'generate_syn' %}';">
+    <img class="flex-img" src="{% static 'syntrus/img/genereer.png' %}"></img>
+    <p>Genereer PVE</p>
+  </div>
+</div>
+<div class="project_overview">
+    <table class="project_overview_content">
+      <caption>Projecten overzicht</caption>
+      <thead>
+        <tr class="table_title">
+          <th>Projectnummer</th>
+          <th>Projectnaam</th>
+          <th>Locatie</th>
+          <th>Aantal VHE</th>
+          <th>Fase</th>
+          <th>Medewerker</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for project in projects %}
+        <tr class="table_content">
+          <td>{{ project.nummer }}</td>
+          <td>{{ project.naam }}</td>
+          <td>Locatie</td>
+          <td>{{ project.vhe }}</td>
+          <td>{{ project.statuscontract }}</td>
+          <td>Medewerker</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endblock %}

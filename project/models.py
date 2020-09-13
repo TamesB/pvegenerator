@@ -2,7 +2,13 @@ from django.db import models
 from django.conf import settings
 from django.contrib.gis.db import models
 from django.contrib.gis import forms
-        
+
+class Beleggers(models.Model):
+    naam = models.CharField(max_length=100, blank=True, null=True)
+    
+    def __str__(self):
+        return f"{self.naam}"
+
 class ContractStatus(models.Model):
     contrstatus = models.CharField(max_length=100, blank=True)
     
@@ -19,6 +25,7 @@ class Project(models.Model):
     pensioenfonds = models.CharField(max_length=100, default=None)
     statuscontract = models.ForeignKey(ContractStatus, on_delete=models.CASCADE)
     datum = models.DateTimeField(auto_now=True)
+    belegger = models.ForeignKey(Beleggers, on_delete=models.CASCADE, null=True)
 
     permitted = models.ManyToManyField('users.CustomUser', default=None)
     pveconnected = models.BooleanField(blank=True, null=True, default=False)

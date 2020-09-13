@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="nl">
+    <head>
+        <meta name="viewport" content="initial-scale=1, width=device-width">
+        {% load static %}
+        {{ form.media }}
+        <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+        <link rel="shortcut icon" type="image/png" href="{% static 'syntrus/favicon.ico' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'syntrus/main_syntrus.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'syntrus/syntrus_spinner.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
+              {% block head %}{% endblock %}
+        <title>PvE Generator</title>
+    </head>
+    <body>
+        <div id="main">
+            <div class="layerOneInner">
+                <span class="header">
+
+                    <img src="{% static 'syntrus/logo_syntrus.png' %}" class="logo_bg"></a>
+
+                    <ul class="menu_right">
+                        <li><a href="{% url 'logout_syn' %}">Afmelden</a></li>
+                        <li><a href="#">Ingelogd als {{ request.user }}</a></li>
+
+                    </ul>
+                </span>
+                <span class="menu_and_article">
+                    <span class="menu">{% block menu %}{% endblock %}</span> <!-- This row should take up 20% of the space -->
+                    <span class="article">{% block main %}{% endblock %}</span> <!-- This row should take up 80% of the space -->
+                </span>
+            </div>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="{% static 'semantic.min.js' %}"></script>  
+        <script src="{% static 'syntrus/main_syntrus.js' %}"></script>
+        <script src="{% static 'syntrus/fadeArticle.js' %}"></script>
+        {% block scripts %}{% endblock %}
+    </body>
+</html>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1535" height="101" viewBox="0 0 1535 101">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f7f7f8;
+      }
+
+      .cls-2 {
+        fill: #467572;
+        font-size: 30px;
+        font-family: 'Montserrat';
+        font-weight: 700;
+      }
+
+      .cls-3 {
+        filter: url(#Rectangle_17);
+      }
+    </style>
+    <filter id="Rectangle_17" x="0" y="0" width="1535" height="101" filterUnits="userSpaceOnUse">
+      <feOffset dx="9" dy="9" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="4.5" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="RegelTitle" transform="translate(-348.5 -862.5)">
+    <g class="cls-3" transform="matrix(1, 0, 0, 1, 348.5, 862.5)">
+      <rect id="Rectangle_17-2" data-name="Rectangle 17" class="cls-1" width="1508" height="74" rx="26" transform="translate(4.5 4.5)"/>
+    </g>
+    <text id="Specifieke_regels" data-name="Specifieke regels" class="cls-2" transform="translate(384 915)"><tspan x="0" y="0">Specifieke regels</tspan></text>
+  </g>
+</svg>

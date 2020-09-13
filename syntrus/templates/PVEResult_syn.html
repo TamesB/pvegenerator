@@ -1,0 +1,32 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+{% block menu %}
+<div class="menu_item"><a href="{% url 'dashboard_syn' %}">Dashboard</a></div>
+<div class="menu_item"><a href="{% url 'plusproject_syn' %}">+ Project</a></div>
+<div class="menu_item"><a href="#">+ Accounts</a></div>
+<div class="menu_item"><a href="{% url 'generate_syn' %}" class="active">Genereer PVE</a></div>
+{% endblock %}
+
+{% block main %}
+<div class="generate_result_box">
+    <div class="box">
+        <h1>Programma van Eisen</h1>
+        {% if itemsPVE %}
+        <form action="{% url 'download' filename %}" target="_blank">
+            <input class="button" type="submit" value="Open als PDF" />
+        </form>
+        {% if zipFilename %}
+        <form action="{% url 'downloadbijlagen' zipFilename %}">
+            <input class="button" type="submit" value="Download PvE + Bijlagen (.zip)" />
+        </form>
+        {% endif %}
+        {% else %}
+        <p>Geen regels met deze parameters. Bewerk de parameters of neem contact op met de systeembeheerder.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -27,13 +27,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     type_choices = (
         ('B', 'Beheerder'),
-        ('OG', 'Opdrachtgever'),
-        ('D', 'Derden'),
+        ('SB', 'Syntrus Beheerder'),
+        ('SOG', 'Syntrus Projectmanager'),
+        ('SD', 'Syntrus Derden'),
     )
 
-    type_user = models.CharField(max_length=2,
+    type_user = models.CharField(max_length=3,
                                  choices=type_choices,
-                                 default='D')
+                                 default='SD')
 
     omschrijving = models.TextField(max_length=1000, default=None, blank=True, null=True)
 
@@ -65,3 +66,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         Sends an email to this User.
         """
         send_mail(subject, message, from_email, [self.email])
+
+# Create your models here.
+class Invitation(models.Model):
+    inviter = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    invitee = models.EmailField()
+    project = models.ForeignKey('project.Project', on_delete=models.CASCADE)
+    expires = models.DateTimeField(auto_now=False)
+    key = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{ self.inviter } invited { self.invitee }. Expires { self.expires }"

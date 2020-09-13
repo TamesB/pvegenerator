@@ -22,7 +22,7 @@ from utils import writePdf, writeDiffPdf, createBijlageZip
 import zipfile
 from invitations.utils import get_invitation_model
 
-@login_required
+@staff_member_required
 def StartProjectView(request):
 
     if request.user.type_user != 'OG' and request.user.type_user != 'B':
@@ -51,7 +51,7 @@ def StartProjectView(request):
     context["form"] = form
     return render(request, 'startproject.html', context)
 
-@login_required
+@staff_member_required
 def ConnectPVEView(request, pk):
     if request.user.type_user != 'OG' and request.user.type_user != 'B':
         raise Http404("404.")
@@ -166,7 +166,7 @@ def ConnectPVEView(request, pk):
     context["project"] = project
     return render(request, 'connectpve.html', context)
 
-@login_required
+@staff_member_required
 def ProjectOverviewView(request):
     if not models.Project.objects.filter(permitted__username__contains=request.user.username):
         raise Http404("Je heb geen projecten waar je toegang tot heb.")
@@ -175,7 +175,7 @@ def ProjectOverviewView(request):
     context["projects"] = models.Project.objects.filter(permitted__username__contains=request.user.username)
     return render(request, 'projectoverview.html', context)
 
-@login_required
+@staff_member_required
 def AllProjectsView(request):
     if request.user.type_user != 'B':
         raise Http404("404.")
@@ -188,7 +188,7 @@ def AllProjectsView(request):
     context["locations"] = locations
     return render(request, 'allprojectoverview.html', context)
 
-@login_required
+@staff_member_required
 def ProjectViewView(request, pk):
     pk = int(pk)
 
@@ -213,67 +213,7 @@ def ProjectViewView(request, pk):
     context["location"] = location
     return render(request, 'viewproject.html', context)
 
-@login_required
-def koppelDerdeView(request, pk):
-    pk = int(pk)
-
-    if not models.Project.objects.filter(id=pk):
-        raise Http404('404')
-
-    if not request.user.type_user == 'OG' and not request.user.type_user == 'B':
-        raise Http404('404')
-    
-    project = models.Project.objects.filter(id=pk).first()
-
-    if request.method == 'POST':
-        form = KoppelDerdeUser(request.POST)
-        if form.is_valid():
-            # BIG TODO
-            try:
-                Invitation = get_invitation_model()
-                invite = Invitation.create(f'{form.cleaned_data["email"]}', inviter=request.user, project=project)
-
-                context = {}
-                context["project"] = project
-                context["sender"] = request.user
-                invite.send_invitation(request)
-                messages.warning(request, 'Uitnodiging verstuurd. U krijgt een melding als de derde het geaccepteerd heeft.')
-            except IntegrityError:
-                messages.warning(request, 'Een uitnodiging is al verstuurd naar deze email.')
-                return HttpResponseRedirect(reverse('koppelderde', args=(project.id,)))
-            return HttpResponseRedirect(reverse('projectview', args=(project.id,)))
-    else:
-        form = KoppelDerdeUser()
-
-    context = {}
-    context["form"] = form
-    context["project"] = project
-    return render(request, 'koppelDerdeForm.html', context)
-
-def AcceptInvitation(request, key):
-    # BIG TODO
-    if request.method == 'POST':
-        form = AcceptInvitationForm(request.POST)
-        if form.is_valid():
-            Invitation = get_invitation_model()
-            invite = Invitation(email=form.cleaned_data["email"]).first()
-            form.save()
-
-            project = invite.project
-            project.permitted.add(user)
-            project.save()
-            (username, password) = (
-                form.cleaned_data["username"], form.cleaned_data["password1"])
-            user = authenticate(request, username=username, password=password)
-            login(request, user)            
-            return HttpResponseRedirect(reverse('projectview', args=(project.id,)))
-    else:
-        form = AcceptInvitationForm()
-
-    return render(request, 'createAccount.html', {'form': form})
-
-
-@login_required
+@staff_member_required
 def download_pve(request, pk):
     if not models.Project.objects.filter(id=pk):
         raise Http404('404')
@@ -336,7 +276,7 @@ def download_pve(request, pk):
     context["zipFilename"] = zipFilename
     return render(request, 'PVEResult.html', context)
 
-@login_required
+@staff_member_required
 def searchProjectPveItem(request, project_id):
     if not models.Project.objects.filter(id=project_id):
         raise Http404("404")
@@ -365,7 +305,7 @@ def searchProjectPveItem(request, project_id):
     return render(request, 'projectItemSearch.html', context)
 
 
-@login_required
+@staff_member_required
 def viewAnnotations(request, project_id):
     if not models.Project.objects.filter(id=project_id):
         raise Http404("404")
@@ -387,7 +327,7 @@ def viewAnnotations(request, project_id):
     context["totale_kosten"] = totale_kosten
     return render(request, 'viewAnnotations.html', context)
 
-@login_required
+@staff_member_required
 def viewItemAnnotations(request, project_id, item_id):
     if not models.Project.objects.filter(id=project_id):
         raise Http404("404")
@@ -417,7 +357,7 @@ def viewItemAnnotations(request, project_id, item_id):
     context["totale_kosten"] = totale_kosten
     return render(request, 'annotationItemView.html', context)
 
-@login_required
+@staff_member_required
 def viewOwnAnnotations(request):
     annotations = models.PVEItemAnnotation.objects.filter(gebruiker=request.user).order_by('-datum')
 
@@ -425,7 +365,7 @@ def viewOwnAnnotations(request):
     context["annotations"] = annotations
     return render(request, 'viewOwnAnnotations.html', context)
 
-@login_required
+@staff_member_required
 def addAnnotationPve(request, project_id, item_id):
     if not models.Project.objects.filter(id=project_id):
         raise Http404("404")
@@ -460,7 +400,7 @@ def addAnnotationPve(request, project_id, item_id):
     context["item_id"] = item_id
     return render(request, 'addAnnotation.html', context)
 
-@login_required
+@staff_member_required
 def editAnnotationPve(request, project_id, ann_id):
     # check if project exists
     if not models.Project.objects.filter(id=project_id):
@@ -502,7 +442,7 @@ def editAnnotationPve(request, project_id, ann_id):
     return render(request, 'editAnnotationModal.html', context)
 
 
-@login_required
+@staff_member_required
 def deleteAnnotationPve(request, project_id, ann_id):
     # check if project exists
     if not models.Project.objects.filter(id=project_id):

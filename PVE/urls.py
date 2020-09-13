@@ -11,7 +11,7 @@ urlpatterns = [
     path('generator/', include('generator.urls')),
     path('users/', include('users.urls')),
     path('admin/', admin.site.urls),
-    path('invitations/', include('invitations.urls', namespace='invitations')),
+    path('syntrus/', include('syntrus.urls'))
 ]
 
 if settings.DEBUG:

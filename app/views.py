@@ -56,7 +56,7 @@ def LogoutView(request):
 def FourOhFourView(request):
     return render(request, '404.html')
 
-@login_required
+@staff_member_required
 def DashboardView(request):
     hour = datetime.datetime.utcnow().hour + 2 # UTC + 2 = CEST
     greeting = ""

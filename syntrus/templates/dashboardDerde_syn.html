@@ -1,0 +1,15 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+
+{% block menu %}
+<div class="menu_item"><a href="{% url 'dashboard_syn' %}" class="active">Dashboard</a></div>
+<div class="menu_item"><a href="#">+ Opmerking</a></div>
+<div class="menu_item"><a href="{% url 'invite_syn' %}">+ Derden</a></div>
+<div class="menu_item"><a href="#">Download PVE</a></div>
+{% endblock %}
+
+{% block main %}
+<p>Hello derde</p>
+{% endblock %}

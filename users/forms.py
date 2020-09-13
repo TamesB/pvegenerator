@@ -18,15 +18,12 @@ class CustomUserCreationForm(UserCreationForm):
 class KoppelDerdeUser(forms.Form):
     email = forms.EmailField()
 
-class AcceptInvitationForm(UserCreationForm):
-    def __init__(self, *args, **kargs):
-        super(CustomUserCreationForm, self).__init__(*args, **kargs)
-
+class AcceptInvitationForm(UserCreationForm):        
     class Meta:
         model = CustomUser
         fields = ("username", "password1", "password2")
         labels = {
-            'username':'E-Mail', 'password1':'Wachtwoord', 'password2':'Herhaal wachtwoord:'
+            'username':'Gebruikersnaam:', 'password1':'Wachtwoord:', 'password2':'Herhaal wachtwoord:'
         }
 
 

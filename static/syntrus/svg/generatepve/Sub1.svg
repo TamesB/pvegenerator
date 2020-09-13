@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="424" height="470" viewBox="0 0 424 470">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f7f7f8;
+      }
+
+      .cls-2 {
+        fill: #b2dbdd;
+      }
+
+      .cls-3 {
+        fill: #fff;
+        font-size: 35px;
+        font-family: 'Montserrat';
+      }
+
+      .cls-4 {
+        filter: url(#Rectangle_13);
+      }
+    </style>
+    <filter id="Rectangle_13" x="0" y="0" width="424" height="470" filterUnits="userSpaceOnUse">
+      <feOffset dx="9" dy="9" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="4.5" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Sub1" transform="translate(-348.5 -346.5)">
+    <g class="cls-4" transform="matrix(1, 0, 0, 1, 348.5, 346.5)">
+      <rect id="Rectangle_13-2" data-name="Rectangle 13" class="cls-1" width="397" height="443" rx="30" transform="translate(4.5 4.5)"/>
+    </g>
+    <rect id="Rectangle_16" data-name="Rectangle 16" class="cls-2" width="44" height="32" transform="translate(706 717)"/>
+    <rect id="Rectangle_15" data-name="Rectangle 15" class="cls-2" width="44" height="32" transform="translate(353 717)"/>
+    <rect id="Rectangle_14" data-name="Rectangle 14" class="cls-2" width="397" height="77" rx="31" transform="translate(353 717)"/>
+    <text id="Sub" class="cls-3" transform="translate(524 763)"><tspan x="0" y="0">Sub</tspan></text>
+  </g>
+</svg>

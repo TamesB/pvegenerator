@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1502" height="374" viewBox="0 0 1502 374">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f5f5f6;
+      }
+
+      .cls-2 {
+        fill: #b1d9dc;
+      }
+
+      .cls-3 {
+        fill: #fff;
+        font-size: 35px;
+        font-family: 'Montserrat';
+      }
+
+      .cls-4 {
+        filter: url(#greyboxoutline);
+      }
+    </style>
+    <filter id="greyboxoutline" x="0" y="0" width="1502" height="374" filterUnits="userSpaceOnUse">
+      <feOffset dx="9" dy="9" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="4.5" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="project_overzicht" transform="translate(-359.5 -602.5)">
+    <g class="cls-4" transform="matrix(1, 0, 0, 1, 359.5, 602.5)">
+      <rect id="greyboxoutline-2" data-name="greyboxoutline" class="cls-1" width="1475" height="347" rx="28" transform="translate(4.5 4.5)"/>
+    </g>
+    <rect id="bluefill" class="cls-2" width="1475" height="47" rx="23.5" transform="translate(364 607)"/>
+    <rect id="blueboxleft" class="cls-2" width="34" height="23" transform="translate(364 631)"/>
+    <rect id="blueboxright" class="cls-2" width="37" height="23" transform="translate(1802 631)"/>
+    <text id="Projecten_overzicht" data-name="Projecten overzicht" class="cls-3" transform="translate(390 640)"><tspan x="0" y="0">Projecten overzicht</tspan></text>
+  </g>
+</svg>

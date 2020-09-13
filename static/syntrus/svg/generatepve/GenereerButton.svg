@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="240" height="82" viewBox="0 0 240 82">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #b2dbdd;
+      }
+
+      .cls-2 {
+        fill: #fff;
+        font-size: 30px;
+        font-family: 'Montserrat';
+      }
+
+      .cls-3 {
+        filter: url(#Rectangle_18);
+      }
+    </style>
+    <filter id="Rectangle_18" x="0" y="0" width="240" height="82" filterUnits="userSpaceOnUse">
+      <feOffset dx="9" dy="9" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="4.5" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="GenereerButton" transform="translate(-349.5 -948.5)">
+    <g class="cls-3" transform="matrix(1, 0, 0, 1, 349.5, 948.5)">
+      <rect id="Rectangle_18-2" data-name="Rectangle 18" class="cls-1" width="213" height="55" rx="27.5" transform="translate(4.5 4.5)"/>
+    </g>
+    <text id="Genereer" class="cls-2" transform="translate(403 991)"><tspan x="0" y="0">Genereer</tspan></text>
+  </g>
+</svg>

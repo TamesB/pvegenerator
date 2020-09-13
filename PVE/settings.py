@@ -45,20 +45,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'allauth',
     'leaflet',
     'django.contrib.gis',
     'app',
     'generator',
     'project',
     'users',
+    'syntrus',
     'semanticuiforms',
     'storages',
-    'invitations',
 ]
 
 SITE_ID = 1
-ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -86,8 +84,15 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
             ],
+            'libraries': {
+                'custom_tags':'syntrus.template_tags.custom_tags'
+            }
         },
     },
+]
+
+TEMPLATE_LOADERS = ['django.template.loaders.filesystem.Loader',
+'django.template.loaders.app_directories.Loader'
 ]
 
 # Database
@@ -167,11 +172,11 @@ EXPORTS_ROOT = os.path.join(BASE_DIR, 'utils/PVEexports')
 LOGIN_URL = "/"
 LOGIN_REDIRECT_URL = "/home"
 
-# Use ONLY for proxy
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# Use in the pvegenerator.net production
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#SECURE_SSL_REDIRECT = True
+#SESSION_COOKIE_SECURE = True
+#CSRF_COOKIE_SECURE = True
 
 
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
@@ -195,7 +200,5 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER")
 SERVER_EMAIL = os.getenv("EMAIL_HOST_USER")
 
-#invitations
-INVITATIONS_SIGNUP_REDIRECT = 'accept_invitation'
 # Heroku settings
 django_heroku.settings(locals())

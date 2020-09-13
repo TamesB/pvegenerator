@@ -1,0 +1,13 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+{% block main %}
+<form action="{% url 'acceptinvite_syn' key %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" class="button" value="Registreer">
+</form>
+{% endblock %}
