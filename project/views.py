@@ -20,7 +20,6 @@ from users.models import CustomUser
 from pyproj import CRS, Transformer
 from utils import writePdf, writeDiffPdf, createBijlageZip
 import zipfile
-from invitations.utils import get_invitation_model
 
 @staff_member_required
 def StartProjectView(request):
