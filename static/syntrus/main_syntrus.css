@@ -160,14 +160,16 @@ body, html {
 
 #main .layerOneInner .header .logo_bg {
   float: left;
-  padding: 1vw 0 1vw 1vw;
   height: 100%;
-  width: 10vw;
+  padding-left: 1vw;
+  padding-top: 1vw;
+  padding-bottom: 1vw;
+  width: 17vw;
   max-width: 20vw;
 }
 
 #main .layerOneInner .header .menu_right {
-  padding: 1em;
+  padding: 1vw;
   font-family: 'Montserrat';
 }
 

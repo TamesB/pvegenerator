@@ -13,7 +13,7 @@ urlpatterns = [
     path('project/<int:id>', views.ViewProject, name="viewproject_syn"),
     path('project/add', views.AddProject, name="plusproject_syn"),
     path('account/add', views.AddAccount, name="plusaccount_syn"),
-    
+
     path('invite', views.AddDerde, name="invite_syn"),
     path('invite/<str:key>', views.AcceptInvite, name="acceptinvite_syn"),
 ]

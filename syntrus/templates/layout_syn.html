@@ -21,7 +21,7 @@
 
                     <ul class="menu_right">
                         <li><a href="{% url 'logout_syn' %}">Afmelden</a></li>
-                        <li><a href="#">Ingelogd als {{ request.user }}</a></li>
+                        <li><a href="{% url 'dashboard_syn' %}">Ingelogd als {{ request.user }}</a></li>
 
                     </ul>
                 </span>
