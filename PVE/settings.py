@@ -168,15 +168,15 @@ ADMIN_ENABLED = True
 EXPORTS_URL = '/PVEexports/'
 EXPORTS_ROOT = os.path.join(BASE_DIR, 'utils/PVEexports')
 
-# @login_required url   redirect
+# @login_required url redirect
 LOGIN_URL = "/"
 LOGIN_REDIRECT_URL = "/home"
 
 # Use in the pvegenerator.net production
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#SECURE_SSL_REDIRECT = True
+#SESSION_COOKIE_SECURE = True
+#CSRF_COOKIE_SECURE = True
 
 
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')

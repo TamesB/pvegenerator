@@ -5,6 +5,7 @@
 {% load custom_tags %}
 
 {% block menu %}
+<div class="hamburger"><img src="{% static 'syntrus/svg/hamburger.svg' %}"></img></div>
 <div class="menu_item"><a href="{% url 'dashboard_syn' %}">Dashboard</a></div>
 <div class="menu_item"><a href="{% url 'plusproject_syn' %}">+ Project</a></div>
 <div class="menu_item"><a href="#">+ Accounts</a></div>

@@ -138,7 +138,7 @@ body, html {
 }
 
 #main .layerOneInner {
-  width: 100vw;
+  width: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -146,27 +146,28 @@ body, html {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  height: 100vh;
+  height: 100%;
 }
 
 #main .layerOneInner .header {
   font-weight: bold;
-  width: 100vw;
+  width: 100%;
   color: black;
-  height: 10em;
+  height: 10vh;
+  max-height: 10vh;
   background-color: #ffffff;
 }
 
 #main .layerOneInner .header .logo_bg {
   float: left;
-  padding: 3em 0 2em 2em;
+  padding: 1vw 0 1vw 1vw;
   height: 100%;
-  width: 20em;
-  max-width: 300px;
+  width: 10vw;
+  max-width: 15vw;
 }
 
 #main .layerOneInner .header .menu_right {
-  padding: 2em;
+  padding: 1vh;
   font-family: 'Montserrat';
 }
 
@@ -180,8 +181,8 @@ body, html {
 #main .layerOneInner .header .menu_right li {
   display: inline;
   float: right;
-  border-right: 0.2em solid #99beb9;
-  padding: 1em;
+  border-right: 0.1vw solid #99beb9;
+  padding: 0.5vw;
 }
 
 #main .layerOneInner .header .menu_right li a {
@@ -197,25 +198,39 @@ body, html {
 }
 
 #main .layerOneInner .menu_and_article {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
   float: center;
   width: 100%;
   height: 100%;
   text-align: center;
+  background-image: -webkit-gradient(linear, left top, right bottom, from(#FFFFFF), to(#D1D1D1));
+  background-image: linear-gradient(top left, #FFFFFF, #D1D1D1);
+  position: absolute;
+  top: 10vh;
+  max-height: 90vh;
 }
 
 #main .layerOneInner .menu_and_article .menu {
+  left: 0;
+  float: left;
   font-family: 'Montserrat';
   font-weight: bold;
-  font-size: 2.5vh;
-  width: 17.5vw;
-  min-width: 15em;
-  max-width: 20em;
+  font-size: 1.5em;
+  width: 3vw;
   background-image: -webkit-gradient(linear, right bottom, left top, from(#026189), to(#00ACA9));
   background-image: linear-gradient(bottom right, #026189, #00ACA9);
-  min-height: 100%;
+  height: 100%;
+  position: absolute;
+  -webkit-transition: 0.1s ease;
+  transition: 0.1s ease;
+  text-overflow: hidden;
+}
+
+#main .layerOneInner .menu_and_article .menu .hamburger {
+  visibility: visible;
+  width: 2vw;
+  margin-left: 0.5vw;
+  margin-top: 1.5vh;
+  z-index: 3;
 }
 
 #main .layerOneInner .menu_and_article .menu a {
@@ -225,6 +240,7 @@ body, html {
   margin-top: 3em;
   text-decoration: none;
   cursor: pointer;
+  visibility: hidden;
 }
 
 #main .layerOneInner .menu_and_article .menu a:hover {
@@ -235,17 +251,22 @@ body, html {
   color: #ccc;
 }
 
+#main .layerOneInner .menu_and_article .menu:hover {
+  width: 17.5vw;
+  z-index: 3;
+}
+
+#main .layerOneInner .menu_and_article .menu:hover a {
+  visibility: visible;
+}
+
 #main .layerOneInner .menu_and_article .article {
-  background-image: -webkit-gradient(linear, left top, right bottom, from(#FFFFFF), to(#D1D1D1));
-  background-image: linear-gradient(top left, #FFFFFF, #D1D1D1);
-  width: 82.5vw;
   font-family: 'Montserrat';
   height: 100%;
+  width: 100%;
 }
 
 #main .layerOneInner .menu_and_article .article .flex-container {
-  margin: 8vh;
-  margin-top: 6vh;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -254,6 +275,9 @@ body, html {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  margin-left: 10vw;
+  margin-right: 7vw;
+  margin-top: 6vh;
 }
 
 #main .layerOneInner .menu_and_article .article .flex-container .flex-item {
@@ -298,7 +322,8 @@ body, html {
 }
 
 #main .layerOneInner .menu_and_article .article .project_overview {
-  margin: 8vh;
+  margin-left: 10vw;
+  margin-right: 7vw;
   margin-top: 6vh;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -320,7 +345,7 @@ body, html {
   padding-top: 5em;
   padding-bottom: 2em;
   padding-left: 3em;
-  z-index: 2;
+  z-index: 1;
   font-size: 1.2em;
   text-align: left;
 }
@@ -355,10 +380,10 @@ body, html {
 }
 
 #main .layerOneInner .menu_and_article .article .generator_title {
-  margin: 6em;
-  margin-top: 4em;
-  margin-bottom: 0;
-  height: 7em;
+  margin-left: 10vw;
+  margin-right: 7vw;
+  margin-top: 6vh;
+  height: 5.5em;
   background: #f7f7f8;
   border-radius: 1.6vh;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
@@ -367,9 +392,9 @@ body, html {
 
 #main .layerOneInner .menu_and_article .article .generator_title .title_img {
   width: 4.5em;
-  height: 4em;
+  height: 3.5em;
   float: left;
-  margin-top: 1.5em;
+  margin-top: 1em;
   margin-left: 2em;
   margin-bottom: 1em;
 }
@@ -377,7 +402,7 @@ body, html {
 #main .layerOneInner .menu_and_article .article .generator_title p {
   font-weight: bold;
   text-align: left;
-  padding-top: 1em;
+  padding-top: 0.75em;
   padding-left: 4em;
   font-size: 2em;
   font-style: bold;
@@ -385,9 +410,9 @@ body, html {
 }
 
 #main .layerOneInner .menu_and_article .article .generator_form form .parameter_container {
-  margin: 6em;
-  margin-top: 4em;
-  margin-bottom: 0.5em;
+  margin-left: 10vw;
+  margin-right: 7vw;
+  margin-top: 6vh;
   height: 28em;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -443,9 +468,9 @@ body, html {
 }
 
 #main .layerOneInner .menu_and_article .article .generator_form .specific_items {
-  margin-left: 6em;
-  margin-right: 6em;
-  margin-top: 3em;
+  margin-left: 10vw;
+  margin-right: 7vw;
+  margin-top: 6vh;
   height: 4em;
   background: #f7f7f8;
   border-radius: 1.6vh;
@@ -461,6 +486,11 @@ body, html {
   font-size: 1.5em;
   font-style: bold;
   color: #2b786e;
+}
+
+#main .layerOneInner .menu_and_article .article .generator_form .specific_item_list {
+  margin-left: 10vw;
+  margin-right: 7vw;
 }
 
 #main .layerOneInner .menu_and_article .article .generator_form .specific_item_list ul {
@@ -496,9 +526,9 @@ body, html {
   color: white;
   font-style: bold;
   font-family: 'Montserrat';
-  margin-left: 3em;
-  margin-right: 2em;
-  margin-top: 1em;
+  margin-left: 10vw;
+  margin-right: 7vw;
+  margin-top: 2vh;
   margin-bottom: 1em;
   width: 9ch;
   height: 2em;
