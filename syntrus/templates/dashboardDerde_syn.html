@@ -13,4 +13,32 @@
 
 {% block main %}
 <p>Hello derde</p>
+<div class="project_overview">
+    <table class="project_overview_content">
+      <caption>Projecten overzicht</caption>
+      <thead>
+        <tr class="table_title">
+          <th>Projectnummer</th>
+          <th>Projectnaam</th>
+          <th>Locatie</th>
+          <th>Aantal VHE</th>
+          <th>Fase</th>
+          <th>Medewerker</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for project in projects %}
+        <tr class="table_content">
+          <td>{{ project.nummer }}</td>
+          <td>{{ project.naam }}</td>
+          <td>{{ project.plaatsnamen }}</td>
+          <td>{{ project.vhe }}</td>
+          <td>{{ project.statuscontract }}</td>
+          <td>{{ project.projectmanager }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+
 {% endblock %}
