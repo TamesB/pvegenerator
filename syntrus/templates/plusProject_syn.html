@@ -9,19 +9,21 @@
 <div class="hamburger"><img src="{% static 'syntrus/svg/hamburger.svg' %}"></img></div>
 <div class="menu_item"><a href="{% url 'dashboard_syn' %}">Dashboard</a></div>
 <div class="menu_item"><a href="{% url 'plusproject_syn' %}" class="active">+ Project</a></div>
-<div class="menu_item"><a href="#">+ Accounts</a></div>
+<div class="menu_item"><a href="{% url 'plusaccount_syn' %}">+ Accounts</a></div>
 <div class="menu_item"><a href="{% url 'generate_syn' %}">Genereer PVE</a></div>
 {% endblock %}
 
 {% block main %}
-<div class="plusproject-container">
-    <div class="plusproject-title">+ Project</div>
+    <div class="generator_title"><p>Start project</p></div>
+    <div class="generator_form">
     <form action="{% url 'plusproject_syn' %}" method="POST" enctype="multipart/form-data">
-        <div class="basis-info-container">
-        <h1 class="title">Basisinfo</h1>
-
+    <div class="parameter_container">
+        <div class="parameter_item">
+        <p>TODO</p>
+    </div>
     </div>
     </form>
+    </div>
 </div>
 {% endblock %}
 

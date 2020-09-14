@@ -223,6 +223,16 @@ def AddProject(request):
     return render(request, 'plusProject_syn.html', context)
 
 @login_required
+def AddAccount(request):
+    allowed_users = ["B", "SB"]
+    if request.user.type_user not in allowed_users:
+        return render(request, '404_syn.html')
+
+    context = {}
+    return render(request, 'plusAccount_syn.html', context)
+
+
+@login_required
 def AddDerde(request):
     allowed_users = ["B", "SB", "SOG", "SD"]
     if request.user.type_user not in allowed_users:

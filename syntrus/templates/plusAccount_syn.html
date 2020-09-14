@@ -1,0 +1,28 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+
+{% block menu %}
+<div class="hamburger"><img src="{% static 'syntrus/svg/hamburger.svg' %}"></img></div>
+<div class="menu_item"><a href="{% url 'dashboard_syn' %}">Dashboard</a></div>
+<div class="menu_item"><a href="{% url 'plusproject_syn' %}">+ Project</a></div>
+<div class="menu_item"><a href="{% url 'plusaccount_syn' %}" class="active">+ Accounts</a></div>
+<div class="menu_item"><a href="{% url 'generate_syn' %}">Genereer PVE</a></div>
+{% endblock %}
+
+{% block main %}
+    <div class="generator_title"><p>+ Account</p></div>
+    <div class="generator_form">
+    <form action="{% url 'plusproject_syn' %}" method="POST" enctype="multipart/form-data">
+    <div class="parameter_container">
+        <div class="parameter_item">
+        <p>TODO</p>
+    </div>
+    </div>
+    </form>
+    </div>
+</div>
+{% endblock %}

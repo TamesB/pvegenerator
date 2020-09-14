@@ -8,7 +8,7 @@
 <div class="hamburger"><img src="{% static 'syntrus/svg/hamburger.svg' %}"></img></div>
 <div class="menu_item"><a href="{% url 'dashboard_syn' %}" class="active">Dashboard</a></div>
 <div class="menu_item"><a href="{% url 'plusproject_syn' %}">+ Project</a></div>
-<div class="menu_item"><a href="#">+ Accounts</a></div>
+<div class="menu_item"><a href="{% url 'plusaccount_syn' %}">+ Accounts</a></div>
 <div class="menu_item"><a href="{% url 'generate_syn' %}">Genereer PVE</a></div>
 {% endblock %}
 {% block main %}
