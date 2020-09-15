@@ -9,6 +9,10 @@
 <div class="menu_item"><a href="#">+ Opmerking</a></div>
 <div class="menu_item"><a href="{% url 'invite_syn' %}">+ Derden</a></div>
 <div class="menu_item"><a href="#">Download PVE</a></div>
+<div class="hori-menu-logout">
+    <a href="{% url 'dashboard_syn' %}">Ingelogd als {{ request.user }}</a>
+    <a href="{% url 'logout_syn' %}">Afmelden</a>
+</div>
 {% endblock %}
 
 {% block main %}
