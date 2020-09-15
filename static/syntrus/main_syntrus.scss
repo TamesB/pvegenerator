@@ -207,12 +207,27 @@ body, html {
                 cursor: pointer;
                 visibility: hidden;
             }
-              
+
             a:hover {
                 color: #ccc;
             }
             .active {
                 color: #ccc;
+            }
+
+            .hori-menu-logout {
+                display: inline-block;
+                font-size: 1.5vh;
+                visibility: hidden;
+                width: 100%;
+
+                a {
+                    margin-right: 2vw;
+                    margin-left: 2vw;
+                    display: inline-block;
+                    text-align: left;
+                    border-right: 0.4vw solid #373737;
+                }
             }
 
         }
@@ -239,19 +254,26 @@ body, html {
                 overflow-x: hidden;
                 z-index: 3;
                 min-height: 40px;
-    
+
+                .hamburger {
+                    margin-left: 2vw;
+                }
+                
                 a {
                     color: white;
                     display: block;
                     margin-bottom: 4vh;
                     margin-top: 2vh;
                 }
+
+                .hori-menu-logout {
+                    visibility: visible;
+                }
             }
 
             .menu:hover {
                 min-width: 100vw;
-                height: 17.5vh;
-                min-height: 200px;
+                min-height: 28vh;
                 z-index: 3;
             }
         }
