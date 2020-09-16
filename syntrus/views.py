@@ -78,13 +78,13 @@ def DashboardView(request):
     if request.user.type_user == "SD":
         return render(request, 'dashboardDerde_syn.html', context)
 
-@login_required
+@login_required(login_url='login_syn')
 def LogoutView(request):
     logout(request)
     return redirect('login_syn')
 
 # Create your views here.
-@login_required
+@login_required(login_url='login_syn')
 def GeneratePVEView(request):
     allowed_users = ["B", "SB"]
     if request.user.type_user not in allowed_users:
@@ -199,7 +199,7 @@ def GeneratePVEView(request):
     return render(request, 'GeneratePVE_syn.html', context)
 
 
-@login_required
+@login_required(login_url='login_syn')
 def ViewProject(request, pk):
     if not Project.objects.filter(id=pk, belegger__naam='Syntrus'):
         return render(request, '404_syn.html')
@@ -213,7 +213,7 @@ def ViewProject(request, pk):
     context["project"] = project
     return render(request, 'projectView_syn.html', context)
 
-@login_required
+@login_required(login_url='login_syn')
 def AddProject(request):
     allowed_users = ["B", "SB"]
     if request.user.type_user not in allowed_users:
@@ -222,7 +222,7 @@ def AddProject(request):
     context = {}
     return render(request, 'plusProject_syn.html', context)
 
-@login_required
+@login_required(login_url='login_syn')
 def AddAccount(request):
     allowed_users = ["B", "SB"]
     if request.user.type_user not in allowed_users:
@@ -232,7 +232,7 @@ def AddAccount(request):
     return render(request, 'plusAccount_syn.html', context)
 
 
-@login_required
+@login_required(login_url='login_syn')
 def AddDerde(request):
     allowed_users = ["B", "SB", "SOG", "SD"]
     if request.user.type_user not in allowed_users:

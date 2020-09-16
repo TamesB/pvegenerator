@@ -260,12 +260,14 @@ body, html {
   font-size: 1.5vh;
   visibility: hidden;
   width: 100%;
+  display: none;
 }
 
 #main .layerOneInner .menu .hori-menu-logout a {
+  visibility: hidden;
+  display: none;
   margin-right: 2vw;
   margin-left: 2vw;
-  display: inline-block;
   text-align: left;
   border-right: 0.4vw solid #373737;
 }
@@ -304,7 +306,12 @@ body, html {
     margin-top: 2vh;
   }
   #main .layerOneInner .menu .hori-menu-logout {
+    display: inline-block;
     visibility: visible;
+  }
+  #main .layerOneInner .menu .hori-menu-logout a {
+    visibility: visible;
+    display: inline-block;
   }
   #main .layerOneInner .menu:hover {
     min-width: 100vw;
@@ -338,7 +345,8 @@ body, html {
           justify-content: center;
   margin-left: 10vw;
   margin-right: 7vw;
-  margin-top: 6vh;
+  margin-top: 3vh;
+  margin-bottom: 3vh;
 }
 
 #main .layerOneInner .article .flex-container .flex-item {
@@ -346,7 +354,8 @@ body, html {
   height: 19vh;
   min-width: 200px;
   min-height: 150px;
-  margin-bottom: 6vh;
+  margin-bottom: 1.5vh;
+  margin-top: 1.5vh;
   margin-left: 3vw;
   margin-right: 3vw;
   background: #b2dbdd;
@@ -378,6 +387,13 @@ body, html {
   min-height: 70px;
 }
 
+@media screen and (max-width: 768px) {
+  #main .layerOneInner .article .flex-container {
+    margin-left: 4vw;
+    margin-right: 4vw;
+  }
+}
+
 #main .layerOneInner .article .flex-item:hover {
   opacity: 0.7;
 }
@@ -389,10 +405,11 @@ body, html {
           transform: translateY(4px);
 }
 
-#main .layerOneInner .article .project_overview {
+#main .layerOneInner .article .main_content_div {
+  margin-top: 3vh;
   margin-left: 10vw;
   margin-right: 7vw;
-  margin-top: 6vh;
+  margin-bottom: 3vh;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -405,10 +422,11 @@ body, html {
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   border-radius: 1.6em;
-  min-width: 840px;
+  overflow-x: scroll;
+  min-height: 180px;
 }
 
-#main .layerOneInner .article .project_overview .project_overview_content {
+#main .layerOneInner .article .main_content_div .project_overview_content {
   width: 100%;
   height: 100%;
   padding-left: 2vw;
@@ -418,9 +436,11 @@ body, html {
   z-index: 1;
   font-size: 1.5vh;
   text-align: left;
+  min-width: 720px;
+  overflow-x: scroll;
 }
 
-#main .layerOneInner .article .project_overview .project_overview_content caption {
+#main .layerOneInner .article .main_content_div .project_overview_content caption {
   margin-top: 1.8vh;
   caption-side: top;
   font-size: 2vh;
@@ -429,25 +449,111 @@ body, html {
   color: white;
 }
 
-#main .layerOneInner .article .project_overview .project_overview_content .table_title {
+@media screen and (max-width: 768px) {
+  #main .layerOneInner .article .main_content_div .project_overview_content caption {
+    text-align: left;
+    margin-left: 5vw;
+  }
+}
+
+#main .layerOneInner .article .main_content_div .project_overview_content .table_title {
   max-width: 100vw;
   color: #4f4b4c;
   letter-spacing: 0.1em;
   font-weight: bold;
 }
 
-#main .layerOneInner .article .project_overview .project_overview_content .table_title th {
+#main .layerOneInner .article .main_content_div .project_overview_content .table_title th {
   padding-bottom: 3em;
 }
 
-#main .layerOneInner .article .project_overview .project_overview_content .table_content {
+#main .layerOneInner .article .main_content_div .project_overview_content .table_content {
+  overflow-x: scroll;
   color: #918f8f;
   letter-spacing: 0.1em;
   font-size: 1.5vh;
 }
 
-#main .layerOneInner .article .project_overview .project_overview_content .table_content td {
-  padding-bottom: 1.5em;
+#main .layerOneInner .article .main_content_div .project_overview_content .table_content td {
+  padding-bottom: 1em;
+}
+
+#main .layerOneInner .article .main_content_div .project_overview_content img {
+  height: 2vh;
+}
+
+#main .layerOneInner .article .main_content_div .project_overview_content img:hover {
+  opacity: 0.7;
+}
+
+#main .layerOneInner .article .profile_box {
+  font-family: 'Montserrat';
+  font-size: 2vh;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(20%, #00aca9), color-stop(20%, #f7f7f8));
+  background: linear-gradient(0deg, #00aca9 20%, #f7f7f8 20%);
+  display: -ms-grid;
+  display: grid;
+      grid-template-areas: 'profile-left profile-right profile-right profile-right profile-right profile-right profile-right profile-right' 'profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom';
+  overflow: hidden;
+}
+
+#main .layerOneInner .article .profile_box .profile_left {
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
+  grid-area: profile-left;
+}
+
+#main .layerOneInner .article .profile_box .profile_left img {
+  height: 70%;
+  width: 70%;
+  margin-top: 7%;
+  margin-bottom: 7%;
+  margin-left: 12%;
+  background-color: white;
+  border-radius: 50%;
+}
+
+#main .layerOneInner .article .profile_box .profile_right {
+  -ms-grid-row: 1;
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 7;
+  grid-area: profile-right;
+}
+
+#main .layerOneInner .article .profile_box .profile_right .profile-title {
+  width: 80%;
+  font-weight: 900;
+}
+
+#main .layerOneInner .article .profile_box .profile_right table {
+  width: 40%;
+  height: 60%;
+  margin-top: 3vh;
+}
+
+#main .layerOneInner .article .profile_box .profile_right table tr td {
+  width: 20%;
+  text-align: left;
+}
+
+#main .layerOneInner .article .profile_box .profile_bottom {
+  -ms-grid-row: 2;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 8;
+  grid-area: profile-bottom;
+  text-align: left;
+  margin-left: 3vw;
+  margin-bottom: 1vh;
+  font-weight: bold;
+  color: white;
+  letter-spacing: 0.2vw;
+}
+
+@media screen and (max-width: 540px) {
+  #main .layerOneInner .article .profile_box {
+    visibility: hidden;
+    display: none;
+  }
 }
 
 #main .layerOneInner .article .generator_title {
