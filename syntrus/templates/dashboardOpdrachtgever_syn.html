@@ -26,11 +26,11 @@
     </tr>
     <tr>
       <td><p class="profile-title">Functie:</p></td>
-      <td>Functie</td>
+      <td>{{ request.user.functie }}</td>
     </tr>
     <tr>
       <td><p class="profile-title">Afdeling:</p></td>
-      <td>Afdeling</td>
+      <td>{{ request.user.afdeling }}</td>
     </tr>
   </table>
   </div>
@@ -117,5 +117,4 @@
       </tbody>
     </table>
 </div>
-
 {% endblock %}

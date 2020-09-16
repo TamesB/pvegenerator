@@ -79,9 +79,11 @@ class KoppelDerdeUserForm(ModelForm):
     class Meta:
         model = Invitation
         fields = {
-            'project', 'invitee',
+            'project', 'invitee', 'user_functie', 'user_afdeling',
         }
         labels = {
             'project':'Project:',
-            'invitee':'E-Mail:'
+            'invitee':'E-Mail:',
+            'user_functie':'Functie:',
+            'user_afdeling':'Afdeling:'
         }

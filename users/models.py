@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from users.managers import CustomUserManager
-
+from project.models import Beleggers
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     """
     A fully featured User model with admin-compliant permissions that uses
@@ -37,6 +37,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
                                  default='SD')
 
     omschrijving = models.TextField(max_length=1000, default=None, blank=True, null=True)
+
+    functie = models.CharField(max_length=500, default=None, blank=True, null=True)
+    afdeling = models.CharField(max_length=500, default=None, blank=True, null=True)
 
     objects = CustomUserManager()
 
@@ -71,6 +74,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Invitation(models.Model):
     inviter = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     invitee = models.EmailField()
+    user_functie = models.CharField(max_length=500, default=None, blank=True, null=True)
+    user_afdeling = models.CharField(max_length=500, default=None, blank=True, null=True)
     project = models.ForeignKey('project.Project', on_delete=models.CASCADE)
     expires = models.DateTimeField(auto_now=False)
     key = models.CharField(max_length=100)

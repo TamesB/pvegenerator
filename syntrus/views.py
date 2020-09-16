@@ -247,6 +247,8 @@ def AddDerde(request):
             invitation.inviter = request.user
             invitation.invitee = form.cleaned_data["invitee"]
             invitation.project = form.cleaned_data["project"]
+            invitation.user_functie = form.cleaned_data["user_functie"]
+            invitation.user_afdeling = form.cleaned_data["user_afdeling"]
 
             expiry_length = 10
             expire_date = datetime.datetime.now() + datetime.timedelta(expiry_length)
@@ -290,6 +292,8 @@ def AcceptInvite(request, key):
 
         if form.is_valid():
             form.email = invitation.invitee
+            form.functie = invitation.user_functie
+            form.afdeling = invitation.user_afdeling
             form.save()
 
             user = authenticate(request, username=form.cleaned_data["username"], password=form.cleaned_data["password1"])
