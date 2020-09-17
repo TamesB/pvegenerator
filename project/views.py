@@ -213,7 +213,7 @@ def ProjectViewView(request, pk):
     context["location"] = location
     return render(request, 'viewproject.html', context)
 
-@staff_member_required
+@login_required
 def download_pve(request, pk):
     if not models.Project.objects.filter(id=pk):
         raise Http404('404')

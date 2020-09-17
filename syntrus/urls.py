@@ -11,6 +11,7 @@ urlpatterns = [
     path('generate', views.GeneratePVEView, name="generate_syn"),
 
     path('project/<int:id>', views.ViewProject, name="viewproject_syn"),
+    path('project/<int:pk>/pve', views.download_pve, name="download_pve_syn"),
     path('project/add', views.AddProject, name="plusproject_syn"),
     path('account/add', views.AddAccount, name="plusaccount_syn"),
 

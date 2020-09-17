@@ -835,14 +835,9 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .invite-container .box {
-  margin: 8em;
-  margin-left: 12em;
-  margin-right: 12em;
-  padding: 8em;
-  padding-top: 4em;
-  padding-left: 10em;
-  padding-right: 10em;
-  padding-bottom: 1.5em;
+  padding-top: 6vh;
+  padding-left: 3vw;
+  padding-right: 3vw;
   font-family: 'Montserrat';
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
@@ -853,14 +848,14 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .invite-container .box .title {
-  font-size: 2em;
+  font-size: 2vh;
   font-weight: 900;
 }
 
 #main .layerOneInner .article .article_content .invite-container .box .description {
-  padding-bottom: 1em;
+  padding-bottom: 1vh;
   border-bottom: 0.2em solid #99beb9;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.1vw;
   color: #3b3b3b;
 }
 
@@ -868,56 +863,56 @@ body, html {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  padding-top: 2em;
+  padding-top: 2vh;
 }
 
 #main .layerOneInner .article .article_content .invite-container .box form .formtitle {
   font-weight: 900;
-  font-size: 1.5em;
+  font-size: 1.5vh;
 }
 
 #main .layerOneInner .article .article_content .invite-container .box form label {
   font-weight: 900;
-  font-size: 1.3em;
+  font-size: 1.3vh;
 }
 
 #main .layerOneInner .article .article_content .invite-container .box form .formbox {
   width: 100%;
-  height: 3em;
-  margin-bottom: 3em;
-  font-size: 1.5em;
+  height: 3vh;
+  margin-bottom: 3vh;
+  font-size: 1.5vh;
 }
 
 #main .layerOneInner .article .article_content .invite-container .box form .formbox input {
   -ms-flex-item-align: center;
       -ms-grid-row-align: center;
       align-self: center;
-  margin-top: 1em;
+  margin-top: 1vh;
   width: 50%;
-  height: 2em;
+  height: 3vh;
 }
 
 #main .layerOneInner .article .article_content .invite-container .box form .formbox select {
   -ms-flex-item-align: center;
       -ms-grid-row-align: center;
       align-self: center;
-  margin-top: 1em;
+  margin-top: 1vh;
   width: 50%;
-  height: 2em;
+  height: 3vh;
 }
 
 #main .layerOneInner .article .article_content .invite-container .box form .button {
-  width: 12em;
-  height: 3em;
+  width: 15vw;
+  height: 5vh;
+  margin-bottom: 2vh;
+  margin-top: 2vh;
   background-color: #026189;
   border-style: none;
   border-radius: 1.6vh;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  margin-top: 1em;
-  bottom: 0;
   outline: none;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.1vw;
   font-family: 'Montserrat';
   color: white;
   font-weight: 800;

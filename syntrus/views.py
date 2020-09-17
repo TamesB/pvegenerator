@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from syntrus import forms
-from project.models import Project
+from project.models import Project, PVEItemAnnotation
 from users.models import Invitation, CustomUser
 from syntrus.forms import KoppelDerdeUserForm
 from users.forms import AcceptInvitationForm
@@ -68,7 +68,11 @@ def DashboardView(request):
         #    else:
         #        locations[project] = geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}").raw['address']['town']
         #context["locations"] = locations
-        
+    
+    if PVEItemAnnotation.objects.filter(gebruiker=request.user):
+        opmerkingen = PVEItemAnnotation.objects.filter(gebruiker=request.user, project__belegger__naam='Syntrus')
+        context["opmerkingen"] = opmerkingen
+
     if request.user.type_user == 'B':
         return render(request, 'dashboardBeheerder_syn.html', context)
     if request.user.type_user == 'SB':
@@ -198,6 +202,68 @@ def GeneratePVEView(request):
     context["form"] = forms.PVEParameterForm()
     return render(request, 'GeneratePVE_syn.html', context)
 
+@login_required
+def download_pve(request, pk):
+    if not Project.objects.filter(id=pk):
+        raise Http404('404')
+    
+    if request.user.type_user != 'B':
+        if not Project.objects.filter(id=pk, permitted__username__contains=request.user.username):
+            raise Http404('404')
+
+    project = Project.objects.filter(id=pk).first()
+    basic_PVE = models.PVEItem.objects.filter(projects__id__contains=pk)
+
+    # make sure pve is ordered
+    basic_PVE = basic_PVE.order_by('id')
+    # make pdf
+    parameters = []
+
+    if project.bouwsoort1:
+        parameters += f"{project.bouwsoort1.parameter} (Hoofd)",
+    if project.bouwsoort2:
+        parameters += f"{project.bouwsoort2.parameter} (Sub)",
+    if project.typeObject1:
+        parameters += f"{project.typeObject1.parameter} (Hoofd)",
+    if project.typeObject2:
+        parameters += f"{project.typeObject2.parameter} (Sub)",
+    if project.doelgroep1:
+        parameters += f"{project.doelgroep1.parameter} (Hoofd)",
+    if project.doelgroep2:
+        parameters += f"{project.doelgroep2.parameter} (Sub)",
+
+    date = datetime.datetime.now()
+
+    fileExt = "%s%s%s%s%s%s" % (
+        date.strftime("%H"),
+        date.strftime("%M"),
+        date.strftime("%S"),
+        date.strftime("%d"),
+        date.strftime("%m"),
+        date.strftime("%Y")
+    )
+
+    filename = f"PvE-{fileExt}"
+    zipFilename = f"PvE_Compleet-{fileExt}"
+
+    pdfmaker = writePdf.PDFMaker()
+    pdfmaker.makepdf(filename, basic_PVE, parameters)
+
+    # get bijlagen
+    bijlagen = [item for item in basic_PVE if item.bijlage]
+
+    if bijlagen:
+        zipmaker = createBijlageZip.ZipMaker()
+        zipmaker.makeZip(zipFilename, filename, bijlagen)
+    else:
+        zipFilename = False
+
+    # and render the result page
+    context = {}
+    context["itemsPVE"] = basic_PVE
+    context["filename"] = filename
+    context["zipFilename"] = zipFilename
+    return render(request, 'PVEResult_syn.html', context)
 
 @login_required(login_url='login_syn')
 def ViewProject(request, pk):
