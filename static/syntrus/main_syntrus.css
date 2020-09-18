@@ -929,6 +929,21 @@ body, html {
           transform: translateY(4px);
 }
 
+#main .layerOneInner .article .article_content .opmerking_project_list .general_title {
+  margin-bottom: 4vh;
+}
+
+#main .layerOneInner .article .article_content .opmerking_project_list .main_content_div .project_overview_content {
+  width: 100%;
+  padding-top: 1.5vh;
+}
+
+#main .layerOneInner .article .article_content .opmerking_project_list .main_content_div .project_overview_content .table_title {
+  margin-top: 1vh;
+  color: white;
+  font-size: 2vh;
+}
+
 #main .layerOneInner .article .article_content .opmerking_form .general_title .submit_button {
   font-family: 'Montserrat';
   padding: 0;
@@ -937,6 +952,13 @@ body, html {
   height: 100%;
   width: 8vw;
   margin-right: 2vw;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list {
+  margin-top: 4vh;
+  height: 75vh;
+  max-height: 75vh;
+  overflow-y: scroll;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .hoofdstuk {

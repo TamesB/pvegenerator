@@ -831,7 +831,24 @@ body, html {
                         }
                     }
                 }
+                .opmerking_project_list {
+                    .general_title {
+                        margin-bottom: 4vh;
+                    }
 
+                    .main_content_div {
+                        .project_overview_content {
+                            width: 100%;
+                            padding-top: 1.5vh;
+                            .table_title {
+                                margin-top: 1vh;
+                                color: white;
+                                font-size: 2vh;
+                            }
+                        }
+                    }
+
+                }
                 .opmerking_form {
                     .general_title {                        
                         .submit_button {
@@ -846,6 +863,10 @@ body, html {
                     }
 
                     .item_opmerking_list {
+                        margin-top: 4vh;
+                        height: 75vh;
+                        max-height: 75vh;
+                        overflow-y: scroll;
 
                         .hoofdstuk {
                             background-color: #31859a;
