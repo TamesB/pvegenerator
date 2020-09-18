@@ -12,6 +12,8 @@ urlpatterns = [
 
     path('project/<int:id>', views.ViewProject, name="viewproject_syn"),
     path('project/<int:pk>/pve', views.download_pve, name="download_pve_syn"),
+    path('comment', views.AddCommentOverview, name="plusopmerkingOverview_syn"),
+    path('project/<int:pk>/comment/add', views.AddComment, name="plusopmerking_syn"),
     path('project/add', views.AddProject, name="plusproject_syn"),
     path('account/add', views.AddAccount, name="plusaccount_syn"),
 

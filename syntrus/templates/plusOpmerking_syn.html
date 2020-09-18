@@ -1,0 +1,109 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+
+{% block menu %}
+<div class="hamburger"><img src="{% static 'syntrus/svg/hamburger.svg' %}"></img></div>
+<div class="menu_item"><a href="{% url 'dashboard_syn' %}">Dashboard</a></div>
+<div class="menu_item"><a href="{% url 'plusopmerkingOverview_syn' %}" class="active">+ Opmerking</a></div>
+<div class="menu_item"><a href="{% url 'invite_syn' %}">+ Derden</a></div>
+<div class="menu_item"><a href="#">Download PVE</a></div>
+<div class="hori-menu-logout">
+    <a href="{% url 'dashboard_syn' %}">Ingelogd als {{ request.user }}</a>
+    <a href="{% url 'logout_syn' %}">Afmelden</a>
+</div>
+{% endblock %}
+
+{% block main %}
+<form class="opmerking_form" action="{% url 'plusopmerking_syn' project.id %}" method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>+ Opmerking <input type="submit" class="submit_button" value="Klaar"></input></p></div>
+
+{% if items %}
+
+
+<div class="item_opmerking_list">
+
+{% for hoofdstuk, one_deep in hoofdstuk_ordered_items.items %}
+    <button type="button" class="hoofdstuk">{{ hoofdstuk.hoofdstuk }}</button>
+    <div class="hoofdstuk_content">
+    {% if one_deep.items %}
+        {% for paragraaf, items in one_deep.items %}
+            <button type="button" class="paragraaf">{{ paragraaf.paragraaf }}</button>
+            <div class="paragraaf_content">
+                {% for item in items %}
+                    <p onClick="document.getElementById('{{ item.id }}').style.display='block'">{{ item.inhoud }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% else %}
+        {% for item in one_deep %}
+        <p onClick="document.getElementById('{{ item.id }}').style.display='block'">{{ item.inhoud }}</p>
+        {% endfor %}  
+    {% endif %}
+    </div>
+{% endfor %}
+</div>
+<div class="opmerking_form_modal">
+        {% for form in forms %}
+            <div id="{{ form.item_id.value }}" class="w3-modal">
+                <div class="w3-modal-content">
+                    <div class="w3-container">
+                        <input class="item-id" type="hidden" value="{{ form.item_id.value }}">
+
+                        <label for="{{ form.annotation.id_for_label }}">Opmerking:</label>
+                        <p class="formbox">{{ form.annotation }}</p>
+                        <label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil:</label>
+                        <p class="formbox">{{ form.kostenConsequenties }}</p>
+                    
+                        <div onclick="document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button"><p>Gereed</p></div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+</div>
+{% else %}
+<p>Nog geen PVE gekoppeld aan dit project.</p>
+{% endif %}
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+var coll = document.getElementsByClassName("hoofdstuk");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+
+var coll2 = document.getElementsByClassName("paragraaf");
+var i;
+
+for (i = 0; i < coll2.length; i++) {
+  coll2[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+
+</script>
+{% endblock %}

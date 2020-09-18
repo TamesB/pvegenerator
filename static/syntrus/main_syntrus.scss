@@ -58,28 +58,29 @@ body, html {
         background: white;
         font-family: 'Montserrat';
         font-weight: bold;
-        font-size: 2em;
+        font-size: 3vh;
         text-align: center;
         position: fixed; /* or absolute */
-        padding: 2em;
+        padding: 4vh 4vw;
         border-radius: 1.6vh;
         -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
         -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
         box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
 
         img {
-            padding: 1.5em;
-            width: 15em;
+            padding: 1.5vw 1.5vh;
+            width: 20vw;
+            min-width: 250px;
         }
 
         .login-button {
             font-family: 'Montserrat';
             font-weight: bold;
-            font-size: 2em;
+            font-size: 2vh;
             color: white;
             border: none;
-            width: 5em;
-            height: 2em;
+            width: 10vw;
+            height: 5vh;
             align-items: center;
             background: rgb(4, 172, 172);
             border-radius: 1.6vh;
@@ -88,6 +89,7 @@ body, html {
             box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
             margin-top: 1em;
             outline: none;
+            min-width: 80px;
         }
         .login-button:hover {
             opacity: 0.7;
@@ -302,8 +304,6 @@ body, html {
                 margin-top: 3vh;
                 margin-left: 10vw;
                 margin-right: 7vw;
-
-                max-width: 1500px;
             
                 .flex-container {
                     display: flex;
@@ -499,7 +499,7 @@ body, html {
                     }
                 }
 
-                .generator_title {
+                .general_title {
                     height: 7vh;    
                     background: rgba(247,247,248,1);
                     border-radius: 1.6vh;
@@ -747,7 +747,8 @@ body, html {
                     justify-content: center;
 
                     .box {
-                        padding-top: 6vh;
+                        margin-top: 3vh;
+                        padding-top: 3vh;
                         padding-left: 3vw;
                         padding-right: 3vw;
                         font-family: 'Montserrat';
@@ -830,6 +831,163 @@ body, html {
                         }
                     }
                 }
+
+                .opmerking_form {
+                    .general_title {                        
+                        .submit_button {
+                            font-family: 'Montserrat';
+                            padding: 0;
+                            font-size: 1.5vh;
+                            float: right;
+                            height: 100%;
+                            width: 8vw;
+                            margin-right: 2vw;
+                        }
+                    }
+
+                    .item_opmerking_list {
+
+                        .hoofdstuk {
+                            background-color: #31859a;
+                            color: white;
+                            cursor: pointer;
+                            padding: 18px;
+                            width: 100%;
+                            border: none;
+                            text-align: left;
+                            outline: none;
+                            font-size: 1.7vh;
+                            font-weight: bold;
+                        }
+                            
+                        .hoofdstuk:hover {
+                            opacity: 0.7;
+                        }
+                        
+                        .hoofdstuk_content {
+                            display: none;
+                            overflow: hidden;
+                            background-color: #f1f1f1;
+                        }
+                        .paragraaf {
+                            background-color: #b6dde8;
+                            color: #215967;
+                            cursor: pointer;
+                            padding-top: 1em;
+                            padding-bottom: 1em;
+                            padding-left: 2vw;
+                            width: 100%;
+                            border: none;
+                            text-align: left;
+                            outline: none;
+                            font-size: 1.6vh;
+                            font-weight: bold;
+                        }
+                            
+                        .paragraaf:hover {
+                            opacity: 0.7;
+                        }
+                        
+                        .paragraaf_content {
+                            display: none;
+                            overflow: hidden;
+                            background-color: #f1f1f1;
+                            transition: 0.1s ease;
+                        }
+
+                        p {
+                            font-size: 1.5vh;
+                            text-align: left;
+                            padding-top: 0.5vh;
+                            padding-bottom: 0.5vh;
+                            margin: 0;
+                            padding-left: 4vw;
+                            cursor: pointer;
+                        }
+                        p:nth-child(even) {
+                            background-color: white;
+                        }                            
+                        p:nth-child(odd) {
+                            background-color: #daedf2;
+                        }
+                        p:hover {
+                            opacity: 0.7;
+                        }
+                    }
+
+                    .opmerking_form_modal {
+                        .w3-modal {                        
+                            .w3-modal-content {
+                                width: 50vw;
+                                .w3-container {
+                                    height: 30vh;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    justify-content: center;
+                                    margin: 0;
+                                    font-family: 'Montserrat';
+                                    padding: 0;
+                                    padding-top: 3vh;
+                                    padding-bottom: 3vh;
+                                    border-radius: 16px;
+
+                                    .item-id {
+                                        display: none;
+                                    }
+                                    label {
+                                        font-family: 'Montserrat';
+                                        margin-top: 1.5vh;
+                                        font-size: 1.5vh;
+                                        font-weight: bold;
+                                    }
+                                    .formbox {
+                                        margin-bottom: 2vh;
+                                        padding: 0;
+                                        margin-top: 2vh;
+                                        height: 5vh;
+
+                                        textarea {
+                                            height: 100%;
+                                            color: black;
+                                        }
+                                    }
+
+                                    .done_button {
+                                        display: flex;
+                                        align-items: center;
+                                        justify-self: center;
+                                        background-color: #31859a;
+                                        width: 15vw;
+                                        height: 6vh;
+                                        cursor: pointer;
+                                        border-radius: 16px;
+
+                                        p {
+                                            width: 100%;
+                                            display: flex;
+                                            align-self: center;
+                                            font-family: 'Montserrat';
+                                            font-size: 1.5vh;
+                                            margin-left: 5vw;
+                                            text-align: center;
+                                            font-weight: bold;
+                                            color: white;
+                                        }
+                                    }
+
+                                    .done_button:hover {
+                                        opacity: 0.7;
+                                    }
+                                }
+                            }
+                        }
+                        .button {
+                            width: 5vw;
+                            height: 3vh;
+                        }
+                    }
+                }
             }
 
             @media screen and (max-width: 768px) {
@@ -852,7 +1010,7 @@ body, html {
 
 #login-box {
     display: flex;
-    margin: 15em 15em 15em 15em;
+    margin: 15vh 15vw;
     float: center;
 }
   

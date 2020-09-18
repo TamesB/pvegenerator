@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from users.managers import CustomUserManager
 from project.models import Beleggers
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     """
     A fully featured User model with admin-compliant permissions that uses

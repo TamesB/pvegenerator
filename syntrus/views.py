@@ -280,6 +280,85 @@ def ViewProject(request, pk):
     return render(request, 'projectView_syn.html', context)
 
 @login_required(login_url='login_syn')
+def AddCommentOverview(request):
+    context = {}
+
+    if Project.objects.filter(permitted__username__contains=request.user):
+        projects = Project.objects.filter(permitted__username__contains=request.user)
+        context["projects"] = projects
+
+    return render(request, 'plusOpmerkingOverview_syn.html', context)
+
+@login_required(login_url='login_syn')
+def AddComment(request, pk):
+    context = {}
+
+    if not Project.objects.filter(id=pk):
+        return render(request, '404_syn.html')
+
+    project = Project.objects.filter(id=pk).first()
+
+    # multiple forms!
+    if request.method == "POST":
+        ann_forms = [
+            forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, kostenConsequenties=kosten))
+            for item_id, opmrk, kosten in zip(
+                request.POST.getlist("item_id"),
+                request.POST.getlist("annotation"),
+                request.POST.getlist("kostenConsequenties"),
+            )
+        ]
+
+        # only use valid forms
+        ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
+
+        # second check, save in annotations
+        if all(ann_forms[i].is_valid() for i in range(len(ann_forms))):                
+            for form in ann_forms:
+                if form.cleaned_data["annotation"]:
+                    annotation = PVEItemAnnotation()
+                    annotation.project = project
+                    annotation.item = models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()
+                    annotation.annotation = form.cleaned_data["annotation"]
+                    annotation.gebruiker = request.user
+                    if form.cleaned_data["kostenConsequenties"]:
+                        annotation.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+
+                    annotation.save()
+
+            messages.warning(request, f"{range(len(ann_forms))} opmerkingen toegevoegd.")
+            return redirect('dashboard_syn')
+
+    if models.PVEItem.objects.filter(projects__id__contains=pk):
+        items = models.PVEItem.objects.filter(projects__id__contains=pk).order_by('id')
+        ann_forms = [forms.PVEItemAnnotationForm(initial={'item_id':item.id}) for item in items]
+
+        hoofdstuk_ordered_items = {}
+
+        for item in items:
+            if item.paragraaf:
+                if item.hoofdstuk not in hoofdstuk_ordered_items.keys():
+                    	hoofdstuk_ordered_items[item.hoofdstuk] = {}
+
+                if item.paragraaf in hoofdstuk_ordered_items[item.hoofdstuk]:
+                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append(item)
+                else:
+                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [item]
+            else:
+                if item.hoofdstuk in hoofdstuk_ordered_items:
+                    hoofdstuk_ordered_items[item.hoofdstuk].append(item)
+                else:
+                    hoofdstuk_ordered_items[item.hoofdstuk] = [item]
+
+        context["forms"] = ann_forms
+        context["items"] = items
+        context["hoofdstuk_ordered_items"] = hoofdstuk_ordered_items
+
+    context["project"] = project
+    return render(request, 'plusOpmerking_syn.html', context)
+
+
+@login_required(login_url='login_syn')
 def AddProject(request):
     allowed_users = ["B", "SB"]
     if request.user.type_user not in allowed_users:
@@ -296,7 +375,6 @@ def AddAccount(request):
 
     context = {}
     return render(request, 'plusAccount_syn.html', context)
-
 
 @login_required(login_url='login_syn')
 def AddDerde(request):

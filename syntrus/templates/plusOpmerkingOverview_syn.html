@@ -1,0 +1,29 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+
+{% block menu %}
+<div class="hamburger"><img src="{% static 'syntrus/svg/hamburger.svg' %}"></img></div>
+<div class="menu_item"><a href="{% url 'dashboard_syn' %}">Dashboard</a></div>
+<div class="menu_item"><a href="{% url 'plusopmerkingOverview_syn' %}" class="active">+ Opmerking</a></div>
+<div class="menu_item"><a href="{% url 'invite_syn' %}">+ Derden</a></div>
+<div class="menu_item"><a href="#">Download PVE</a></div>
+<div class="hori-menu-logout">
+    <a href="{% url 'dashboard_syn' %}">Ingelogd als {{ request.user }}</a>
+    <a href="{% url 'logout_syn' %}">Afmelden</a>
+</div>
+{% endblock %}
+
+{% block main %}
+    <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>+ Opmerking</p></div>
+    <div class="generator_form">
+        <div class="parameter_container">
+            {% for project in projects %}
+                <p><a href="{% url 'plusopmerking_syn' project.id %}">{{ project.naam }}</a></p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

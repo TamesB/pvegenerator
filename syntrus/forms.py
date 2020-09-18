@@ -87,3 +87,8 @@ class KoppelDerdeUserForm(ModelForm):
             'user_functie':'Functie:',
             'user_afdeling':'Afdeling:'
         }
+
+class PVEItemAnnotationForm(forms.Form):
+    item_id = forms.IntegerField(label='item_id')
+    annotation = forms.CharField(label='Opmerking', max_length=1000, widget=forms.Textarea, required=False)
+    kostenConsequenties = forms.DecimalField(label='(Optioneel) Kosten Consequenties', required=False, min_value=0)
