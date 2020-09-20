@@ -6,18 +6,7 @@ body, html {
     font-size: 0px;
     line-height: 0em;
 }
-.loader {
-    border: 16px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 16px solid #3498db;
-    width: 5em;
-    margin-left: 50%;
-    margin-top: 50%;
-    height: 5em;
-    position: absolute;
-    -webkit-animation: spin 0.3s linear infinite; /* Safari */
-    animation: spin 0.3s linear infinite;
-}
+
 .centered_div {
     display: flex;
     width: 100vw;
@@ -304,7 +293,7 @@ body, html {
                 margin-top: 3vh;
                 margin-left: 10vw;
                 margin-right: 7vw;
-            
+
                 .flex-container {
                     display: flex;
                     flex-wrap: wrap;
@@ -859,7 +848,24 @@ body, html {
                             height: 100%;
                             width: 8vw;
                             margin-right: 2vw;
+                            background-color: #026189;
+                            border-radius: 16px;
+                            -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                            -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                            box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                            outline: none;
+                            border-style: none;
+                            color: white;
+                            font-weight: bold;
+                            cursor: pointer;
                         }
+                        .submit_button:hover {
+                            opacity: 0.7;
+                        }
+                
+                        .submit_button:active {
+                            transform: translateY(4px);
+                        }    
                     }
 
                     .item_opmerking_list {
@@ -889,7 +895,9 @@ body, html {
                             display: none;
                             overflow: hidden;
                             background-color: #f1f1f1;
+                            transition: 0.1s ease;
                         }
+
                         .paragraaf {
                             background-color: #b6dde8;
                             color: #215967;
@@ -1048,3 +1056,29 @@ body, html {
     }
  }
  
+ .loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 5em;
+    height: 5em;
+    margin-top: 20%;
+    position: absolute;
+    z-index: 2;
+    margin-left: 50%;
+    -webkit-animation: spin 0.3s linear infinite; /* Safari */
+    animation: spin 0.3s linear infinite;
+}
+
+@-moz-keyframes spin {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}

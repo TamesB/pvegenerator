@@ -1,5 +1,9 @@
-function fadeInPage() {
-    if (!window.AnimationEvent) { return; }
-    var fader = document.getElementById('fader');
-    fader.classList.add('fade-out');
-}
+$(function() {
+    $('#main .layerOneInner .article .article_content').css('display', 'none');
+    $('#main .layerOneInner .article .article_content').fadeIn(200);
+});
+
+$(window).on('beforeunload', function() {
+    $('#main .layerOneInner .article .article_content').fadeOut(200);
+    $('#main .layerOneInner .article .loader').delay(500).fadeIn(200);
+});

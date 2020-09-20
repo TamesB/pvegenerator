@@ -6,20 +6,6 @@ body, html {
   line-height: 0em;
 }
 
-.loader {
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid #3498db;
-  width: 5em;
-  margin-left: 50%;
-  margin-top: 50%;
-  height: 5em;
-  position: absolute;
-  -webkit-animation: spin 0.3s linear infinite;
-  /* Safari */
-  animation: spin 0.3s linear infinite;
-}
-
 .centered_div {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -952,6 +938,24 @@ body, html {
   height: 100%;
   width: 8vw;
   margin-right: 2vw;
+  background-color: #026189;
+  border-radius: 16px;
+  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  outline: none;
+  border-style: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .general_title .submit_button:hover {
+  opacity: 0.7;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .general_title .submit_button:active {
+  -webkit-transform: translateY(4px);
+          transform: translateY(4px);
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list {
@@ -982,6 +986,8 @@ body, html {
   display: none;
   overflow: hidden;
   background-color: #f1f1f1;
+  -webkit-transition: 0.1s ease;
+  transition: 0.1s ease;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .paragraaf {
@@ -1155,5 +1161,40 @@ body, html {
   bottom: 0;
   height: 2.5rem;
   /* Footer height */
+}
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 5em;
+  height: 5em;
+  margin-top: 20%;
+  position: absolute;
+  z-index: 2;
+  margin-left: 50%;
+  -webkit-animation: spin 0.3s linear infinite;
+  /* Safari */
+  animation: spin 0.3s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
 }
 /*# sourceMappingURL=main_syntrus.css.map */

@@ -34,7 +34,7 @@
             {% for project in projects %}
         <tr class="table_content">
           <td>{{ project.naam }}</td>
-          <td><a href="{% url 'plusopmerking_syn' project.id %}"><img src="{% static 'syntrus/img/plus.png' %}"></img></a></td>
+          <td class="link"><a href="{% url 'plusopmerking_syn' project.id %}"><img src="{% static 'syntrus/img/plus.png' %}"></img></a></td>
         </tr>
         {% endfor %}
         {% else %}

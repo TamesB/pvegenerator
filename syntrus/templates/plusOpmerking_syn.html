@@ -21,7 +21,7 @@
 <form class="opmerking_form" action="{% url 'plusopmerking_syn' project.id %}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 
-<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>+ Opmerking <input type="submit" class="submit_button" value="Klaar"></input></p></div>
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>+ Opmerking <input type="submit" class="submit_button" value="Opslaan"></input></p></div>
 
 {% if items %}
 
