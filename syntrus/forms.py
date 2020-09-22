@@ -3,7 +3,7 @@
 from django import forms
 from django.forms import ModelForm
 from app.models import Bouwsoort, TypeObject, Doelgroep, PVEItem
-from project.models import Project
+from project.models import Project, PVEItemAnnotation
 from users.models import Invitation
 class LoginForm(forms.Form):
     attrs = {
@@ -92,3 +92,4 @@ class PVEItemAnnotationForm(forms.Form):
     item_id = forms.IntegerField(label='item_id')
     annotation = forms.CharField(label='Opmerking', max_length=1000, widget=forms.Textarea, required=False)
     kostenConsequenties = forms.DecimalField(label='(Optioneel) Kosten Consequenties', required=False, min_value=0)
+    annbijlage = forms.FileField(required=False)

@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.gis.db import models
 from django.contrib.gis import forms
+from utils.upload_rename import upload_to
 
 class Beleggers(models.Model):
     naam = models.CharField(max_length=100, blank=True, null=True)
@@ -51,6 +52,7 @@ class PVEItemAnnotation(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, default=None)
     item = models.ForeignKey('app.PVEItem', on_delete=models.CASCADE, default=None)
     annotation = models.TextField(max_length=1000, default=None)
+    annbijlage = models.FileField(blank=True, null=True, upload_to=upload_to('OpmerkingBijlages'))
     gebruiker = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, default=None)
     datum = models.DateTimeField(auto_now=True)
     kostenConsequenties = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=None)

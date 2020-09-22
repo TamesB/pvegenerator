@@ -298,20 +298,26 @@ def AddComment(request, pk):
 
     project = Project.objects.filter(id=pk).first()
 
+    if request.user not in project.permitted.all():
+        return render(request, '404_syn.html')
+
     # multiple forms!
     if request.method == "POST":
         ann_forms = [
-            forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, kostenConsequenties=kosten))
-            for item_id, opmrk, kosten in zip(
+            forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, kostenConsequenties=kosten, annbijlage=annbijlage))
+            for item_id, opmrk, kosten, annbijlage in zip(
                 request.POST.getlist("item_id"),
                 request.POST.getlist("annotation"),
                 request.POST.getlist("kostenConsequenties"),
+                request.FILES.getlist("annbijlage"),
             )
         ]
 
+        print(request.POST.getlist("item_id"), request.POST.getlist("annotation"), request.POST.getlist("kostenConsequenties"))
+        print(ann_forms)
         # only use valid forms
         ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
-
+        print(ann_forms)
         # second check, save in annotations
         if all(ann_forms[i].is_valid() for i in range(len(ann_forms))):                
             for form in ann_forms:
@@ -323,7 +329,8 @@ def AddComment(request, pk):
                     annotation.gebruiker = request.user
                     if form.cleaned_data["kostenConsequenties"]:
                         annotation.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
-
+                    if form.cleaned_data["annbijlage"]:
+                        annotation.annbijlage = form.cleaned_data["annbijlage"]
                     annotation.save()
 
             messages.warning(request, f"{range(len(ann_forms))} opmerkingen toegevoegd.")

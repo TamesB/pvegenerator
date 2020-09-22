@@ -937,6 +937,7 @@ body, html {
   float: right;
   height: 100%;
   width: 8vw;
+  min-width: 90px;
   margin-right: 2vw;
   background-color: #026189;
   border-radius: 16px;
@@ -963,6 +964,18 @@ body, html {
   height: 75vh;
   max-height: 75vh;
   overflow-y: scroll;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .arrow-down {
+  display: block;
+  float: right;
+  max-height: 1vh;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .arrow-up {
+  display: none;
+  float: right;
+  max-height: 1vh;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .hoofdstuk {
@@ -997,6 +1010,7 @@ body, html {
   padding-top: 1em;
   padding-bottom: 1em;
   padding-left: 2vw;
+  padding-right: 18px;
   width: 100%;
   border: none;
   text-align: left;
@@ -1015,6 +1029,14 @@ body, html {
   background-color: #f1f1f1;
   -webkit-transition: 0.1s ease;
   transition: 0.1s ease;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .active .arrow-down {
+  display: none;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .active .arrow-up {
+  display: block;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list p {
@@ -1044,7 +1066,7 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container {
-  height: 30vh;
+  height: 40vh;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1099,21 +1121,20 @@ body, html {
   justify-self: center;
   background-color: #31859a;
   width: 15vw;
+  min-width: 100px;
+  max-width: 125px;
+  padding-left: 3vw;
+  text-align: center;
   height: 6vh;
   cursor: pointer;
   border-radius: 16px;
+  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .done_button p {
-  width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-item-align: center;
-      align-self: center;
   font-family: 'Montserrat';
   font-size: 1.5vh;
-  margin-left: 5vw;
   text-align: center;
   font-weight: bold;
   color: white;
@@ -1166,7 +1187,7 @@ body, html {
 .loader {
   border: 16px solid #f3f3f3;
   border-radius: 50%;
-  border-top: 16px solid #3498db;
+  border-top: 16px solid #00aca9;
   width: 5em;
   height: 5em;
   margin-top: 20%;
