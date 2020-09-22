@@ -313,11 +313,9 @@ def AddComment(request, pk):
             )
         ]
 
-        print(request.POST.getlist("item_id"), request.POST.getlist("annotation"), request.POST.getlist("kostenConsequenties"))
-        print(ann_forms)
         # only use valid forms
         ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
-        print(ann_forms)
+
         # second check, save in annotations
         if all(ann_forms[i].is_valid() for i in range(len(ann_forms))):                
             for form in ann_forms:
@@ -357,8 +355,12 @@ def AddComment(request, pk):
                 else:
                     hoofdstuk_ordered_items[item.hoofdstuk] = [item]
 
+        # easy entrance to item ids
+        form_item_ids = [item.id for item in items]
+
         context["forms"] = ann_forms
         context["items"] = items
+        context["form_item_ids"] = form_item_ids
         context["hoofdstuk_ordered_items"] = hoofdstuk_ordered_items
 
     context["project"] = project

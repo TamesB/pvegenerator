@@ -1062,11 +1062,10 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content {
-  width: 50vw;
+  width: 75%;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container {
-  height: 40vh;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1086,6 +1085,7 @@ body, html {
   padding-top: 3vh;
   padding-bottom: 3vh;
   border-radius: 16px;
+  overflow-y: scroll;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .item-id {
@@ -1097,6 +1097,18 @@ body, html {
   margin-top: 1.5vh;
   font-size: 1.5vh;
   font-weight: bold;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .item_label {
+  margin-top: 4vh;
+  margin-bottom: 2vh;
+  float: left;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .inhoud {
+  margin-right: 5vw;
+  margin-left: 5vw;
+  float: left;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .formbox {
@@ -1111,37 +1123,54 @@ body, html {
   color: black;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .done_button {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  justify-self: center;
+#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons {
+  display: inline;
+  width: 100%;
+  padding-left: 3vw;
+  padding-right: 3vw;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .done_button {
+  display: inline-block;
   background-color: #31859a;
   width: 15vw;
   min-width: 100px;
   max-width: 125px;
-  padding-left: 3vw;
-  text-align: center;
-  height: 6vh;
+  height: 4vh;
   cursor: pointer;
   border-radius: 16px;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .done_button p {
+#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .done_button p {
   font-family: 'Montserrat';
   font-size: 1.5vh;
+  margin-top: 0.5vh;
   text-align: center;
   font-weight: bold;
   color: white;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .done_button:hover {
+#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .done_button:hover {
   opacity: 0.7;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .done_button:active {
+  -webkit-transform: translateY(4px);
+          transform: translateY(4px);
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .right {
+  float: right;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .left {
+  float: left;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .center {
+  float: center;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .button {

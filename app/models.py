@@ -81,7 +81,4 @@ class PVEItem(models.Model):
     projects = models.ManyToManyField('project.Project', blank=True)
 
     def __str__(self):
-        if self.paragraaf:
-            return f"Item: {self.id}, Paragraaf: {self.paragraaf}"
-        
-        return f"Item: {self.id}, Hoofdstuk: {self.hoofdstuk}"
+        return f"{self.inhoud}"
