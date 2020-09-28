@@ -203,6 +203,14 @@ def GeneratePVEView(request):
     return render(request, 'GeneratePVE_syn.html', context)
 
 @login_required
+def download_pve_overview(request):    
+    projects = Project.objects.filter(permitted__username__contains=request.user.username)
+
+    context = {}
+    context["projects"] = projects
+    return render(request, 'downloadPveOverview_syn.html', context)
+    
+@login_required
 def download_pve(request, pk):
     if not Project.objects.filter(id=pk):
         raise Http404('404')

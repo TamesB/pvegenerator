@@ -11,6 +11,7 @@ urlpatterns = [
     path('generate', views.GeneratePVEView, name="generate_syn"),
 
     path('project/<int:id>', views.ViewProject, name="viewproject_syn"),
+    path('project/pve', views.download_pve_overview, name="downloadPveOverview_syn"),
     path('project/<int:pk>/pve', views.download_pve, name="download_pve_syn"),
     path('comment', views.AddCommentOverview, name="plusopmerkingOverview_syn"),
     path('project/<int:pk>/comment/add', views.AddComment, name="plusopmerking_syn"),

@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Monsterrat:400,700');
+@font-face {
+    font-family: 'Montserrat';
+    src: url(https://fonts.googleapis.com/css?family=Montserrat);
+}
 
 body, html {
     font-family: 'Montserrat';
@@ -1072,6 +1075,18 @@ body, html {
                         .button {
                             width: 5vw;
                             height: 3vh;
+                        }
+                    }
+                }
+                .popup_wrapper {
+                    font-family: 'Montserrat';
+                    overflow-y: scroll;
+
+                    .download_pve_menu {
+                        .pop-up-table {
+                            .dimg {
+                                width: 3vw;
+                            }
                         }
                     }
                 }

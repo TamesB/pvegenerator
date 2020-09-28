@@ -1,4 +1,8 @@
-@import url("https://fonts.googleapis.com/css?family=Monsterrat:400,700");
+@font-face {
+  font-family: 'Montserrat';
+  src: url(https://fonts.googleapis.com/css?family=Montserrat);
+}
+
 body, html {
   font-family: 'Montserrat';
   margin: 0;
@@ -1176,6 +1180,15 @@ body, html {
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .button {
   width: 5vw;
   height: 3vh;
+}
+
+#main .layerOneInner .article .article_content .popup_wrapper {
+  font-family: 'Montserrat';
+  overflow-y: scroll;
+}
+
+#main .layerOneInner .article .article_content .popup_wrapper .download_pve_menu .pop-up-table .dimg {
+  width: 3vw;
 }
 
 @media screen and (max-width: 768px) {

@@ -1,0 +1,43 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+
+{% block menu %}
+<div class="hamburger"><img src="{% static 'syntrus/svg/hamburger.svg' %}"></img></div>
+<div class="menu_item"><a href="{% url 'dashboard_syn' %}">Dashboard</a></div>
+<div class="menu_item"><a href="{% url 'plusopmerkingOverview_syn' %}">+ Opmerking</a></div>
+<div class="menu_item"><a href="{% url 'invite_syn' %}">+ Derden</a></div>
+<div class="menu_item"><a href="{% url 'downloadPveOverview_syn' %}" class="active">Download PVE</a></div>
+<div class="hori-menu-logout">
+    <a href="{% url 'dashboard_syn' %}">Ingelogd als {{ request.user }}</a>
+    <a href="{% url 'logout_syn' %}">Afmelden</a>
+</div>
+{% endblock %}
+
+{% block main %}
+
+<div class="opmerking_project_list">
+    <div class="general_title"><img src="{% static 'syntrus/img/download.png'%}" class="title_img"></img><p>Download Programma van Eisen</p></div>
+<div class="main_content_div">
+        <table class="project_overview_content">
+
+            <thead>
+            <tr class="table_title">
+                <th>Project</th>
+                <th>Download</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for project in projects %}
+            <tr class="table_content">
+                <td>{{ project.naam }}</td>
+                <td>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' project.id %}"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% else %}Niet beschikbaar{% endif %}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+</div>
+{% endblock %}

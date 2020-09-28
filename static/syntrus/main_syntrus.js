@@ -68,7 +68,6 @@ template.innerHTML = `
       transform-origin: bottom left;
       transition: transform .5s cubic-bezier(0.860, 0.000, 0.070, 1.000);
     }
-
   </style>
   <div class="tooltip-container">
     <svg xmlns="http://www.w3.org/2000/svg" class="alert" viewBox="0 0 100 100">
