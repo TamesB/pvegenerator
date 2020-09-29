@@ -386,15 +386,6 @@ def AddProject(request):
 
 @login_required(login_url='login_syn')
 def AddAccount(request):
-    allowed_users = ["B", "SB"]
-    if request.user.type_user not in allowed_users:
-        return render(request, '404_syn.html')
-
-    context = {}
-    return render(request, 'plusAccount_syn.html', context)
-
-@login_required(login_url='login_syn')
-def AddDerde(request):
     allowed_users = ["B", "SB", "SOG", "SD"]
     staff_users = ["B", "SB"]
     if request.user.type_user not in allowed_users:
@@ -488,16 +479,16 @@ def AcceptInvite(request, key):
         form = AcceptInvitationForm(request.POST)
 
         if form.is_valid():
-            form.email = invitation.invitee
-            form.functie = invitation.user_functie
-            form.afdeling = invitation.user_afdeling
-
-            if invitation.rang:
-                form.type_user = invitation.rang
-
             form.save()
 
             user = authenticate(request, username=form.cleaned_data["username"], password=form.cleaned_data["password1"])
+            user.email = invitation.invitee
+            user.functie = invitation.user_functie
+            user.afdeling = invitation.user_afdeling
+
+            if invitation.rang:
+                user.type_user = invitation.rang
+
             project = invitation.project
             project.permitted.add(user)
 
@@ -506,7 +497,8 @@ def AcceptInvite(request, key):
                     project.projectmanager = user
 
             invitation.delete()
-
+            project.save()
+            user.save()
             if user is not None:
                 login(request, user)
                 return redirect('dashboard_syn')
