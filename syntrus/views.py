@@ -293,12 +293,12 @@ def AddComment(request, pk):
     # multiple forms!
     if request.method == "POST":
         ann_forms = [
-            forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, kostenConsequenties=kosten, annbijlage=annbijlage))
-            for item_id, opmrk, kosten, annbijlage in zip(
+            # todo: fix bijlages toevoegen
+            forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, kostenConsequenties=kosten))
+            for item_id, opmrk, kosten in zip(
                 request.POST.getlist("item_id"),
                 request.POST.getlist("annotation"),
                 request.POST.getlist("kostenConsequenties"),
-                request.FILES.getlist("annbijlage"),
             )
         ]
 
