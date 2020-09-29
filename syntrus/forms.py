@@ -76,8 +76,6 @@ class PVEParameterForm(ModelForm):
         self.fields['Doelgroep3'].required = False
 
 class KoppelDerdeUserForm(ModelForm):
-    project = forms.ModelChoiceField(queryset=None, label='Project')
-
     class Meta:
         model = Invitation
         fields = {

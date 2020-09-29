@@ -7,9 +7,6 @@
 {% block menu %}
 <div class="hamburger"><img src="{% static 'syntrus/svg/hamburger.svg' %}"></img></div>
 <div class="menu_item"><a href="{% url 'dashboard_syn' %}">Dashboard</a></div>
-<div class="menu_item"><a href="{% url 'plusproject_syn' %}">+ Project</a></div>
-<div class="menu_item"><a href="{% url 'plusaccount_syn' %}">+ Accounts</a></div>
-<div class="menu_item"><a href="{% url 'generate_syn' %}" class="active">Genereer PVE</a></div>
 <div class="hori-menu-logout">
     <a href="{% url 'dashboard_syn' %}">Ingelogd als {{ request.user }}</a>
     <a href="{% url 'logout_syn' %}">Afmelden</a>

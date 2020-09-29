@@ -12,6 +12,7 @@ from syntrus.forms import KoppelDerdeUserForm, StartProjectForm
 from users.forms import AcceptInvitationForm
 from app import models
 import datetime
+from django.utils import timezone
 from geopy.geocoders import Nominatim
 from django.db.models import Q
 from utils import writePdf
@@ -218,18 +219,7 @@ def download_pve(request, pk):
     # make pdf
     parameters = []
 
-    if project.bouwsoort1:
-        parameters += f"{project.bouwsoort1.parameter} (Hoofd)",
-    if project.bouwsoort2:
-        parameters += f"{project.bouwsoort2.parameter} (Sub)",
-    if project.typeObject1:
-        parameters += f"{project.typeObject1.parameter} (Hoofd)",
-    if project.typeObject2:
-        parameters += f"{project.typeObject2.parameter} (Sub)",
-    if project.doelgroep1:
-        parameters += f"{project.doelgroep1.parameter} (Hoofd)",
-    if project.doelgroep2:
-        parameters += f"{project.doelgroep2.parameter} (Sub)",
+    parameters += f"Project: {project.naam}",
 
     date = datetime.datetime.now()
 
@@ -478,7 +468,7 @@ def ConnectPVE(request, pk):
 
 @login_required(login_url='login_syn')
 def AddAccount(request):
-    allowed_users = ["B", "SB", "SOG", "SD"]
+    allowed_users = ["B", "SB", "SOG"]
     staff_users = ["B", "SB"]
     if request.user.type_user not in allowed_users:
         return render(request, '404_syn.html')
@@ -508,7 +498,7 @@ def AddAccount(request):
                     manager = True
 
             expiry_length = 10
-            expire_date = datetime.datetime.now() + datetime.timedelta(expiry_length)
+            expire_date = timezone.now() + timezone.timedelta(expiry_length)
             invitation.expires = expire_date
             invitation.key = secrets.token_urlsafe(30)
             invitation.save()
