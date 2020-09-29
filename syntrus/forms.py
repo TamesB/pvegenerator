@@ -5,6 +5,8 @@ from django.forms import ModelForm
 from app.models import Bouwsoort, TypeObject, Doelgroep, PVEItem
 from project.models import Project, PVEItemAnnotation
 from users.models import Invitation
+from django.contrib.gis import forms
+
 class LoginForm(forms.Form):
     attrs = {
         "type": "password"
@@ -74,7 +76,7 @@ class PVEParameterForm(ModelForm):
         self.fields['Doelgroep3'].required = False
 
 class KoppelDerdeUserForm(ModelForm):
-    project = forms.ModelChoiceField(queryset=Project.objects.all(), label='Project')
+    project = forms.ModelChoiceField(queryset=None, label='Project')
 
     class Meta:
         model = Invitation
@@ -89,8 +91,6 @@ class KoppelDerdeUserForm(ModelForm):
         }
 
 class PlusAccountForm(ModelForm):
-    project = forms.ModelChoiceField(queryset=Project.objects.all(), label='Project')
-
     type_choices = (
         ('SOG', 'Syntrus Projectmanager'),
         ('SD', 'Derde'),
@@ -116,3 +116,22 @@ class PVEItemAnnotationForm(forms.Form):
     annotation = forms.CharField(label='Opmerking', max_length=1000, widget=forms.Textarea, required=False)
     kostenConsequenties = forms.DecimalField(label='(Optioneel) Kosten Consequenties', required=False, min_value=0)
     annbijlage = forms.FileField(required=False)
+
+class StartProjectForm(ModelForm):
+    plaats = forms.PointField(widget=forms.OSMWidget(attrs={'default_lat': 52.37, 'default_lon': 4.895,}))
+
+    class Meta:
+        model = Project
+        fields = ('naam', 'nummer', 'vhe', 'pensioenfonds', 'statuscontract', 'plaats')
+        geom = forms.PointField()
+        labels = {
+            'naam':'Projectnaam:', 'nummer':'Projectnummer:', 'plaats':'Plaats:', 'vhe':'Aantal verhuureenheden:', 
+            'pensioenfonds':'Pensioenfonds:', 'statuscontract':"Contractstatus:",
+        }
+        widgets = {
+            'point': forms.OSMWidget(
+                attrs={
+                    'default_lat': 52.37,
+                    'default_lon': 4.895,
+                })
+        }

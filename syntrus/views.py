@@ -6,9 +6,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from syntrus import forms
-from project.models import Project, PVEItemAnnotation
+from project.models import Project, PVEItemAnnotation, Beleggers
 from users.models import Invitation, CustomUser
-from syntrus.forms import KoppelDerdeUserForm
+from syntrus.forms import KoppelDerdeUserForm, StartProjectForm
 from users.forms import AcceptInvitationForm
 from app import models
 import datetime
@@ -59,15 +59,6 @@ def DashboardView(request):
     if Project.objects.filter(permitted__username__contains=request.user.username, belegger__naam='Syntrus'):
         projects = Project.objects.filter(belegger__naam='Syntrus').filter(permitted__username__contains=request.user.username).distinct()
         context["projects"] = projects
-        print(projects)
-        #geolocator = Nominatim(user_agent="pvegenerator")
-        #locations = {}
-        #for project in projects:
-        #    if 'city' in geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}").raw['address'].keys():
-        #        locations[project] = geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}").raw['address']['city']
-        #    else:
-        #        locations[project] = geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}").raw['address']['town']
-        #context["locations"] = locations
     
     if PVEItemAnnotation.objects.filter(gebruiker=request.user):
         opmerkingen = PVEItemAnnotation.objects.filter(gebruiker=request.user, project__belegger__naam='Syntrus')
@@ -381,7 +372,27 @@ def AddProject(request):
     if request.user.type_user not in allowed_users:
         return render(request, '404_syn.html')
 
+    if request.method == "POST":
+        form = forms.StartProjectForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+
+            project = Project.objects.all().order_by("-id")[0]
+            project.permitted.add(request.user)
+            project.belegger = Beleggers.objects.filter(naam="Syntrus").first()
+
+            geolocator = Nominatim(user_agent="pvegenerator")
+            if 'city' in geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}").raw['address'].keys():
+                project.plaatsnamen = geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}").raw['address']['city']
+            else:
+                project.plaatsnamen = geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}").raw['address']['town']
+
+            project.save()
+            return redirect('plusaccount_syn')
+
     context = {}
+    context["form"] = StartProjectForm()
     return render(request, 'plusProject_syn.html', context)
 
 @login_required(login_url='login_syn')
@@ -451,13 +462,15 @@ def AddAccount(request):
             messages.warning(request, f"Uitnodiging verstuurd naar { form.cleaned_data['invitee'] } voor project { form.cleaned_data['project'] }. De uitnodiging zal verlopen in { expiry_length } dagen.)")
             return redirect("dashboard_syn")
 
-    projecten = Project.objects.filter(permitted__username__contains=request.user.username, belegger__naam='Syntrus')
+    projecten = Project.objects.filter(permitted__username__contains=request.user.username)
 
     if request.user.type_user in staff_users:
-        form = forms.PlusAccountForm(initial={'project': projecten})
+        form = forms.PlusAccountForm()
     else:
-        form = forms.KoppelDerdeUserForm(initial={'project': projecten})
+        form = forms.KoppelDerdeUserForm()
 
+    # set projects to own
+    form.fields["project"].queryset = projecten
     context = {}
     context["form"] = form
 

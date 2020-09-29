@@ -40,7 +40,7 @@
           <th>Locatie</th>
           <th>Aantal VHE</th>
           <th>Fase</th>
-          <th>Medewerker</th>
+          <th>Projectmanager</th>
         </tr>
       </thead>
       <tbody>
@@ -51,7 +51,7 @@
           <td>{{ project.plaatsnamen }}</td>
           <td>{{ project.vhe }}</td>
           <td>{{ project.statuscontract }}</td>
-          <td>{{ project.projectmanager }}</td>
+          <td>{% if project.projectmanager %}{{ project.projectmanager }}{% else %}<i>Geen Projectmanager</i>{% endif %}</td>
         </tr>
         {% endfor %}
       </tbody>

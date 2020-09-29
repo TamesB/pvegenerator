@@ -18,15 +18,26 @@
 {% endblock %}
 
 {% block main %}
-    <div class="general_title"><img src="{% static 'syntrus/img/plusproject.png'%}" class="title_img"></img><p>Start project</p></div>
-    <div class="generator_form">
-    <form action="{% url 'plusproject_syn' %}" method="POST" enctype="multipart/form-data">
-    <div class="parameter_container">
-        <div class="parameter_item">
-        <p>TODO</p>
-    </div>
-    </div>
-    </form>
+<div class="general_title"><img src="{% static 'syntrus/img/plusproject.png'%}" class="title_img"></img><p>Start project</p></div>
+<div class="invite-container">
+    <div class="box">
+        <p class="description">Voeg de basisinformatie toe aan uw nieuwe project.</p>
+        <form action="{% url 'plusproject_syn' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label class="formtitle" for="{{ form.naam.id_for_label }}">Projectnaam:</label>
+            <p class="formbox">{{ form.naam }}</p>
+            <label class="formtitle" for="{{ form.nummer.id_for_label }}">Projectnummer:</label>
+            <p class="formbox">{{ form.nummer }}</p>
+            <label class="formtitle" for="{{ form.vhe.id_for_label }}">Aantal Verhuureenheden:</label>
+            <p class="formbox">{{ form.vhe }}</p>        
+            <label class="formtitle" for="{{ form.pensioenfonds.id_for_label }}">Pensioenfonds:</label>
+            <p class="formbox">{{ form.pensioenfonds }}</p>
+            <label class="formtitle" for="{{ form.statuscontract.id_for_label }}">Contractstatus:</label>
+            <p class="formbox">{{ form.statuscontract }}</p>
+            <label class="formtitle" for="{{ form.plaats.id_for_label }}">Locatie:</label>
+            <p class="location-box">{{ form.plaats }}</p>
+            <input type="submit" class="button" value="Maak project aan">
+        </form>    
     </div>
 </div>
 {% endblock %}

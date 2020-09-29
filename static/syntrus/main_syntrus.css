@@ -835,8 +835,8 @@ body, html {
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   border-radius: 1.6em;
   background: #b2dbdd;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(15%, #00aca9), color-stop(15%, #f7f7f8));
-  background: linear-gradient(0deg, #00aca9 15%, #f7f7f8 15%);
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(10%, #00aca9), color-stop(10%, #f7f7f8));
+  background: linear-gradient(0deg, #00aca9 10%, #f7f7f8 10%);
 }
 
 #main .layerOneInner .article .article_content .invite-container .box .title {
@@ -891,6 +891,16 @@ body, html {
   margin-top: 1vh;
   width: 50%;
   height: 3vh;
+}
+
+#main .layerOneInner .article .article_content .invite-container .box form #id_plaats_div_map {
+  margin-bottom: 3vh;
+  margin-left: 2vw;
+  margin-right: 2vw;
+}
+
+#main .layerOneInner .article .article_content .invite-container .box form #id_plaats_div_map .clear_features {
+  display: none;
 }
 
 #main .layerOneInner .article .article_content .invite-container .box form .button {
