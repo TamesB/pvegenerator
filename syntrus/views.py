@@ -397,7 +397,7 @@ def AddProject(request):
 
 @login_required(login_url='login_syn')
 def ConnectPVE(request, pk):
-    allowed_users = ["B", "SB"]
+    allowed_users = ["B", "SB", "SOG"]
 
     if request.user.type_user not in allowed_users:
         return render(request, '404_syn.html')
