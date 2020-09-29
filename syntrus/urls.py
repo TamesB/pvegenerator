@@ -16,6 +16,7 @@ urlpatterns = [
     path('comment', views.AddCommentOverview, name="plusopmerkingOverview_syn"),
     path('project/<int:pk>/comment/add', views.AddComment, name="plusopmerking_syn"),
     path('project/add', views.AddProject, name="plusproject_syn"),
+    path('project/<int:pk>/addpve', views.ConnectPVE, name="connectpve_syn"),
     path('account/add', views.AddAccount, name="plusaccount_syn"),
 
     path('invite', views.AddAccount, name="invite_syn"),

@@ -111,7 +111,7 @@
           <td>{{ project.statuscontract }}</td>
           <td>{% if project.projectmanager %}{{ project.projectmanager }}{% else %}<i>Geen Projectmanager</i>{% endif %}</td>
           <td><a href="{% url 'plusopmerking_syn' project.id %}"><img src="{% static 'syntrus/img/plus.png' %}"></img></a></td>
-          <td>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' project.id %}"><img src="{% static 'syntrus/img/download.png' %}"></img></a>{% else %}Niet beschikbaar{% endif %}</td>
+          <td>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' project.id %}"><img src="{% static 'syntrus/img/download.png' %}"></img></a>{% else %}Nog geen PvE{% endif %}</td>
         </tr>
         {% endfor %}
       </tbody>
