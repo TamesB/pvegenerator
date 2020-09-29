@@ -73,6 +73,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 # Create your models here.
 class Invitation(models.Model):
+    type_choices = (
+        ('SOG', 'Syntrus Projectmanager'),
+        ('SD', 'Derde'),
+    )    
     inviter = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     invitee = models.EmailField()
     user_functie = models.CharField(max_length=500, default=None, blank=True, null=True)
@@ -80,6 +84,9 @@ class Invitation(models.Model):
     project = models.ForeignKey('project.Project', on_delete=models.CASCADE)
     expires = models.DateTimeField(auto_now=False)
     key = models.CharField(max_length=100)
+    rang = models.CharField(max_length=3,
+                                 choices=type_choices,
+                                 default='SD')
 
     def __str__(self):
         return f"{ self.inviter } invited { self.invitee }. Expires { self.expires }"

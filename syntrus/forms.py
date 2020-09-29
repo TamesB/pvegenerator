@@ -88,6 +88,29 @@ class KoppelDerdeUserForm(ModelForm):
             'user_afdeling':'Afdeling:'
         }
 
+class PlusAccountForm(ModelForm):
+    project = forms.ModelChoiceField(queryset=Project.objects.all(), label='Project')
+
+    type_choices = (
+        ('SOG', 'Syntrus Projectmanager'),
+        ('SD', 'Derde'),
+    )    
+    
+    rang = forms.ChoiceField(choices=type_choices)
+
+    class Meta:
+        model = Invitation
+        fields = {
+            'project', 'invitee', 'user_functie', 'user_afdeling',
+        }
+        labels = {
+            'rang':'Rang gebruiker:',
+            'project':'Project:',
+            'invitee':'E-Mail:',
+            'user_functie':'Functie:',
+            'user_afdeling':'Afdeling:'
+        }
+
 class PVEItemAnnotationForm(forms.Form):
     item_id = forms.IntegerField(label='item_id')
     annotation = forms.CharField(label='Opmerking', max_length=1000, widget=forms.Textarea, required=False)

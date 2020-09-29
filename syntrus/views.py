@@ -396,12 +396,16 @@ def AddAccount(request):
 @login_required(login_url='login_syn')
 def AddDerde(request):
     allowed_users = ["B", "SB", "SOG", "SD"]
+    staff_users = ["B", "SB"]
     if request.user.type_user not in allowed_users:
         return render(request, '404_syn.html')
 
     if request.method == "POST":
         # get user entered form
-        form = forms.KoppelDerdeUserForm(request.POST)
+        if request.user.type_user in staff_users:
+            form = forms.PlusAccountForm(request.POST)
+        else:
+            form = forms.KoppelDerdeUserForm(request.POST)
         # check validity
         if form.is_valid():
             invitation = Invitation()
@@ -410,6 +414,15 @@ def AddDerde(request):
             invitation.project = form.cleaned_data["project"]
             invitation.user_functie = form.cleaned_data["user_functie"]
             invitation.user_afdeling = form.cleaned_data["user_afdeling"]
+            
+            # Als syntrus beheerder invitatie doet kan hij ook rang geven (projectmanager/derde)
+            manager = False
+
+            if request.user.type_user in staff_users:
+                invitation.rang = form.cleaned_data["rang"]
+
+                if form.cleaned_data["rang"] == 'SOG':
+                    manager = True
 
             expiry_length = 10
             expire_date = datetime.datetime.now() + datetime.timedelta(expiry_length)
@@ -417,27 +430,50 @@ def AddDerde(request):
             invitation.key = secrets.token_urlsafe(30)
             invitation.save()
 
-            send_mail(
-                f"Syntrus Projecten - Uitnodiging voor project {form.cleaned_data['project']}",
-                f"""{ request.user } nodigt u uit voor het commentaar leveren en het checken van het Programma van Eisen voor het project { form.cleaned_data['project'] } van Syntrus.
-                
-                Klik op de uitnodigingslink om rechtstreeks het project in te gaan.
-                Link: https://pvegenerator.net/syntrus/invite/{invitation.key}
-                
-                Deze link is 10 dagen geldig.""",
-                'admin@pvegenerator.net',
-                [f'{form.cleaned_data["invitee"]}'],
-                fail_silently=False,
-            )
+            if manager:
+                send_mail(
+                    f"Syntrus Projecten - Uitnodiging voor project {form.cleaned_data['project']}",
+                    f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor het project { form.cleaned_data['project'] } van Syntrus.
+                    
+                    Klik op de uitnodigingslink om rechtstreeks het project in te gaan.
+                    Link: https://pvegenerator.net/syntrus/invite/{invitation.key}
+                    
+                    Deze link is 10 dagen geldig.""",
+                    'admin@pvegenerator.net',
+                    [f'{form.cleaned_data["invitee"]}'],
+                    fail_silently=False,
+                )
+            else:
+                send_mail(
+                    f"Syntrus Projecten - Uitnodiging voor project {form.cleaned_data['project']}",
+                    f"""{ request.user } nodigt u uit voor het commentaar leveren en het checken van het Programma van Eisen voor het project { form.cleaned_data['project'] } van Syntrus.
+                    
+                    Klik op de uitnodigingslink om rechtstreeks het project in te gaan.
+                    Link: https://pvegenerator.net/syntrus/invite/{invitation.key}
+                    
+                    Deze link is 10 dagen geldig.""",
+                    'admin@pvegenerator.net',
+                    [f'{form.cleaned_data["invitee"]}'],
+                    fail_silently=False,
+                )
 
             messages.warning(request, f"Uitnodiging verstuurd naar { form.cleaned_data['invitee'] } voor project { form.cleaned_data['project'] }. De uitnodiging zal verlopen in { expiry_length } dagen.)")
             return redirect("dashboard_syn")
 
     projecten = Project.objects.filter(permitted__username__contains=request.user.username, belegger__naam='Syntrus')
-    form = KoppelDerdeUserForm(initial={'project': projecten})
+
+    if request.user.type_user in staff_users:
+        form = forms.PlusAccountForm(initial={'project': projecten})
+    else:
+        form = forms.KoppelDerdeUserForm(initial={'project': projecten})
+
     context = {}
     context["form"] = form
-    return render(request, 'plusDerde_syn.html', context)
+
+    if request.user.type_user in staff_users:
+        return render(request, 'plusAccount_syn.html', context)
+    else:
+        return render(request, 'plusDerde_syn.html', context)
 
 def AcceptInvite(request, key):
     if not key or not Invitation.objects.filter(key=key):
@@ -455,11 +491,19 @@ def AcceptInvite(request, key):
             form.email = invitation.invitee
             form.functie = invitation.user_functie
             form.afdeling = invitation.user_afdeling
+
+            if invitation.rang:
+                form.type_user = invitation.rang
+
             form.save()
 
             user = authenticate(request, username=form.cleaned_data["username"], password=form.cleaned_data["password1"])
             project = invitation.project
             project.permitted.add(user)
+
+            if invitation.rang:
+                if invitation.rang == "SOG":
+                    project.projectmanager = user
 
             invitation.delete()
 

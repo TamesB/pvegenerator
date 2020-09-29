@@ -18,15 +18,25 @@
 {% endblock %}
 
 {% block main %}
-    <div class="general_title"><p>+ Account</p></div>
-    <div class="generator_form">
-    <form action="{% url 'plusproject_syn' %}" method="POST" enctype="multipart/form-data">
-    <div class="parameter_container">
-        <div class="parameter_item">
-        <p>TODO</p>
-    </div>
-    </div>
-    </form>
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>+ Account</p></div>
+<div class="invite-container">
+    <div class="box">
+        <p class="description">Voeg een projectmanager toe aan een project, of nodig een derde uit voor een project.</p>
+        <form action="{% url 'plusaccount_syn' %}" method="post">
+            {% csrf_token %}
+            <label class="formtitle" for="{{ form.rang.id_for_label }}">Rang gebruiker:</label>
+            <p class="formbox">{{ form.rang }}</p>
+            <label class="formtitle" for="{{ form.project.id_for_label }}">Voor project:</label>
+            <p class="formbox">{{ form.project }}</p>
+            <label class="formtitle" for="{{ form.invitee.id_for_label }}">E-mail voor uitnodiging:</label>
+            <p class="formbox">{{ form.invitee }}</p>        
+            <label class="formtitle" for="{{ form.user_functie.id_for_label }}">Functie beschrijving van gebruiker:</label>
+            <p class="formbox">{{ form.user_functie }}</p>
+            <label class="formtitle" for="{{ form.user_afdeling.id_for_label }}">Afdeling van gebruiker:</label>
+            <p class="formbox">{{ form.user_afdeling }}</p>
+            <input type="submit" class="button" value="Nodig uit">
+        </form>    
     </div>
 </div>
+
 {% endblock %}
