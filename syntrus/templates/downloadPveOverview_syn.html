@@ -6,15 +6,15 @@
 
 
 {% block menu %}
-<div class="hamburger"><img src="{% static 'syntrus/svg/hamburger.svg' %}"></img></div>
-<div class="menu_item"><a href="{% url 'dashboard_syn' %}">Dashboard</a></div>
-<div class="menu_item"><a href="{% url 'plusopmerkingOverview_syn' %}">+ Opmerking</a></div>
-{% if request.user.type_user == 'SOG' %}<div class="menu_item"><a href="{% url 'invite_syn' %}">+ Derden</a></div>{% endif %}
-<div class="menu_item"><a href="{% url 'downloadPveOverview_syn' %}" class="active">Download PVE</a></div>
-<div class="hori-menu-logout">
-    <a href="{% url 'dashboard_syn' %}">Ingelogd als {{ request.user }}</a>
-    <a href="{% url 'logout_syn' %}">Afmelden</a>
-</div>
+{% if request.user.type_user == 'SOG' %}
+{% include 'Menu.html' with type='manager' %}
+{% elif request.user.type_user == 'SB' %}
+{% include 'Menu.html' with type='beheerder' %}
+{% elif request.user.type_user == 'SD' %}
+{% include 'Menu.html' with type='derde' %}
+{% else %}
+{% include 'Menu.html' with type='beheerder' %}
+{% endif %}
 {% endblock %}
 
 {% block main %}

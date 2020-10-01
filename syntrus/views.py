@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -8,6 +8,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from syntrus import forms
 from project.models import Project, PVEItemAnnotation, Beleggers
 from users.models import Invitation, CustomUser
+from syntrus.models import FAQ, Room
 from syntrus.forms import KoppelDerdeUserForm, StartProjectForm
 from users.forms import AcceptInvitationForm
 from app import models
@@ -22,7 +23,6 @@ from utils.createBijlageZip import ZipMaker
 import secrets
 from django.core.mail import send_mail
 import pytz
-
 utc=pytz.UTC
 
 
@@ -73,6 +73,21 @@ def DashboardView(request):
         return render(request, 'dashboardOpdrachtgever_syn.html', context)
     if request.user.type_user == "SD":
         return render(request, 'dashboardDerde_syn.html', context)
+
+@login_required(login_url='login_syn')
+def FAQView(request):
+
+    faqquery = FAQ.objects.all()
+    if request.user.type_user == "SB":
+        faqquery = FAQ.objects.filter(gebruikersrang="SB")
+    if request.user.type_user == "SOG":
+        faqquery = FAQ.objects.filter(gebruikersrang="SOG")
+    if request.user.type_user == "SD":
+        faqquery = FAQ.objects.filter(gebruikersrang="SD")
+
+    context = {}
+    context["faqquery"] = faqquery
+    return render(request, 'FAQ_syn.html', context)
 
 @login_required(login_url='login_syn')
 def LogoutView(request):
@@ -259,14 +274,23 @@ def ViewProject(request, pk):
     if not Project.objects.filter(id=pk, belegger__naam='Syntrus'):
         return render(request, '404_syn.html')
 
-    project = Project.object.filter(id=pk, belegger__naam='Syntrus')
+    project = Project.objects.filter(id=pk, belegger__naam='Syntrus').first()
 
-    if not project.filter(permitted__username__contains=request.user.username):
+    if not Project.objects.filter(permitted__username__contains=request.user.username):
         return render(request, '404_syn.html')
+
+    if Room.objects.filter(project=project):
+        chatroom = Room.objects.get(project=project)
+    else:
+        chatroom = Room()
+        chatroom.description = f"Chat van {project.naam}"
+        chatroom.project = project
+        chatroom.save()
 
     context = {}
     context["project"] = project
-    return render(request, 'projectView_syn.html', context)
+    context["chatroom"] = chatroom
+    return render(request, 'ProjectPagina_syn.html', context)    
 
 @login_required(login_url='login_syn')
 def AddCommentOverview(request):
@@ -277,6 +301,22 @@ def AddCommentOverview(request):
         context["projects"] = projects
 
     return render(request, 'plusOpmerkingOverview_syn.html', context)
+
+@login_required(login_url='login_syn')
+def AllComments(request, pk):
+    context = {}
+
+    if not Project.objects.filter(pk=pk):
+        return render(request, '404_syn.html')
+
+    project = Project.objects.filter(pk=pk).first()
+
+    if not project.filter(permitted__username__contains=request.user.username):
+        return render(request, '404_syn.html')
+
+    context["comments"] = PVEItemAnnotation.objects.filter(project=project)
+    context["project"] = project
+    return render(request, 'AllCommentsOfProject_syn.html', context)
 
 @login_required(login_url='login_syn')
 def AddComment(request, pk):

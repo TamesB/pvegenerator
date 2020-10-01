@@ -1,0 +1,25 @@
+{% load static %}
+
+<div class="hamburger"><img src="{% static 'syntrus/svg/hamburger.svg' %}" ></img></div>
+<div class="menu_item"><a href="{% url 'dashboard_syn' %}" class="{{ 1|default:"" }}">Dashboard</a></div>
+
+{% if type == 'derde' %}
+    <div class="menu_item"><a href="{% url 'plusopmerkingOverview_syn' %}" class="{{ 2|default:"" }}">+ Opmerking</a></div>
+    <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' %}" class="{{ 3|default:"" }}">Download PVE</a></div>
+{% elif type == 'manager' %}
+    <div class="menu_item"><a href="{% url 'plusopmerkingOverview_syn' %} " class="{{ 2|default:"" }}">+ Opmerking</a></div>
+    <div class="menu_item"><a href="{% url 'invite_syn' %}" class="{{ 3|default:"" }}">+ Derden</a></div>
+    <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' %}" class="{{ 4|default:"" }}">Download PVE</a></div>
+{% elif type == 'beheerder' %}
+    <div class="menu_item"><a href="{% url 'plusproject_syn' %}" class="{{ 2|default:"" }}">+ Project</a></div>
+    <div class="menu_item"><a href="{% url 'plusaccount_syn' %}" class="{{ 3|default:"" }}">+ Accounts</a></div>
+    <div class="menu_item"><a href="{% url 'generate_syn' %}" class="{{ 4|default:"" }}">Genereer PVE</a></div>
+{% endif %}
+
+<div class="menu_item"><a href="{% url 'faq_syn' %}" class="{{ 4|default:"" }}">FAQ</a></div>
+
+
+<div class="hori-menu-logout">
+    <a href="{% url 'dashboard_syn' %}">Ingelogd als {{ request.user }}</a>
+    <a href="{% url 'logout_syn' %}">Afmelden</a>
+</div>

@@ -1,0 +1,93 @@
+/* chat/static/chat/styles/room_detail.css */
+
+.messages_box {
+  margin-top: 4vh;
+  font-family: 'Montserrat';
+  font-size: 2vh;
+  background: linear-gradient(0deg, rgba(0, 172, 169, 1) 20%, rgba(247,247,248,1) 20%);
+  display: grid;
+  overflow: hidden;
+}
+
+.chat-title {
+  font-family: 'Montserrat';
+  padding-bottom: 3vh;
+  font-size: 3vh;
+  width: 100%;
+  min-height: 20%;
+  font-weight: bold;
+  color: white;
+}
+
+.chatroom {
+  width: 100%;
+  padding-top: 3.5vh;
+  padding-bottom: 0.5vh;
+  padding-left: 2vw;
+  padding-right: 2vw;
+}
+#messages {
+  display: inline-block;
+  height: 100%;
+  max-height: 200px;
+  max-width: 70%;
+  min-width: 70%;
+  overflow-y: auto;
+  padding-bottom: 2vh;
+}
+
+#messages p {
+  width: 100%;
+  padding: 0;
+  float: left;
+}
+
+.sidebar {
+  right: 2vw;
+  height: 100%;
+  background-color: white;
+}
+
+.info {
+  margin: 2vh 2vh;
+  font-style: italic;
+}
+
+.message-container {
+    margin: 2vh 2vh;
+}
+
+.message-container .username {
+  display: inline-block;
+  margin-right: 2vw;
+  font-weight: bold;
+}
+
+.me,
+.username.me {
+  font-weight: bold;
+  color: blue;
+}
+
+.message-container .username.me {
+  display: inline-block;
+  margin-right: 2vw;
+}
+
+#message-form {
+  padding: 1vw;
+  background-color: #f7f7f7;
+  bottom: 2vh;
+  align-items: right;
+  float: right;
+  display: inline-block;
+  width: 30%;
+  min-width:30%;
+  max-width:30%;
+  margin-bottom: 3vh;
+  width: 20%;
+}
+
+#message-input {
+  resize: none;
+}

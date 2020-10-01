@@ -18,3 +18,5 @@ django-leaflet
 boto3
 django-storages
 geopy
+twilio==6.10.1
+python-dotenv

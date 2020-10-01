@@ -1,0 +1,49 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+
+{% block menu %}
+{% if request.user.type_user == 'SOG' %}
+{% include 'Menu.html' with type='manager' %}
+{% elif request.user.type_user == 'SB' %}
+{% include 'Menu.html' with type='beheerder' %}
+{% elif request.user.type_user == 'SD' %}
+{% include 'Menu.html' with type='derde' %}
+{% else %}
+{% include 'Menu.html' with type='beheerder' %}
+{% endif %}
+{% endblock %}
+
+{% block head%}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css" />
+  <link rel="stylesheet" href="{% static "syntrus/chat/styles/room_detail.css" %}">
+{% endblock %}
+
+{% block main %}
+<div class="general_title"><img src="{% static 'syntrus/img/plusproject.png'%}" class="title_img"></img><p>Project: {{ project.naam }}</p></div>
+
+<div class="main_content_div messages_box">
+<div class="chatroom">
+<div class="chat-title">Project Chat</div>
+          <div id="messages"></div>
+          <form id="message-form">
+            <div class="field">
+              <label class="label">Bericht</label>
+              <div class="control">
+                <textarea class="textarea" id="message-input" placeholder="Jouw bericht hier" rows="3" autofocus></textarea>
+              </div>
+            </div>
+            <button type="submit" class="button">Verstuur</button>
+          </form>
+</div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://media.twiliocdn.com/sdk/js/common/v0.1/twilio-common.min.js"></script>
+  <script src="https://media.twiliocdn.com/sdk/js/chat/v2.0/twilio-chat.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+  <script src="{% static "syntrus/chat/scripts/rooms.js" %}"></script>
+{% endblock %}
