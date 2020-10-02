@@ -295,9 +295,11 @@ def ViewProject(request, pk):
         chatroom.project = project
         chatroom.save()
 
+    medewerkers = [medewerker.username for medewerker in project.permitted.all()]
     context = {}
     context["project"] = project
     context["chatroom"] = chatroom
+    context["medewerkers"] = medewerkers
     return render(request, 'ProjectPagina_syn.html', context)    
 
 @login_required(login_url='login_syn')

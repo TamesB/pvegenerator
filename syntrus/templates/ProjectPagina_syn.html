@@ -2,6 +2,7 @@
 
 {% load semanticui %}
 {% load static %}
+{% load leaflet_tags %}
 
 {% block menu %}
 {% if request.user.type_user == 'SOG' %}
@@ -18,26 +19,27 @@
 {% block head%}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css" />
   <link rel="stylesheet" href="{% static "syntrus/chat/styles/room_detail.css" %}">
+  {% leaflet_css %}
+{% leaflet_js %}
+
 {% endblock %}
 
 {% block main %}
-<div class="general_title"><img src="{% static 'syntrus/img/plusproject.png'%}" class="title_img"></img><p>Project: {{ project.naam }}</p></div>
-<div class="divider"></div>
 <div class="main_content_div profile_box">
   <div class="profile_left"><img class="round-profile" src="{% static 'syntrus/img/plusproject.png' %}"></img></div>
   <div class="profile_right">
   <table>
     <tr>
       <td><p class="profile-title">Bouwsoort(en):</p></td>
-      <td>{% if project.bouwsoort1 %} {{ project.bouwsoort1.parameter }},{% endif%}{% if project.bouwsoort2 %} {{ project.bouwsoort2.parameter }},{% endif %}{% if project.bouwsoort3 %} {{ project.bouwsoort3.parameter }}{% endif %}</td>
+      <td><p>{% if project.bouwsoort1 %} {{ project.bouwsoort1.parameter }}{% endif%}{% if project.bouwsoort2 %}, {{ project.bouwsoort2.parameter }}{% endif %}{% if project.bouwsoort3 %}, {{ project.bouwsoort3.parameter }}{% endif %}</p></td>
     </tr>
     <tr>
       <td><p class="profile-title">Type object(en):</p></td>
-      <td>{% if project.typeObject1 %} {{ project.typeObject1.parameter }},{% endif%}{% if project.typeObject2 %} {{ project.typeObject2.parameter }},{% endif %}{% if project.typeObject3 %} {{ project.typeObject3.parameter }}{% endif %}</td>
+      <td><p>{% if project.typeObject1 %} {{ project.typeObject1.parameter }}{% endif%}{% if project.typeObject2 %}, {{ project.typeObject2.parameter }}{% endif %}{% if project.typeObject3 %}, {{ project.typeObject3.parameter }}{% endif %}</p></td>
     </tr>
     <tr>
       <td><p class="profile-title">Doelgroep(en):</p></td>
-      <td>{% if project.doelgroep1 %} {{ project.doelgroep1.parameter }},{% endif%}{% if project.doelgroep2 %} {{ project.doelgroep2.parameter }},{% endif %}{% if project.doelgroep3 %} {{ project.doelgroep3.parameter }}{% endif %}</td>
+      <td><p>{% if project.doelgroep1 %} {{ project.doelgroep1.parameter }}{% endif%}{% if project.doelgroep2 %}, {{ project.doelgroep2.parameter }}{% endif %}{% if project.doelgroep3 %}, {{ project.doelgroep3.parameter }}{% endif %}</p></td>
     </tr>
   </table>
   </div>
@@ -46,8 +48,8 @@
   </div>
 </div>
 
-
-<div class="main_content_div messages_box">
+<div class="flex_projectpagina">
+<div class="main_content_div messages_box" style="display: inline-block;">
 <div class="chatroom">
 <div class="chat-title">Project Chat</div>
           <div id="messages"></div>
@@ -59,6 +61,63 @@
               <button type="submit" id="chatSend" class="button">Verstuur</button>
             </div>
           </form>
+</div>
+</div>
+
+<div class="project_acties">
+<div class="acties_title">Acties</div>
+<div class="acties">
+<div class="actie_item" onClick="javascript:location.href='{% url 'download_pve_syn' project.id %}'">
+    <img class="actie-img" src="{% static 'syntrus/img/download.png' %}"></img>
+    <p class="subtext">PvE</p>
+</div>
+<div class="actie_item" onClick="javascript:location.href='{% url 'plusopmerking_syn' project.id %}'">
+    <img class="actie-img" src="{% static 'syntrus/img/opmerking.png' %}"></img>
+    <p class="subtext">Opmerking</p>
+</div>
+{% if request.user.type_user == "SOG" %}
+<div class="actie_item" onClick="javascript:location.href='{% url 'plusaccount_syn' %}'">
+    <img class="actie-img" src="{% static 'syntrus/img/accountsderden.png' %}"></img>
+    <p class="subtext">+ Derde</p>
+</div>
+{% endif %}
+</div>
+</div>
+
+<div class="extra_proj_info">
+<div class="title">Extra info</div>
+  <div class="content">
+  <table>
+    <tr>
+      <td><p class="conttitle">Projectmanager: </p></td>
+      <td><p class="contcontent">{% if project.projectmanager %}{{ project.projectmanager }}{% else %}Nog geen projectmanager.{% endif %}</p></td>
+    </tr>
+    <tr>
+      <td><p class="conttitle">Status Contract: </p></td>
+      <td><p class="contcontent">{{ project.statuscontract }}</p></td>
+    </tr>
+    <tr>
+      <td><p class="conttitle">Aantal verhuureenheden: </p></td>
+      <td><p class="contcontent">{{ project.vhe }}</p></td>
+    </tr>
+    <tr>
+      <td><p class="conttitle">Pensioenfonds: </p></td>
+      <td><p class="contcontent">{{ project.pensioenfonds }}</p></td>
+    </tr>
+    <tr>
+      <td><p class="conttitle">Medewerkers: </p></td>
+      <td><p class="contcontent">{% for medewerker in medewerkers %}{{ medewerker }}, {% endfor%}</p></td>
+    </tr>
+  </table>
+  </div>
+</div>
+
+<div class="card project_locatie">
+    <p class="title">Locatie</p>
+   {% leaflet_map "card" callback="map_init" %}
+</div>
+
+<div class="recente_opmerkingen">
 </div>
 </div>
 {% endblock %}
@@ -84,4 +143,14 @@ input.addEventListener("keyup", function(event) {
 });
 
   </script>
+<script type="text/javascript">
+function map_init(map, options) {
+    // get point lat and lon
+    var lon = "{{ project.plaats.x }}";
+    var lat = "{{ project.plaats.y }}";
+    // zoom to point & add it to map
+    map.setView([lat, lon], 12);
+    var point = L.marker([lat, lon]).addTo(map);
+
+}</script>
 {% endblock %}
