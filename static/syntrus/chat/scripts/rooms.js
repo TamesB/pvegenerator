@@ -30,7 +30,8 @@ $(function() {
     }
     let $message = $('<span class="message">').text(message);
     let $container = $('<div class="message-container">');
-    $container.append($user).append($message);
+    let $date = $('<span class="date">').text(message.date);
+    $container.append($user).append($message).append($date);
     $chatWindow.append($container);
     $chatWindow.scrollTop($chatWindow[0].scrollHeight);
   }
@@ -76,20 +77,21 @@ $(function() {
     });
     // Listen for new messages sent to the channel
     roomChannel.on("messageAdded", function(message) {
-      printMessage(message.author, message.body);
+      printMessage(message.author, message.body, message.date_updated);
     });
   } else {
       roomChannel.getMessages(30).then(processPage);
     // Listen for new messages sent to the channel
     roomChannel.on("messageAdded", function(message) {
-      printMessage(message.author, message.body);
+      printMessage(message.author, message.body, message.date_updated);
+
     });
   }
   }
 
   function processPage(page) {
     page.items.forEach(message => {
-      printMessage(message.author, message.body);
+      printMessage(message.author, message.body, message.date_updated);
     });
     if (page.hasNextPage) {
       page.nextPage().then(processPage);

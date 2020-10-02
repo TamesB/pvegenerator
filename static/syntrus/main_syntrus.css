@@ -110,6 +110,12 @@ body, html {
           transform: translateY(4px);
 }
 
+.divider {
+  margin-top: 3vh;
+  margin-bottom: 3vh;
+  min-width: 100%;
+}
+
 #main {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -493,6 +499,7 @@ body, html {
 #main .layerOneInner .article .article_content .profile_box .profile_left img {
   height: 70%;
   width: 70%;
+  max-width: 10vw;
   margin-top: 7%;
   margin-bottom: 7%;
   margin-left: 12%;
@@ -513,13 +520,16 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .profile_box .profile_right table {
-  width: 40%;
+  width: 80%;
   height: 60%;
-  margin-top: 3vh;
+  margin-top: 5vh;
+}
+
+#main .layerOneInner .article .article_content .profile_box .profile_right table tr {
+  text-align: left;
 }
 
 #main .layerOneInner .article .article_content .profile_box .profile_right table tr td {
-  width: 20%;
   text-align: left;
 }
 

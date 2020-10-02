@@ -4,36 +4,36 @@
   margin-top: 4vh;
   font-family: 'Montserrat';
   font-size: 2vh;
-  background: linear-gradient(0deg, rgba(0, 172, 169, 1) 20%, rgba(247,247,248,1) 20%);
   display: grid;
   overflow: hidden;
+  border: #f7f7f7;
 }
 
 .chat-title {
   font-family: 'Montserrat';
-  padding-bottom: 3vh;
-  font-size: 3vh;
+  margin-top: 3.5vh;
+  margin-bottom: 5vh;
+  font-size: 2.5vh;
   width: 100%;
-  min-height: 20%;
   font-weight: bold;
   color: white;
 }
 
 .chatroom {
   width: 100%;
-  padding-top: 3.5vh;
-  padding-bottom: 0.5vh;
-  padding-left: 2vw;
-  padding-right: 2vw;
+  padding-right: 0.5vw;
+  padding-left: 0.5vw;
 }
 #messages {
   display: inline-block;
-  height: 100%;
+  align-content: left;
+  text-align: left;
+  padding-top: 5vh;
+  min-height: 200px;
   max-height: 200px;
-  max-width: 70%;
-  min-width: 70%;
+  max-width: 100%;
+  min-width: 100%;
   overflow-y: auto;
-  padding-bottom: 2vh;
 }
 
 #messages p {
@@ -55,6 +55,8 @@
 
 .message-container {
     margin: 2vh 2vh;
+    align-content: left;
+    box-align: left;
 }
 
 .message-container .username {
@@ -78,16 +80,29 @@
   padding: 1vw;
   background-color: #f7f7f7;
   bottom: 2vh;
-  align-items: right;
-  float: right;
-  display: inline-block;
-  width: 30%;
-  min-width:30%;
-  max-width:30%;
-  margin-bottom: 3vh;
-  width: 20%;
+  align-items: bottom;
+  float: bottom;
+  display: block;
+  width: 100%;
+  min-width:100%;
 }
 
 #message-input {
   resize: none;
+}
+
+.control {
+  width: 70%;
+  display: flex;
+
+}
+.field {
+  display: flex;
+  justify-content: space-between;
+}
+.button {
+  display: flex;
+  float: right;
+  margin-right: 1vw;
+  margin-top: 1vh;
 }

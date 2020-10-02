@@ -93,6 +93,12 @@ body, html {
     }
 }
 
+.divider {
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+    min-width: 100%;
+}
+
 #main {
     display: flex;
     flex-wrap: nowrap;
@@ -444,6 +450,7 @@ body, html {
                         img {
                             height: 70%;
                             width: 70%;
+                            max-width: 10vw;
                             margin-top: 7%;
                             margin-bottom: 7%;
                             margin-left: 12%;
@@ -462,12 +469,12 @@ body, html {
                         }
 
                         table {
-                            width: 40%;
+                            width: 80%;
                             height: 60%;
-                            margin-top: 3vh;
+                            margin-top: 5vh;
                             tr {
+                                text-align: left;
                                 td {
-                                    width: 20%;
                                     text-align: left;
                                 }
                             }

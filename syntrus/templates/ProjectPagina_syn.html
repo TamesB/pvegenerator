@@ -22,6 +22,30 @@
 
 {% block main %}
 <div class="general_title"><img src="{% static 'syntrus/img/plusproject.png'%}" class="title_img"></img><p>Project: {{ project.naam }}</p></div>
+<div class="divider"></div>
+<div class="main_content_div profile_box">
+  <div class="profile_left"><img class="round-profile" src="{% static 'syntrus/img/plusproject.png' %}"></img></div>
+  <div class="profile_right">
+  <table>
+    <tr>
+      <td><p class="profile-title">Bouwsoort(en):</p></td>
+      <td>{% if project.bouwsoort1 %} {{ project.bouwsoort1.parameter }},{% endif%}{% if project.bouwsoort2 %} {{ project.bouwsoort2.parameter }},{% endif %}{% if project.bouwsoort3 %} {{ project.bouwsoort3.parameter }}{% endif %}</td>
+    </tr>
+    <tr>
+      <td><p class="profile-title">Type object(en):</p></td>
+      <td>{% if project.typeObject1 %} {{ project.typeObject1.parameter }},{% endif%}{% if project.typeObject2 %} {{ project.typeObject2.parameter }},{% endif %}{% if project.typeObject3 %} {{ project.typeObject3.parameter }}{% endif %}</td>
+    </tr>
+    <tr>
+      <td><p class="profile-title">Doelgroep(en):</p></td>
+      <td>{% if project.doelgroep1 %} {{ project.doelgroep1.parameter }},{% endif%}{% if project.doelgroep2 %} {{ project.doelgroep2.parameter }},{% endif %}{% if project.doelgroep3 %} {{ project.doelgroep3.parameter }}{% endif %}</td>
+    </tr>
+  </table>
+  </div>
+  <div class="profile_bottom">
+    <p>Project: {{ project.naam }}</p>
+  </div>
+</div>
+
 
 <div class="main_content_div messages_box">
 <div class="chatroom">
@@ -29,16 +53,14 @@
           <div id="messages"></div>
           <form id="message-form">
             <div class="field">
-              <label class="label">Bericht</label>
               <div class="control">
-                <textarea class="textarea" id="message-input" placeholder="Jouw bericht hier" rows="3" autofocus></textarea>
+                <textarea class="textarea" id="message-input" placeholder="Jouw bericht hier" rows="1" autofocus></textarea>
               </div>
+              <button type="submit" id="chatSend" class="button">Verstuur</button>
             </div>
-            <button type="submit" class="button">Verstuur</button>
           </form>
 </div>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
@@ -46,4 +68,20 @@
   <script src="https://media.twiliocdn.com/sdk/js/chat/v2.0/twilio-chat.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
   <script src="{% static "syntrus/chat/scripts/rooms.js" %}"></script>
+  <script>
+  // Get the input field
+var input = document.getElementById("chatSend");
+
+// Execute a function when the user releases a key on the keyboard
+input.addEventListener("keyup", function(event) {
+  // Number 13 is the "Enter" key on the keyboard
+  if (event.keyCode === 13) {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Trigger the button element with a click
+    document.getElementById("chatSend").click();
+  }
+});
+
+  </script>
 {% endblock %}

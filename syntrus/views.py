@@ -270,14 +270,22 @@ def download_pve(request, pk):
     return render(request, 'PVEResult_syn.html', context)
 
 @login_required(login_url='login_syn')
+def ViewProjectOverview(request):
+    projects = Project.objects.filter(belegger__naam='Syntrus', permitted__username__contains=request.user.username)
+
+    context = {}
+    context["projects"]=projects
+    return render(request, 'MyProjecten_syn.html', context)
+
+@login_required(login_url='login_syn')
 def ViewProject(request, pk):
     if not Project.objects.filter(id=pk, belegger__naam='Syntrus'):
         return render(request, '404_syn.html')
 
-    project = Project.objects.filter(id=pk, belegger__naam='Syntrus').first()
-
-    if not Project.objects.filter(permitted__username__contains=request.user.username):
+    if not Project.objects.filter(id=pk, belegger__naam='Syntrus', permitted__username__contains=request.user.username):
         return render(request, '404_syn.html')
+
+    project = Project.objects.filter(id=pk, belegger__naam='Syntrus').first()
 
     if Room.objects.filter(project=project):
         chatroom = Room.objects.get(project=project)
@@ -453,40 +461,83 @@ def ConnectPVE(request, pk):
             # Entered parameters are in the manytomany parameters of the object
             basic_PVE = models.PVEItem.objects.filter(basisregel=True)
             basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(Bouwsoort__parameter__contains=Bouwsoort1))
+            project.bouwsoort1 = models.Bouwsoort.objects.filter(parameter=Bouwsoort1).first()
 
             if Bouwsoort2:
-                basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(Bouwsoort__parameter__contains=Bouwsoort2))
+                basic_PVE = basic_PVE.union(
+                    models.PVEItem.objects.filter(
+                        Bouwsoort__parameter__contains=Bouwsoort2))
+                project.bouwsoort2 = models.Bouwsoort.objects.filter(parameter=Bouwsoort2).first()
+
             if Bouwsoort3:
-                basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(Bouwsoort__parameter__contains=Bouwsoort3))
+                basic_PVE = basic_PVE.union(
+                   models.PVEItem.objects.filter(
+                        Bouwsoort__parameter__contains=Bouwsoort3))
+                project.bouwsoort2 = models.Bouwsoort.objects.filter(parameter=Bouwsoort3).first()
+
             if TypeObject1:
-                basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(TypeObject__parameter__contains=TypeObject1))
+                basic_PVE = basic_PVE.union(
+                    models.PVEItem.objects.filter(
+                        TypeObject__parameter__contains=TypeObject1))
+                project.typeObject1 = models.TypeObject.objects.filter(parameter=TypeObject1).first()
+
             if TypeObject2:
-                basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(TypeObject__parameter__contains=TypeObject2))
+                basic_PVE = basic_PVE.union(
+                    models.PVEItem.objects.filter(
+                        TypeObject__parameter__contains=TypeObject2))
+                project.typeObject2 = models.TypeObject.objects.filter(parameter=TypeObject2).first()
+
             if TypeObject3:
-                basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(TypeObject__parameter__contains=TypeObject3))
+                basic_PVE = basic_PVE.union(
+                    models.PVEItem.objects.filter(
+                        TypeObject__parameter__contains=TypeObject3))
+                project.typeObject2 = models.TypeObject.objects.filter(parameter=TypeObject3).first()
+
             if Doelgroep1:
-                basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(Doelgroep__parameter__contains=Doelgroep1))
+                basic_PVE = basic_PVE.union(
+                    models.PVEItem.objects.filter(
+                        Doelgroep__parameter__contains=Doelgroep1))
+                project.doelgroep1 = models.Doelgroep.objects.filter(parameter=Doelgroep1).first()
+
             if Doelgroep2:
-                basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(Doelgroep__parameter__contains=Doelgroep2))
+                basic_PVE = basic_PVE.union(
+                    models.PVEItem.objects.filter(
+                        Doelgroep__parameter__contains=Doelgroep2))
+                project.doelgroep2 = models.Doelgroep.objects.filter(parameter=Doelgroep2).first()
+            
             if Doelgroep3:
-                basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(Doelgroep__parameter__contains=Doelgroep3))
+                basic_PVE = basic_PVE.union(
+                    models.PVEItem.objects.filter(
+                        Doelgroep__parameter__contains=Doelgroep3))
+                project.doelgroep2 = models.Doelgroep.objects.filter(parameter=Doelgroep3).first()
             # If line is extra (AED, Smarthome, Entree Upgrade); Always include
             # if box checked
             if AED:
                 basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(Q(AED=True)))
+                
+                project.AED = True
+
             if Smarthome:
                 basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(Q(Smarthome=True)))
+                # add the parameter to the project
+                project.Smarthome = True
+
             if EntreeUpgrade:
                 basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(Q(EntreeUpgrade=True)))
+                project.EntreeUpgrade = True
+
             if Pakketdient:
                 basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(Q(Pakketdient=True)))
+                project.Pakketdient = True
+
             if JamesConcept:
                 basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(Q(JamesConcept=True)))
+                project.JamesConcept = True
 
             # add the project to all the pve items
             for item in basic_PVE:

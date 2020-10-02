@@ -2,7 +2,7 @@
 
 <div class="hamburger"><img src="{% static 'syntrus/svg/hamburger.svg' %}" ></img></div>
 <div class="menu_item"><a href="{% url 'dashboard_syn' %}" class="{{ 1|default:"" }}">Dashboard</a></div>
-
+<div class="menu_item"><a href="{% url 'viewprojectoverview_syn' %}" class="{{ 1|default:"" }}">Mijn Projecten</a></div>
 {% if type == 'derde' %}
     <div class="menu_item"><a href="{% url 'plusopmerkingOverview_syn' %}" class="{{ 2|default:"" }}">+ Opmerking</a></div>
     <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' %}" class="{{ 3|default:"" }}">Download PVE</a></div>
