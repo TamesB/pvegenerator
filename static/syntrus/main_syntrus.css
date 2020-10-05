@@ -273,7 +273,7 @@ body, html {
 #main .layerOneInner .menu:hover {
   width: 17.5vw;
   min-width: 200px;
-  z-index: 3;
+  z-index: 10;
 }
 
 #main .layerOneInner .menu:hover a {
@@ -329,7 +329,7 @@ body, html {
   position: absolute;
   top: 10vh;
   max-height: 90vh;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 #main .layerOneInner .article .article_content {
@@ -505,6 +505,7 @@ body, html {
   margin-left: 12%;
   background-color: white;
   border-radius: 50%;
+  min-width: 150px;
 }
 
 #main .layerOneInner .article .article_content .profile_box .profile_right {
@@ -987,7 +988,7 @@ body, html {
   margin-top: 4vh;
   height: 75vh;
   max-height: 75vh;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .arrow-down {
@@ -1109,7 +1110,7 @@ body, html {
   padding-top: 3vh;
   padding-bottom: 3vh;
   border-radius: 16px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .item-id {
@@ -1145,6 +1146,13 @@ body, html {
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .formbox textarea {
   height: 100%;
   color: black;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .checkbox {
+  width: 2vw;
+  height: 2vh;
+  padding-bottom: 1vh;
+  padding-top: 1vh;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons {
@@ -1204,7 +1212,7 @@ body, html {
 
 #main .layerOneInner .article .article_content .popup_wrapper {
   font-family: 'Montserrat';
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 #main .layerOneInner .article .article_content .popup_wrapper .download_pve_menu .pop-up-table .dimg {
@@ -1232,16 +1240,18 @@ body, html {
   border-radius: 1.6vh;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(15%, #00aca9), color-stop(15%, #f7f7f8));
+  background: linear-gradient(180deg, #00aca9 15%, #f7f7f8 15%);
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .project_acties .acties_title {
   font-size: 2.5vh;
   font-weight: bold;
-  color: black;
+  padding-top: 0.5vh;
+  color: white;
   width: 100%;
   padding-top: 2vh;
   padding-bottom: 2vh;
-  border-bottom: 0.1vw solid black;
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .project_acties .acties {
@@ -1274,7 +1284,7 @@ body, html {
   min-height: 30%;
   max-height: 30%;
   width: 30%;
-  min-width: 23%;
+  min-width: 100px;
   max-width: 23%;
   background: white;
   border-radius: 1.6vh;
@@ -1322,7 +1332,7 @@ body, html {
 
 #main .layerOneInner .article .article_content .flex_projectpagina .messages_box {
   max-width: 45%;
-  min-width: 45%;
+  min-width: 600px;
   max-height: 40%;
   min-height: 40%;
   float: left;
@@ -1333,6 +1343,8 @@ body, html {
   font-size: 1.5vh;
   border: #f7f7f7;
   background: #f7f7f7;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(15%, #00aca9), color-stop(15%, #f7f7f8));
+  background: linear-gradient(180deg, #00aca9 15%, #f7f7f8 15%);
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .messages_box .chat-title {
@@ -1342,8 +1354,7 @@ body, html {
   padding-bottom: 3vh;
   width: 100%;
   font-weight: bold;
-  color: black;
-  border-bottom: 0.1vw solid black;
+  color: white;
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .messages_box .chatroom {
@@ -1454,9 +1465,9 @@ body, html {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
@@ -1474,8 +1485,12 @@ body, html {
   background: #f7f7f7;
   padding-left: 2vw;
   padding-right: 2vw;
-  padding-bottom: 2vh;
+  padding-top: 2vh;
+  padding-bottom: 5vh;
+  margin-top: 2vh;
   overflow-x: scroll;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(15%, #00aca9), color-stop(15%, #f7f7f8));
+  background: linear-gradient(180deg, #00aca9 15%, #f7f7f8 15%);
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .extra_proj_info .title {
@@ -1483,10 +1498,11 @@ body, html {
   display: -ms-flexbox;
   display: flex;
   min-width: 100%;
+  margin-bottom: 2vh;
   width: 100%;
-  height: 4vh;
+  font-size: 2.5vh;
+  color: white;
   float: center;
-  border-bottom: 0.1vw solid black;
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .extra_proj_info .content {
@@ -1497,9 +1513,11 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .card {
-  background: #f7f7f8;
-  float: right;
   margin-top: 2vh;
+  background: #f7f7f8;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(18%, #00aca9), color-stop(18%, #f7f7f8));
+  background: linear-gradient(180deg, #00aca9 18%, #f7f7f8 18%);
+  float: right;
   max-width: 40%;
   min-width: 40%;
   border-radius: 1.6vh;
@@ -1515,11 +1533,11 @@ body, html {
   min-width: 45%;
 }
 
-#main .layerOneInner .article .article_content .flex_projectpagina .card .project_locatie .title {
-  font-size: 1vh;
+#main .layerOneInner .article .article_content .flex_projectpagina .card .title {
+  margin-top: 1vh;
+  font-size: 2.5vh;
+  color: white;
   font-weight: bold;
-  padding-top: 3vh;
-  border-bottom: 0.1vw solid black;
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .recente_opmerkingen {
@@ -1531,6 +1549,87 @@ body, html {
   border-radius: 1.6vh;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper {
+  margin-top: 2vh;
+  width: 100%;
+  height: 80%;
+  padding-top: 2vh;
+  padding-left: 2vw;
+  padding-right: 2vw;
+  border-radius: 16px;
+  text-align: left;
+  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  background: linear-gradient(180deg, #00aca9 95px, #f7f7f8 95px);
+  overflow-y: auto;
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_head {
+  font-size: 2vh;
+  font-weight: bold;
+  width: 100%;
+  padding-bottom: 2vh;
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_head th {
+  padding-bottom: 2vh;
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_head th .rodo {
+  color: red;
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_head .syntr_logo {
+  min-width: 275px;
+  max-width: 20%;
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content {
+  font-size: 1.5vh;
+  word-wrap: break-word;
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .inhoud_box {
+  padding-bottom: 1vh;
+  font-size: 1.5vh;
+  max-width: 75px;
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .inhoud_box p {
+  overflow-y: auto;
+  max-width: 100%;
+  max-height: 75px;
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .inhoud_box p .inhopmerking {
+  color: red;
+  font-weight: bold;
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .voldoening {
+  max-width: 30px;
+  padding-top: 2vh;
+  min-width: 20%;
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .voldoening p {
+  width: 100%;
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .kosten {
+  max-width: 30px;
+  padding-top: 2vh;
+  min-width: 20%;
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content:nth-child(even) {
+  background-color: white;
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content:nth-child(odd) {
+  background-color: #daedf2;
 }
 
 @media screen and (max-width: 768px) {

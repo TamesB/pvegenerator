@@ -21,6 +21,11 @@
 {% csrf_token %}
 
 <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>+ Opmerking <input type="submit" class="submit_button" value="Opslaan"></input></p></div>
+<ul class="list">
+  {% for message in messages %}
+    <li>{{ message }}</li>
+  {% endfor %}
+</ul>
 
 {% if items %}
 
@@ -55,6 +60,8 @@
                         <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}">
                         <label class="item_label">Item:</label>
                         <p class="inhoud">{{ items|index:forloop.counter0|slice:":100" }}</p>
+                        <label for="{{ form.voldoet.id_for_label }}">Voldoet:</label>
+                        <p class="checkbox">{{ form.voldoet }}</p>
                         <label for="{{ form.annotation.id_for_label }}">Opmerking:</label>
                         <p class="formbox">{{ form.annotation }}</p>
                         <label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil:</label>

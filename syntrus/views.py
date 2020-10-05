@@ -321,11 +321,21 @@ def AllComments(request, pk):
 
     project = Project.objects.filter(pk=pk).first()
 
-    if not project.filter(permitted__username__contains=request.user.username):
+    if not Project.objects.filter(permitted__username__contains=request.user.username):
         return render(request, '404_syn.html')
+    
+    totale_kosten = 0
+    totale_kosten_lijst = [comment.kostenConsequenties for comment in PVEItemAnnotation.objects.filter(project=project) if comment.kostenConsequenties]
+    for kosten in totale_kosten_lijst:
+        totale_kosten += kosten
 
+    gebruiker = PVEItemAnnotation.objects.filter(project=project).first()
+    auteur = gebruiker.gebruiker
+    context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
     context["comments"] = PVEItemAnnotation.objects.filter(project=project)
     context["project"] = project
+    context["totale_kosten"] = totale_kosten
+    context["gebruiker"] = gebruiker
     return render(request, 'AllCommentsOfProject_syn.html', context)
 
 @login_required(login_url='login_syn')
@@ -344,38 +354,55 @@ def AddComment(request, pk):
     if request.method == "POST":
         ann_forms = [
             # todo: fix bijlages toevoegen
-            forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, kostenConsequenties=kosten))
-            for item_id, opmrk, kosten in zip(
+            forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, voldoet=voldoet, kostenConsequenties=kosten))
+            for item_id, opmrk, voldoet, kosten in zip(
                 request.POST.getlist("item_id"),
                 request.POST.getlist("annotation"),
+                request.POST.getlist("voldoet") or None,
                 request.POST.getlist("kostenConsequenties"),
             )
         ]
 
+        print(request.POST.getlist("item_id"),
+                request.POST.getlist("annotation"),
+                request.POST.getlist("voldoet"),
+                request.POST.getlist("kostenConsequenties"))
         # only use valid forms
         ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
+        # second check, save in annotations. May this code save the meek.
+        for form in ann_forms:
+            ann = PVEItemAnnotation()
+            ann.project = project
+            ann.gebruiker = request.user
+            ann.item = models.PVEItem.objects.get(id=form.cleaned_data["item_id"])
+            ann.annotation = form.cleaned_data["annotation"]
+            ann.voldoet = form.cleaned_data["voldoet"]
+            if form.cleaned_data["kostenConsequenties"]:
+                ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+            if form.cleaned_data["annbijlage"]:
+                ann.annbijlage = form.cleaned_data["annbijlage"]
+            ann.save()
 
-        # second check, save in annotations
-        if all(ann_forms[i].is_valid() for i in range(len(ann_forms))):                
-            for form in ann_forms:
-                if form.cleaned_data["annotation"]:
-                    annotation = PVEItemAnnotation()
-                    annotation.project = project
-                    annotation.item = models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()
-                    annotation.annotation = form.cleaned_data["annotation"]
-                    annotation.gebruiker = request.user
-                    if form.cleaned_data["kostenConsequenties"]:
-                        annotation.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
-                    if form.cleaned_data["annbijlage"]:
-                        annotation.annbijlage = form.cleaned_data["annbijlage"]
-                    annotation.save()
-
-            messages.warning(request, f"{range(len(ann_forms))} opmerkingen toegevoegd.")
-            return redirect('dashboard_syn')
+            return redirect('alleopmerkingen_syn', pk=project.id)
+        else:
+            messages.message("Niet goed ingevuld")
 
     if models.PVEItem.objects.filter(projects__id__contains=pk):
         items = models.PVEItem.objects.filter(projects__id__contains=pk).order_by('id')
-        ann_forms = [forms.PVEItemAnnotationForm(initial={'item_id':item.id}) for item in items]
+        ann_forms = []
+
+        for item in items:
+            if not PVEItemAnnotation.objects.filter(Q(project=project) & Q(gebruiker=request.user) & Q(item=item)):
+                ann_forms.append(forms.PVEItemAnnotationForm(initial={'item_id':item.id}))
+            else:
+                opmerking = PVEItemAnnotation.objects.filter(Q(project=project) & Q(gebruiker=request.user) & Q(item=item)).first()
+                ann_forms.append(forms.PVEItemAnnotationForm(initial={
+                    'item_id':opmerking.item.id,
+                    'annotation':opmerking.annotation,
+                    'voldoet':opmerking.voldoet,
+                    'kostenConsequenties':opmerking.kostenConsequenties,
+                    'annbijlage':opmerking.annbijlage,
+                    }))
 
         hoofdstuk_ordered_items = {}
 
@@ -548,7 +575,7 @@ def ConnectPVE(request, pk):
             # succesfully connected, save the project
             project.pveconnected = True
             project.save()
-            return redirect('plusaccount_syn')
+            return redirect('viewproject_syn', pk=project.id)
 
     # form
     form = forms.PVEParameterForm()
@@ -624,7 +651,7 @@ def AddAccount(request):
                 )
 
             messages.warning(request, f"Uitnodiging verstuurd naar { form.cleaned_data['invitee'] } voor project { form.cleaned_data['project'] }. De uitnodiging zal verlopen in { expiry_length } dagen.)")
-            return redirect("dashboard_syn")
+            return redirect("viewproject_syn", pk=project.id)
 
     projecten = Project.objects.filter(permitted__username__contains=request.user.username)
 
@@ -678,7 +705,7 @@ def AcceptInvite(request, key):
             user.save()
             if user is not None:
                 login(request, user)
-                return redirect('dashboard_syn')
+                return redirect('viewproject_syn', pk=project.id)
 
     form = AcceptInvitationForm()
     context = {}

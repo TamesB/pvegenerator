@@ -237,7 +237,7 @@ body, html {
         .menu:hover {
             width: 17.5vw;
             min-width: 200px;
-            z-index: 3;
+            z-index: 10;
 
             a {
                 visibility: visible;
@@ -296,7 +296,7 @@ body, html {
             position: absolute;
             top: 10vh;
             max-height: 90vh;
-            overflow-y: scroll;
+            overflow-y: auto;
 
             .article_content {
                 margin-top: 3vh;
@@ -456,6 +456,7 @@ body, html {
                             margin-left: 12%;
                             background-color: white;
                             border-radius: 50%;
+                            min-width:150px;
                         }
 
                     }
@@ -892,7 +893,7 @@ body, html {
                         margin-top: 4vh;
                         height: 75vh;
                         max-height: 75vh;
-                        overflow-y: scroll;
+                        overflow-y: auto;
 
                         .arrow-down {
                             display: block;
@@ -1001,7 +1002,7 @@ body, html {
                                     padding-top: 3vh;
                                     padding-bottom: 3vh;
                                     border-radius: 16px;
-                                    overflow-y: scroll;
+                                    overflow-y: auto;
 
                                     .item-id {
                                         display: none;
@@ -1035,6 +1036,12 @@ body, html {
                                             height: 100%;
                                             color: black;
                                         }
+                                    }
+                                    .checkbox {
+                                        width: 2vw;
+                                        height: 2vh;
+                                        padding-bottom: 1vh;
+                                        padding-top: 1vh;
                                     }
                                     
                                     .form_buttons {
@@ -1096,7 +1103,7 @@ body, html {
                 }
                 .popup_wrapper {
                     font-family: 'Montserrat';
-                    overflow-y: scroll;
+                    overflow-y: auto;
 
                     .download_pve_menu {
                         .pop-up-table {
@@ -1123,15 +1130,16 @@ body, html {
                         -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                         -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                         box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                        background: linear-gradient(180deg, rgba(0, 172, 169, 1) 15%, rgba(247,247,248,1) 15%);
 
                         .acties_title {
                             font-size: 2.5vh;
                             font-weight: bold;
-                            color: black;
+                            padding-top: 0.5vh;
+                            color: white;
                             width: 100%;
                             padding-top: 2vh;
                             padding-bottom: 2vh;
-                            border-bottom: 0.1vw solid black;
 
                         }
                         .acties {
@@ -1142,7 +1150,7 @@ body, html {
                             padding-left: 2vw;
                             padding-right: 2vw;
                             padding-bottom: 2vh;
-                        
+
                             .actie_item {
                                 display: flex;
                                 flex-wrap: wrap;
@@ -1152,7 +1160,7 @@ body, html {
                                 min-height: 30%;
                                 max-height: 30%;
                                 width: 30%;
-                                min-width: 23%;
+                                min-width: 100px;
                                 max-width: 23%;
                                 background: white;
                                 border-radius: 1.6vh;
@@ -1197,7 +1205,7 @@ body, html {
 
                     .messages_box {
                         max-width: 45%;
-                        min-width: 45%;
+                        min-width: 600px;
                         max-height: 40%;
                         min-height: 40%;
                         float:left;
@@ -1206,6 +1214,8 @@ body, html {
                         font-size: 1.5vh;
                         border: #f7f7f7;
                         background: #f7f7f7;
+                        background: linear-gradient(180deg, rgba(0, 172, 169, 1) 15%, rgba(247,247,248,1) 15%);
+
                     
                       
                         .chat-title {
@@ -1215,8 +1225,7 @@ body, html {
                             padding-bottom: 3vh;
                             width: 100%;
                             font-weight: bold;
-                            color: black;
-                            border-bottom: 0.1vw solid black;
+                            color: white;
                         }
                         
                         .chatroom {
@@ -1312,7 +1321,7 @@ body, html {
                     
                     .extra_proj_info {
                         display: flex;
-                        justify-content: space-evenly;
+                        justify-content: space-between;
                         flex-direction: column;
                         align-items: center;
                         min-width: 40%;
@@ -1326,16 +1335,21 @@ body, html {
                         background: #f7f7f7;
                         padding-left: 2vw;
                         padding-right: 2vw;
-                        padding-bottom: 2vh;
+                        padding-top: 2vh;
+                        padding-bottom: 5vh;
+                        margin-top: 2vh;
                         overflow-x: scroll;
+                        background: linear-gradient(180deg, rgba(0, 172, 169, 1) 15%, rgba(247,247,248,1) 15%);
+
 
                         .title {
                             display: flex;
                             min-width: 100%;
+                            margin-bottom: 2vh;
                             width: 100%;
-                            height: 4vh;
+                            font-size: 2.5vh;
+                            color: white;
                             float: center;
-                            border-bottom: 0.1vw solid black;
                         }
 
                         .content {
@@ -1345,9 +1359,10 @@ body, html {
 
                     }
                     .card   {
-                        background: rgba(247,247,248,1);
-                        float:right;
                         margin-top: 2vh;
+                        background: rgba(247,247,248,1);
+                        background: linear-gradient(180deg, rgba(0, 172, 169, 1) 18%, rgba(247,247,248,1) 18%);
+                        float:right;
                         max-width: 40%;
                         min-width: 40%;
                         border-radius: 1.6vh;
@@ -1358,14 +1373,14 @@ body, html {
                             display: flex;
                             max-width: 45%;
                             min-width: 45%;
+                        }
 
-                            .title {
-                                font-size: 1vh;
-                                font-weight: bold;
-                                padding-top: 3vh;
-                                border-bottom: 0.1vw solid black;
+                        .title {
+                            margin-top: 1vh;
+                            font-size: 2.5vh;
+                            color: white;
+                            font-weight: bold;
 
-                            }
                         }
                     }
 
@@ -1382,7 +1397,87 @@ body, html {
     
                 }
 
+                .opmerkingtable_wrapper {
+                    margin-top: 2vh;
+                    width: 100%;
+                    height: 80%;
+                    padding-top: 2vh;
+                    padding-left: 2vw;
+                    padding-right: 2vw;
+                    border-radius: 16px;
+                    text-align: left;
+                    -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    background: linear-gradient(180deg, rgba(0, 172, 169, 1) 95px, rgba(247,247,248,1) 95px);
+                    overflow-y: auto;
 
+                    .table_head {
+                        font-size: 2vh;
+                        font-weight:bold;
+                        width: 100%;
+                        padding-bottom: 2vh;
+                        
+                        th {
+                            padding-bottom: 2vh;
+
+                            .rodo {
+                                color: red;
+                            }
+                        }
+                        .syntr_logo {
+                            min-width: 275px;
+                            max-width: 20%;
+                        }
+                    }
+
+                    .table_content {
+                        font-size: 1.5vh;
+                        word-wrap: break-word;
+
+                        .inhoud_box {
+                            padding-bottom: 1vh;
+                            font-size: 1.5vh;     
+                            max-width: 75px;                       
+                            p {
+                                overflow-y: auto;
+                                max-width: 100%;
+                                max-height: 75px;
+                                .inhopmerking {
+                                    color: red;
+                                    font-weight: bold;
+                                }
+                            }
+
+                        }
+                        .voldoening {
+                            max-width: 30px;                       
+                            padding-top: 2vh;
+
+                            min-width: 20%;
+                            p {
+                                width: 100%;
+                            }
+                        }                        
+                        
+                        .kosten {
+                            max-width: 30px;                       
+
+                            padding-top: 2vh;
+
+                            min-width: 20%;
+                        }
+
+                    }
+
+                    .table_content:nth-child(even) {
+                        background-color: white;
+                    }                            
+                    .table_content:nth-child(odd) {
+                        background-color: #daedf2;
+                    }
+
+                }
 
             }
 

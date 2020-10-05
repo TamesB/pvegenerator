@@ -109,10 +109,22 @@ class PlusAccountForm(ModelForm):
             'user_afdeling':'Afdeling:'
         }
 
+class CheckboxInput(forms.CheckboxInput):
+    def __init__(self, default=False, *args, **kwargs):
+        super(CheckboxInput, self).__init__(*args, **kwargs)
+        self.default = default
+
+    def value_from_datadict(self, data, files, name):
+        if name not in data:
+            return self.default
+        return super(CheckboxInput, self).value_from_datadict(data, files, name)
+
+
 class PVEItemAnnotationForm(forms.Form):
     item_id = forms.IntegerField(label='item_id')
-    annotation = forms.CharField(label='Opmerking', max_length=1000, widget=forms.Textarea, required=False)
-    kostenConsequenties = forms.DecimalField(label='(Optioneel) Kosten Consequenties', required=False, min_value=0)
+    voldoet = forms.BooleanField(label='voldoet', widget=CheckboxInput(default=False), required=False)
+    annotation = forms.CharField(label='annotation', max_length=1000, widget=forms.Textarea, required=False)
+    kostenConsequenties = forms.DecimalField(label='(Optioneel) Kosten Consequenties', required=False)
     annbijlage = forms.FileField(required=False)
 
 class StartProjectForm(ModelForm):
