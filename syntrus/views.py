@@ -384,14 +384,6 @@ def AddComment(request, pk):
         ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
         # second check, save in annotations. May this code save the meek.
 
-        print([f"""
-        id {form.cleaned_data["item_id"]}
-        ann{form.cleaned_data["annotation"]}
-        inh {models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first().inhoud}
-        voldoet {form.cleaned_data["voldoet"]}
-        kost {form.cleaned_data["kostenConsequenties"]}
-        bijl {form.cleaned_data["annbijlage"]}
-        """ for form in ann_forms])
         for form in ann_forms:
             # true comment if either comment or voldoet
             if form.cleaned_data["annotation"] or form.cleaned_data["voldoet"]:
@@ -446,8 +438,17 @@ def AddComment(request, pk):
         # easy entrance to item ids
         form_item_ids = [item.id for item in items]
 
+        aantal_opmerkingen_gedaan = PVEItemAnnotation.objects.filter(Q(project=project) & Q(gebruiker=request.user)).count()
+
+        if aantal_opmerkingen_gedaan < items.count():
+            progress = "niet_klaar"
+        else:
+            progress = "klaar"
+
         context["forms"] = ann_forms
         context["items"] = items
+        context["progress"] = progress
+        context["aantal_opmerkingen_gedaan"] = aantal_opmerkingen_gedaan
         context["form_item_ids"] = form_item_ids
         context["hoofdstuk_ordered_items"] = hoofdstuk_ordered_items
 

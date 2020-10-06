@@ -419,6 +419,48 @@ body, html {
   min-height: 180px;
 }
 
+#main .layerOneInner .article .article_content .main_content_div .opmerking_info {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  text-align: center;
+  padding-left: 3vw;
+  padding-right: 3vw;
+  padding-bottom: 2vw;
+  overflow-x: auto;
+}
+
+#main .layerOneInner .article .article_content .main_content_div .opmerking_info .title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  font-size: 2.5vh;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-top: 0.3vh;
+}
+
+#main .layerOneInner .article .article_content .main_content_div .opmerking_info .title p {
+  text-align: center;
+}
+
+#main .layerOneInner .article .article_content .main_content_div .opmerking_info .content {
+  margin-top: 4vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  letter-spacing: 0.1vw;
+  line-height: 0.15vh;
+  font-size: 1.5vh;
+  color: black;
+  text-align: center;
+}
+
 #main .layerOneInner .article .article_content .main_content_div .project_overview_content {
   width: 100%;
   height: 100%;
@@ -1178,6 +1220,25 @@ body, html {
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .done_button p {
   font-family: 'Montserrat';
   font-size: 1.5vh;
+  margin-top: 0.5vh;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .niet_klaar {
+  background-color: grey;
+  display: inline-block;
+  width: 25vw;
+  min-width: 100px;
+  max-width: 250px;
+  height: 4vh;
+  border-radius: 64px;
+  float: right;
+  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  font-family: 'Montserrat';
+  font-size: 1vh;
   margin-top: 0.5vh;
   text-align: center;
   font-weight: bold;
