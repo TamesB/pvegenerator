@@ -122,7 +122,7 @@ class CheckboxInput(forms.CheckboxInput):
 
 class PVEItemAnnotationForm(forms.Form):
     item_id = forms.IntegerField(label='item_id')
-    voldoet = forms.BooleanField(label='voldoet', widget=CheckboxInput(default=False), required=False)
+    voldoet = forms.BooleanField(label='voldoet', widget=CheckboxInput(attrs={'checked':'checked'}), required=False)
     annotation = forms.CharField(label='annotation', max_length=1000, widget=forms.Textarea, required=False)
     kostenConsequenties = forms.DecimalField(label='(Optioneel) Kosten Consequenties', required=False)
     annbijlage = forms.FileField(required=False)
