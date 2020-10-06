@@ -56,38 +56,6 @@
 
 <div class="main_content_div">
     <table class="project_overview_content">
-      <caption>Overzicht opmerkingen</caption>
-      <thead>
-        <tr class="table_title">
-          <th>Item</th>
-          <th>Project</th>
-          <th>Mijn opmerking</th>
-          <th>Bewerken</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% if opmerkingen %}
-        {% for opmerking in opmerkingen %}
-        <tr class="table_content">
-          <td>{{ opmerking.item.id }}</td>
-          <td>{{ opmerking.project }}</td>
-          <td>{{ opmerking.annotation }}</td>
-          <td><a href="#"><img src="{% static 'syntrus/img/bewerk.png' %}"></img></a></td>
-        </tr>
-        {% endfor %}
-        {% else %}
-        <tr>
-          <td>
-          <i>Nog geen opmerkingen geplaatst.</i>
-          </td>
-        </tr>
-        {% endif %}
-      </tbody>
-    </table>
-</div>
-
-<div class="main_content_div">
-    <table class="project_overview_content">
       <caption>Projecten overzicht</caption>
       <thead>
         <tr class="table_title">
