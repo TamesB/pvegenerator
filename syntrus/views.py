@@ -387,7 +387,10 @@ def AddComment(request, pk):
         for form in ann_forms:
             # true comment if either comment or voldoet
             if form.cleaned_data["annotation"] or form.cleaned_data["voldoet"]:
-                ann = PVEItemAnnotation()
+                if PVEItemAnnotation.objects.filter(item=models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()):
+                    ann = PVEItemAnnotation.objects.filter(item=models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()).first()
+                else:
+                    ann = PVEItemAnnotation()
                 ann.project = project
                 ann.gebruiker = request.user
                 ann.item = models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()
@@ -398,6 +401,9 @@ def AddComment(request, pk):
                 if form.cleaned_data["annbijlage"]:
                     ann.annbijlage = form.cleaned_data["annbijlage"]
                 ann.save()
+
+
+        # remove duplicate entries
 
         return redirect('alleopmerkingen_syn', pk=project.id)
 
