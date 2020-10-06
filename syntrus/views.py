@@ -352,40 +352,62 @@ def AddComment(request, pk):
 
     # multiple forms!
     if request.method == "POST":
+        item_id_list = [number for number in request.POST.getlist("item_id")]
+
+        request_list = request.POST.getlist("voldoet")
+        checkbox_list = []
+
+        for id_value in item_id_list:
+            found = False
+
+            for checkbox_value in request_list:
+                if checkbox_value == id_value:
+                    found = True
+
+            if found == True:
+                checkbox_list.append("on")
+            else:
+                checkbox_list.append("")
+            
         ann_forms = [
             # todo: fix bijlages toevoegen
             forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, voldoet=voldoet, kostenConsequenties=kosten))
             for item_id, opmrk, voldoet, kosten in zip(
                 request.POST.getlist("item_id"),
                 request.POST.getlist("annotation"),
-                request.POST.getlist("voldoet") or None,
+                checkbox_list,
                 request.POST.getlist("kostenConsequenties"),
             )
         ]
 
-        print(request.POST.getlist("item_id"),
-                request.POST.getlist("annotation"),
-                request.POST.getlist("voldoet"),
-                request.POST.getlist("kostenConsequenties"))
         # only use valid forms
         ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
         # second check, save in annotations. May this code save the meek.
-        for form in ann_forms:
-            ann = PVEItemAnnotation()
-            ann.project = project
-            ann.gebruiker = request.user
-            ann.item = models.PVEItem.objects.get(id=form.cleaned_data["item_id"])
-            ann.annotation = form.cleaned_data["annotation"]
-            ann.voldoet = form.cleaned_data["voldoet"]
-            if form.cleaned_data["kostenConsequenties"]:
-                ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
-            if form.cleaned_data["annbijlage"]:
-                ann.annbijlage = form.cleaned_data["annbijlage"]
-            ann.save()
 
-            return redirect('alleopmerkingen_syn', pk=project.id)
-        else:
-            messages.message("Niet goed ingevuld")
+        print([f"""
+        id {form.cleaned_data["item_id"]}
+        ann{form.cleaned_data["annotation"]}
+        inh {models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first().inhoud}
+        voldoet {form.cleaned_data["voldoet"]}
+        kost {form.cleaned_data["kostenConsequenties"]}
+        bijl {form.cleaned_data["annbijlage"]}
+        """ for form in ann_forms])
+        for form in ann_forms:
+            # true comment if either comment or voldoet
+            if form.cleaned_data["annotation"] or form.cleaned_data["voldoet"]:
+                ann = PVEItemAnnotation()
+                ann.project = project
+                ann.gebruiker = request.user
+                ann.item = models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()
+                ann.annotation = form.cleaned_data["annotation"]
+                ann.voldoet = form.cleaned_data["voldoet"]
+                if form.cleaned_data["kostenConsequenties"]:
+                    ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+                if form.cleaned_data["annbijlage"]:
+                    ann.annbijlage = form.cleaned_data["annbijlage"]
+                ann.save()
+
+        return redirect('alleopmerkingen_syn', pk=project.id)
 
     if models.PVEItem.objects.filter(projects__id__contains=pk):
         items = models.PVEItem.objects.filter(projects__id__contains=pk).order_by('id')

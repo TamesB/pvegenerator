@@ -61,7 +61,7 @@
                         <label class="item_label">Item:</label>
                         <p class="inhoud">{{ items|index:forloop.counter0|slice:":100" }}</p>
                         <label for="{{ form.voldoet.id_for_label }}">Voldoet:</label>
-                        <p class="checkbox">{{ form.voldoet }}</p>
+                        <p class="checkbox"><input type="checkbox" name="voldoet" id="id_voldoet" value="{{ form.item_id.value }}"></p>
                         <label for="{{ form.annotation.id_for_label }}">Opmerking:</label>
                         <p class="formbox">{{ form.annotation }}</p>
                         <label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil:</label>
