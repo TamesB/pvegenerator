@@ -55,7 +55,7 @@ class PVEItemAnnotation(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, default=None)
     item = models.ForeignKey('app.PVEItem', on_delete=models.CASCADE, default=None)
     annotation = models.TextField(max_length=1000, default=None, null=True)
-    voldoet = models.BooleanField(default=False)
+    status = models.ForeignKey('syntrus.CommentStatus', on_delete=models.CASCADE, default=None)
     annbijlage = models.FileField(blank=True, null=True, upload_to=upload_to('OpmerkingBijlages'))
     gebruiker = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, default=None, null=True)
     datum = models.DateTimeField(auto_now=True)

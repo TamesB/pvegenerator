@@ -8,7 +8,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from syntrus import forms
 from project.models import Project, PVEItemAnnotation, Beleggers
 from users.models import Invitation, CustomUser
-from syntrus.models import FAQ, Room
+from syntrus.models import FAQ, Room, CommentStatus
 from syntrus.forms import KoppelDerdeUserForm, StartProjectForm
 from users.forms import AcceptInvitationForm
 from app import models
@@ -353,29 +353,14 @@ def AddComment(request, pk):
     # multiple forms!
     if request.method == "POST":
         item_id_list = [number for number in request.POST.getlist("item_id")]
-
-        request_list = request.POST.getlist("voldoet")
-        checkbox_list = []
-
-        for id_value in item_id_list:
-            found = False
-
-            for checkbox_value in request_list:
-                if checkbox_value == id_value:
-                    found = True
-
-            if found == True:
-                checkbox_list.append("on")
-            else:
-                checkbox_list.append("")
-            
+        print(request.POST.getlist("status"))
         ann_forms = [
             # todo: fix bijlages toevoegen
-            forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, voldoet=voldoet, kostenConsequenties=kosten))
-            for item_id, opmrk, voldoet, kosten in zip(
+            forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, status=status, kostenConsequenties=kosten))
+            for item_id, opmrk, status, kosten in zip(
                 request.POST.getlist("item_id"),
                 request.POST.getlist("annotation"),
-                checkbox_list,
+                request.POST.getlist("status"),
                 request.POST.getlist("kostenConsequenties"),
             )
         ]
@@ -386,7 +371,7 @@ def AddComment(request, pk):
 
         for form in ann_forms:
             # true comment if either comment or voldoet
-            if form.cleaned_data["annotation"] or form.cleaned_data["voldoet"]:
+            if form.cleaned_data["annotation"] or form.cleaned_data["status"]:
                 if PVEItemAnnotation.objects.filter(item=models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()):
                     ann = PVEItemAnnotation.objects.filter(item=models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()).first()
                 else:
@@ -395,7 +380,7 @@ def AddComment(request, pk):
                 ann.gebruiker = request.user
                 ann.item = models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()
                 ann.annotation = form.cleaned_data["annotation"]
-                ann.voldoet = form.cleaned_data["voldoet"]
+                ann.status = form.cleaned_data["status"]
                 if form.cleaned_data["kostenConsequenties"]:
                     ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
                 if form.cleaned_data["annbijlage"]:
@@ -419,7 +404,7 @@ def AddComment(request, pk):
                 ann_forms.append(forms.PVEItemAnnotationForm(initial={
                     'item_id':opmerking.item.id,
                     'annotation':opmerking.annotation,
-                    'voldoet':opmerking.voldoet,
+                    'status':opmerking.status,
                     'kostenConsequenties':opmerking.kostenConsequenties,
                     'annbijlage':opmerking.annbijlage,
                     }))

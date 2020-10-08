@@ -14,6 +14,12 @@ class Room(models.Model):
         return self.name
 
 
+class CommentStatus(models.Model):
+    status = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.status}"
+
 class FAQ(models.Model):
     type_choices = (
         ('B', 'Beheerder'),

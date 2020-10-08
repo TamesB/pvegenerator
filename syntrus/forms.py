@@ -5,6 +5,7 @@ from django.forms import ModelForm
 from app.models import Bouwsoort, TypeObject, Doelgroep, PVEItem
 from project.models import Project, PVEItemAnnotation
 from users.models import Invitation
+from syntrus.models import CommentStatus
 from django.contrib.gis import forms
 
 class LoginForm(forms.Form):
@@ -122,7 +123,7 @@ class CheckboxInput(forms.CheckboxInput):
 
 class PVEItemAnnotationForm(forms.Form):
     item_id = forms.IntegerField(label='item_id')
-    voldoet = forms.BooleanField(label='voldoet', widget=CheckboxInput(attrs={'checked':'checked'}), required=False)
+    status = forms.ModelChoiceField(queryset=CommentStatus.objects.all(), required=False)
     annotation = forms.CharField(label='annotation', max_length=1000, widget=forms.Textarea, required=False)
     kostenConsequenties = forms.DecimalField(label='(Optioneel) Kosten Consequenties', required=False)
     annbijlage = forms.FileField(required=False)

@@ -17,23 +17,25 @@
 {% endblock %}
 
 {% block main %}
-<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Alle Opmerkingen, project {{ project.naam }}</p></div>
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Mijn Opmerkingen, project {{ project.naam }}</p></div>
 <table class="opmerkingtable_wrapper">
   <tr class="table_head">
-    <th><img src="{% static 'syntrus/svg/logo.svg' %}" class="syntr_logo"></a> Opmerkingen in <span class="rodo">rood</span></th>
-    <th><p>Voldoet aan derde</p></th>
+    <th><img src="{% static 'syntrus/svg/logo.svg' %}" class="syntr_logo"></a></th>
+    <th><p>Opmerking</p></th>
+    <th><p>Status</p></th>
     <th><p>Kostenverschil</p></th>
-    <th><p>Reageer</p></th>
   </tr>
   {% for comment in comments %}
   <tr class="table_content">
-    <td class="inhoud_box"><p>{{ comment.item.inhoud }}{% if comment.annotation %}<span class="inhopmerking"> {{ comment.annotation }} ~{{ comment.gebruiker.username }}</span>{% endif %}</p></td>
-    <td class="voldoening"><p>{% if comment.voldoet %}Ja{% else %}&nbsp;{% endif %}</p></td>
+    <td class="inhoud_box"><p>{{ comment.item.inhoud }}</p></td>
+    <td class="voldoening"><p>{% if comment.annotation %}{{ comment.annotation }} ~{{comment.gebruiker}}{% else %}<i>Geen</i>{% endif %}</p></td>
+    <td class="voldoening"><p>{% if comment.status %}{{ comment.status }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="kosten"><p>{% if comment.kostenConsequenties %}€ {{ comment.kostenConsequenties }}{% else %} € 0 {% endif %}</p></td>
   </tr>
   {% endfor %}
   <tr>
     <td class="inhoud_box">&nbsp;</td>
+    <td class="voldoening">&nbsp;</td>
     <td class="voldoening">&nbsp;</td>
     <td class="kosten"><p>Totaal: {% if totale_kosten %}€{{totale_kosten}}{% else %}€0{% endif %}</p></td>
   </tr>
