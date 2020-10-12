@@ -636,6 +636,7 @@ def AddAccount(request):
             invitation.expires = expire_date
             invitation.key = secrets.token_urlsafe(30)
             invitation.save()
+            project = form.cleaned_data["project"]
 
             if manager:
                 send_mail(
