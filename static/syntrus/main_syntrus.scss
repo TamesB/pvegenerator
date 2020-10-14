@@ -918,7 +918,7 @@ body, html {
                 
                         .submit_button:active {
                             transform: translateY(4px);
-                        }    
+                        }
                     }
 
                     .item_opmerking_list {
@@ -1052,6 +1052,13 @@ body, html {
                                         margin-top: 4vh;
                                         margin-bottom: 2vh;
                                         float: left;
+                                    }
+
+                                    .sluit_x_button {
+                                        cursor: pointer;
+                                        width: 100%;
+                                        text-align: right;
+                                        margin-right: 3vh;
                                     }
                                     .inhoud {
                                         margin-right: 5vw;

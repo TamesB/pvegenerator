@@ -74,11 +74,16 @@
 <div class="actie_item" onClick="javascript:location.href='{% url 'plusopmerking_syn' project.id %}'">
     <img class="actie-img" src="{% static 'syntrus/img/opmerking.png' %}"></img>
     <p class="subtext">+ Opmrk</p>
-</div><div class="actie_item" onClick="javascript:location.href='{% url 'alleopmerkingen_syn' project.id %}'">
+</div><div class="actie_item" onClick="javascript:location.href='{% url 'mijnopmerkingen_syn' project.id %}'">
     <img class="actie-img" src="{% static 'syntrus/img/opmerking.png' %}"></img>
     <p class="subtext">Mijn Opmrk</p>
 </div>
 {% if request.user.type_user == "SOG" %}
+<div class="actie_item" onClick="javascript:location.href='{% url 'alleopmerkingen_syn' project.id %}'">
+    <img class="actie-img" src="{% static 'syntrus/img/opmerking.png' %}"></img>
+    <p class="subtext">Alle Opmrk</p>
+</div>
+
 <div class="actie_item" onClick="javascript:location.href='{% url 'plusaccount_syn' %}'">
     <img class="actie-img" src="{% static 'syntrus/img/accountsderden.png' %}"></img>
     <p class="subtext">+ Derde</p>

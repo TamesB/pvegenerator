@@ -1,0 +1,80 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+{% block menu %}
+{% if request.user.type_user == 'SOG' %}
+{% include 'Menu.html' with type='manager' %}
+{% elif request.user.type_user == 'SB' %}
+{% include 'Menu.html' with type='beheerder' %}
+{% elif request.user.type_user == 'SD' %}
+{% include 'Menu.html' with type='derde' %}
+{% else %}
+{% include 'Menu.html' with type='beheerder' %}
+{% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Mijn Opmerkingen, project {{ project.naam }}</p></div>
+<table class="opmerkingtable_wrapper">
+  <tr class="table_head">
+    <th><img src="{% static 'syntrus/svg/logo.svg' %}" class="syntr_logo"></a></th>
+    <th><p>Opmerking</p></th>
+    <th><p>Status</p></th>
+    <th><p>Kostenverschil</p></th>
+    <th><p>Acties</p></th>
+  </tr>
+  {% for comment in comments %}
+  <tr class="table_content">
+    <td class="inhoud_box"><p>{{ comment.item.inhoud }}</p></td>
+    <td class="voldoening"><p>{% if comment.annotation %}{{ comment.annotation }}{% else %}<i>Geen</i>{% endif %}</p></td>
+    <td class="voldoening"><p>{% if comment.status %}{{ comment.status }}{% else %}&nbsp;{% endif %}</p></td>
+    <td class="kosten"><p>{% if comment.kostenConsequenties %}€ {{ comment.kostenConsequenties }}{% else %} € 0 {% endif %}</p></td>
+    <td class="voldoening"><p onClick="document.getElementById('{{ comment.item.id }}').style.display='block'" class="bewerk_button">Bewerk</p></td>
+
+  </tr>
+  {% endfor %}
+  <tr>
+    <td class="inhoud_box">&nbsp;</td>
+    <td class="voldoening">&nbsp;</td>
+    <td class="voldoening">&nbsp;</td>
+    <td class="kosten"><p>Totaal: {% if totale_kosten %}€{{totale_kosten}}{% else %}€0{% endif %}</p></td>
+  </tr>
+</table>
+
+<form class="opmerking_form" action="{% url 'mijnopmerkingen_syn' project.id %}" method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+
+<div class="opmerking_form_modal">
+        {% for form in forms %}
+            <div id="{{ form.item_id.value }}" class="w3-modal">
+                <div class="w3-modal-content">
+                    <div class="w3-container">
+                        <div onclick="document.getElementById('{{ form.item_id.value }}').style.display='none'" class="sluit_x_button"><p>Sluit</p></div>
+                        <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}">
+                        <label class="item_label">Item:</label>
+                        <p class="inhoud">{{ items|index:forloop.counter0|slice:":100" }}</p>
+                        <label for="{{ form.voldoet.id_for_label }}">Status:</label>
+                        <p class="formbox">{{ form.status }}</p>
+                        <label for="{{ form.annotation.id_for_label }}">Opmerking:</label>
+                        <p class="formbox">{{ form.annotation }}</p>
+                        <label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil:</label>
+                        <p class="formbox">{{ form.kostenConsequenties }}</p>                    
+                        <label for="{{ form.annbijlage.id_for_label }}">Bijlage:</label>
+                        <p class="formbox">{{ form.annbijlage }}</p>
+
+                        <span class="form_buttons">
+                          <div onclick="document.getElementById('{{ form_item_ids|previous_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
+                          <input type="submit" class="done_button" value="Gereed"></input>
+                          <div onclick="document.getElementById('{{ form_item_ids|next_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+</div>
+</form>
+{% endblock %}

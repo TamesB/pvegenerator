@@ -313,6 +313,83 @@ def AddCommentOverview(request):
     return render(request, 'plusOpmerkingOverview_syn.html', context)
 
 @login_required(login_url='login_syn')
+def MyComments(request, pk):
+    context = {}
+
+    if not Project.objects.filter(pk=pk):
+        return render(request, '404_syn.html')
+
+    project = Project.objects.filter(pk=pk).first()
+
+    if not Project.objects.filter(permitted__username__contains=request.user.username):
+        return render(request, '404_syn.html')
+    
+    if request.method == "POST":
+        item_id_list = [number for number in request.POST.getlist("item_id")]
+        ann_forms = [
+            # todo: fix bijlages toevoegen
+            forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, status=status, kostenConsequenties=kosten))
+            for item_id, opmrk, status, kosten in zip(
+                request.POST.getlist("item_id"),
+                request.POST.getlist("annotation"),
+                request.POST.getlist("status"),
+                request.POST.getlist("kostenConsequenties"),
+            )
+        ]
+
+        # only use valid forms
+        ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
+        # second check, save in annotations. May this code save the meek.
+
+        for form in ann_forms:
+            # true comment if either comment or voldoet
+            if form.cleaned_data["annotation"] or form.cleaned_data["status"]:
+                if PVEItemAnnotation.objects.filter(item=models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()):
+                    ann = PVEItemAnnotation.objects.filter(item=models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()).first()
+                else:
+                    raise Http404("404.")
+                ann.project = project
+                ann.gebruiker = request.user
+                ann.item = models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()
+                ann.annotation = form.cleaned_data["annotation"]
+                ann.status = form.cleaned_data["status"]
+                if form.cleaned_data["kostenConsequenties"]:
+                    ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+                if form.cleaned_data["annbijlage"]:
+                    ann.annbijlage = form.cleaned_data["annbijlage"]
+                ann.save()
+        return redirect('mijnopmerkingen_syn', pk=project.id)        
+
+    totale_kosten = 0
+    totale_kosten_lijst = [comment.kostenConsequenties for comment in PVEItemAnnotation.objects.filter(project=project) if comment.kostenConsequenties]
+    for kosten in totale_kosten_lijst:
+        totale_kosten += kosten
+
+    comments = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user)
+    ann_forms = []
+
+    for comment in comments:
+            ann_forms.append(forms.PVEItemAnnotationForm(initial={
+                'item_id':comment.item.id,
+                'annotation':comment.annotation,
+                'status':comment.status,
+                'kostenConsequenties':comment.kostenConsequenties,
+                'annbijlage':comment.annbijlage,
+                }))
+
+    # easy entrance to item ids
+    form_item_ids = [comment.item.id for comment in comments]
+
+    context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
+    context["comments"] = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user)
+    context["project"] = project
+    context["forms"] = ann_forms
+    context["totale_kosten"] = totale_kosten
+    context["form_item_ids"] = form_item_ids
+
+    return render(request, 'MyComments.html', context)
+
+@login_required(login_url='login_syn')
 def AllComments(request, pk):
     context = {}
 
@@ -332,10 +409,11 @@ def AllComments(request, pk):
     gebruiker = PVEItemAnnotation.objects.filter(project=project).first()
     auteur = gebruiker.gebruiker
     context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
-    context["comments"] = PVEItemAnnotation.objects.filter(project=project)
+    context["comments"] = PVEItemAnnotation.objects.filter(project=project).order_by('gebruiker')
     context["project"] = project
     context["totale_kosten"] = totale_kosten
     context["gebruiker"] = gebruiker
+    context["aantal_opmerkingen_gedaan"] = PVEItemAnnotation.objects.filter(project=project).count()
     return render(request, 'AllCommentsOfProject_syn.html', context)
 
 @login_required(login_url='login_syn')
@@ -353,7 +431,6 @@ def AddComment(request, pk):
     # multiple forms!
     if request.method == "POST":
         item_id_list = [number for number in request.POST.getlist("item_id")]
-        print(request.POST.getlist("status"))
         ann_forms = [
             # todo: fix bijlages toevoegen
             forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, status=status, kostenConsequenties=kosten))

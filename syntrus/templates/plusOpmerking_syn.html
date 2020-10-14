@@ -20,7 +20,7 @@
 <form class="opmerking_form" action="{% url 'plusopmerking_syn' project.id %}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 
-<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p><input type="submit" class="submit_button" value="Opslaan"></input><input type="button" class="{{ progress }}" disabled onClick="javascript:location.href='#';" value="Freeze opmerkingen ({{ aantal_opmerkingen_gedaan }} / {{ items|length }})"></input></p></div>
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p><input type="submit" class="submit_button" value="Opslaan"></input></p></div>
 <ul class="list">
   {% for message in messages %}
     <li>{{ message }}</li>

@@ -1172,6 +1172,13 @@ body, html {
   float: left;
 }
 
+#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .sluit_x_button {
+  cursor: pointer;
+  width: 100%;
+  text-align: right;
+  margin-right: 3vh;
+}
+
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .inhoud {
   margin-right: 5vw;
   margin-left: 5vw;
