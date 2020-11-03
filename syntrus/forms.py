@@ -126,7 +126,7 @@ class PVEItemAnnotationForm(forms.Form):
     status = forms.ModelChoiceField(queryset=CommentStatus.objects.all(), required=False)
     annotation = forms.CharField(label='annotation', max_length=1000, widget=forms.Textarea, required=False)
     kostenConsequenties = forms.DecimalField(label='(Optioneel) Kosten Consequenties', required=False)
-    annbijlage = forms.ClearableFileInput(attrs={'multiple': True})
+    annbijlage = forms.FileField(required=False)
 
 class StartProjectForm(ModelForm):
     plaats = forms.PointField(widget=forms.OSMWidget(attrs={'default_lat': 52.37, 'default_lon': 4.895,}))
