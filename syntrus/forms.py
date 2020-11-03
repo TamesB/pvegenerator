@@ -3,7 +3,7 @@
 from django import forms
 from django.forms import ModelForm
 from app.models import Bouwsoort, TypeObject, Doelgroep, PVEItem
-from project.models import Project, PVEItemAnnotation
+from project.models import Project, PVEItemAnnotation, BijlageToAnnotation
 from users.models import Invitation
 from syntrus.models import CommentStatus
 from django.contrib.gis import forms
@@ -126,7 +126,18 @@ class PVEItemAnnotationForm(forms.Form):
     status = forms.ModelChoiceField(queryset=CommentStatus.objects.all(), required=False)
     annotation = forms.CharField(label='annotation', max_length=1000, widget=forms.Textarea, required=False)
     kostenConsequenties = forms.DecimalField(label='(Optioneel) Kosten Consequenties', required=False)
-    annbijlage = forms.FileField(required=False)
+
+class BijlageUpload(forms.ModelForm):
+    class Meta:
+        model = BijlageToAnnotation
+        fields = ['item', 'gebruiker', 'project', 'annbijlage']
+        widgets = {
+            'annbijlage': forms.ClearableFileInput(attrs={'multiple': True}),
+            'item': forms.HiddenInput(),
+            'gebruiker': forms.HiddenInput(),
+            'project': forms.HiddenInput(),
+        }
+
 
 class StartProjectForm(ModelForm):
     plaats = forms.PointField(widget=forms.OSMWidget(attrs={'default_lat': 52.37, 'default_lon': 4.895,}))

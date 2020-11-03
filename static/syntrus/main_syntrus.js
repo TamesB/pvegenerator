@@ -28,6 +28,9 @@ $(document).ready(function(){
          ;
        })
      ;
+
+     $('.option[value=""]').remove();
+
 });
 
 

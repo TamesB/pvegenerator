@@ -20,7 +20,7 @@
 <form class="opmerking_form" action="{% url 'plusopmerking_syn' project.id %}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 
-<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p><input type="submit" class="submit_button" value="Opslaan"></input></p></div>
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>+ Opmerkingen<input type="submit" class="submit_button" value="Opslaan"></input></p></div>
 <ul class="list">
   {% for message in messages %}
     <li>{{ message }}</li>
@@ -30,7 +30,7 @@
 <div class="main_content_div">
   <div class="opmerking_info">
     <div class="title"><p>Opmerkingen maken op het PvE</p></div>
-    <div class="content"><p>Maak hier uw opmerkingen op alle items op het PvE. Een item kan voldoen aan de eisen, of u kan een opmerking hebben op het item, met daarbij extra kosten geven, of juist minder kosten geven (minteken toevoegen voor de prijs). Een item is genoteerd als 'verwerkt' als 'voldoet' is aangeklikt, óf een opmerking is toegevoegd als hij niet voldoet. Als u over alle items gegaan ben is er een mogelijkheid om de opmerkingen te 'freezen', de projectmanager wordt genotificeerd voor volgende acties, en kunt u geen opmerkingen meer maken of bewerken. U kunt uw voortgang altijd opslaan en later weer terugkomen.</p></div>
+    <div class="content"><p>Maak hier uw opmerkingen op alle items op het PvE. Klik op opslaan als u klaar bent.</p></div>
   </div>
 </div>
 {% if items %}
@@ -73,7 +73,7 @@
                         <label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil:</label>
                         <p class="formbox">{{ form.kostenConsequenties }}</p>                    
                         <label for="{{ form.annbijlage.id_for_label }}">Bijlage:</label>
-                        <p class="formbox">{{ form.annbijlage }}</p>
+                        <p class="formbox">{{ bijlage_forms|index:forloop.counter0 }}</p>
 
                         <span class="form_buttons">
                           <div onclick="document.getElementById('{{ form_item_ids|previous_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
