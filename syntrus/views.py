@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from syntrus import forms
-from project.models import Project, PVEItemAnnotation, Beleggers, BijlageToAnnotation
+from project.models import Project, PVEItemAnnotation, Beleggers
 from users.models import Invitation, CustomUser
 from syntrus.models import FAQ, Room, CommentStatus
 from syntrus.forms import KoppelDerdeUserForm, StartProjectForm
@@ -433,25 +433,16 @@ def AddComment(request, pk):
         item_id_list = [number for number in request.POST.getlist("item_id")]
         ann_forms = [
             # todo: fix bijlages toevoegen
-            forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, status=status, kostenConsequenties=kosten))
-            for item_id, opmrk, status, kosten in zip(
+            forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, status=status, kostenConsequenties=kosten, annbijlage=annbijlage))
+            for item_id, opmrk, status, kosten, annbijlage in zip(
                 request.POST.getlist("item_id"),
                 request.POST.getlist("annotation"),
                 request.POST.getlist("status"),
                 request.POST.getlist("kostenConsequenties"),
+                request.FILES.getlist("annbijlage"),
             )
         ]
 
-        # CHECK ANN_BIJLAGES UIT TEMPLATE, SLA OP. DOE BIJ FORMS OOK GEBRUIKER/ITEM_ID/PROJECT MAAR HIDDEN.
-        bijlage_forms = [
-            forms.BijlageUpload(dict(item=models.PVEItem.objects.filter(id=item).first(), gebruiker=request.user, project=project, annbijlage=annbijlage))
-            for item, annbijlage in zip(
-                request.POST.getlist("item"),
-                request.FILES.getlist("annbijlage"),
-            )
-        ] 
-        print(bijlage_forms)
-        print(request.FILES.getlist("annbijlage"))
         # only use valid forms
         ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
 
@@ -467,13 +458,11 @@ def AddComment(request, pk):
                 ann.item = models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()
                 ann.annotation = form.cleaned_data["annotation"]
                 ann.status = form.cleaned_data["status"]
+                ann.annbijlage = form.cleaned_data["annbijlage"]
                 if form.cleaned_data["kostenConsequenties"]:
                     ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
                 ann.save()
 
-        for form in bijlage_forms:
-            if form.is_valid():
-                form.save()
         # remove duplicate entries
         return redirect('alleopmerkingen_syn', pk=project.id)
 
@@ -485,7 +474,6 @@ def AddComment(request, pk):
         for item in items:
             if not PVEItemAnnotation.objects.filter(Q(project=project) & Q(gebruiker=request.user) & Q(item=item)):
                 ann_forms.append(forms.PVEItemAnnotationForm(initial={'item_id':item.id}))
-                bijlage_forms.append(forms.BijlageUpload(initial={'item':item, 'gebruiker':request.user, 'project':project}))
             else:
                 opmerking = PVEItemAnnotation.objects.filter(Q(project=project) & Q(gebruiker=request.user) & Q(item=item)).first()
                 ann_forms.append(forms.PVEItemAnnotationForm(initial={
@@ -493,11 +481,6 @@ def AddComment(request, pk):
                     'annotation':opmerking.annotation,
                     'status':opmerking.status,
                     'kostenConsequenties':opmerking.kostenConsequenties,
-                    }))
-
-                bijlage = BijlageToAnnotation.objects.filter(Q(item=item) & Q(gebruiker=request.user) & Q(project=project)).first()
-                bijlage_forms.append(forms.BijlageUpload(initial={
-                    'item':bijlage.item, 'gebruiker':bijlage.gebruiker, 'project':bijlage.project, 'annbijlage':bijlage.annbijlage
                     }))
 
 
@@ -529,7 +512,6 @@ def AddComment(request, pk):
             progress = "klaar"
 
         context["forms"] = ann_forms
-        context["bijlage_forms"] = bijlage_forms
         context["items"] = items
         context["progress"] = progress
         context["aantal_opmerkingen_gedaan"] = aantal_opmerkingen_gedaan

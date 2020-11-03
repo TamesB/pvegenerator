@@ -73,7 +73,7 @@
                         <label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil:</label>
                         <p class="formbox">{{ form.kostenConsequenties }}</p>                    
                         <label for="{{ form.annbijlage.id_for_label }}">Bijlage:</label>
-                        <p class="formbox">{{ bijlage_forms|index:forloop.counter0 }}</p>
+                        <p class="formbox">{{ form.annbijlage }}</p>
 
                         <span class="form_buttons">
                           <div onclick="document.getElementById('{{ form_item_ids|previous_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
