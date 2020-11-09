@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-from django.forms import formset_factory
+from django.forms import formset_factory, modelformset_factory
 from syntrus import forms
 from project.models import Project, PVEItemAnnotation, Beleggers
 from users.models import Invitation, CustomUser
@@ -364,6 +364,7 @@ def AllComments(request, pk):
     return render(request, 'AllCommentsOfProject_syn.html', context)
 
 @login_required(login_url='login_syn')
+@login_required(login_url='login_syn')
 def AddComment(request, pk):
     context = {}
 
@@ -380,13 +381,12 @@ def AddComment(request, pk):
         item_id_list = [number for number in request.POST.getlist("item_id")]
         ann_forms = [
             # todo: fix bijlages toevoegen
-            forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, status=status, kostenConsequenties=kosten, annbijlage=annbijlage))
-            for item_id, opmrk, status, kosten, annbijlage in zip(
+            forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, status=status, kostenConsequenties=kosten))
+            for item_id, opmrk, status, kosten in zip(
                 request.POST.getlist("item_id"),
                 request.POST.getlist("annotation"),
                 request.POST.getlist("status"),
                 request.POST.getlist("kostenConsequenties"),
-                request.FILES.getlist("annbijlage"),
             )
         ]
 
@@ -407,7 +407,6 @@ def AddComment(request, pk):
                 ann.item = models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()
                 ann.annotation = form.cleaned_data["annotation"]
                 ann.status = form.cleaned_data["status"]
-                ann.annbijlage = form.cleaned_data["annbijlage"]
                 if form.cleaned_data["kostenConsequenties"]:
                     ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
                 ann.save()
@@ -418,7 +417,7 @@ def AddComment(request, pk):
     if models.PVEItem.objects.filter(projects__id__contains=pk):
         items = models.PVEItem.objects.filter(projects__id__contains=pk).order_by('id')
 
-        ann_forms = modelformset_factory(PVEItemAnnotation)
+        ann_forms = []
         for item in items:
             if not PVEItemAnnotation.objects.filter(Q(project=project) & Q(gebruiker=request.user) & Q(item=item)):
                 ann_forms.append(forms.PVEItemAnnotationForm(initial={'item_id':item.id}))
