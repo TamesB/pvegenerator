@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.gis.admin import GeoModelAdmin
-from .models import Project, ContractStatus, Beleggers, PVEItemAnnotation
+from .models import Project, ContractStatus, Beleggers, PVEItemAnnotation, BijlageToAnnotation
 # Register your models here.
 class CustomGeoAdmin(GeoModelAdmin):
     options = {
@@ -18,3 +18,4 @@ admin.site.register(Project, CustomGeoAdmin)
 admin.site.register(ContractStatus)
 admin.site.register(Beleggers)
 admin.site.register(PVEItemAnnotation)
+admin.site.register(BijlageToAnnotation)

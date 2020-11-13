@@ -25,7 +25,6 @@
     <th><p>Status</p></th>
     <th><p>Kostenverschil</p></th>
     <th><p>Acties</p></th>
-    <th><p>Bijlage</p></th>
   </tr>
   {% for comment in comments %}
   <tr class="table_content">
@@ -34,7 +33,6 @@
     <td class="voldoening"><p>{% if comment.status %}{{ comment.status }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="kosten"><p>{% if comment.kostenConsequenties %}€ {{ comment.kostenConsequenties }}{% else %} € 0 {% endif %}</p></td>
     <td class="voldoening"><p onClick="document.getElementById('{{ comment.item.id }}').style.display='block'" class="bewerk_button">Bewerk</p></td>
-    <td class="voldoening"><p>{% if not comment.bijlage %}<a href="{% url 'bijlageaanopmerking_syn' project.id comment.id %}">+ Bijlage</a>{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>Download</button></a>{% endif %}</p></td>
 
   </tr>
   {% endfor %}
@@ -46,37 +44,25 @@
   </tr>
 </table>
 
-<form class="opmerking_form" action="{% url 'mijnopmerkingen_syn' project.id %}" method="POST" enctype="multipart/form-data">
+<form class="opmerking_form" action="{% url 'bijlageaanopmerking_syn' project.id annotation.id %}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 
 <div class="opmerking_form_modal">
-        {% for form in forms %}
-            <div id="{{ form.item_id.value }}" class="w3-modal">
+            <div id="" class="w3-modal" style="display:block;">
                 <div class="w3-modal-content">
                     <div class="w3-container">
-                        <div onclick="document.getElementById('{{ form.item_id.value }}').style.display='none'" class="sluit_x_button"><p>Sluit</p></div>
-                        <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}">
-                        <label class="item_label">Item:</label>
-                        <p class="inhoud">{{ items|index:forloop.counter0|slice:":100" }}</p>
-                        <label for="{{ form.voldoet.id_for_label }}">Status:</label>
-                        <p class="formbox">{{ form.status }}</p>
-                        <label for="{{ form.annotation.id_for_label }}">Opmerking:</label>
-                        <p class="formbox">{{ form.annotation }}</p>
-                        <label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil:</label>
-                        <p class="formbox">{{ form.kostenConsequenties }}</p>                    
+
+                        <label for="{{ form.ann.id_for_label }}">Opmerking:</label>
+                        <p class="formbox">{{ form.ann }}</p>                    
                         <label for="{{ form.annbijlage.id_for_label }}">Bijlage:</label>
                         <p class="formbox">{{ form.annbijlage }}</p>
 
                         <span class="form_buttons">
-                          <div onclick="document.getElementById('{{ form_item_ids|previous_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
-                          <input type="submit" class="done_button" value="Gereed"></input>
-                          <div onclick="document.getElementById('{{ form_item_ids|next_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
+                          <button type="submit" class="done_button" value="Gereed"></a>
                         </span>
                     </div>
                 </div>
             </div>
-        {% endfor %}
-
 </div>
 </form>
 {% endblock %}

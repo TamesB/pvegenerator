@@ -7,10 +7,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.forms import formset_factory, modelformset_factory
 from syntrus import forms
-from project.models import Project, PVEItemAnnotation, Beleggers
+from project.models import Project, PVEItemAnnotation, Beleggers, BijlageToAnnotation
 from users.models import Invitation, CustomUser
 from syntrus.models import FAQ, Room, CommentStatus
-from syntrus.forms import KoppelDerdeUserForm, StartProjectForm
+from syntrus.forms import KoppelDerdeUserForm, StartProjectForm, BijlageToAnnotationForm
 from users.forms import AcceptInvitationForm
 from app import models
 import datetime
@@ -24,6 +24,8 @@ from utils.createBijlageZip import ZipMaker
 import secrets
 from django.core.mail import send_mail
 import pytz
+from django.conf import settings
+import mimetypes
 utc=pytz.UTC
 
 
@@ -330,11 +332,74 @@ def MyComments(request, pk):
     for kosten in totale_kosten_lijst:
         totale_kosten += kosten
 
+    bijlages = []
+    
+    for bijlage in BijlageToAnnotation.objects.filter(ann__project=project, ann__gebruiker=request.user):
+        if bijlage.annbijlage.url:
+            bijlages.append(bijlage.annbijlage.url)
+        else:
+            bijlages.append(None)
+
     context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
     context["comments"] = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user)
     context["project"] = project
+    context["bijlages"] = bijlages
     context["totale_kosten"] = totale_kosten
     return render(request, 'MyComments.html', context)
+
+@login_required(login_url='login_syn')
+def AddAnnotationAttachment(request, projid, annid):
+    if not Project.objects.filter(pk=projid):
+        return render(request, '404_syn.html')
+
+    project = Project.objects.filter(pk=projid).first()
+
+    if not Project.objects.filter(permitted__username__contains=request.user.username):
+        return render(request, '404_syn.html')
+
+    annotation = PVEItemAnnotation.objects.filter(project=project, pk=annid).first()
+    comments = PVEItemAnnotation.objects.filter(project=project).order_by('id')
+
+    if annotation.gebruiker != request.user:
+        return render(request, '404_syn.html')
+
+
+    if request.method == "POST":
+        form = forms.BijlageToAnnotationForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save()
+            annotation.bijlage = True
+            annotation.save()
+            return redirect('mijnopmerkingen_syn', pk=project.id)
+    
+    context = {}
+    form = BijlageToAnnotationForm(initial={'ann':annotation})
+    context["annotation"] = annotation
+    context["form"] = form
+    context["project"] = project
+    context["comments"] = comments
+    return render(request, 'addBijlagetoAnnotation_syn.html', context)
+
+@login_required(login_url='login_syn')
+def DownloadAnnotationAttachment(request, projid, annid):
+    item = BijlageToAnnotation.objects.filter(ann__project__id=projid, ann__id=annid).first()
+    filename = str(item.annbijlage)
+    print(filename)
+    path = settings.MEDIA_ROOT + "/" + filename
+    print(path)
+    try:
+        fl = open(path, 'rb')
+    except OSError:
+        raise Http404("404")
+    
+    # get mimetype
+    mime = magic.Magic(mime=True)
+
+    response = HttpResponse(fl, content_type=mime.from_file(path))
+    response['Content-Disposition'] = "inline; filename=%s" % filename
+
+    return response
 
 @login_required(login_url='login_syn')
 def AllComments(request, pk):
@@ -363,7 +428,6 @@ def AllComments(request, pk):
     context["aantal_opmerkingen_gedaan"] = PVEItemAnnotation.objects.filter(project=project).count()
     return render(request, 'AllCommentsOfProject_syn.html', context)
 
-@login_required(login_url='login_syn')
 @login_required(login_url='login_syn')
 def AddComment(request, pk):
     context = {}
@@ -407,6 +471,7 @@ def AddComment(request, pk):
                 ann.item = models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()
                 ann.annotation = form.cleaned_data["annotation"]
                 ann.status = form.cleaned_data["status"]
+                #bijlage uit cleaned data halen en opslaan!
                 if form.cleaned_data["kostenConsequenties"]:
                     ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
                 ann.save()
@@ -428,7 +493,6 @@ def AddComment(request, pk):
                     'annotation':opmerking.annotation,
                     'status':opmerking.status,
                     'kostenConsequenties':opmerking.kostenConsequenties,
-                    'annbijlage':opmerking.annbijlage,
                     }))
 
 
