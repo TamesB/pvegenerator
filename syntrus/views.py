@@ -259,15 +259,23 @@ def download_pve(request, pk):
     filename = f"PvE-{fileExt}"
     zipFilename = f"PvE_Compleet-{fileExt}"
 
+    # Opmerkingen in het rood naast de regels
+    opmerkingen = {}
+
+    if PVEItemAnnotation.objects.filter(project=project):
+        for opmerking in PVEItemAnnotation.objects.filter(project=project):
+            opmerkingen[opmerking.item.id] = opmerking
+
+
     pdfmaker = writePdf.PDFMaker()
-    pdfmaker.makepdf(filename, basic_PVE, parameters)
+    pdfmaker.makepdf(filename, basic_PVE, opmerkingen, parameters)
 
     # get bijlagen
     bijlagen = [item for item in basic_PVE if item.bijlage]
 
-    if PVEItemAnnotation.objects.filter(project=project):
-        for item in PVEItemAnnotation.objects.filter(project=project):
-            bijlagen.append(bijlage.bijlage)
+    if BijlageToAnnotation.objects.filter(ann__project=project):
+        for item in BijlageToAnnotation.objects.filter(ann__project=project):
+            bijlagen.append(item)
             
     if bijlagen:
         zipmaker = createBijlageZip.ZipMaker()

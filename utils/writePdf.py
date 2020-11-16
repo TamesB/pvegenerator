@@ -76,6 +76,23 @@ class PDFMaker:
                                 fontSize=8, 
                                 leftIndent=60
                         )
+
+        self.regelStyleOpmrk = ParagraphStyle(
+                                name='Normal', 
+                                fontName='Calibri', 
+                                fontSize=8, 
+                                leftIndent=60,
+                                textColor=colors.red,
+                        )
+                        
+        self.regelStyleSwitchOpmrk = ParagraphStyle(
+                                backColor=colors.Color(red=218/255, green=237/255, blue=242/255), 
+                                name='Normal', 
+                                fontName='Calibri', 
+                                fontSize=8, 
+                                leftIndent=60,
+                                textColor=colors.red,
+                        )
                 
     def myFirstPage(self, canvas, doc):
         canvas.saveState()
@@ -133,7 +150,7 @@ class PDFMaker:
 
         canvas.restoreState()
 
-    def makepdf(self, filename, PVEItems, parameters):
+    def makepdf(self, filename, PVEItems, opmerkingen, parameters):
         # for switching background styles between added items
         
         item_added = 0
@@ -170,16 +187,42 @@ class PDFMaker:
                             for item in items:
                                 
                                 Story.append(Spacer(self.LeftPadding, 0))
-                                inhoud = ("%s" % item.inhoud)
-                                
+                                inhoud = "%s" % item.inhoud               
+                                if item.bijlage:
+                                    inhoud += ". Bijlage in mapje BasisBijlages."
+
+                                inhoud = (inhoud)
                                 if (item_added % 2) == 0:
                                     item_added += 1
-                                    p = Paragraph(inhoud.replace('\n','<br />\n'), self.regelStyle)
+                                    if item.id in opmerkingen:
+                                        opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}, Status: {opmerkingen[item.id].status}, Kostenverschil: {opmerkingen[item.id].kostenConsequenties}"
+                                        if opmerkingen[item.id].bijlage:
+                                            opmrk += f". Bijlage in mapje OpmerkingsBijlages."
+                                        opmrk = (opmrk)
+                                        p = Paragraph(f"{inhoud}".replace('\n','<br />\n'), self.regelStyle)
+                                        j = Paragraph(f"Opmerking: {opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrk)
+                                        Story.append(p)
+                                        Story.append(j)
+                                    else:
+                                        p = Paragraph(inhoud.replace('\n','<br />\n'), self.regelStyle)
+                                        Story.append(p)
+
+
                                 else:
                                     item_added += 1
-                                    p = Paragraph(inhoud.replace('\n','<br />\n'), self.regelStyleSwitch)
+                                    if item.id in opmerkingen:
+                                        opmrk = (f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}, Status: {opmerkingen[item.id].status}, Kostenverschil: {opmerkingen[item.id].kostenConsequenties}")
+                                        p = Paragraph(f"{inhoud}".replace('\n','<br />\n'), self.regelStyleSwitch)
+                                        j = Paragraph(f"Opmerking: {opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrk)
+                                        
+                                        Story.append(p)
+                                        Story.append(j)
+
+                                    else:
+                                        p = Paragraph(inhoud.replace('\n','<br />\n'), self.regelStyleSwitch)
+                                        Story.append(p)
+
                                     
-                                Story.append(p)
                 else:
                     items = [item for item in PVEItems if item.hoofdstuk == hoofdstuk]
                     
