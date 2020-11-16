@@ -22,10 +22,16 @@ from utils import createBijlageZip
 from utils.writePdf import PDFMaker
 from utils.createBijlageZip import ZipMaker
 import secrets
+from django.core.files import storage
 from django.core.mail import send_mail
 import pytz
 from django.conf import settings
 import mimetypes
+import boto3
+from botocore.client import Config
+from botocore.exceptions import ClientError
+import botocore
+
 utc=pytz.UTC
 
 
@@ -327,6 +333,39 @@ def MyComments(request, pk):
     if not Project.objects.filter(permitted__username__contains=request.user.username):
         return render(request, '404_syn.html')
     
+        # multiple forms
+    if request.method == "POST":
+        item_id_list = [number for number in request.POST.getlist("item_id")]
+        ann_forms = [
+            # todo: fix bijlages toevoegen
+            forms.PVEItemAnnotationForm(dict(item_id=item_id, annotation=opmrk, status=status, kostenConsequenties=kosten))
+            for item_id, opmrk, status, kosten in zip(
+                request.POST.getlist("item_id"),
+                request.POST.getlist("annotation"),
+                request.POST.getlist("status"),
+                request.POST.getlist("kostenConsequenties"),
+            )
+        ]
+
+        # only use valid forms
+        ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
+
+        for form in ann_forms:
+            # true comment if either comment or voldoet
+            if form.cleaned_data["annotation"] or form.cleaned_data["status"]:
+                ann = PVEItemAnnotation.objects.filter(item=models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()).first()
+                ann.project = project
+                ann.gebruiker = request.user
+                ann.item = models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()
+                ann.annotation = form.cleaned_data["annotation"]
+                ann.status = form.cleaned_data["status"]
+                #bijlage uit cleaned data halen en opslaan!
+                if form.cleaned_data["kostenConsequenties"]:
+                    ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+                ann.save()
+
+        return redirect('mijnopmerkingen_syn', pk=project.id)
+
     totale_kosten = 0
     totale_kosten_lijst = [comment.kostenConsequenties for comment in PVEItemAnnotation.objects.filter(project=project) if comment.kostenConsequenties]
     for kosten in totale_kosten_lijst:
@@ -340,6 +379,22 @@ def MyComments(request, pk):
         else:
             bijlages.append(None)
 
+    comments = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user).order_by('id')
+
+    ann_forms = []
+    form_item_ids = []
+    for comment in comments:
+        ann_forms.append(forms.PVEItemAnnotationForm(initial={
+            'item_id':comment.item.id,
+            'annotation':comment.annotation,
+            'status':comment.status,
+            'kostenConsequenties':comment.kostenConsequenties,
+            }))
+        
+        form_item_ids.append(comment.item.id)
+
+    context["ann_forms"] = ann_forms
+    context["form_item_ids"] = form_item_ids
     context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
     context["comments"] = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user)
     context["project"] = project
@@ -358,20 +413,20 @@ def AddAnnotationAttachment(request, projid, annid):
         return render(request, '404_syn.html')
 
     annotation = PVEItemAnnotation.objects.filter(project=project, pk=annid).first()
-    comments = PVEItemAnnotation.objects.filter(project=project).order_by('id')
+    comments = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user).order_by('id')
 
     if annotation.gebruiker != request.user:
         return render(request, '404_syn.html')
-
 
     if request.method == "POST":
         form = forms.BijlageToAnnotationForm(request.POST, request.FILES)
 
         if form.is_valid():
-            form.save()
-            annotation.bijlage = True
-            annotation.save()
-            return redirect('mijnopmerkingen_syn', pk=project.id)
+            if form.cleaned_data["annbijlage"]:
+                form.save()
+                annotation.bijlage = True
+                annotation.save()
+                return redirect('mijnopmerkingen_syn', pk=project.id)
     
     context = {}
     form = BijlageToAnnotationForm(initial={'ann':annotation})
@@ -383,23 +438,24 @@ def AddAnnotationAttachment(request, projid, annid):
 
 @login_required(login_url='login_syn')
 def DownloadAnnotationAttachment(request, projid, annid):
+    access_key = settings.AWS_ACCESS_KEY_ID
+    secret_key = settings.AWS_SECRET_ACCESS_KEY
+    bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+    region = settings.AWS_S3_REGION_NAME
     item = BijlageToAnnotation.objects.filter(ann__project__id=projid, ann__id=annid).first()
-    filename = str(item.annbijlage)
-    print(filename)
-    path = settings.MEDIA_ROOT + "/" + filename
-    print(path)
+    expiration = 10000
+    s3_client = boto3.client('s3', aws_access_key_id=access_key, aws_secret_access_key=secret_key, region_name=settings.AWS_S3_REGION_NAME, config=botocore.client.Config(signature_version=settings.AWS_S3_SIGNATURE_VERSION))
     try:
-        fl = open(path, 'rb')
-    except OSError:
-        raise Http404("404")
-    
-    # get mimetype
-    mime = magic.Magic(mime=True)
+        response = s3_client.generate_presigned_url('get_object',
+                                                    Params={'Bucket': bucket_name,
+                                                            'Key': str(item.annbijlage)},
+                                                    ExpiresIn=expiration)
+    except ClientError as e:
+        logging.error(e)
+        return None
 
-    response = HttpResponse(fl, content_type=mime.from_file(path))
-    response['Content-Disposition'] = "inline; filename=%s" % filename
-
-    return response
+    # The response contains the presigned URL
+    return HttpResponseRedirect(response)
 
 @login_required(login_url='login_syn')
 def AllComments(request, pk):
@@ -420,7 +476,7 @@ def AllComments(request, pk):
 
     gebruiker = PVEItemAnnotation.objects.filter(project=project).first()
     auteur = gebruiker.gebruiker
-    context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
+    context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id).order_by('id')
     context["comments"] = PVEItemAnnotation.objects.filter(project=project).order_by('gebruiker')
     context["project"] = project
     context["totale_kosten"] = totale_kosten
@@ -454,8 +510,6 @@ def AddComment(request, pk):
             )
         ]
 
-        print(request.POST.getlist("item_id"))
-        print(request.FILES.getlist("annbijlage"))
         # only use valid forms
         ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
 

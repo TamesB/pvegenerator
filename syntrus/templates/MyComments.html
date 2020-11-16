@@ -33,8 +33,8 @@
     <td class="voldoening"><p>{% if comment.annotation %}{{ comment.annotation }}{% else %}<i>Geen</i>{% endif %}</p></td>
     <td class="voldoening"><p>{% if comment.status %}{{ comment.status }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="kosten"><p>{% if comment.kostenConsequenties %}€ {{ comment.kostenConsequenties }}{% else %} € 0 {% endif %}</p></td>
-    <td class="voldoening"><p onClick="document.getElementById('{{ comment.item.id }}').style.display='block'" class="bewerk_button">Bewerk</p></td>
-    <td class="voldoening"><p>{% if not comment.bijlage %}<a href="{% url 'bijlageaanopmerking_syn' project.id comment.id %}">+ Bijlage</a>{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>Download</button></a>{% endif %}</p></td>
+    <td class="voldoening"><p onClick="document.getElementById('{{ comment.item.id }}').style.display='block'" class="bewerk_button"><button class="ui basic button"><i class="icon edit"></i>Bewerk</button></p></td>
+    <td class="voldoening"><p>{% if not comment.bijlage %}<a href="{% url 'bijlageaanopmerking_syn' project.id comment.id %}"><button class="ui basic button"><i class="icon plus"></i>Bijlage</button></a>{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>Download</button></a>{% endif %}</p></td>
 
   </tr>
   {% endfor %}
@@ -50,7 +50,7 @@
 {% csrf_token %}
 
 <div class="opmerking_form_modal">
-        {% for form in forms %}
+        {% for form in ann_forms %}
             <div id="{{ form.item_id.value }}" class="w3-modal">
                 <div class="w3-modal-content">
                     <div class="w3-container">
@@ -64,9 +64,6 @@
                         <p class="formbox">{{ form.annotation }}</p>
                         <label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil:</label>
                         <p class="formbox">{{ form.kostenConsequenties }}</p>                    
-                        <label for="{{ form.annbijlage.id_for_label }}">Bijlage:</label>
-                        <p class="formbox">{{ form.annbijlage }}</p>
-
                         <span class="form_buttons">
                           <div onclick="document.getElementById('{{ form_item_ids|previous_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
                           <input type="submit" class="done_button" value="Gereed"></input>

@@ -24,7 +24,8 @@
     <th><p>Opmerking</p></th>
     <th><p>Status</p></th>
     <th><p>Kostenverschil</p></th>
-    <th><p>Acties</p></th>
+    <th><p>Bewerk</p></th>
+    <th><p>Bijlage</p></th>
   </tr>
   {% for comment in comments %}
   <tr class="table_content">
@@ -32,7 +33,8 @@
     <td class="voldoening"><p>{% if comment.annotation %}{{ comment.annotation }}{% else %}<i>Geen</i>{% endif %}</p></td>
     <td class="voldoening"><p>{% if comment.status %}{{ comment.status }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="kosten"><p>{% if comment.kostenConsequenties %}€ {{ comment.kostenConsequenties }}{% else %} € 0 {% endif %}</p></td>
-    <td class="voldoening"><p onClick="document.getElementById('{{ comment.item.id }}').style.display='block'" class="bewerk_button">Bewerk</p></td>
+    <td class="voldoening"><p onClick="document.getElementById('{{ comment.item.id }}').style.display='block'" class="bewerk_button"><button class="ui basic button"><i class="icon edit"></i>Bewerk</button></p></td>
+    <td class="voldoening"><p>{% if not comment.bijlage %}<a href="{% url 'bijlageaanopmerking_syn' project.id comment.id %}"><button class="ui basic button"><i class="icon plus"></i>Bijlage</button></a>{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>Download</button></a>{% endif %}</p></td>
 
   </tr>
   {% endfor %}
@@ -51,14 +53,14 @@
             <div id="" class="w3-modal" style="display:block;">
                 <div class="w3-modal-content">
                     <div class="w3-container">
-
-                        <label for="{{ form.ann.id_for_label }}">Opmerking:</label>
+                        <a href="{% url 'mijnopmerkingen_syn' project.id %}" class="sluit_x_button"><p>Sluit</p></a>
+                        <label for="{{ form.ann.id_for_label }}"></label>
                         <p class="formbox">{{ form.ann }}</p>                    
                         <label for="{{ form.annbijlage.id_for_label }}">Bijlage:</label>
                         <p class="formbox">{{ form.annbijlage }}</p>
 
                         <span class="form_buttons">
-                          <button type="submit" class="done_button" value="Gereed"></a>
+                          <button type="submit" class="done_button" value="Gereed">Upload</a>
                         </span>
                     </div>
                 </div>
