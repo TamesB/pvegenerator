@@ -130,9 +130,9 @@ class PVEItemAnnotationForm(forms.Form):
 class BijlageToAnnotationForm(ModelForm):
     class Meta:
         model = BijlageToAnnotation
-        fields = ('ann', 'annbijlage')
+        fields = ('ann', 'bijlage')
         labels = {
-            'ann':'Opmerking:', 'annbijlage':'Bijlage:',
+            'ann':'Opmerking:', 'bijlage':'Bijlage:',
         }
         widgets = {'ann': forms.HiddenInput()}
 

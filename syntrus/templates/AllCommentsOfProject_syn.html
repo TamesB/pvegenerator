@@ -25,6 +25,7 @@
     <th><p>Gebruiker</p></th>
     <th><p>Status</p></th>
     <th><p>Kostenverschil</p></th>
+    <th><p>Bijlage</p></th>
   </tr>
   {% for comment in comments %}
   <tr class="table_content">
@@ -33,6 +34,8 @@
     <td class="voldoening"><p>{% if comment.gebruiker %}{{ comment.gebruiker }}{% else %}<i>Geen</i>{% endif %}</p></td>
     <td class="voldoening"><p>{% if comment.status %}{{ comment.status }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="kosten"><p>{% if comment.kostenConsequenties %}€ {{ comment.kostenConsequenties }}{% else %} € 0 {% endif %}</p></td>
+    <td class="voldoening"><p>{% if not comment.bijlage %}<i>Geen</i>{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>Download</button></a>{% endif %}</p></td>
+
   </tr>
   {% endfor %}
   <tr>

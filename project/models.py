@@ -59,11 +59,10 @@ class PVEItemAnnotation(models.Model):
     gebruiker = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, default=None, null=True)
     datum = models.DateTimeField(auto_now=True)
     kostenConsequenties = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=None)
-    bijlage = models.BooleanField(default=False, blank=True, null=True)
 
     def __str__(self):
         return f"{self.annotation}"
 
 class BijlageToAnnotation(models.Model):
     ann = models.ForeignKey(PVEItemAnnotation, on_delete=models.CASCADE, default=None)
-    annbijlage = models.FileField(blank=True, null=True, upload_to='OpmerkingBijlages/')
+    bijlage = models.FileField(blank=True, null=True, upload_to='OpmerkingBijlages/')

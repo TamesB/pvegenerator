@@ -265,6 +265,10 @@ def download_pve(request, pk):
     # get bijlagen
     bijlagen = [item for item in basic_PVE if item.bijlage]
 
+    if PVEItemAnnotation.objects.filter(project=project):
+        for item in PVEItemAnnotation.objects.filter(project=project):
+            bijlagen.append(bijlage.bijlage)
+            
     if bijlagen:
         zipmaker = createBijlageZip.ZipMaker()
         zipmaker.makeZip(zipFilename, filename, bijlagen)
@@ -374,8 +378,8 @@ def MyComments(request, pk):
     bijlages = []
     
     for bijlage in BijlageToAnnotation.objects.filter(ann__project=project, ann__gebruiker=request.user):
-        if bijlage.annbijlage.url:
-            bijlages.append(bijlage.annbijlage.url)
+        if bijlage.bijlage.url:
+            bijlages.append(bijlage.bijlage.url)
         else:
             bijlages.append(None)
 
@@ -422,7 +426,7 @@ def AddAnnotationAttachment(request, projid, annid):
         form = forms.BijlageToAnnotationForm(request.POST, request.FILES)
 
         if form.is_valid():
-            if form.cleaned_data["annbijlage"]:
+            if form.cleaned_data["bijlage"]:
                 form.save()
                 annotation.bijlage = True
                 annotation.save()
@@ -448,7 +452,7 @@ def DownloadAnnotationAttachment(request, projid, annid):
     try:
         response = s3_client.generate_presigned_url('get_object',
                                                     Params={'Bucket': bucket_name,
-                                                            'Key': str(item.annbijlage)},
+                                                            'Key': str(item.bijlage)},
                                                     ExpiresIn=expiration)
     except ClientError as e:
         logging.error(e)
