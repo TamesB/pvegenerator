@@ -21,7 +21,8 @@ class PDFMaker:
         self.bedrijfsnaam = "Syntrus"
         
         self.defaultPageSize = letter
-        self.PAGE_HEIGHT=self.defaultPageSize[1]; self.PAGE_WIDTH=self.defaultPageSize[0]
+        self.PAGE_HEIGHT= self.defaultPageSize[1]
+        self.PAGE_WIDTH=self.defaultPageSize[0]
         self.styles = getSampleStyleSheet()
 
         self.year = self.date.strftime("%Y")

@@ -1677,13 +1677,10 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .voldoening {
-  max-width: 30px;
-  padding-top: 2vh;
-  min-width: 20%;
-}
-
-#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .voldoening p {
-  width: 100%;
+  padding-right: 2%;
+  padding-left: 2%;
+  max-width: 10%;
+  min-width: 10%;
 }
 
 #main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .kosten {

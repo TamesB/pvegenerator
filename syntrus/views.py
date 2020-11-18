@@ -259,16 +259,22 @@ def download_pve(request, pk):
     filename = f"PvE-{fileExt}"
     zipFilename = f"PvE_Compleet-{fileExt}"
 
-    # Opmerkingen in het rood naast de regels
+    # Opmerkingen in kleur naast de regels
     opmerkingen = {}
+    bijlagen = {}
+    kostenverschil = 0
 
     if PVEItemAnnotation.objects.filter(project=project):
         for opmerking in PVEItemAnnotation.objects.filter(project=project):
             opmerkingen[opmerking.item.id] = opmerking
-
+            if opmerking.kostenConsequenties:
+                kostenverschil += opmerking.kostenConsequenties
+            if BijlageToAnnotation.objects.filter(ann=opmerking):
+                bijlagen[opmerking.item.id] = BijlageToAnnotation.objects.filter(ann=opmerking).first()
 
     pdfmaker = writePdf.PDFMaker()
-    pdfmaker.makepdf(filename, basic_PVE, opmerkingen, parameters)
+    pdfmaker.kostenverschil = kostenverschil
+    pdfmaker.makepdf(filename, basic_PVE, opmerkingen, bijlagen, parameters)
 
     # get bijlagen
     bijlagen = [item for item in basic_PVE if item.bijlage]
@@ -415,6 +421,54 @@ def MyComments(request, pk):
     return render(request, 'MyComments.html', context)
 
 @login_required(login_url='login_syn')
+def deleteAnnotationPve(request, project_id, ann_id):
+    # check if project exists
+    if not Project.objects.filter(id=project_id):
+        raise Http404("404")
+    
+    project = Project.objects.filter(id=project_id).first()
+    # check if user is authorized to project
+    if request.user.type_user != 'B':
+        if not Project.objects.filter(id=project_id, permitted__username__contains=request.user.username):
+            raise Http404('404')
+    
+    # check if user placed that annotation
+    if not PVEItemAnnotation.objects.filter(id=ann_id, gebruiker=request.user):
+        raise Http404("404")
+
+
+    comment = PVEItemAnnotation.objects.filter(id=ann_id).first()
+
+    if request.method == "POST":
+        messages.warning(request, f'Opmerking van {comment.project} verwijderd.')
+        comment.delete()
+        return HttpResponseRedirect(reverse('mijnopmerkingen_syn', args=(project.id,)))
+
+
+    totale_kosten = 0
+    totale_kosten_lijst = [comment.kostenConsequenties for comment in PVEItemAnnotation.objects.filter(project=project) if comment.kostenConsequenties]
+    for kosten in totale_kosten_lijst:
+        totale_kosten += kosten
+
+    bijlages = []
+    
+    for bijlage in BijlageToAnnotation.objects.filter(ann__project=project, ann__gebruiker=request.user):
+        if bijlage.bijlage.url:
+            bijlages.append(bijlage.bijlage.url)
+        else:
+            bijlages.append(None)
+
+    context = {}
+    context["comment"] = comment
+    context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
+    context["comments"] = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user).order_by('id')
+    context["project"] = project
+    context["bijlages"] = bijlages
+    context["totale_kosten"] = totale_kosten
+
+    return render(request, 'deleteAnnotationModal_syn.html', context)
+
+@login_required(login_url='login_syn')
 def AddAnnotationAttachment(request, projid, annid):
     if not Project.objects.filter(pk=projid):
         return render(request, '404_syn.html')
@@ -447,6 +501,57 @@ def AddAnnotationAttachment(request, projid, annid):
     context["project"] = project
     context["comments"] = comments
     return render(request, 'addBijlagetoAnnotation_syn.html', context)
+
+
+@login_required(login_url='login_syn')
+def VerwijderAnnotationAttachment(request, projid, annid):
+    # check if project exists
+    if not Project.objects.filter(id=projid):
+        raise Http404("404")
+    
+    project = Project.objects.filter(id=projid).first()
+    # check if user is authorized to project
+    if request.user.type_user != 'B':
+        if not Project.objects.filter(id=projid, permitted__username__contains=request.user.username):
+            raise Http404('404')
+    
+    # check if user placed that annotation
+    if not PVEItemAnnotation.objects.filter(id=annid, gebruiker=request.user):
+        raise Http404("404")
+
+    comment = PVEItemAnnotation.objects.filter(id=annid).first()
+    attachment = BijlageToAnnotation.objects.filter(ann_id=annid).first()
+
+    if request.method == "POST":
+        messages.warning(request, f'Bijlage van {attachment.ann} verwijderd.')
+        comment.bijlage = False
+        comment.save()
+        attachment.delete()
+        return HttpResponseRedirect(reverse('mijnopmerkingen_syn', args=(project.id,)))
+
+    totale_kosten = 0
+    totale_kosten_lijst = [comment.kostenConsequenties for comment in PVEItemAnnotation.objects.filter(project=project) if comment.kostenConsequenties]
+    for kosten in totale_kosten_lijst:
+        totale_kosten += kosten
+
+    bijlages = []
+    
+    for bijlage in BijlageToAnnotation.objects.filter(ann__project=project, ann__gebruiker=request.user):
+        if bijlage.bijlage.url:
+            bijlages.append(bijlage.bijlage.url)
+        else:
+            bijlages.append(None)
+
+    context = {}
+    context["comment"] = comment
+    context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
+    context["comments"] = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user).order_by('id')
+    context["project"] = project
+    context["bijlages"] = bijlages
+    context["totale_kosten"] = totale_kosten
+
+    return render(request, 'deleteAttachmentAnnotation_syn.html', context)
+
 
 @login_required(login_url='login_syn')
 def DownloadAnnotationAttachment(request, projid, annid):
@@ -879,3 +984,15 @@ def AcceptInvite(request, key):
     context["form"] = form
     context["key"] = key
     return render(request, 'acceptInvitation_syn.html', context)
+
+
+@login_required(login_url='login_syn')
+def FirstFreeze(request, pk):
+    if not Project.objects.filter(id=pk):
+        raise Http404('404')
+
+    project = Project.objects.filter(id=pk).first()
+
+    project.frozenLevel = 1
+    project.save()
+

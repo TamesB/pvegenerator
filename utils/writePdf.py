@@ -26,6 +26,7 @@ class PDFMaker:
 
         self.year = self.date.strftime("%Y")
         self.Topleft = f"PVE SAREF {self.year}"
+        self.BijlageDisclaimer = f"Bijlages van regels zijn in het mapje BasisBijlages, bijlagen van opmerkingen in het mapje OpmerkingBijlages."
         self.Topright = "CONCEPT"
         self.Centered = "PARAMETERS"
         self.Bottomleft = "%s-%s-%s" % (self.date.strftime("%d"), self.date.strftime("%m"), self.year)
@@ -34,6 +35,8 @@ class PDFMaker:
         self.BottomPadding = 20
         self.TopPadding = 33
         self.RightPadding = 55
+
+        self.kostenverschil = 0
 
         self.InhoudWidth = self.PAGE_WIDTH - self.LeftPadding - (self.RightPadding / 3)
 
@@ -84,6 +87,20 @@ class PDFMaker:
                                 leftIndent=60,
                                 textColor=colors.red,
                         )
+        self.regelStyleOpmrkGreen = ParagraphStyle(
+                                name='Normal', 
+                                fontName='Calibri', 
+                                fontSize=8, 
+                                leftIndent=60,
+                                textColor=colors.green,
+                        )
+        self.regelStyleOpmrkOrange = ParagraphStyle(
+                                name='Normal', 
+                                fontName='Calibri', 
+                                fontSize=8, 
+                                leftIndent=60,
+                                textColor=colors.orange,
+                        )
                         
         self.regelStyleSwitchOpmrk = ParagraphStyle(
                                 backColor=colors.Color(red=218/255, green=237/255, blue=242/255), 
@@ -92,6 +109,22 @@ class PDFMaker:
                                 fontSize=8, 
                                 leftIndent=60,
                                 textColor=colors.red,
+                        )
+        self.regelStyleSwitchOpmrkGreen = ParagraphStyle(
+                                backColor=colors.Color(red=218/255, green=237/255, blue=242/255), 
+                                name='Normal', 
+                                fontName='Calibri', 
+                                fontSize=8, 
+                                leftIndent=60,
+                                textColor=colors.green,
+                        )
+        self.regelStyleSwitchOpmrkOrange = ParagraphStyle(
+                                backColor=colors.Color(red=218/255, green=237/255, blue=242/255), 
+                                name='Normal', 
+                                fontName='Calibri', 
+                                fontSize=8, 
+                                leftIndent=60,
+                                textColor=colors.orange,
                         )
                 
     def myFirstPage(self, canvas, doc):
@@ -119,7 +152,11 @@ class PDFMaker:
         canvas.setFillColorRGB(0, 0, 0)
         canvas.setFont('Calibri',8)
         canvas.drawString(self.LeftPadding + 1, self.OpmerkingBoxPadding + self.OpmerkingBoxHeight + 2, f"PROGRAMMA VAN EISEN {self.year}")
-
+        #   rode kleur voor disclaimer
+        canvas.setFillColorRGB(255, 0, 0)
+        canvas.drawString(self.LeftPadding + 4, self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 2) - 2, self.BijlageDisclaimer)
+        canvas.drawString(self.LeftPadding + 4, self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 2) + 8, f"Huidige kostenverschil: €{self.kostenverschil},-")
+        canvas.setFillColorRGB(0, 0, 0)
         # Blauwe Box voordat PVE begint
         canvas.setFillColorRGB(75/255, 172/255, 198/255)
         canvas.setStrokeColorRGB(75/255, 172/255, 198/255)
@@ -150,7 +187,7 @@ class PDFMaker:
 
         canvas.restoreState()
 
-    def makepdf(self, filename, PVEItems, opmerkingen, parameters):
+    def makepdf(self, filename, PVEItems, opmerkingen, bijlagen, parameters):
         # for switching background styles between added items
         
         item_added = 0
@@ -187,20 +224,35 @@ class PDFMaker:
                             for item in items:
                                 
                                 Story.append(Spacer(self.LeftPadding, 0))
-                                inhoud = "%s" % item.inhoud               
-                                if item.bijlage:
-                                    inhoud += ". Bijlage in mapje BasisBijlages."
 
+                                # basis pve regels
+                                inhoud = "%s" % item.inhoud
                                 inhoud = (inhoud)
+
                                 if (item_added % 2) == 0:
                                     item_added += 1
+
+                                    # opmerkingen en alles printen
                                     if item.id in opmerkingen:
-                                        opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}, Status: {opmerkingen[item.id].status}, Kostenverschil: {opmerkingen[item.id].kostenConsequenties}"
-                                        if opmerkingen[item.id].bijlage:
-                                            opmrk += f". Bijlage in mapje OpmerkingsBijlages."
-                                        opmrk = (opmrk)
                                         p = Paragraph(f"{inhoud}".replace('\n','<br />\n'), self.regelStyle)
-                                        j = Paragraph(f"Opmerking: {opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrk)
+
+                                        opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}, Status: {opmerkingen[item.id].status}."
+                                        if opmerkingen[item.id].kostenConsequenties:
+                                            opmrk += f" Kostenverschil: €{opmerkingen[item.id].kostenConsequenties}."
+                                        else:
+                                            opmrk += f" Geen kostenverschil."
+                                        if opmerkingen[item.id].bijlage:
+                                            opmrk += f" Zie bijlage '{bijlagen[item.id].bijlage}'."
+                                        opmrk = (opmrk)
+
+                                        # groen als akkoord, rood als andere status
+                                        if str(opmerkingen[item.id].status) == "akkoord":
+                                            j = Paragraph(f"Opmerking: {opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
+                                        elif str(opmerkingen[item.id].status) == "niet akkoord":
+                                            j = Paragraph(f"Opmerking: {opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrk)
+                                        else:
+                                            j = Paragraph(f"Opmerking: {opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkOrange)
+
                                         Story.append(p)
                                         Story.append(j)
                                     else:
@@ -210,10 +262,27 @@ class PDFMaker:
 
                                 else:
                                     item_added += 1
+
+                                    # opmerkingen en alles printen
                                     if item.id in opmerkingen:
-                                        opmrk = (f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}, Status: {opmerkingen[item.id].status}, Kostenverschil: {opmerkingen[item.id].kostenConsequenties}")
                                         p = Paragraph(f"{inhoud}".replace('\n','<br />\n'), self.regelStyleSwitch)
-                                        j = Paragraph(f"Opmerking: {opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrk)
+
+                                        opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}, Status: {opmerkingen[item.id].status}."
+                                        if opmerkingen[item.id].kostenConsequenties:
+                                            opmrk += f" Kostenverschil: €{opmerkingen[item.id].kostenConsequenties}."
+                                        else:
+                                            opmrk += f" Geen kostenverschil."
+                                        if opmerkingen[item.id].bijlage:
+                                            opmrk += f" Zie bijlage '{bijlagen[item.id].bijlage}'."
+                                        opmrk = (opmrk)
+                                        
+                                        # groen als akkoord, rood als andere status
+                                        if str(opmerkingen[item.id].status) == "akkoord":
+                                            j = Paragraph(f"Opmerking: {opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkGreen)
+                                        elif str(opmerkingen[item.id].status) == "niet akkoord":
+                                            j = Paragraph(f"Opmerking: {opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrk)
+                                        else:
+                                            j = Paragraph(f"Opmerking: {opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkOrange)
                                         
                                         Story.append(p)
                                         Story.append(j)

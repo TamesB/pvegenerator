@@ -33,8 +33,8 @@
     <td class="voldoening"><p>{% if comment.annotation %}{{ comment.annotation }}{% else %}<i>Geen</i>{% endif %}</p></td>
     <td class="voldoening"><p>{% if comment.status %}{{ comment.status }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="kosten"><p>{% if comment.kostenConsequenties %}€ {{ comment.kostenConsequenties }}{% else %} € 0 {% endif %}</p></td>
-    <td class="voldoening"><p onClick="document.getElementById('{{ comment.item.id }}').style.display='block'" class="bewerk_button"><button class="ui basic button"><i class="icon edit"></i>Bewerk</button></p></td>
-    <td class="voldoening"><p>{% if not comment.bijlage %}<a href="{% url 'bijlageaanopmerking_syn' project.id comment.id %}"><button class="ui basic button"><i class="icon plus"></i>Bijlage</button></a>{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>Download</button></a>{% endif %}</p></td>
+    <td class="voldoening"><p style="float: left;" onClick="document.getElementById('{{ comment.item.id }}').style.display='block'"><button class="ui icon basic button"><i class="icon edit"></i></button></p><a href="{% url 'deleteAnnotationPve_syn' project.id comment.id %}" style="float:right;"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></p></td>
+    <td class="voldoening">{% if not comment.bijlage %}<p><a href="{% url 'bijlageaanopmerking_syn' project.id comment.id %}"><button class="ui icon basic button"><i class="icon plus"></i></button></a></p>{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" style="float:left;" target="_blank"><button class="ui icon basic button"><i class="icon download"></i></button></a><p><a href="{% url 'verwijderbijlageopmerking_syn' project.id comment.id %}" style="float: right;"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></p>{% endif %}</td>
 
   </tr>
   {% endfor %}
@@ -76,4 +76,6 @@
 
 </div>
 </form>
+{% endblock %}
+{% block modal %}
 {% endblock %}
