@@ -20,6 +20,8 @@ from project.models import Project
 from . import forms
 import magic
 from django.core.mail import send_mail
+import boto3
+import botocore
 
 def LoginPageView(request):
     # cant see lander page if already logged in
@@ -628,26 +630,27 @@ def viewItemView(request, pk):
 
     return render(request, 'PVEItemView.html', context)
 
+
 @staff_member_required(login_url='/404')
 def downloadBijlageView(request, pk):
+    access_key = settings.AWS_ACCESS_KEY_ID
+    secret_key = settings.AWS_SECRET_ACCESS_KEY
+    bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+    region = settings.AWS_S3_REGION_NAME
     item = models.PVEItem.objects.filter(id=pk).first()
-    filename = str(item.bijlage)
-
-    path = settings.MEDIA_ROOT + "/" + filename
-
+    expiration = 10000
+    s3_client = boto3.client('s3', aws_access_key_id=access_key, aws_secret_access_key=secret_key, region_name=settings.AWS_S3_REGION_NAME, config=botocore.client.Config(signature_version=settings.AWS_S3_SIGNATURE_VERSION))
     try:
-        fl = open(path, 'rb')
-    except OSError:
-        raise Http404("404")
-    
-    # get mimetype
-    mime = magic.Magic(mime=True)
+        response = s3_client.generate_presigned_url('get_object',
+                                                    Params={'Bucket': bucket_name,
+                                                            'Key': str(item.bijlage)},
+                                                    ExpiresIn=expiration)
+    except ClientError as e:
+        logging.error(e)
+        return None
 
-    response = HttpResponse(fl, content_type=mime.from_file(path))
-    response['Content-Disposition'] = "inline; filename=%s" % filename
-
-    return response
-
+    # The response contains the presigned URL
+    return HttpResponseRedirect(response)
 
 @staff_member_required(login_url='/404')
 def editItemView(request, pk):

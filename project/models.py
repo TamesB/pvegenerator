@@ -32,6 +32,13 @@ class Project(models.Model):
     permitted = models.ManyToManyField('users.CustomUser', default=None, related_name="permitted")
     pveconnected = models.BooleanField(blank=True, null=True, default=False)
 
+    # frozen level 0: all derde kunnen +opmerking doen. Frozen level 1: alleen aangegeven derde door projectmanager kan
+    # de statussen accepteren of een opmerking maken. De volgende even frozens zijn dan projectmanager behandelbaar,
+    # en de oneven is behandelbaar door de derde. Zo trechteren alle regels naar uiteindelijke acceptatie van alle
+    # statussen. Opmerkingen moeten wellicht bijgehouden worden.
+    frozenLevel = models.IntegerField(default=0, null=True)
+    fullyFrozen = models.BooleanField(default=False)
+
     bouwsoort1 = models.ForeignKey('app.Bouwsoort', on_delete=models.CASCADE, default=None, null=True)
     typeObject1 = models.ForeignKey('app.TypeObject', on_delete=models.CASCADE, default=None, null=True)
     doelgroep1 = models.ForeignKey('app.Doelgroep', on_delete=models.CASCADE, default=None, null=True)
