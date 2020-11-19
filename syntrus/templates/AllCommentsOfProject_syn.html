@@ -18,6 +18,8 @@
 
 {% block main %}
 <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Alle opmerkingen, project {{ project.naam }} <input type="button" class="{{ progress }}" disabled onClick="javascript:location.href='#';" value="Freeze opmerkingen ({{ aantal_opmerkingen_gedaan }} / {{ items|length }})"></input></p></div>
+
+{% if comments %}
 <table class="opmerkingtable_wrapper">
   <tr class="table_head">
     <th><img src="{% static 'syntrus/svg/logo.svg' %}" class="syntr_logo"></a></th>
@@ -46,4 +48,7 @@
     <td class="kosten"><p>Totaal: {% if totale_kosten %}€{{totale_kosten}}{% else %}€0{% endif %}</p></td>
   </tr>
 </table>
+{% else %}
+<p>Nog geen opmerkingen op het PvE geplaatst!</p>
+{% endif %}
 {% endblock %}

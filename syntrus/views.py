@@ -367,10 +367,10 @@ def MyComments(request, pk):
 
         # only use valid forms
         ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
-
         for form in ann_forms:
+            print(form.cleaned_data["annotation"])
             # true comment if either comment or voldoet
-            if form.cleaned_data["annotation"]:
+            if form.cleaned_data["annotation"] != "":
                 ann = PVEItemAnnotation.objects.filter(item=models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()).first()
                 ann.project = project
                 ann.gebruiker = request.user
@@ -619,13 +619,15 @@ def AllComments(request, pk):
     for kosten in totale_kosten_lijst:
         totale_kosten += kosten
 
-    gebruiker = PVEItemAnnotation.objects.filter(project=project).first()
-    auteur = gebruiker.gebruiker
+    if PVEItemAnnotation.objects.filter(project=project):
+        gebruiker = PVEItemAnnotation.objects.filter(project=project).first()
+        auteur = gebruiker.gebruiker
+        context["gebruiker"] = gebruiker
+        context["comments"] = PVEItemAnnotation.objects.filter(project=project).order_by('gebruiker')
+
     context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id).order_by('id')
-    context["comments"] = PVEItemAnnotation.objects.filter(project=project).order_by('gebruiker')
     context["project"] = project
     context["totale_kosten"] = totale_kosten
-    context["gebruiker"] = gebruiker
     context["aantal_opmerkingen_gedaan"] = PVEItemAnnotation.objects.filter(project=project).count()
     return render(request, 'AllCommentsOfProject_syn.html', context)
 
@@ -660,7 +662,7 @@ def AddComment(request, pk):
 
         for form in ann_forms:
             # true comment if either comment or voldoet
-            if form.cleaned_data["annotation"] or form.cleaned_data["status"]:
+            if form.cleaned_data["annotation"]:
                 if PVEItemAnnotation.objects.filter(item=models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()):
                     ann = PVEItemAnnotation.objects.filter(item=models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()).first()
                 else:
