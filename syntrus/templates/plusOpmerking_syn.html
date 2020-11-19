@@ -30,7 +30,7 @@
 <div class="main_content_div">
   <div class="opmerking_info">
     <div class="title"><p>Opmerkingen maken op het PvE</p></div>
-    <div class="content"><p>Maak hier uw opmerkingen op alle items op het PvE. Klik op opslaan als u klaar bent. Bijlages aan een opmerking kunt u later toevoegen bij "Mijn Opmerkingen" op de project homepagina.</p></div>
+    <div class="content"><p>Maak hier uw opmerkingen op alle items op het PvE. Een opmerking wordt pas echt geteld als er iets in het opmerkingsvak is ingevuld, niet alleen de status. Klik op opslaan als u klaar bent. Bijlages aan een opmerking kunt u later toevoegen bij "Mijn Opmerkingen" op de project homepagina.</p></div>
   </div>
 </div>
 {% if items %}
@@ -126,6 +126,8 @@ $('.leavecomment').click(function(e){
       $(this).next().show();
 });
 
-
+$(document).ready(function(){
+     $('option[value=""]').remove();
+});
 </script>
 {% endblock %}

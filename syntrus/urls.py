@@ -21,6 +21,7 @@ urlpatterns = [
     path('project/<int:pk>/comment/add', views.AddComment, name="plusopmerking_syn"),
     path('project/<int:pk>/comment/all', views.AllComments, name="alleopmerkingen_syn"),
     path('project/<int:pk>/comment/my', views.MyComments, name="mijnopmerkingen_syn"),
+    path('project/<int:pk>/comment/my/deleteoverview', views.MyCommentsDelete, name="mijnopmerkingendelete_syn"),
     path('project/<int:project_id>/comment/<int:ann_id>/delete', views.deleteAnnotationPve, name="deleteAnnotationPve_syn"),
     path('project/<int:projid>/comment/my/<int:annid>', views.AddAnnotationAttachment, name="bijlageaanopmerking_syn"),
     path('project/<int:projid>/comment/my/<int:annid>/dl', views.DownloadAnnotationAttachment, name="downloadbijlageaanopmerking_syn"),

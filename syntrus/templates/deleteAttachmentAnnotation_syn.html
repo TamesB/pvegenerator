@@ -1,4 +1,4 @@
-{% extends "MyComments.html" %}
+{% extends "MyCommentsDelete.html" %}
 
 {% load semanticui %}
 
@@ -21,7 +21,7 @@ $('.mini.modal')
         <input type="submit" style="float: right;" class="ui basic red button" value="Verwijder">
     </form>  
 
-    <p><a href="{% url 'mijnopmerkingen_syn' project.id %}" class="bewerk_button"><button style="float: left;" class="ui green button">Behoud</button></a></p> 
+    <p><a href="{% url 'mijnopmerkingendelete_syn' project.id %}" class="bewerk_button"><button style="float: left;" class="ui green button">Behoud</button></a></p> 
   </div>
 </div>
 

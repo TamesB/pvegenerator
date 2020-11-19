@@ -370,7 +370,7 @@ def MyComments(request, pk):
 
         for form in ann_forms:
             # true comment if either comment or voldoet
-            if form.cleaned_data["annotation"] or form.cleaned_data["status"]:
+            if form.cleaned_data["annotation"]:
                 ann = PVEItemAnnotation.objects.filter(item=models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()).first()
                 ann.project = project
                 ann.gebruiker = request.user
@@ -386,21 +386,20 @@ def MyComments(request, pk):
 
     totale_kosten = 0
     totale_kosten_lijst = [comment.kostenConsequenties for comment in PVEItemAnnotation.objects.filter(project=project) if comment.kostenConsequenties]
-    for kosten in totale_kosten_lijst:
-        totale_kosten += kosten
+    totale_kosten = sum(totale_kosten_lijst)
 
     bijlages = []
-    
+
     for bijlage in BijlageToAnnotation.objects.filter(ann__project=project, ann__gebruiker=request.user):
         if bijlage.bijlage.url:
             bijlages.append(bijlage.bijlage.url)
         else:
             bijlages.append(None)
 
-    comments = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user).order_by('id')
-
     ann_forms = []
     form_item_ids = []
+
+    comments = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user).order_by('id')
     for comment in comments:
         ann_forms.append(forms.PVEItemAnnotationForm(initial={
             'item_id':comment.item.id,
@@ -414,11 +413,40 @@ def MyComments(request, pk):
     context["ann_forms"] = ann_forms
     context["form_item_ids"] = form_item_ids
     context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
-    context["comments"] = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user)
+    context["comments"] = comments
     context["project"] = project
     context["bijlages"] = bijlages
     context["totale_kosten"] = totale_kosten
     return render(request, 'MyComments.html', context)
+
+@login_required(login_url='login_syn')
+def MyCommentsDelete(request, pk):
+    if not Project.objects.filter(pk=pk):
+        return render(request, '404_syn.html')
+
+    if not Project.objects.filter(permitted__username__contains=request.user.username):
+        return render(request, '404_syn.html')
+
+    project = Project.objects.filter(pk=pk).first()
+    totale_kosten = 0
+    totale_kosten_lijst = [comment.kostenConsequenties for comment in PVEItemAnnotation.objects.filter(project=project) if comment.kostenConsequenties]
+    totale_kosten = sum(totale_kosten_lijst)
+
+    bijlages = []
+
+    for bijlage in BijlageToAnnotation.objects.filter(ann__project=project, ann__gebruiker=request.user):
+        if bijlage.bijlage.url:
+            bijlages.append(bijlage.bijlage.url)
+        else:
+            bijlages.append(None)
+
+    context = {}
+    context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
+    context["comments"] = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user).order_by('id')
+    context["project"] = project
+    context["bijlages"] = bijlages
+    context["totale_kosten"] = totale_kosten
+    return render(request, 'MyCommentsDelete.html', context)
 
 @login_required(login_url='login_syn')
 def deleteAnnotationPve(request, project_id, ann_id):
@@ -442,7 +470,7 @@ def deleteAnnotationPve(request, project_id, ann_id):
     if request.method == "POST":
         messages.warning(request, f'Opmerking van {comment.project} verwijderd.')
         comment.delete()
-        return HttpResponseRedirect(reverse('mijnopmerkingen_syn', args=(project.id,)))
+        return HttpResponseRedirect(reverse('mijnopmerkingendelete_syn', args=(project.id,)))
 
 
     totale_kosten = 0
@@ -527,7 +555,7 @@ def VerwijderAnnotationAttachment(request, projid, annid):
         comment.bijlage = False
         comment.save()
         attachment.delete()
-        return HttpResponseRedirect(reverse('mijnopmerkingen_syn', args=(project.id,)))
+        return HttpResponseRedirect(reverse('mijnopmerkingendelete_syn', args=(project.id,)))
 
     totale_kosten = 0
     totale_kosten_lijst = [comment.kostenConsequenties for comment in PVEItemAnnotation.objects.filter(project=project) if comment.kostenConsequenties]

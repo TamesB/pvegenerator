@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block main %}
-<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Mijn Opmerkingen, project {{ project.naam }}</p></div>
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Mijn Opmerkingen, project {{ project.naam }} <a style="float: right;" href="{% url 'mijnopmerkingendelete_syn' project.id %}"><button class="ui basic red button"><i class="icon trash"></i>Kies verwijdering</button></a></p></div>
 <table class="opmerkingtable_wrapper">
   <tr class="table_head">
     <th><img src="{% static 'syntrus/svg/logo.svg' %}" class="syntr_logo"></a></th>
@@ -33,8 +33,8 @@
     <td class="voldoening"><p>{% if comment.annotation %}{{ comment.annotation }}{% else %}<i>Geen</i>{% endif %}</p></td>
     <td class="voldoening"><p>{% if comment.status %}{{ comment.status }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="kosten"><p>{% if comment.kostenConsequenties %}€ {{ comment.kostenConsequenties }}{% else %} € 0 {% endif %}</p></td>
-    <td class="voldoening"><p style="float: left;" onClick="document.getElementById('{{ comment.item.id }}').style.display='block'"><button class="ui icon basic button"><i class="icon edit"></i></button></p><a href="{% url 'deleteAnnotationPve_syn' project.id comment.id %}" style="float:right;"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></p></td>
-    <td class="voldoening">{% if not comment.bijlage %}<p><a href="{% url 'bijlageaanopmerking_syn' project.id comment.id %}"><button class="ui icon basic button"><i class="icon plus"></i></button></a></p>{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" style="float:left;" target="_blank"><button class="ui icon basic button"><i class="icon download"></i></button></a><p><a href="{% url 'verwijderbijlageopmerking_syn' project.id comment.id %}" style="float: right;"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></p>{% endif %}</td>
+    <td class="voldoening"><p style="float: left;" onClick="document.getElementById('{{ comment.item.id }}').style.display='block'"><button class="ui icon basic button"><i class="icon edit"></i></button></p></td>
+    <td class="voldoening">{% if not comment.bijlage %}<p><a href="{% url 'bijlageaanopmerking_syn' project.id comment.id %}"><button class="ui icon basic button"><i class="icon plus"></i></button></a></p>{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" style="float:left;" target="_blank"><button class="ui icon basic button"><i class="icon download"></i></button></a>{% endif %}</td>
 
   </tr>
   {% endfor %}
@@ -78,4 +78,11 @@
 </form>
 {% endblock %}
 {% block modal %}
+{% endblock %}
+{% block scripts %}
+<script>
+$(document).ready(function(){
+     $('option[value=""]').remove();
+});
+</script>
 {% endblock %}

@@ -29,7 +29,8 @@ $(document).ready(function(){
        })
      ;
 
-     $('.option[value=""]').remove();
+     $('option[value=""]').remove();
+
 
 });
 

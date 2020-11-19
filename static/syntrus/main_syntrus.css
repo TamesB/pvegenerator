@@ -621,6 +621,8 @@ body, html {
   padding-left: 7vw;
   font-size: 2.5vh;
   font-style: bold;
+  width: 100%;
+  padding-right: 2vw;
   color: #2b786e;
 }
 
