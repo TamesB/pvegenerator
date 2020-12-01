@@ -26,7 +26,6 @@ class AcceptInvitationForm(UserCreationForm):
             'username':'Gebruikersnaam:', 'password1':'Wachtwoord:', 'password2':'Herhaal wachtwoord:'
         }
 
-
 class CustomUserChangeForm(UserChangeForm):
     """A form for updating users. Includes all the fields on
     the user, but replaces the password field with admin's

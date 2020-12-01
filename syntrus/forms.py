@@ -4,7 +4,7 @@ from django import forms
 from django.forms import ModelForm
 from app.models import Bouwsoort, TypeObject, Doelgroep, PVEItem
 from project.models import Project, PVEItemAnnotation, BijlageToAnnotation
-from users.models import Invitation
+from users.models import Invitation, CommentCheckInvitation
 from syntrus.models import CommentStatus
 from django.contrib.gis import forms
 
@@ -153,4 +153,16 @@ class StartProjectForm(ModelForm):
                     'default_lat': 52.37,
                     'default_lon': 4.895,
                 })
+        }
+
+class FirstFreezeInvitationForm(ModelForm):
+    class Meta:
+        model = CommentCheckInvitation
+        fields = {
+            'invitee', 'user_functie', 'user_afdeling',
+        }
+        labels = {
+            'invitee':'E-Mail:',
+            'user_functie':'Functie:',
+            'user_afdeling':'Afdeling:'
         }

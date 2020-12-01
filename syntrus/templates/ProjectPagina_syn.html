@@ -71,6 +71,7 @@
     <img class="actie-img" src="{% static 'syntrus/img/download.png' %}"></img>
     <p class="subtext">PvE</p>
 </div>
+{% if project.frozenLevel == 0 %}
 <div class="actie_item" onClick="javascript:location.href='{% url 'plusopmerking_syn' project.id %}'">
     <img class="actie-img" src="{% static 'syntrus/img/opmerking.png' %}"></img>
     <p class="subtext">+ Opmrk</p>
@@ -78,6 +79,7 @@
     <img class="actie-img" src="{% static 'syntrus/img/opmerking.png' %}"></img>
     <p class="subtext">Mijn Opmrk</p>
 </div>
+{% endif %}
 {% if request.user.type_user == "SOG" %}
 <div class="actie_item" onClick="javascript:location.href='{% url 'alleopmerkingen_syn' project.id %}'">
     <img class="actie-img" src="{% static 'syntrus/img/opmerking.png' %}"></img>
@@ -110,6 +112,17 @@
       <td><p class="contcontent">{{ project.statuscontract }}</p></td>
     </tr>
     <tr>
+      <td><p class="conttitle">Status Project: </p></td>
+      <td><p class="contcontent">
+      {% if project.frozenLevel == 0 %}
+      Opmerkingen op het PvE maken
+      {% endif %}
+      {% if project.frozenLevel == 1 %}
+      Opmerkingen bevroren
+      {% endif %}
+      </p></td>
+    </tr>
+    <tr>
       <td><p class="conttitle">Aantal verhuureenheden: </p></td>
       <td><p class="contcontent">{{ project.vhe }}</p></td>
     </tr>
@@ -120,13 +133,12 @@
     <tr>
       <td><p class="conttitle">Medewerkers: </p></td>
       <td><p class="contcontent">{% for medewerker in medewerkers %}{{ medewerker }}, {% endfor%}</p></td>
-    </tr>
+    </tr>    
   </table>
   </div>
 </div>
-
-<div class="recente_opmerkingen">
 </div>
+
 </div>
 {% endblock %}
 

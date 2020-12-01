@@ -33,4 +33,8 @@ urlpatterns = [
 
     path('invite', views.AddAccount, name="invite_syn"),
     path('invite/<str:key>', views.AcceptInvite, name="acceptinvite_syn"),
+
+    # firstfreezing
+    path('project/<int:pk>/firstfreeze', views.FirstFreeze, name="firstfreeze_syn"),
+    path('invitecommentcheck/<str:key>', views.AcceptCommentCheck, name="acceptcommentcheck_syn"),
 ]

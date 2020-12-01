@@ -1,0 +1,38 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+
+{% block menu %}
+{% if request.user.type_user == 'SOG' %}
+{% include 'Menu.html' with type='manager' %}
+{% elif request.user.type_user == 'SB' %}
+{% include 'Menu.html' with type='beheerder' %}
+{% elif request.user.type_user == 'SD' %}
+{% include 'Menu.html' with type='derde' %}
+{% else %}
+{% include 'Menu.html' with type='beheerder' %}
+{% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>First Freeze</p></div>
+<div class="invite-container">
+    <div class="box">
+        <p class="description">Voeg een opmerkingschecker toe aan uw project.</p>
+        <form action="{% url 'firstfreeze_syn' pk %}" method="post">
+            {% csrf_token %}
+            <label class="formtitle" for="{{ form.invitee.id_for_label }}">E-mail voor uitnodiging:</label>
+            <p class="formbox">{{ form.invitee }}</p>        
+            <label class="formtitle" for="{{ form.user_functie.id_for_label }}">Functie beschrijving van gebruiker:</label>
+            <p class="formbox">{{ form.user_functie }}</p>
+            <label class="formtitle" for="{{ form.user_afdeling.id_for_label }}">Afdeling van gebruiker:</label>
+            <p class="formbox">{{ form.user_afdeling }}</p>
+            <input type="submit" class="button" value="Nodig uit">
+        </form>    
+    </div>
+</div>
+
+{% endblock %}

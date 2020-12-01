@@ -8,9 +8,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.forms import formset_factory, modelformset_factory
 from syntrus import forms
 from project.models import Project, PVEItemAnnotation, Beleggers, BijlageToAnnotation
-from users.models import Invitation, CustomUser
+from users.models import Invitation, CustomUser, CommentCheckInvitation
 from syntrus.models import FAQ, Room, CommentStatus
-from syntrus.forms import KoppelDerdeUserForm, StartProjectForm, BijlageToAnnotationForm
+from syntrus.forms import KoppelDerdeUserForm, StartProjectForm, BijlageToAnnotationForm, FirstFreezeInvitationForm
 from users.forms import AcceptInvitationForm
 from app import models
 import datetime
@@ -82,6 +82,8 @@ def DashboardView(request):
         return render(request, 'dashboardOpdrachtgever_syn.html', context)
     if request.user.type_user == "SD":
         return render(request, 'dashboardDerde_syn.html', context)
+    if request.user.type_user == "SOC":
+        return render(request, 'dashboardChecker_syn.html', context)
 
 @login_required(login_url='login_syn')
 def FAQView(request):
@@ -348,6 +350,10 @@ def MyComments(request, pk):
 
     project = Project.objects.filter(pk=pk).first()
 
+    if project.frozenLevel > 0:
+        return render(request, '404_syn.html')
+
+
     if not Project.objects.filter(permitted__username__contains=request.user.username):
         return render(request, '404_syn.html')
     
@@ -428,6 +434,10 @@ def MyCommentsDelete(request, pk):
         return render(request, '404_syn.html')
 
     project = Project.objects.filter(pk=pk).first()
+
+    if project.frozenLevel > 0:
+        return render(request, '404_syn.html')
+
     totale_kosten = 0
     totale_kosten_lijst = [comment.kostenConsequenties for comment in PVEItemAnnotation.objects.filter(project=project) if comment.kostenConsequenties]
     totale_kosten = sum(totale_kosten_lijst)
@@ -455,6 +465,10 @@ def deleteAnnotationPve(request, project_id, ann_id):
         raise Http404("404")
     
     project = Project.objects.filter(id=project_id).first()
+
+    if project.frozenLevel > 0:
+        return render(request, '404_syn.html')
+
     # check if user is authorized to project
     if request.user.type_user != 'B':
         if not Project.objects.filter(id=project_id, permitted__username__contains=request.user.username):
@@ -503,6 +517,10 @@ def AddAnnotationAttachment(request, projid, annid):
 
     project = Project.objects.filter(pk=projid).first()
 
+    if project.frozenLevel > 0:
+        return render(request, '404_syn.html')
+
+
     if not Project.objects.filter(permitted__username__contains=request.user.username):
         return render(request, '404_syn.html')
 
@@ -533,11 +551,16 @@ def AddAnnotationAttachment(request, projid, annid):
 
 @login_required(login_url='login_syn')
 def VerwijderAnnotationAttachment(request, projid, annid):
+    
     # check if project exists
     if not Project.objects.filter(id=projid):
         raise Http404("404")
     
     project = Project.objects.filter(id=projid).first()
+
+    if project.frozenLevel > 0:
+        return render(request, '404_syn.html')
+
     # check if user is authorized to project
     if request.user.type_user != 'B':
         if not Project.objects.filter(id=projid, permitted__username__contains=request.user.username):
@@ -643,6 +666,9 @@ def AddComment(request, pk):
     if request.user not in project.permitted.all():
         return render(request, '404_syn.html')
 
+    if project.frozenLevel > 0:
+        return render(request, '404_syn.html')
+
     # multiple forms
     if request.method == "POST":
         item_id_list = [number for number in request.POST.getlist("item_id")]
@@ -678,7 +704,7 @@ def AddComment(request, pk):
                 ann.save()
 
         # remove duplicate entries
-        return redirect('alleopmerkingen_syn', pk=project.id)
+        return redirect('mijnopmerkingen_syn', pk=project.id)
 
     if models.PVEItem.objects.filter(projects__id__contains=pk):
         items = models.PVEItem.objects.filter(projects__id__contains=pk).order_by('id')
@@ -1023,6 +1049,86 @@ def FirstFreeze(request, pk):
 
     project = Project.objects.filter(id=pk).first()
 
-    project.frozenLevel = 1
-    project.save()
+    if request.user !=  project.projectmanager:
+        return render(request, '404_syn.html')
 
+    if request.method == "POST":
+        form = FirstFreezeInvitationForm(request.POST)
+
+        if form.is_valid():
+            invitation = CommentCheckInvitation()
+            invitation.inviter = request.user
+            invitation.invitee = form.cleaned_data["invitee"]
+            invitation.user_functie = form.cleaned_data["user_functie"]
+            invitation.user_afdeling = form.cleaned_data["user_afdeling"]
+            invitation.project = project
+            expiry_length = 10
+            expire_date = timezone.now() + timezone.timedelta(expiry_length)
+            invitation.expires = expire_date
+            invitation.key = secrets.token_urlsafe(30)
+            invitation.save()
+
+            # freeze opmerkingen op niveau 1
+            project.frozenLevel = 1
+            project.save()
+
+            send_mail(
+                f"Syntrus Projecten - Uitnodiging voor project {project}",
+                f"""{ request.user } nodigt u uit om de opmerkingen te checken op het Programma van Eisen voor het project { project } van Syntrus.
+                
+                Klik op de uitnodigingslink om rechtstreeks het project in te gaan.
+                Link: https://pvegenerator.net/syntrus/invitecommentcheck/{invitation.key}
+                
+                Deze link is 10 dagen geldig.""",
+                'admin@pvegenerator.net',
+                [f'{form.cleaned_data["invitee"]}'],
+                fail_silently=False,
+            )
+
+            messages.warning(request, f"Uitnodiging voor opmerkingen checken verstuurd naar { form.cleaned_data['invitee'] }. De uitnodiging zal verlopen in { expiry_length } dagen.)")
+            return redirect('viewproject_syn', pk=project.id)
+
+
+    context = {}
+    context["form"] = FirstFreezeInvitationForm(request.POST)
+    context["pk"] = pk
+    return render(request, 'FirstFreeze.html', context)
+
+def AcceptCommentCheck(request, key):
+    if not key or not CommentCheckInvitation.objects.filter(key=key):
+        return render(request, '404_syn.html')
+    
+    invitation = CommentCheckInvitation.objects.filter(key=key).first()
+
+    if utc.localize(datetime.datetime.now()) > invitation.expires:
+        return render(request, '404verlopen_syn.html')
+
+    if request.method == "POST":
+        form = AcceptInvitationForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+
+            user = authenticate(request, username=form.cleaned_data["username"], password=form.cleaned_data["password1"])
+            user.email = invitation.invitee
+            user.functie = invitation.user_functie
+            user.afdeling = invitation.user_afdeling
+
+            # make user SOC (Syntrus Opmerking Checker)
+            user.type_user = "SOC"
+            user.save()
+
+            project = invitation.project
+            project.commentchecker = user
+            project.permitted.add(user)
+            project.save()
+            
+            if user is not None:
+                login(request, user)
+                return redirect('viewproject_syn', pk=project.id)
+
+    form = AcceptInvitationForm()
+    context = {}
+    context["form"] = form
+    context["key"] = key
+    return render(request, 'acceptCommentCheckInvitation_syn.html', context)

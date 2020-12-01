@@ -22,9 +22,12 @@
                     <img src="{% static 'syntrus/svg/logo.svg' %}" class="logo_bg"></a>
 
                     <ul class="menu_right">
+                    {% if user.is_authenticated %}
                         <li><a href="{% url 'logout_syn' %}">Afmelden</a></li>
                         <li><a href="{% url 'dashboard_syn' %}">Ingelogd als {{ request.user }}</a></li>
-
+                    {% else %}
+                        <li><a href="#">Afgemeld</a></li>
+                    {% endif %}
                     </ul>
                 </span>
                 <span class="menu">{% block menu %}{% endblock %}</span> 

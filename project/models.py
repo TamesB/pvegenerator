@@ -28,7 +28,7 @@ class Project(models.Model):
     datum = models.DateTimeField(auto_now=True)
     belegger = models.ForeignKey(Beleggers, on_delete=models.CASCADE, null=True)
 
-    projectmanager = models.ForeignKey('users.CustomUser', default=None, on_delete=models.CASCADE, null=True)
+    projectmanager = models.ForeignKey('users.CustomUser', default=None, on_delete=models.CASCADE, blank=True, null=True)
     permitted = models.ManyToManyField('users.CustomUser', default=None, related_name="permitted")
     pveconnected = models.BooleanField(blank=True, null=True, default=False)
 
@@ -38,16 +38,17 @@ class Project(models.Model):
     # statussen. Opmerkingen moeten wellicht bijgehouden worden. MOET NOG MIGRATEN
     frozenLevel = models.IntegerField(default=0, null=True)
     fullyFrozen = models.BooleanField(default=False)
+    commentchecker = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, blank=True, null=True, related_name="commentchecker")
 
-    bouwsoort1 = models.ForeignKey('app.Bouwsoort', on_delete=models.CASCADE, default=None, null=True)
-    typeObject1 = models.ForeignKey('app.TypeObject', on_delete=models.CASCADE, default=None, null=True)
-    doelgroep1 = models.ForeignKey('app.Doelgroep', on_delete=models.CASCADE, default=None, null=True)
-    bouwsoort2 = models.ForeignKey('app.Bouwsoort', on_delete=models.CASCADE, default=None, null=True, related_name='SubBouwsoort')
-    typeObject2 = models.ForeignKey('app.TypeObject', on_delete=models.CASCADE, default=None, null=True, related_name='SubTypeObject')
-    doelgroep2 = models.ForeignKey('app.Doelgroep', on_delete=models.CASCADE, default=None, null=True, related_name='SubDoelgroep')
-    bouwsoort3 = models.ForeignKey('app.Bouwsoort', on_delete=models.CASCADE, default=None, null=True, related_name='SubSubBouwsoort')
-    typeObject3 = models.ForeignKey('app.TypeObject', on_delete=models.CASCADE, default=None, null=True, related_name='SubSubTypeObject')
-    doelgroep3 = models.ForeignKey('app.Doelgroep', on_delete=models.CASCADE, default=None, null=True, related_name='SubSubDoelgroep')
+    bouwsoort1 = models.ForeignKey('app.Bouwsoort', on_delete=models.CASCADE, blank=True, null=True)
+    typeObject1 = models.ForeignKey('app.TypeObject', on_delete=models.CASCADE, blank=True, null=True)
+    doelgroep1 = models.ForeignKey('app.Doelgroep', on_delete=models.CASCADE, blank=True, null=True)
+    bouwsoort2 = models.ForeignKey('app.Bouwsoort', on_delete=models.CASCADE, blank=True, null=True, related_name='SubBouwsoort')
+    typeObject2 = models.ForeignKey('app.TypeObject', on_delete=models.CASCADE, blank=True, null=True, related_name='SubTypeObject')
+    doelgroep2 = models.ForeignKey('app.Doelgroep', on_delete=models.CASCADE, blank=True, null=True, related_name='SubDoelgroep')
+    bouwsoort3 = models.ForeignKey('app.Bouwsoort', on_delete=models.CASCADE, blank=True, null=True, related_name='SubSubBouwsoort')
+    typeObject3 = models.ForeignKey('app.TypeObject', on_delete=models.CASCADE, blank=True, null=True, related_name='SubSubTypeObject')
+    doelgroep3 = models.ForeignKey('app.Doelgroep', on_delete=models.CASCADE, blank=True, null=True, related_name='SubSubDoelgroep')
 
     Smarthome = models.BooleanField(default=False)
     AED = models.BooleanField(default=False)

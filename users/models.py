@@ -31,6 +31,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         ('SB', 'Syntrus Beheerder'),
         ('SOG', 'Syntrus Projectmanager'),
         ('SD', 'Syntrus Derden'),
+        ('SOC', 'Syntrus Opmerkingchecker'),
     )
 
     type_user = models.CharField(max_length=3,
@@ -87,6 +88,18 @@ class Invitation(models.Model):
     rang = models.CharField(max_length=3,
                                  choices=type_choices,
                                  default='SD')
+
+    def __str__(self):
+        return f"{ self.inviter } invited { self.invitee }. Expires { self.expires }"
+
+class CommentCheckInvitation(models.Model):
+    inviter = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    invitee = models.EmailField()
+    project = models.ForeignKey('project.Project', on_delete=models.CASCADE, default=None)
+    user_functie = models.CharField(max_length=500, default=None, blank=True, null=True)
+    user_afdeling = models.CharField(max_length=500, default=None, blank=True, null=True)
+    expires = models.DateTimeField(auto_now=False)
+    key = models.CharField(max_length=100)
 
     def __str__(self):
         return f"{ self.inviter } invited { self.invitee }. Expires { self.expires }"
