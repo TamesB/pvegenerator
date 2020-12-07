@@ -9,7 +9,7 @@ from django.forms import formset_factory, modelformset_factory
 from syntrus import forms
 from project.models import Project, PVEItemAnnotation, Beleggers, BijlageToAnnotation
 from users.models import Invitation, CustomUser, CommentCheckInvitation
-from syntrus.models import FAQ, Room, CommentStatus, FrozenComments
+from syntrus.models import FAQ, Room, CommentStatus, FrozenComments, CommentReply
 from syntrus.forms import KoppelDerdeUserForm, StartProjectForm, BijlageToAnnotationForm, FirstFreezeInvitationForm
 from users.forms import AcceptInvitationForm
 from app import models
