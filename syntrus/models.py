@@ -46,7 +46,7 @@ class FrozenComments(models.Model):
     comments = models.ManyToManyField(PVEItemAnnotation)
 
     def __str__(self):
-        return f"{self.level}, {self.project}: {self.comments}"
+        return f"Level: {self.level}, Project: {self.project}"
 
 # places a comment on the comment, allocates it to a specific commentphase (records it all)
 class CommentReply(models.Model):
