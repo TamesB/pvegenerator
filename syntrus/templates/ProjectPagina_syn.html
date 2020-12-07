@@ -5,18 +5,10 @@
 {% load leaflet_tags %}
 
 {% block menu %}
-{% if request.user.type_user == 'SOG' %}
-{% include 'Menu.html' with type='manager' %}
-{% elif request.user.type_user == 'SB' %}
-{% include 'Menu.html' with type='beheerder' %}
-{% elif request.user.type_user == 'SD' %}
-{% include 'Menu.html' with type='derde' %}
-{% else %}
-{% include 'Menu.html' with type='beheerder' %}
-{% endif %}
+{% include 'MenuTypes.html' %}
 {% endblock %}
 
-{% block head%}
+{% block head %}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css" />
   <link rel="stylesheet" href="{% static "syntrus/chat/styles/room_detail.css" %}">
   {% leaflet_css %}
@@ -90,6 +82,23 @@
     <img class="actie-img" src="{% static 'syntrus/img/accountsderden.png' %}"></img>
     <p class="subtext">+ Derde</p>
 </div>
+{% endif %}
+{% if project.frozenLevel > 0 %}
+{% if project.frozenLevel|divisibleby:2 %}
+{% if request.user.type_user == "SOG" %}
+<div class="actie_item" onClick="javascript:location.href='{% url 'commentscheck_syn' project.id %}'">
+    <img class="actie-img" src="{% static 'syntrus/img/accountsderden.png' %}"></img>
+    <p class="subtext">Opmrk Check</p>
+</div>
+{% endif %}
+{% else %}
+{% if request.user.type_user == "SOC" %}
+<div class="actie_item" onClick="javascript:location.href='{% url 'commentscheck_syn' project.id %}'">
+    <img class="actie-img" src="{% static 'syntrus/img/accountsderden.png' %}"></img>
+    <p class="subtext">Opmrk Check</p>
+</div>
+{% endif %}
+{% endif %}
 {% endif %}
 </div>
 </div>

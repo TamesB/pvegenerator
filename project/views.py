@@ -201,6 +201,7 @@ def ProjectViewView(request, pk):
 
     project = models.Project.objects.filter(id=pk).first()
     
+    transformer = Transformer()
     transformer = Transformer.from_crs("EPSG:3857", "EPSG:4326")
     x,y = transformer.transform(project.plaats.x, project.plaats.y)
 

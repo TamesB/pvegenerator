@@ -9,7 +9,7 @@ from django.forms import formset_factory, modelformset_factory
 from syntrus import forms
 from project.models import Project, PVEItemAnnotation, Beleggers, BijlageToAnnotation
 from users.models import Invitation, CustomUser, CommentCheckInvitation
-from syntrus.models import FAQ, Room, CommentStatus
+from syntrus.models import FAQ, Room, CommentStatus, FrozenComments
 from syntrus.forms import KoppelDerdeUserForm, StartProjectForm, BijlageToAnnotationForm, FirstFreezeInvitationForm
 from users.forms import AcceptInvitationForm
 from app import models
@@ -1072,6 +1072,19 @@ def FirstFreeze(request, pk):
             project.frozenLevel = 1
             project.save()
 
+            # create new frozen comments and the level to 1
+            frozencomments = FrozenComments()
+
+            comments = PVEItemAnnotation.objects.filter(project=project).all()
+            
+            # add all comments to it
+            for comment in comments:
+                frozencomments.comments.add(comment)
+
+            frozencomments.project = project
+            frozencomments.level = 1
+            frozencomments.save()
+
             send_mail(
                 f"Syntrus Projecten - Uitnodiging voor project {project}",
                 f"""{ request.user } nodigt u uit om de opmerkingen te checken op het Programma van Eisen voor het project { project } van Syntrus.
@@ -1088,12 +1101,12 @@ def FirstFreeze(request, pk):
             messages.warning(request, f"Uitnodiging voor opmerkingen checken verstuurd naar { form.cleaned_data['invitee'] }. De uitnodiging zal verlopen in { expiry_length } dagen.)")
             return redirect('viewproject_syn', pk=project.id)
 
-
     context = {}
     context["form"] = FirstFreezeInvitationForm(request.POST)
     context["pk"] = pk
     return render(request, 'FirstFreeze.html', context)
 
+# commentcheck acceptance after first freeze
 def AcceptCommentCheck(request, key):
     if not key or not CommentCheckInvitation.objects.filter(key=key):
         return render(request, '404_syn.html')
@@ -1125,10 +1138,167 @@ def AcceptCommentCheck(request, key):
             
             if user is not None:
                 login(request, user)
-                return redirect('viewproject_syn', pk=project.id)
+                return redirect('commentscheck_syn', proj_id=project.id)
 
     form = AcceptInvitationForm()
     context = {}
     context["form"] = form
     context["key"] = key
     return render(request, 'acceptCommentCheckInvitation_syn.html', context)
+
+@login_required(login_url='login_syn')
+def CheckComments(request, proj_id):
+    context = {}
+
+    # get the project
+    if not Project.objects.filter(id=proj_id):
+        return render(request, '404_syn.html')
+
+    project = Project.objects.filter(id=proj_id).first()
+
+    # check first if user is permitted to the project
+    if not Project.objects.filter(permitted__username__contains=request.user.username):
+        return render(request, '404_syn.html')
+
+    # get the frozencomments and the level
+    if not FrozenComments.objects.filter(project__id=proj_id):
+        return render(request, '404_syn.html')
+
+    # get the highest ID of the frozencomments phases; the current phase
+    frozencomments = FrozenComments.objects.filter(project__id=proj_id).order_by('id').first()
+
+    # uneven level = turn of SOC, even level = turn of SOG
+    if (frozencomments.level % 2) != 0:
+        # level uneven: make page only visible for SOC
+        if request.user.type_user != "SOC":
+            return render(request, '404_syn.html')
+    else:
+        # level even: make page only visible for SOG
+        if request.user.type_user != "SOG":
+            return render(request, '404_syn.html')
+
+    # the POST method
+    if request.method == "POST":
+        comment_id_list = [number for number in request.POST.getlist("comment_id")]
+        ann_forms = [
+            # todo: fix bijlages toevoegen
+            forms.CommentReplyForm(dict(comment_id=comment_id, annotation=opmrk))
+            for comment_id, opmrk in zip(
+                request.POST.getlist("comment_id"),
+                request.POST.getlist("annotation"),
+            )
+        ]
+
+        # only use valid forms
+        ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
+
+        # initiate the non-accepted comments check
+        non_accepted_comments_ids = []
+
+        for form in ann_forms:
+            # Not accepted if annotation is filled out. Add a CommentReply per form
+            if form.cleaned_data["annotation"]:
+                
+                # get the original comment it was on
+                originalComment = models.PVEItemAnnotation.objects.filter(id=form.cleaned_data["comment_id"]).first()
+
+                # if the commentreply already exists (change it instead of create it)
+                if CommentReply.objects.filter(onComment=originalComment):
+                    ann = CommentReply.objects.filter(onComment=originalComment).first()
+                else:
+                    ann = CommentReply()
+
+                ann.commentphase = frozencomments
+                ann.onComment = originalComment
+                ann.comment = form.cleaned_data["annotation"]
+                ann.save()
+
+                # add the non_accepted id to list for further saving
+                non_accepted_comments_ids.append(form.cleaned_data["comment_id"])
+
+        # create a new phase with 1 higher level
+        new_phase = FrozenComments()
+        new_phase.level = frozencomments.level + 1
+        new_phase.project = project
+
+        # add all the non accepted comments
+        for comment_id in non_accepted_comments_ids:
+            todo_comment = models.PVEItemAnnotation.objects.filter(id=comment_id).first()
+            new_phase.comments.add(todo_comment)
+
+        new_phase.save()
+
+        # redirect to dashboard after posting replies for now
+        return redirect('dashboard_syn')
+
+    # the GET method
+    comments = frozencomments.comments
+
+    # create the forms
+    ann_forms = []
+    for comment in comments:
+        # look if the persons reply already exists, for later saving
+        if not CommentReply.objects.filter(Q(commentphase=frozencomments) & Q(onComment=comment)):
+            ann_forms.append(forms.CommentReplyForm(initial={'comment_id':comment.id}))
+        else:
+            reply = CommentReply.objects.filter(Q(commentphase=frozencomments) & Q(onComment=comment)).first()
+            ann_forms.append(forms.CommentReplyForm(initial={
+                'comment_id':opmerking.item.id,
+                'annotation':opmerking.annotation,
+                }))
+
+    # loop for reply ordering for the pagedesign
+    hoofdstuk_ordered_items = {}
+    form_item_ids = []
+    for comment in comments:
+
+        # set the PVEItem from the comment
+        item = comment.OnComment.item
+
+        # save id to list for connecting modal to the item
+        form_item_ids.append(item.id)
+
+        # sort
+        if item.paragraaf:
+            if item.hoofdstuk not in hoofdstuk_ordered_items.keys():
+                    hoofdstuk_ordered_items[item.hoofdstuk] = {}
+
+            if item.paragraaf in hoofdstuk_ordered_items[item.hoofdstuk]:
+                hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append(item)
+            else:
+                hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [item]
+        else:
+            if item.hoofdstuk in hoofdstuk_ordered_items:
+                hoofdstuk_ordered_items[item.hoofdstuk].append(item)
+            else:
+                hoofdstuk_ordered_items[item.hoofdstuk] = [item]
+
+        # to put comments in a dict where they are organized
+        if item not in temp_commentbulk_list.keys():
+            temp_commentbulk_list[item] = [comment]
+        else:
+            temp_commentbulk_list[item].append(comment)
+
+    # arrange the comments in list so the comments are combined onto one item
+    temp_commentbulk_list = {}
+    comment_inhoud_list = []
+
+    for comments in temp_commentbulk_list.values():
+
+        # ensures to put multiple comments in one string
+        string = ""
+        for comment in comments:
+            string += f"'{ comment }' -{ comment.gebruiker }, "
+
+        # remove last comma and space from string
+        string = string[:-1]
+        comment_inhoud_list.append(string)    
+
+    context["forms"] = ann_forms
+    context["comments"] = comments
+    context["form_item_ids"] = form_item_ids
+    context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id).order_by('id')
+    context["project"] = project
+    context["hoofdstuk_ordered_items"] = hoofdstuk_ordered_items
+    context["comment_inhoud_list"] = comment_inhoud_list
+    return render(request, 'CheckComments_syn.html', context)

@@ -37,4 +37,8 @@ urlpatterns = [
     # firstfreezing
     path('project/<int:pk>/firstfreeze', views.FirstFreeze, name="firstfreeze_syn"),
     path('invitecommentcheck/<str:key>', views.AcceptCommentCheck, name="acceptcommentcheck_syn"),
+
+    # check comments after freeze
+    path('project/<int:proj_id>/check', views.CheckComments, name="commentscheck_syn"),
+
 ]

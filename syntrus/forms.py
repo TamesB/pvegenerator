@@ -166,3 +166,7 @@ class FirstFreezeInvitationForm(ModelForm):
             'user_functie':'Functie:',
             'user_afdeling':'Afdeling:'
         }
+
+class CommentReplyForm(forms.Form):
+    comment_id = forms.IntegerField(label='comment_id')
+    annotation = forms.CharField(label='annotation', max_length=1000, widget=forms.Textarea, required=False)

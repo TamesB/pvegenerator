@@ -9,10 +9,10 @@
 {% endblock %}
 
 {% block main %}
-<form class="opmerking_form" action="{% url 'plusopmerking_syn' project.id %}" method="POST" enctype="multipart/form-data">
+<form class="opmerking_form" action="{% url 'commentscheck_syn' project.id %}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 
-<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>+ Opmerkingen<input type="submit" class="submit_button" value="Opslaan"></input></p></div>
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>+ Opmerkingscheck<input type="submit" class="submit_button" value="Opslaan"></input></p></div>
 <ul class="list">
   {% for message in messages %}
     <li>{{ message }}</li>
@@ -21,11 +21,11 @@
 
 <div class="main_content_div">
   <div class="opmerking_info">
-    <div class="title"><p>Opmerkingen maken op het PvE</p></div>
-    <div class="content"><p>Maak hier uw opmerkingen op alle items op het PvE. Een opmerking wordt pas echt geteld als er iets in het opmerkingsvak is ingevuld, niet alleen de status. Klik op opslaan als u klaar bent. Bijlages aan een opmerking kunt u later toevoegen bij "Mijn Opmerkingen" op de project homepagina.</p></div>
+    <div class="title"><p>Opmerkingencheck op het PVE</p></div>
+    <div class="content"><p>Reageer op de projectmanager. Klik op de item om verder te reageren, negeer de item om hem te accepteren. Klik uiteindelijk rechtsboven op opslaan om uw reacties te bevriezen en terug te sturen naar de projectmanager.</p></div>
   </div>
 </div>
-{% if items %}
+{% if comments %}
 
 
 <div class="item_opmerking_list">
@@ -38,13 +38,13 @@
             <button type="button" class="paragraaf">{{ paragraaf.paragraaf }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></button>
             <div class="paragraaf_content">
                 {% for item in items %}
-                    <p onClick="document.getElementById('{{ item.id }}').style.display='block'">{{ item.inhoud }}</p>
+                      <div onClick="document.getElementById('{{ form_item_ids|index:forloop.counter0 }}').style.display='block'"><p>{{ item.inhoud }}</p><p style="color: red;">{{ comment_inhoud_list|index:forloop.counter0 }}</p></div>
                 {% endfor %}
             </div>
         {% endfor %}
     {% else %}
         {% for item in one_deep %}
-        <p onClick="document.getElementById('{{ item.id }}').style.display='block'">{{ item.inhoud }}</p>
+        <div onClick="document.getElementById('{{ form_item_ids|index:forloop.counter0 }}').style.display='block'"><p>{{ item.inhoud }}</p><p style="color: red;">{{ comment_inhoud_list|index:forloop.counter0 }}</p></div>
         {% endfor %}  
     {% endif %}
     </div>
@@ -52,22 +52,18 @@
 </div>
 <div class="opmerking_form_modal">
         {% for form in forms %}
-            <div id="{{ form.item_id.value }}" class="w3-modal">
+            <div id="{{ form_item_ids|index:forloop.counter0 }}" class="w3-modal">
                 <div class="w3-modal-content">
                     <div class="w3-container">
-                        <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}">
-                        <label class="item_label">Item:</label>
-                        <p class="inhoud">{{ items|index:forloop.counter0|slice:":100" }}</p>
-                        <label for="{{ form.voldoet.id_for_label }}">Status:</label>
-                        <p class="formbox">{{ form.status }}</p>
-                        <label for="{{ form.annotation.id_for_label }}">Opmerking:</label>
-                        <p class="formbox">{{ form.annotation }}</p>
-                        <label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil:</label>
-                        <p class="formbox">{{ form.kostenConsequenties }}</p>                    
+                        <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}">
+                        <label class="comment_label">Opmerking(en):</label>
+                        <p class="inhoud">{{ comment_inhoud_list|index:forloop.counter0 }}</p>
+                        <label for="{{ form.comment.id_for_label }}">Reactie:</label>
+                        <p class="formbox">{{ form.comment }}</p>
                         <span class="form_buttons">
-                          <div onclick="document.getElementById('{{ form_item_ids|previous_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
-                          <div onclick="document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button center"><p>Gereed</p></div>
-                          <div onclick="document.getElementById('{{ form_item_ids|next_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
+                          <div onclick="document.getElementById('{{ form_item_ids|previous_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
+                          <div onclick="document.getElementById('{{ form_item_ids|index:forloop.counter0 }}').style.display='none'" class="done_button center"><p>Gereed</p></div>
+                          <div onclick="document.getElementById('{{ form_item_ids|next_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
                         </span>
                     </div>
                 </div>
@@ -76,7 +72,7 @@
 
 </div>
 {% else %}
-<p>Nog geen PVE gekoppeld aan dit project.</p>
+<p>Nog geen comments gekoppeld aan dit project.</p>
 {% endif %}
 </form>
 {% endblock %}

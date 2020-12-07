@@ -1,0 +1,13 @@
+{% load static %}
+
+{% if request.user.type_user == 'SOG' %}
+{% include 'Menu.html' with type='manager' %}
+{% elif request.user.type_user == 'SB' %}
+{% include 'Menu.html' with type='beheerder' %}
+{% elif request.user.type_user == 'SD' %}
+{% include 'Menu.html' with type='derde' %}
+{% elif request.user.type_user == 'SOC' %}
+{% include 'Menu.html' with type='checker' %}
+{% else %}
+{% include 'Menu.html' with type='beheerder' %}
+{% endif %}

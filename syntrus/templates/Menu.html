@@ -14,6 +14,8 @@
     <div class="menu_item"><a href="{% url 'plusproject_syn' %}" class="{{ 2|default:"" }}">+ Project</a></div>
     <div class="menu_item"><a href="{% url 'plusaccount_syn' %}" class="{{ 3|default:"" }}">+ Accounts</a></div>
     <div class="menu_item"><a href="{% url 'generate_syn' %}" class="{{ 4|default:"" }}">Genereer PVE</a></div>
+{% elif type == 'checker' %}
+    &nbsp;
 {% endif %}
 
 <div class="menu_item"><a href="{% url 'faq_syn' %}" class="{{ 4|default:"" }}">FAQ</a></div>

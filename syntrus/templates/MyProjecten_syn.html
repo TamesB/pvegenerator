@@ -4,17 +4,8 @@
 {% load static %}
 {% load custom_tags %}
 
-
 {% block menu %}
-{% if request.user.type_user == 'SOG' %}
-{% include 'Menu.html' with type='manager' %}
-{% elif request.user.type_user == 'SB' %}
-{% include 'Menu.html' with type='beheerder' %}
-{% elif request.user.type_user == 'SD' %}
-{% include 'Menu.html' with type='derde' %}
-{% else %}
-{% include 'Menu.html' with type='beheerder' %}
-{% endif %}
+{% include 'MenuTypes.html' %}
 {% endblock %}
 
 {% block main %}
