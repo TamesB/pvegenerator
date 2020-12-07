@@ -1251,7 +1251,9 @@ def CheckComments(request, proj_id):
 
     # loop for reply ordering for the pagedesign
     hoofdstuk_ordered_items = {}
+    temp_commentbulk_list = {}
     form_item_ids = []
+    
     for comment in comments:
 
         # set the PVEItem from the comment
@@ -1282,7 +1284,6 @@ def CheckComments(request, proj_id):
             temp_commentbulk_list[item].append(comment)
 
     # arrange the comments in list so the comments are combined onto one item
-    temp_commentbulk_list = {}
     comment_inhoud_list = []
 
     for comments in temp_commentbulk_list.values():
