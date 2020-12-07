@@ -1074,7 +1074,9 @@ def FirstFreeze(request, pk):
 
             # create new frozen comments and the level to 1
             frozencomments = FrozenComments()
-
+            frozencomments.project = project
+            frozencomments.level = 1
+            frozencomments.save()
             comments = PVEItemAnnotation.objects.filter(project=project)
             
             # add all comments to it
