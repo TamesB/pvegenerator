@@ -1077,7 +1077,7 @@ def FirstFreeze(request, pk):
             frozencomments.project = project
             frozencomments.level = 1
             frozencomments.save()
-            comments = PVEItemAnnotation.objects.filter(project=project)
+            comments = PVEItemAnnotation.objects.filter(project=project).all()
             
             # add all comments to it
             for comment in comments:
@@ -1234,7 +1234,7 @@ def CheckComments(request, proj_id):
         return redirect('dashboard_syn')
 
     # the GET method
-    comments = frozencomments.comments
+    comments = frozencomments.comments.all()
 
     # create the forms
     ann_forms = []
