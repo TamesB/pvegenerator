@@ -1255,7 +1255,7 @@ def CheckComments(request, proj_id):
     for comment in comments:
 
         # set the PVEItem from the comment
-        item = comment.OnComment.item
+        item = comment.item
 
         # save id to list for connecting modal to the item
         form_item_ids.append(item.id)
