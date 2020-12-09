@@ -330,9 +330,9 @@ def ViewProject(request, pk):
     if FrozenComments.objects.filter(project__id=project.id):
         frozencomments = FrozenComments.objects.filter(project__id=project.id).order_by('-level').first()
         highest_frozen_level = frozencomments.level
-
-    # anders niet frozen
-    highest_frozen_level = 0
+    else:
+        # anders niet frozen
+        highest_frozen_level = 0
 
     context = {}
     context["project"] = project
