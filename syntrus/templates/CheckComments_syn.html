@@ -55,15 +55,15 @@
             <div id="{{ form_item_ids|index:forloop.counter0 }}" class="w3-modal">
                 <div class="w3-modal-content">
                     <div class="w3-container">
-                        <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}">
+                        <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}" hidden>
                         <label class="comment_label">Opmerking(en):</label>
                         <p class="inhoud">{{ comment_inhoud_list|index:forloop.counter0 }}</p>
-                        <label for="{{ form.comment.id_for_label }}">Reactie:</label>
-                        <p class="formbox">{{ form.comment }}</p>
+                        <label for="{{ form.annotation.id_for_label }}">Reactie:</label>
+                        <p class="formbox">{{ form.annotation }}</p>
                         <span class="form_buttons">
-                          <div onclick="document.getElementById('{{ form_item_ids|previous_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
+                          <div onclick="document.getElementById('{{ form_item_ids|previous_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form_item_ids|index:forloop.counter0 }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
                           <div onclick="document.getElementById('{{ form_item_ids|index:forloop.counter0 }}').style.display='none'" class="done_button center"><p>Gereed</p></div>
-                          <div onclick="document.getElementById('{{ form_item_ids|next_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
+                          <div onclick="document.getElementById('{{ form_item_ids|next_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form_item_ids|index:forloop.counter0 }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
                         </span>
                     </div>
                 </div>
