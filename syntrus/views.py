@@ -1245,8 +1245,8 @@ def CheckComments(request, proj_id):
         else:
             reply = CommentReply.objects.filter(Q(commentphase=frozencomments) & Q(onComment=comment)).first()
             ann_forms.append(forms.CommentReplyForm(initial={
-                'comment_id':opmerking.item.id,
-                'annotation':opmerking.annotation,
+                'comment_id':reply.item.id,
+                'annotation':reply.annotation,
                 }))
 
     # loop for reply ordering for the pagedesign
