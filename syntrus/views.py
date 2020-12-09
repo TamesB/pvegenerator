@@ -1202,7 +1202,7 @@ def CheckComments(request, proj_id):
             if form.cleaned_data["annotation"]:
                 
                 # get the original comment it was on
-                originalComment = models.PVEItemAnnotation.objects.filter(id=form.cleaned_data["comment_id"]).first()
+                originalComment = PVEItemAnnotation.objects.filter(id=form.cleaned_data["comment_id"]).first()
 
                 # if the commentreply already exists (change it instead of create it)
                 if CommentReply.objects.filter(onComment=originalComment):
@@ -1225,7 +1225,7 @@ def CheckComments(request, proj_id):
 
         # add all the non accepted comments
         for comment_id in non_accepted_comments_ids:
-            todo_comment = models.PVEItemAnnotation.objects.filter(id=comment_id).first()
+            todo_comment = PVEItemAnnotation.objects.filter(id=comment_id).first()
             new_phase.comments.add(todo_comment)
 
         new_phase.save()
@@ -1253,7 +1253,7 @@ def CheckComments(request, proj_id):
     hoofdstuk_ordered_items = {}
     temp_commentbulk_list = {}
     form_item_ids = []
-    
+
     for comment in comments:
 
         # set the PVEItem from the comment
@@ -1295,7 +1295,7 @@ def CheckComments(request, proj_id):
 
         # remove last comma and space from string
         string = string[:-1]
-        comment_inhoud_list.append(string)    
+        comment_inhoud_list.append(string)
 
     context["forms"] = ann_forms
     context["comments"] = comments
