@@ -83,8 +83,8 @@
     <p class="subtext">+ Derde</p>
 </div>
 {% endif %}
-{% if project.frozenLevel > 0 %}
-{% if project.frozenLevel|divisibleby:2 %}
+{% if highest_frozen_level > 0 %}
+{% if highest_frozen_level|divisibleby:2 %}
 {% if request.user.type_user == "SOG" %}
 <div class="actie_item" onClick="javascript:location.href='{% url 'commentscheck_syn' project.id %}'">
     <img class="actie-img" src="{% static 'syntrus/img/accountsderden.png' %}"></img>

@@ -325,10 +325,20 @@ def ViewProject(request, pk):
         chatroom.save()
 
     medewerkers = [medewerker.username for medewerker in project.permitted.all()]
+
+    # check of er frozencomments zijn als het project bevroren is, check het hoogste niveau om te kijken of het deelbaar door 2 is (of projmanager of checker kan het bekijken)
+    if FrozenComments.objects.filter(project__id=proj_id):
+        frozencomments = FrozenComments.objects.filter(project__id=proj_id).order_by('-level').first()
+        highest_frozen_level = frozencomments.level
+
+    # anders niet frozen
+    highest_frozen_level = 0
+    
     context = {}
     context["project"] = project
     context["chatroom"] = chatroom
     context["medewerkers"] = medewerkers
+    context["highest_frozen_level"] = highest_frozen_level
     return render(request, 'ProjectPagina_syn.html', context)    
 
 @login_required(login_url='login_syn')
