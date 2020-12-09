@@ -1227,8 +1227,7 @@ def CheckComments(request, proj_id):
         for comment_id in non_accepted_comments_ids:
             todo_comment = PVEItemAnnotation.objects.filter(id=comment_id).first()
             new_phase.comments.add(todo_comment)
-
-        new_phase.save()
+            new_phase.save()
 
         # redirect to dashboard after posting replies for now
         return redirect('dashboard_syn')
