@@ -1222,12 +1222,14 @@ def CheckComments(request, proj_id):
         new_phase = FrozenComments()
         new_phase.level = frozencomments.level + 1
         new_phase.project = project
-
+        new_phase.save()
+        
         # add all the non accepted comments
         for comment_id in non_accepted_comments_ids:
             todo_comment = PVEItemAnnotation.objects.filter(id=comment_id).first()
             new_phase.comments.add(todo_comment)
-            new_phase.save()
+        
+        new_phase.save()
 
         # redirect to dashboard after posting replies for now
         return redirect('dashboard_syn')
