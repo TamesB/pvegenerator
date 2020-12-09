@@ -1167,7 +1167,7 @@ def CheckComments(request, proj_id):
         return render(request, '404_syn.html')
 
     # get the highest ID of the frozencomments phases; the current phase
-    frozencomments = FrozenComments.objects.filter(project__id=proj_id).order_by('id').first()
+    frozencomments = FrozenComments.objects.filter(project__id=proj_id).order_by('-level').first()
 
     # uneven level = turn of SOC, even level = turn of SOG
     if (frozencomments.level % 2) != 0:
