@@ -1245,7 +1245,7 @@ def CheckComments(request, proj_id):
         else:
             reply = CommentReply.objects.filter(Q(commentphase=frozencomments) & Q(onComment=comment)).first()
             ann_forms.append(forms.CommentReplyForm(initial={
-                'comment_id':reply.item.id,
+                'comment_id':comment.id,
                 'annotation':reply.annotation,
                 }))
 
