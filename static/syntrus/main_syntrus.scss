@@ -549,7 +549,7 @@ body, html {
                         min-width: 40px;
                     }
                     
-                    p {
+                    p, label {
                         font-weight: bold;
                         text-align: left;
                         padding-top: 2vh;
@@ -1460,6 +1460,39 @@ body, html {
     
                 }
 
+                .project_progress_bar {
+                    height: 7vh;    
+                    background: rgba(247,247,248,1);
+                    border-radius: 1.6vh;
+                    -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    margin-bottom: 2vh;
+                    display: inline-block;
+                    width: 100%;
+                    
+                    label {
+                        font-weight: bold;
+                        text-align: left;
+                        float: left;
+                        padding-top: 3.5vh;
+                        padding-left: 2vw;
+                        font-size: 2.5vh;
+                        font-style: bold;
+                        width: 65%;
+                        padding-right: 2vw;
+                        color: #2b786e;
+                    }
+
+                    progress {
+                        float: right;
+                        width: 30%;
+                        margin-right: 2vw;
+                        margin-top: 2vh;
+                        height: 50%;
+                    }
+
+                }
                 .opmerkingtable_wrapper {
                     margin-top: 2vh;
                     width: 100%;
@@ -1541,7 +1574,88 @@ body, html {
 
                 }
 
+                .frozencomments_list {
+                    margin-top: 2vh;
+                    width: 100%;
+                    height: 80%;
+                    padding-top: 2vh;
+                    padding-left: 2vw;
+                    padding-right: 2vw;
+                    border-radius: 16px;
+                    text-align: left;
+                    -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    background: linear-gradient(180deg, rgba(0, 172, 169, 1) 95px, rgba(247,247,248,1) 95px);
+                    overflow-y: auto;
+
+                    .table_head {
+                        font-size: 2vh;
+                        font-weight:bold;
+                        width: 100%;
+                        padding-bottom: 2vh;
+                        
+                        th {
+                            padding-bottom: 2vh;
+
+                            .rodo {
+                                color: red;
+                            }
+                        }
+                        .syntr_logo {
+                            min-width: 275px;
+                            max-width: 20%;
+                        }
+                    }
+
+                    .table_content {
+                        font-size: 1.5vh;
+                        word-wrap: break-word;
+
+                        .inhoud_box {
+                            padding-bottom: 1vh;
+                            font-size: 1.5vh;     
+                            max-width: 75px;                       
+                            p {
+                                overflow-y: auto;
+                                max-width: 100%;
+                                max-height: 75px;
+                                .inhopmerking {
+                                    color: red;
+                                    font-weight: bold;
+                                }
+                            }
+
+                        }
+                        .voldoening {
+                            padding-right: 2%;
+                            padding-left: 2%;
+
+                            max-width: 10%;
+                            min-width: 10%;
+
+                        }                        
+                        
+                        .kosten {
+                            max-width: 30px;                       
+
+                            padding-top: 2vh;
+
+                            min-width: 20%;
+                        }
+
+                    }
+
+                    .table_content:nth-child(even) {
+                        background-color: white;
+                    }                            
+                    .table_content:nth-child(odd) {
+                        background-color: #daedf2;
+                    }
+
+                }
             }
+
 
             @media screen and (max-width: 768px) {
                 .article_content {

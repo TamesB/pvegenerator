@@ -1,0 +1,34 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+{% block menu %}
+{% include 'MenuTypes.html' %}
+{% endblock %}
+
+{% block main %}
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Opmerkingen, project {{ project.naam }}</p></div>
+
+<div>
+        <table class="frozencomments_list">
+        <tr class="table_head">
+            <th><img src="{% static 'syntrus/svg/logo.svg' %}" class="syntr_logo"></a></th>
+            {% for info in infos %}
+                <th>{{ info }}</th>
+            {% endfor %}
+        </tr>
+        {% for key, value in regels.items %}
+        <tr class="table_content">
+            <td class="inhoud_box"><p>{{ key }}</p></td>
+            {% for comment in value %}
+                <td class="voldoening"><p>{{ comment }}</p></td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        </table>
+    </div>
+</div>
+
+{% endblock %}

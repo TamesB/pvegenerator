@@ -335,6 +335,22 @@ def ViewProject(request, pk):
         highest_frozen_level = 0
 
     context = {}
+
+    if project.frozenLevel == 0:
+        pve_item_count = models.PVEItem.objects.filter(projects__id__contains=pk).count()
+        comment_count = PVEItemAnnotation.objects.filter(project__id=pk).count()
+        context["pve_item_count"] = pve_item_count
+        context["comment_count"] = comment_count
+        context["done_percentage"] = int(100 * (comment_count) / pve_item_count)
+
+    if project.frozenLevel == 1:
+        frozencomments_todo_now = FrozenComments.objects.filter(project__id=project.id).order_by('-level').first().comments.count()
+        frozencomments_todo_first = FrozenComments.objects.filter(project__id=project.id).order_by('level').first().comments.count()
+        context["frozencomments_todo_now"] = frozencomments_todo_now
+        context["frozencomments_todo_first"] = frozencomments_todo_first
+        context["frozencomments_done"] = frozencomments_todo_first - frozencomments_todo_now
+        context["frozencomments_percentage"] = int(100 * (frozencomments_todo_first - frozencomments_todo_now) / frozencomments_todo_first)
+
     context["project"] = project
     context["chatroom"] = chatroom
     context["medewerkers"] = medewerkers
@@ -1214,11 +1230,7 @@ def CheckComments(request, proj_id):
                 # get the original comment it was on
                 originalComment = PVEItemAnnotation.objects.filter(id=form.cleaned_data["comment_id"]).first()
 
-                # if the commentreply already exists (change it instead of create it)
-                if CommentReply.objects.filter(onComment=originalComment):
-                    ann = CommentReply.objects.filter(onComment=originalComment).first()
-                else:
-                    ann = CommentReply()
+                ann = CommentReply()
 
                 ann.commentphase = frozencomments
                 ann.onComment = originalComment
@@ -1293,6 +1305,14 @@ def CheckComments(request, proj_id):
         else:
             temp_commentbulk_list[item].append(comment)
 
+        # add all replies to this comment
+        if CommentReply.objects.filter(Q(onComment=comment) & Q(commentphase=frozencomments)):
+            commentreplys = CommentReply.objects.filter(Q(onComment=comment) & Q(commentphase=frozencomments)).all()
+
+            for reply in commentreplys:
+                temp_commentbulk_list[item].append(reply.comment)
+        
+
     # arrange the comments in list so the comments are combined onto one item
     comment_inhoud_list = []
 
@@ -1301,7 +1321,7 @@ def CheckComments(request, proj_id):
         # ensures to put multiple comments in one string
         string = ""
         for comment in comments:
-            string += f"'{ comment }' -{ comment.gebruiker }, "
+            string += f"'{ comment }', "
 
         # remove last comma and space from string
         string = string[:-1]
@@ -1315,3 +1335,49 @@ def CheckComments(request, proj_id):
     context["hoofdstuk_ordered_items"] = hoofdstuk_ordered_items
     context["comment_inhoud_list"] = comment_inhoud_list
     return render(request, 'CheckComments_syn.html', context)
+
+@login_required
+def FrozenProgressView(request, proj_id):
+    context = {}
+
+    # get the project
+    if not Project.objects.filter(id=proj_id):
+        return render(request, '404_syn.html')
+
+    project = Project.objects.filter(id=proj_id).first()
+
+    # check first if user is permitted to the project
+    if not Project.objects.filter(permitted__username__contains=request.user.username):
+        return render(request, '404_syn.html')
+
+    # get the frozencomments and the level
+    if not FrozenComments.objects.filter(project__id=proj_id):
+        return render(request, '404_syn.html')
+
+    # get all the frozencomments, based on level
+    frozencomments = FrozenComments.objects.filter(project__id=proj_id).order_by('level')
+    first_frozen = frozencomments.first()
+
+    # infos (list van gebruiker + datum), regels (die op de comments waren), comments (lijst van opeenvolgende comments bij de regel)
+    infos = []
+    regels = {}
+
+    for frozencomment in frozencomments:
+        infos.append(frozencomment.level)
+
+        for comment in frozencomment.comments.all():
+            if comment.item in regels:
+                commentreplys = CommentReply.objects.filter(Q(onComment=comment) & Q(commentphase=frozencomment)).order_by('id')
+
+                for commentreply in commentreplys:
+                    regels[comment.item].append(commentreply.comment)
+            else:
+                regels[comment.item] = [comment.annotation]
+
+    # remove current level
+    infos.pop()
+
+    context["infos"] = infos
+    context["regels"] = regels
+    context["project"] = project
+    return render(request, 'FrozenProgress_syn.html', context)

@@ -40,5 +40,6 @@ urlpatterns = [
 
     # check comments after freeze
     path('project/<int:proj_id>/check', views.CheckComments, name="commentscheck_syn"),
+    path('project/<int:proj_id>/frozenopmerkingen', views.FrozenProgressView, name="frozenprogress_syn"),
 
 ]
