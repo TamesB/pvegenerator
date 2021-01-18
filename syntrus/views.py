@@ -350,7 +350,8 @@ def ViewProject(request, pk):
         context["frozencomments_todo_first"] = frozencomments_todo_first
         context["frozencomments_done"] = frozencomments_todo_first - frozencomments_todo_now
         context["frozencomments_percentage"] = int(100 * (frozencomments_todo_first - frozencomments_todo_now) / frozencomments_todo_first)
-    elif project.frozenLevel == 1:
+    
+    if project.frozenLevel == 1:
         context["frozencomments_todo_now"] = 0
         context["frozencomments_todo_first"] = 0
         context["frozencomments_done"] = 0
@@ -808,7 +809,7 @@ def AddProject(request):
             project.permitted.add(request.user)
             project.belegger = Beleggers.objects.filter(naam="Syntrus").first()
 
-            geolocator = Nominatim(user_agent="pvegenerator")
+            geolocator = Nominatim(user_agent="tamesbpvegenerator")
             if 'city' in geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}").raw['address'].keys():
                 project.plaatsnamen = geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}").raw['address']['city']
             else:
