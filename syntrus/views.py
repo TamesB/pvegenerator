@@ -343,7 +343,7 @@ def ViewProject(request, pk):
         context["comment_count"] = comment_count
         context["done_percentage"] = int(100 * (comment_count) / pve_item_count)
 
-    if project.frozenLevel > 1:
+    if project.frozenLevel >= 1:
         frozencomments_todo_now = FrozenComments.objects.filter(project__id=project.id).order_by('-level').first().comments.count()
         frozencomments_todo_first = FrozenComments.objects.filter(project__id=project.id).order_by('level').first().comments.count()
         context["frozencomments_todo_now"] = frozencomments_todo_now
@@ -351,12 +351,6 @@ def ViewProject(request, pk):
         context["frozencomments_done"] = frozencomments_todo_first - frozencomments_todo_now
         context["frozencomments_percentage"] = int(100 * (frozencomments_todo_first - frozencomments_todo_now) / frozencomments_todo_first)
     
-    if project.frozenLevel == 1:
-        context["frozencomments_todo_now"] = 0
-        context["frozencomments_todo_first"] = 0
-        context["frozencomments_done"] = 0
-        context["frozencomments_percentage"] = 0
-
     context["project"] = project
     context["chatroom"] = chatroom
     context["medewerkers"] = medewerkers
