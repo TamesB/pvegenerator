@@ -12,7 +12,6 @@ urlpatterns = [
     path('faq', views.FAQView, name="faq_syn"),
     path('generate', views.GeneratePVEView, name="generate_syn"),
 
-
     path('projects', views.ViewProjectOverview, name="viewprojectoverview_syn"),
     path('project/<int:pk>', views.ViewProject, name="viewproject_syn"),
     path('project/pve', views.download_pve_overview, name="downloadPveOverview_syn"),

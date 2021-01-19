@@ -1374,8 +1374,6 @@ def FrozenProgressView(request, proj_id):
             else:
                 regels[comment.item] = [comment.annotation]
 
-    # remove current level
-    infos.pop()
 
     context["infos"] = infos
     context["regels"] = regels
