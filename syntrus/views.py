@@ -1306,8 +1306,8 @@ def CheckComments(request, proj_id):
             temp_commentbulk_list[item].append(comment)
 
         # add all replies to this comment
-        if CommentReply.objects.filter(Q(onComment=comment) & Q(commentphase=frozencomments)):
-            commentreplys = CommentReply.objects.filter(Q(onComment=comment) & Q(commentphase=frozencomments)).all()
+        if CommentReply.objects.filter(Q(onComment=comment)):
+            commentreplys = CommentReply.objects.filter(Q(onComment=comment)).all()
 
             for reply in commentreplys:
                 temp_commentbulk_list[item].append(reply.comment)
@@ -1367,13 +1367,12 @@ def FrozenProgressView(request, proj_id):
 
         for comment in frozencomment.comments.all():
             if comment.item in regels:
-                commentreplys = CommentReply.objects.filter(Q(onComment=comment) & Q(commentphase=frozencomment)).order_by('id')
+                commentreplys = CommentReply.objects.filter(Q(onComment=comment)).order_by('id')
 
                 for commentreply in commentreplys:
                     regels[comment.item].append(commentreply.comment)
             else:
                 regels[comment.item] = [comment.annotation]
-
 
     context["infos"] = infos
     context["regels"] = regels
