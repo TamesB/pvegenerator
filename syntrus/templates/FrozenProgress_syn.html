@@ -15,6 +15,7 @@
         <table class="frozencomments_list">
         <tr class="table_head">
             <th><img src="{% static 'syntrus/svg/logo.svg' %}" class="syntr_logo"></a></th>
+            <th>Huidige Status</th>
             {% for info in infos %}
                 <th>{{ info }}e laag</th>
             {% endfor %}
@@ -23,7 +24,7 @@
         <tr class="table_content">
             <td class="inhoud_box"><p>{{ key }}</p></td>
             {% for comment in value %}
-                <td class="voldoening"><p>{{ comment }}</p></td>
+                <td class="voldoening"><p>{{ comment }}{% if comment.bijlage %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" style="float:right;" target="_blank"><i>Bijlage: </i><button class="ui icon basic button"><i class="icon download"></i></button></a>{% endif %}</p></td>
             {% endfor %}
         </tr>
         {% endfor %}

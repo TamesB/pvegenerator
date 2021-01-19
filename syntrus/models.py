@@ -53,3 +53,6 @@ class CommentReply(models.Model):
     commentphase = models.ForeignKey(FrozenComments, on_delete=models.CASCADE, null=True)
     onComment = models.ForeignKey(PVEItemAnnotation, on_delete=models.CASCADE, null=True)
     comment = models.TextField(max_length=1000, default=None, null=True)
+
+    def __str__(self):
+        return self.comment

@@ -57,7 +57,7 @@
                     <div class="w3-container">
                         <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}" hidden>
                         <label class="comment_label">Opmerking(en):</label>
-                        <p class="inhoud">{{ comment_inhoud_list|index:forloop.counter0 }}</p>
+                        <p class="inhoud"><br>{{ comment_inhoud_list|index:forloop.counter0 }}</p>
                         <label for="{{ form.annotation.id_for_label }}">Reactie:</label>
                         <p class="formbox">{{ form.annotation }}</p>
                         <span class="form_buttons">

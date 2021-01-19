@@ -197,7 +197,10 @@ def GeneratePVEView(request):
             filename = f"PvE-{fileExt}"
             zipFilename = f"PvE_Compleet-{fileExt}"
             pdfmaker = writePdf.PDFMaker()
-            pdfmaker.makepdf(filename, basic_PVE, parameters)
+            opmerkingen = {}
+            bijlagen = {}
+
+            pdfmaker.makepdf(filename, basic_PVE, opmerkingen, bijlagen, parameters)
             # get bijlagen
             bijlagen = [item for item in basic_PVE if item.bijlage]
             if bijlagen:
@@ -400,7 +403,6 @@ def MyComments(request, pk):
         # only use valid forms
         ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
         for form in ann_forms:
-            print(form.cleaned_data["annotation"])
             # true comment if either comment or voldoet
             if form.cleaned_data["annotation"] != "":
                 ann = PVEItemAnnotation.objects.filter(item=models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()).first()
@@ -1256,7 +1258,7 @@ def CheckComments(request, proj_id):
         return redirect('dashboard_syn')
 
     # the GET method
-    comments = frozencomments.comments.all()
+    comments = frozencomments.comments.order_by('id').all()
 
     # create the forms
     ann_forms = []
@@ -1319,12 +1321,12 @@ def CheckComments(request, proj_id):
     for comments in temp_commentbulk_list.values():
 
         # ensures to put multiple comments in one string
-        string = ""
+        string = f"Status: { comments[0].status }, Opmerkingen: "
         for comment in comments:
             string += f"'{ comment }', "
 
         # remove last comma and space from string
-        string = string[:-1]
+        string = string[:-2]
         comment_inhoud_list.append(string)
 
     context["forms"] = ann_forms
@@ -1366,13 +1368,15 @@ def FrozenProgressView(request, proj_id):
         infos.append(frozencomment.level)
 
         for comment in frozencomment.comments.all():
+
             if comment.item in regels:
                 commentreplys = CommentReply.objects.filter(Q(onComment=comment)).order_by('id')
-
+                
                 for commentreply in commentreplys:
-                    regels[comment.item].append(commentreply.comment)
+                    if commentreply.comment not in regels[comment.item]:
+                        regels[comment.item].append(commentreply)
             else:
-                regels[comment.item] = [comment.annotation]
+                regels[comment.item] = [comment.status, comment]
 
     context["infos"] = infos
     context["regels"] = regels

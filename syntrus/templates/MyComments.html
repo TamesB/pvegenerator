@@ -19,6 +19,7 @@
     <th><p>Acties</p></th>
     <th><p>Bijlage</p></th>
   </tr>
+  {% if comments %}
   {% for comment in comments %}
   <tr class="table_content">
     <td class="inhoud_box"><p>{{ comment.item.inhoud }}</p></td>
@@ -30,12 +31,16 @@
 
   </tr>
   {% endfor %}
-  <tr>
+    <tr>
     <td class="inhoud_box">&nbsp;</td>
     <td class="voldoening">&nbsp;</td>
     <td class="voldoening">&nbsp;</td>
     <td class="kosten"><p>Totaal: {% if totale_kosten %}€{{totale_kosten}}{% else %}€0{% endif %}</p></td>
   </tr>
+
+  {% else %}
+  <td class="inhoud_box"><p>Nog geen opmerkingen geplaatst.</p></td>
+  {% endif %}
 </table>
 
 <form class="opmerking_form" action="{% url 'mijnopmerkingen_syn' project.id %}" method="POST" enctype="multipart/form-data">

@@ -21,18 +21,24 @@
   <div class="profile_left"><img class="round-profile" src="{% static 'syntrus/img/plusproject.png' %}"></img></div>
   <div class="profile_right">
   <table>
+    {% if project.bouwsoort1 %}
     <tr>
-      <td><p class="profile-title">Bouwsoort(en):</p></td>
-      <td><p>{% if project.bouwsoort1 %} {{ project.bouwsoort1.parameter }}{% endif%}{% if project.bouwsoort2 %}, {{ project.bouwsoort2.parameter }}{% endif %}{% if project.bouwsoort3 %}, {{ project.bouwsoort3.parameter }}{% endif %}</p></td>
+      <td><p class="profile-title">Object:</p></td>
+      <td><p>Bouwsoort: <i>{{ project.bouwsoort1.parameter }}</i>, Type Object: <i>{{ project.typeObject1.parameter }}</i>, Doelgroep: <i>{{ project.doelgroep1.parameter }}</i></p></td>
     </tr>
+    {% endif %}
+    {% if project.bouwsoort2 %}
     <tr>
-      <td><p class="profile-title">Type object(en):</p></td>
-      <td><p>{% if project.typeObject1 %} {{ project.typeObject1.parameter }}{% endif%}{% if project.typeObject2 %}, {{ project.typeObject2.parameter }}{% endif %}{% if project.typeObject3 %}, {{ project.typeObject3.parameter }}{% endif %}</p></td>
+      <td><p class="profile-title">Object:</p></td>
+      <td><p>Bouwsoort: <i>{{ project.bouwsoort2.parameter }}</i>, Type Object: <i>{{ project.typeObject2.parameter }}</i>, Doelgroep: <i>{{ project.doelgroep2.parameter }}</i></p></td>
     </tr>
+    {% endif %}
+    {% if project.bouwsoort3 %}
     <tr>
-      <td><p class="profile-title">Doelgroep(en):</p></td>
-      <td><p>{% if project.doelgroep1 %} {{ project.doelgroep1.parameter }}{% endif%}{% if project.doelgroep2 %}, {{ project.doelgroep2.parameter }}{% endif %}{% if project.doelgroep3 %}, {{ project.doelgroep3.parameter }}{% endif %}</p></td>
+      <td><p class="profile-title">Object:</p></td>
+      <td><p>Bouwsoort: <i>{{ project.bouwsoort3.parameter }}</i>, Type Object: <i>{{ project.typeObject3.parameter }}</i>, Doelgroep: <i>{{ project.doelgroep3.parameter }}</i></p></td>
     </tr>
+    {% endif %}
   </table>
   </div>
   <div class="profile_bottom">
@@ -42,13 +48,13 @@
 
 {% if project.frozenLevel == 0 %}
 <div class="project_progress_bar">
-  <label for="file">Status: Eerste opmerkingen maken (Niveau 1) ({{ comment_count }}/{{ pve_item_count}} opmerkingen geplaatst)</label>
+  <label for="file">Status: Eerste opmerkingen ({{ comment_count }}/{{ pve_item_count}} voltooid)</label>
   <span><progress id="file" value="{{ comment_count }}" max="{{ pve_item_count }}">{{ done_percentage }}%</progress></span>
 </div>
 {% endif %}
 {% if project.frozenLevel == 1 %}
 <div class="project_progress_bar">
-  <label for="file">Status: Opmerkingsoverleg (Niveau 2) ({{ frozencomments_done }} van de {{ frozencomments_todo_first }} afgewerkt)</label>
+  <label for="file">Status: Opmerkingsoverleg ({{ frozencomments_done }}/{{ frozencomments_todo_first }} afgewerkt)</label>
   <span><progress id="file" value="{{ frozencomments_done }}" max="{{ frozencomments_todo_first }}">{{ frozencomments_percentage }}%</progress></span>
 </div>
 {% endif %}
