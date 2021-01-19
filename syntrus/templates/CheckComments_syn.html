@@ -60,6 +60,8 @@
                         <p class="inhoud"><br>{{ comment_inhoud_list|index:forloop.counter0 }}</p>
                         <label for="{{ form.annotation.id_for_label }}">Reactie:</label>
                         <p class="formbox">{{ form.annotation }}</p>
+                        <label for="{{ form.status.id_for_label }}">Status:</label>
+                        <p class="formbox">{{ form.status }}</p>
                         <span class="form_buttons">
                           <div onclick="document.getElementById('{{ form_item_ids|previous_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form_item_ids|index:forloop.counter0 }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
                           <div onclick="document.getElementById('{{ form_item_ids|index:forloop.counter0 }}').style.display='none'" class="done_button center"><p>Gereed</p></div>

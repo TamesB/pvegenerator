@@ -169,4 +169,5 @@ class FirstFreezeInvitationForm(ModelForm):
 
 class CommentReplyForm(forms.Form):
     comment_id = forms.IntegerField(label='comment_id')
+    status = forms.ModelChoiceField(queryset=CommentStatus.objects.all(), required=False)
     annotation = forms.CharField(label='annotation', max_length=1000, widget=forms.Textarea, required=False)

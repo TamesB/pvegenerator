@@ -17,14 +17,14 @@
             <th><img src="{% static 'syntrus/svg/logo.svg' %}" class="syntr_logo"></a></th>
             <th>Huidige Status</th>
             {% for info in infos %}
-                <th>{{ info }}e laag</th>
+                <th>{{ info }}e opmerkingslaag</th>
             {% endfor %}
         </tr>
         {% for key, value in regels.items %}
         <tr class="table_content">
             <td class="inhoud_box"><p>{{ key }}</p></td>
             {% for comment in value %}
-                <td class="voldoening"><p>{{ comment }}{% if comment.bijlage %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" style="float:right;" target="_blank"><i>Bijlage: </i><button class="ui icon basic button"><i class="icon download"></i></button></a>{% endif %}</p></td>
+                <td class="voldoening"><p>{% if forloop.counter0 == 0 %}<b>{{ comment }}</b>{% else %}{{ comment }}{% endif %}{% if comment.bijlage %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" style="float:right;" target="_blank"><i>Bijlage: </i><button class="ui icon basic button"><i class="icon download"></i></button></a>{% endif %}</p></td>
             {% endfor %}
         </tr>
         {% endfor %}

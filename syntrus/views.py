@@ -1212,10 +1212,11 @@ def CheckComments(request, proj_id):
         comment_id_list = [number for number in request.POST.getlist("comment_id")]
         ann_forms = [
             # todo: fix bijlages toevoegen
-            forms.CommentReplyForm(dict(comment_id=comment_id, annotation=opmrk))
-            for comment_id, opmrk in zip(
+            forms.CommentReplyForm(dict(comment_id=comment_id, annotation=opmrk, status=status))
+            for comment_id, opmrk, status in zip(
                 request.POST.getlist("comment_id"),
                 request.POST.getlist("annotation"),
+                request.POST.getlist("status"),
             )
         ]
 
@@ -1231,6 +1232,10 @@ def CheckComments(request, proj_id):
                 
                 # get the original comment it was on
                 originalComment = PVEItemAnnotation.objects.filter(id=form.cleaned_data["comment_id"]).first()
+
+                if form.cleaned_data["status"] != originalComment.status:
+                    originalComment.status = form.cleaned_data["status"]
+                    originalComment.save()
 
                 ann = CommentReply()
 
@@ -1265,7 +1270,7 @@ def CheckComments(request, proj_id):
     for comment in comments:
         # look if the persons reply already exists, for later saving
         if not CommentReply.objects.filter(Q(commentphase=frozencomments) & Q(onComment=comment)):
-            ann_forms.append(forms.CommentReplyForm(initial={'comment_id':comment.id}))
+            ann_forms.append(forms.CommentReplyForm(initial={'comment_id':comment.id, 'status':comment.status}))
         else:
             reply = CommentReply.objects.filter(Q(commentphase=frozencomments) & Q(onComment=comment)).first()
             ann_forms.append(forms.CommentReplyForm(initial={
@@ -1321,7 +1326,7 @@ def CheckComments(request, proj_id):
     for comments in temp_commentbulk_list.values():
 
         # ensures to put multiple comments in one string
-        string = f"Status: { comments[0].status }, Opmerkingen: "
+        string = f"Huidige status: { comments[0].status }, Opmerkingen: "
         for comment in comments:
             string += f"'{ comment }', "
 
@@ -1373,7 +1378,7 @@ def FrozenProgressView(request, proj_id):
                 commentreplys = CommentReply.objects.filter(Q(onComment=comment)).order_by('id')
                 
                 for commentreply in commentreplys:
-                    if commentreply.comment not in regels[comment.item]:
+                    if commentreply not in regels[comment.item]:
                         regels[comment.item].append(commentreply)
             else:
                 regels[comment.item] = [comment.status, comment]
