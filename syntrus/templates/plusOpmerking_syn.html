@@ -58,7 +58,7 @@
                         <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}">
                         <label class="item_label">Item:</label>
                         <p class="inhoud">{{ items|index:forloop.counter0|slice:":100" }}</p>
-                        <label for="{{ form.voldoet.id_for_label }}">Status:</label>
+                        <label for="{{ form.status.id_for_label }}">Status:</label>
                         <p class="formbox">{{ form.status }}</p>
                         <label for="{{ form.annotation.id_for_label }}">Opmerking:</label>
                         <p class="formbox">{{ form.annotation }}</p>

@@ -11,9 +11,10 @@
     <div class="menu_item"><a href="{% url 'invite_syn' %}" class="{{ 3|default:"" }}">+ Derden</a></div>
     <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' %}" class="{{ 4|default:"" }}">Download PVE</a></div>
 {% elif type == 'beheerder' %}
-    <div class="menu_item"><a href="{% url 'plusproject_syn' %}" class="{{ 2|default:"" }}">+ Project</a></div>
-    <div class="menu_item"><a href="{% url 'plusaccount_syn' %}" class="{{ 3|default:"" }}">+ Accounts</a></div>
-    <div class="menu_item"><a href="{% url 'generate_syn' %}" class="{{ 4|default:"" }}">Genereer PVE</a></div>
+    <div class="menu_item"><a href="{% url 'manageorganisaties_syn' %}" class="{{ 2|default:"" }}">Manage Organisaties</a></div>
+    <div class="menu_item"><a href="{% url 'plusproject_syn' %}" class="{{ 3|default:"" }}">+ Project</a></div>
+    <div class="menu_item"><a href="{% url 'plusaccount_syn' %}" class="{{ 4|default:"" }}">+ Accounts</a></div>
+    <div class="menu_item"><a href="{% url 'generate_syn' %}" class="{{ 5|default:"" }}">Genereer PVE</a></div>
 {% elif type == 'checker' %}
     &nbsp;
 {% endif %}

@@ -4,7 +4,7 @@ from django import forms
 from django.forms import ModelForm
 from app.models import Bouwsoort, TypeObject, Doelgroep, PVEItem
 from project.models import Project, PVEItemAnnotation, BijlageToAnnotation
-from users.models import Invitation, CommentCheckInvitation
+from users.models import Invitation, CustomUser, Organisatie
 from syntrus.models import CommentStatus
 from django.contrib.gis import forms
 
@@ -80,13 +80,12 @@ class KoppelDerdeUserForm(ModelForm):
     class Meta:
         model = Invitation
         fields = {
-            'project', 'invitee', 'user_functie', 'user_afdeling',
+            'project', 'invitee', 'organisatie',
         }
         labels = {
             'project':'Project:',
             'invitee':'E-Mail:',
-            'user_functie':'Functie:',
-            'user_afdeling':'Afdeling:'
+            'organisatie':'Organisatie:',
         }
 
 class PlusAccountForm(ModelForm):
@@ -100,14 +99,13 @@ class PlusAccountForm(ModelForm):
     class Meta:
         model = Invitation
         fields = {
-            'project', 'invitee', 'user_functie', 'user_afdeling',
+            'project', 'invitee', 'organisatie',
         }
         labels = {
             'rang':'Rang gebruiker:',
-            'project':'Project:',
+            'project':'Voor project:',
             'invitee':'E-Mail:',
-            'user_functie':'Functie:',
-            'user_afdeling':'Afdeling:'
+            'organisatie':'Organisatie:',
         }
 
 class CheckboxInput(forms.CheckboxInput):
@@ -136,36 +134,54 @@ class BijlageToAnnotationForm(ModelForm):
         }
         widgets = {'ann': forms.HiddenInput()}
 
+
+class AddOrganisatieForm(forms.Form):
+    naam = forms.CharField(max_length=100)
+
+    class Meta:
+        labels = {
+            'naam':'Organisatienaam:',
+        }
+
 class StartProjectForm(ModelForm):
     plaats = forms.PointField(widget=forms.OSMWidget(attrs={'default_lat': 52.37, 'default_lon': 4.895,}))
 
     class Meta:
         model = Project
-        fields = ('naam', 'nummer', 'vhe', 'pensioenfonds', 'statuscontract', 'plaats')
+        fields = ('naam', 'nummer', 'organisaties', 'vhe', 'pensioenfonds', 'statuscontract', 'plaats')
         geom = forms.PointField()
         labels = {
             'naam':'Projectnaam:', 'nummer':'Projectnummer:', 'plaats':'Plaats:', 'vhe':'Aantal verhuureenheden:', 
             'pensioenfonds':'Pensioenfonds:', 'statuscontract':"Contractstatus:",
         }
+
         widgets = {
             'point': forms.OSMWidget(
                 attrs={
                     'default_lat': 52.37,
                     'default_lon': 4.895,
-                })
+                }),
         }
 
-class FirstFreezeInvitationForm(ModelForm):
+class InviteProjectStartForm(ModelForm):
     class Meta:
-        model = CommentCheckInvitation
-        fields = {
-            'invitee', 'user_functie', 'user_afdeling',
-        }
+        model = Project
+        fields = ('projectmanager', 'organisaties', 'permitted')
         labels = {
-            'invitee':'E-Mail:',
-            'user_functie':'Functie:',
-            'user_afdeling':'Afdeling:'
+            'projectmanager':'Projectmanager:', 'organisaties':'Organisaties (Voegt alle derden toe van een organisatie):', 'permitted':'Handmatig Derden:',
         }
+        widgets = {
+            'permitted': forms.SelectMultiple(choices=CustomUser.objects.filter(type_user="SD"), attrs={'class': 'ui dropdown'}),
+            'organisaties': forms.SelectMultiple(choices=Organisatie.objects.all(), attrs={'class': 'ui dropdown'}),
+        }
+class FirstFreezeForm(ModelForm):
+    confirm = forms.CheckboxInput()
+
+    class Meta:
+        labels = {
+            'confirm':'Vink aan als je alle statussen wil bevriezen en door wil sturen naar de derden om de opmerkingen te checken.'
+        }
+
 
 class CommentReplyForm(forms.Form):
     comment_id = forms.IntegerField(label='comment_id')

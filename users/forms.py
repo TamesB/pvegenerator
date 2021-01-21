@@ -13,17 +13,17 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ("type_user", "omschrijving", "username", "password1")
+        fields = ("type_user", "organisatie", "username", "password1")
 
 class KoppelDerdeUser(forms.Form):
     email = forms.EmailField()
 
-class AcceptInvitationForm(UserCreationForm):        
+class AcceptInvitationForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ("username", "password1", "password2")
+        fields = ("password1", "password2")
         labels = {
-            'username':'Gebruikersnaam:', 'password1':'Wachtwoord:', 'password2':'Herhaal wachtwoord:'
+            'password1':'Wachtwoord:', 'password2':'Herhaal wachtwoord:'
         }
 
 class CustomUserChangeForm(UserChangeForm):

@@ -8,10 +8,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.forms import formset_factory, modelformset_factory
 from syntrus import forms
 from project.models import Project, PVEItemAnnotation, Beleggers, BijlageToAnnotation
-from users.models import Invitation, CustomUser, CommentCheckInvitation
+from users.models import Invitation, CustomUser, Organisatie
 from syntrus.models import FAQ, Room, CommentStatus, FrozenComments, CommentReply
-from syntrus.forms import KoppelDerdeUserForm, StartProjectForm, BijlageToAnnotationForm, FirstFreezeInvitationForm
-from users.forms import AcceptInvitationForm
+from syntrus.forms import AddOrganisatieForm, KoppelDerdeUserForm, StartProjectForm, BijlageToAnnotationForm, FirstFreezeForm
 from app import models
 import datetime
 from django.utils import timezone
@@ -82,8 +81,6 @@ def DashboardView(request):
         return render(request, 'dashboardOpdrachtgever_syn.html', context)
     if request.user.type_user == "SD":
         return render(request, 'dashboardDerde_syn.html', context)
-    if request.user.type_user == "SOC":
-        return render(request, 'dashboardChecker_syn.html', context)
 
 @login_required(login_url='login_syn')
 def FAQView(request):
@@ -104,6 +101,59 @@ def FAQView(request):
 def LogoutView(request):
     logout(request)
     return redirect('login_syn')
+
+@login_required(login_url='login_syn')
+def ManageOrganisaties(request):
+    allowed_users = ["B", "SB"]
+
+    if request.user.type_user not in allowed_users:
+        return render(request, '404_syn.html')
+    
+    context = {}
+    context["organisaties"] = Organisatie.objects.all()
+    return render(request, 'organisatieManager.html', context)
+
+@login_required(login_url='login_syn')
+def AddOrganisatie(request):
+    allowed_users = ["B", "SB"]
+
+    if request.user.type_user not in allowed_users:
+        return render(request, '404_syn.html')
+    
+    if request.method == "POST":
+        form = forms.AddOrganisatieForm(request.POST)
+
+        if form.is_valid():
+            new_organisatie = Organisatie()
+            new_organisatie.naam = form.cleaned_data["naam"]
+            new_organisatie.save()
+            return redirect("manageorganisaties_syn")
+
+    context = {}
+    context["organisaties"] = Organisatie.objects.all()
+    context["form"] = AddOrganisatieForm()
+    return render(request, 'organisatieAdd.html', context)
+
+@login_required(login_url='login_syn')
+def DeleteOrganisatie(request, pk):
+    allowed_users = ["B", "SB"]
+
+    if request.user.type_user not in allowed_users:
+        return render(request, '404_syn.html')
+    
+    if not Organisatie.objects.filter(id=pk):
+        return render(request, '404_syn.html')
+
+    organisatie = Organisatie.objects.filter(id=pk).first()
+
+    if request.method == "POST":
+        organisatie.delete()
+        return redirect("manageorganisaties_syn")
+
+    context = {}
+    context["organisatie"] = organisatie
+    context["organisaties"] = Organisatie.objects.all()
+    return render(request, 'organisatieDelete.html', context)
 
 # Create your views here.
 @login_required(login_url='login_syn')
@@ -344,8 +394,11 @@ def ViewProject(request, pk):
         comment_count = PVEItemAnnotation.objects.filter(project__id=pk).count()
         context["pve_item_count"] = pve_item_count
         context["comment_count"] = comment_count
-        context["done_percentage"] = int(100 * (comment_count) / pve_item_count)
-
+        if project.pveconnected:
+            context["done_percentage"] = int(100 * (comment_count) / pve_item_count)
+        else:
+            context["done_percentage"] = 0
+            
     if project.frozenLevel >= 1:
         frozencomments_todo_now = FrozenComments.objects.filter(project__id=project.id).order_by('-level').first().comments.count()
         frozencomments_todo_first = FrozenComments.objects.filter(project__id=project.id).order_by('level').first().comments.count()
@@ -812,11 +865,96 @@ def AddProject(request):
                 project.plaatsnamen = geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}").raw['address']['town']
 
             project.save()
-            return redirect('connectpve_syn', pk=project.id)
+            return redirect('addusersproject_syn', pk=project.id)
 
     context = {}
     context["form"] = StartProjectForm()
     return render(request, 'plusProject_syn.html', context)
+
+@login_required(login_url='login_syn')
+def InviteUsersToProject(request, pk):
+    allowed_users = ["B", "SB"]
+    if request.user.type_user not in allowed_users:
+        return render(request, '404_syn.html')
+
+    project = Project.objects.filter(id=pk).first()
+
+    if request.method == 'POST':
+        form = forms.InviteProjectStartForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            organisaties = form.cleaned_data["organisaties"]
+            projectmanager = form.cleaned_data["projectmanager"]
+            permitted = form.cleaned_data["permitted"]
+
+            project.projectmanager = projectmanager
+
+            for organisatie in organisaties:
+                project.organisaties.add(organisatie)
+            
+            for permit in permitted:
+                project.permitted.add(permit)
+
+            project.save()
+
+            if organisaties:
+                organisaties = [organisatie for organisatie in organisaties]
+                gebruikers = []
+
+                for organisatie in organisaties:
+                    gebruikerSet = [user for user in organisatie.gebruikers.all()]
+                    gebruikers.append(gebruikerSet)
+
+                for gebruiker in gebruikers:
+                    send_mail(
+                        f"Syntrus Projecten - Uitnodiging voor project {project}",
+                        f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor het project { project } van Syntrus.
+                        
+                        U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
+                        Link: https://pvegenerator.net/syntrus/project/{project.id}""",
+                        'admin@pvegenerator.net',
+                        [f'{gebruiker.email}'],
+                        fail_silently=False,
+                    )
+
+            if projectmanager:
+                send_mail(
+                    f"Syntrus Projecten - Uitnodiging voor project {project}",
+                    f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor het project { project } van Syntrus.
+                    
+                    U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
+                    Link: https://pvegenerator.net/syntrus/project/{project.id}""",
+                    'admin@pvegenerator.net',
+                    [f'{projectmanager.email}'],
+                    fail_silently=False,
+                )
+
+            if permitted:
+                gebruikers = [user for user in permitted]
+
+                for gebruiker in gebruikers:
+                    send_mail(
+                        f"Syntrus Projecten - Uitnodiging voor project {project}",
+                        f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor het project { project } van Syntrus.
+                        
+                        U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
+                        Link: https://pvegenerator.net/syntrus/project/{project.id}""",
+                        'admin@pvegenerator.net',
+                        [f'{gebruiker.email}'],
+                        fail_silently=False,
+                    )
+
+
+            return redirect('connectpve_syn', pk=project.id)
+
+    # form
+    form = forms.InviteProjectStartForm()
+
+    context = {}
+    context["form"] = form
+    context["project"] = project
+    return render(request, 'InviteUsersToProject_syn.html', context)
+
 
 @login_required(login_url='login_syn')
 def ConnectPVE(request, pk):
@@ -960,8 +1098,7 @@ def AddAccount(request):
             invitation.inviter = request.user
             invitation.invitee = form.cleaned_data["invitee"]
             invitation.project = form.cleaned_data["project"]
-            invitation.user_functie = form.cleaned_data["user_functie"]
-            invitation.user_afdeling = form.cleaned_data["user_afdeling"]
+            invitation.organisatie = form.cleaned_data["organisatie"]
             
             # Als syntrus beheerder invitatie doet kan hij ook rang geven (projectmanager/derde)
             manager = False
@@ -998,7 +1135,7 @@ def AddAccount(request):
                     f"""{ request.user } nodigt u uit voor het commentaar leveren en het checken van het Programma van Eisen voor het project { form.cleaned_data['project'] } van Syntrus.
                     
                     Klik op de uitnodigingslink om rechtstreeks het project in te gaan.
-                    Link: https://pvegenerator.net/syntrus/invite/{invitation.key}
+                    Link: https://pvegenerator.net/syntrus/project/{invitation.key}
                     
                     Deze link is 10 dagen geldig.""",
                     'admin@pvegenerator.net',
@@ -1039,12 +1176,15 @@ def AcceptInvite(request, key):
         form = AcceptInvitationForm(request.POST)
 
         if form.is_valid():
-            form.save()
-
-            user = authenticate(request, username=form.cleaned_data["username"], password=form.cleaned_data["password1"])
+            # strip the email by its first part to automatically create a username
+            sep = "@"
+            username = invitation.invitee.split(sep, 1)[0]
+            user = CustomUser.objects.create_user(username, password=form.cleaned_data["password1"])
             user.email = invitation.invitee
-            user.functie = invitation.user_functie
-            user.afdeling = invitation.user_afdeling
+            user.organisatie = invitation.organisatie
+            user.save()
+            
+            user = authenticate(request, username=username, password=form.cleaned_data["password1"])
 
             if invitation.rang:
                 user.type_user = invitation.rang
@@ -1081,100 +1221,50 @@ def FirstFreeze(request, pk):
         return render(request, '404_syn.html')
 
     if request.method == "POST":
-        form = FirstFreezeInvitationForm(request.POST)
+        form = FirstFreezeForm(request.POST)
 
         if form.is_valid():
-            invitation = CommentCheckInvitation()
-            invitation.inviter = request.user
-            invitation.invitee = form.cleaned_data["invitee"]
-            invitation.user_functie = form.cleaned_data["user_functie"]
-            invitation.user_afdeling = form.cleaned_data["user_afdeling"]
-            invitation.project = project
-            expiry_length = 10
-            expire_date = timezone.now() + timezone.timedelta(expiry_length)
-            invitation.expires = expire_date
-            invitation.key = secrets.token_urlsafe(30)
-            invitation.save()
+            if form.cleaned_data["confirm"]:
+                # freeze opmerkingen op niveau 1
+                project.frozenLevel = 1
+                project.save()
 
-            # freeze opmerkingen op niveau 1
-            project.frozenLevel = 1
-            project.save()
-
-            # create new frozen comments and the level to 1
-            frozencomments = FrozenComments()
-            frozencomments.project = project
-            frozencomments.level = 1
-            frozencomments.save()
-            comments = PVEItemAnnotation.objects.filter(project=project).all()
-            
-            # add all comments to it
-            for comment in comments:
-                frozencomments.comments.add(comment)
-
-            frozencomments.project = project
-            frozencomments.level = 1
-            frozencomments.save()
-
-            send_mail(
-                f"Syntrus Projecten - Uitnodiging voor project {project}",
-                f"""{ request.user } nodigt u uit om de opmerkingen te checken op het Programma van Eisen voor het project { project } van Syntrus.
+                # create new frozen comments and the level to 1
+                frozencomments = FrozenComments()
+                frozencomments.project = project
+                frozencomments.level = 1
+                frozencomments.save()
+                comments = PVEItemAnnotation.objects.filter(project=project).all()
                 
-                Klik op de uitnodigingslink om rechtstreeks het project in te gaan.
-                Link: https://pvegenerator.net/syntrus/invitecommentcheck/{invitation.key}
-                
-                Deze link is 10 dagen geldig.""",
-                'admin@pvegenerator.net',
-                [f'{form.cleaned_data["invitee"]}'],
-                fail_silently=False,
-            )
+                # add all comments to it
+                for comment in comments:
+                    frozencomments.comments.add(comment)
 
-            messages.warning(request, f"Uitnodiging voor opmerkingen checken verstuurd naar { form.cleaned_data['invitee'] }. De uitnodiging zal verlopen in { expiry_length } dagen.)")
-            return redirect('viewproject_syn', pk=project.id)
+                frozencomments.project = project
+                frozencomments.level = 1
+                frozencomments.save()
+
+                allprojectusers = project.permitted.all()
+                filteredDerden = [user.email for user in allprojectusers if user.type_user == "SD"]
+                send_mail(
+                    f"Syntrus Projecten - Uitnodiging opmerkingscheck voor project {project}",
+                    f"""{ request.user } heeft de initiele statussen van de PvE-regels ingevuld en nodigt u uit deze te checken voor het project { project } van Syntrus.
+                    
+                    Klik op de link om rechtstreeks de statussen langs te gaan.
+                    Link: https://pvegenerator.net/syntrus/project/{project.id}/check
+                    """,
+                    'admin@pvegenerator.net',
+                    [f'{filteredDerden}'],
+                    fail_silently=False,
+                )
+
+                messages.warning(request, f"Uitnodiging voor opmerkingen checken verstuurd naar { form.cleaned_data['invitee'] }. De uitnodiging zal verlopen in { expiry_length } dagen.)")
+                return redirect('viewproject_syn', pk=project.id)
 
     context = {}
-    context["form"] = FirstFreezeInvitationForm(request.POST)
+    context["form"] = FirstFreezeForm(request.POST)
     context["pk"] = pk
     return render(request, 'FirstFreeze.html', context)
-
-# commentcheck acceptance after first freeze
-def AcceptCommentCheck(request, key):
-    if not key or not CommentCheckInvitation.objects.filter(key=key):
-        return render(request, '404_syn.html')
-    
-    invitation = CommentCheckInvitation.objects.filter(key=key).first()
-
-    if utc.localize(datetime.datetime.now()) > invitation.expires:
-        return render(request, '404verlopen_syn.html')
-
-    if request.method == "POST":
-        form = AcceptInvitationForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-
-            user = authenticate(request, username=form.cleaned_data["username"], password=form.cleaned_data["password1"])
-            user.email = invitation.invitee
-            user.functie = invitation.user_functie
-            user.afdeling = invitation.user_afdeling
-
-            # make user SOC (Syntrus Opmerking Checker)
-            user.type_user = "SOC"
-            user.save()
-
-            project = invitation.project
-            project.commentchecker = user
-            project.permitted.add(user)
-            project.save()
-            
-            if user is not None:
-                login(request, user)
-                return redirect('commentscheck_syn', proj_id=project.id)
-
-    form = AcceptInvitationForm()
-    context = {}
-    context["form"] = form
-    context["key"] = key
-    return render(request, 'acceptCommentCheckInvitation_syn.html', context)
 
 @login_required(login_url='login_syn')
 def CheckComments(request, proj_id):
@@ -1197,10 +1287,10 @@ def CheckComments(request, proj_id):
     # get the highest ID of the frozencomments phases; the current phase
     frozencomments = FrozenComments.objects.filter(project__id=proj_id).order_by('-level').first()
 
-    # uneven level = turn of SOC, even level = turn of SOG
+    # uneven level = turn of SD, even level = turn of SOG
     if (frozencomments.level % 2) != 0:
-        # level uneven: make page only visible for SOC
-        if request.user.type_user != "SOC":
+        # level uneven: make page only visible for SD
+        if request.user.type_user != "SD":
             return render(request, '404_syn.html')
     else:
         # level even: make page only visible for SOG

@@ -28,6 +28,7 @@ class Project(models.Model):
     datum = models.DateTimeField(auto_now=True)
     belegger = models.ForeignKey(Beleggers, on_delete=models.CASCADE, null=True)
 
+    organisaties = models.ManyToManyField('users.Organisatie', default=None, related_name="organisaties", blank=True, null=True)
     projectmanager = models.ForeignKey('users.CustomUser', default=None, on_delete=models.CASCADE, blank=True, null=True)
     permitted = models.ManyToManyField('users.CustomUser', default=None, related_name="permitted")
     pveconnected = models.BooleanField(blank=True, null=True, default=False)

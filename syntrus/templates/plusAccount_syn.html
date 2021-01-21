@@ -20,12 +20,10 @@
             <p class="formbox">{{ form.rang }}</p>
             <label class="formtitle" for="{{ form.project.id_for_label }}">Voor project:</label>
             <p class="formbox">{{ form.project }}</p>
+            <label class="formtitle" for="{{ form.organisatie.id_for_label }}">Organisatie:</label>
+            <p class="formbox">{{ form.organisatie }}</p>
             <label class="formtitle" for="{{ form.invitee.id_for_label }}">E-mail voor uitnodiging:</label>
             <p class="formbox">{{ form.invitee }}</p>        
-            <label class="formtitle" for="{{ form.user_functie.id_for_label }}">Functie beschrijving van gebruiker:</label>
-            <p class="formbox">{{ form.user_functie }}</p>
-            <label class="formtitle" for="{{ form.user_afdeling.id_for_label }}">Afdeling van gebruiker:</label>
-            <p class="formbox">{{ form.user_afdeling }}</p>
             <input type="submit" class="button" value="Nodig uit">
         </form>    
     </div>

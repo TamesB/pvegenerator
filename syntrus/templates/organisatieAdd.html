@@ -1,0 +1,29 @@
+{% extends "organisatieManager.html" %}
+
+{% load semanticui %}
+
+{% load filename %}
+
+{% block modal %}
+<script>
+$('.mini.modal')
+  .modal('show')
+;
+</script>
+
+<div class="ui mini modal">
+  <div class="header">
+    Voeg organisatie toe
+  </div>
+  <div class="content">
+    <form action="{% url 'addorganisatie_syn' %}" class="ui form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" style="float: right;" class="ui basic green button" value="Voeg toe">
+    </form>  
+
+    <p><a href="{% url 'manageorganisaties_syn' %}" class="bewerk_button"><button style="float: left;" class="ui basic button">Terug</button></a></p> 
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+{% block menu %}
+{% include 'MenuTypes.html' %}
+{% endblock %}
+
+{% block main %}
+
+<div class="opmerking_project_list">
+    <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Organisaties</p></div>
+<div class="main_content_div">
+    <table class="project_overview_content">
+      <thead>
+        <tr class="table_title">
+          <th>Organisatie</th>
+          <th>Gebruikers</th>
+          <th>Acties</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if organisaties %}
+            {% for organisatie in organisaties %}
+        <tr class="table_content">
+          <td>{{ organisatie.naam }}</td>
+          <td>{% for gebruiker in organisatie.gebruikers %}{{ gebruiker }} ({{ gebruiker.email }}), {% endfor %}</td>
+          <td><a href="{% url 'deleteorganisatie_syn' organisatie.id %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+          <td>
+          <i>Nog geen organisaties toegevoegd.</i>
+          </td>
+        </tr>
+        {% endif %}
+        <tr>
+            <td>
+            <a href="{% url 'addorganisatie_syn' %}"><button class="ui icon basic green button"><i class="icon plus"></i></button></a>
+            </td>
+        </tr>
+      </tbody>
+    </table>
+</div>
+</div>
+{% endblock %}
+{% block modal %}
+{% endblock %}

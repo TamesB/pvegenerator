@@ -7,6 +7,13 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from users.managers import CustomUserManager
 from project.models import Beleggers
 
+class Organisatie(models.Model):
+    naam = models.CharField(max_length=500)
+    gebruikers = models.ManyToManyField('users.CustomUser', default=None, related_name="gebruikers")
+    
+    def __str__(self):
+        return self.naam
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     """
     A fully featured User model with admin-compliant permissions that uses
@@ -31,17 +38,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         ('SB', 'Syntrus Beheerder'),
         ('SOG', 'Syntrus Projectmanager'),
         ('SD', 'Syntrus Derden'),
-        ('SOC', 'Syntrus Opmerkingchecker'),
     )
 
     type_user = models.CharField(max_length=3,
                                  choices=type_choices,
                                  default='SD')
 
-    omschrijving = models.TextField(max_length=1000, default=None, blank=True, null=True)
-
-    functie = models.CharField(max_length=500, default=None, blank=True, null=True)
-    afdeling = models.CharField(max_length=500, default=None, blank=True, null=True)
+    organisatie = models.ForeignKey(Organisatie, on_delete=models.CASCADE, null=True)
 
     objects = CustomUserManager()
 
@@ -80,8 +83,7 @@ class Invitation(models.Model):
     )    
     inviter = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     invitee = models.EmailField()
-    user_functie = models.CharField(max_length=500, default=None, blank=True, null=True)
-    user_afdeling = models.CharField(max_length=500, default=None, blank=True, null=True)
+    organisatie = models.ForeignKey(Organisatie, on_delete=models.CASCADE, null=True)
     project = models.ForeignKey('project.Project', on_delete=models.CASCADE)
     expires = models.DateTimeField(auto_now=False)
     key = models.CharField(max_length=100)
@@ -94,10 +96,7 @@ class Invitation(models.Model):
 
 class CommentCheckInvitation(models.Model):
     inviter = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    invitee = models.EmailField()
-    project = models.ForeignKey('project.Project', on_delete=models.CASCADE, default=None)
-    user_functie = models.CharField(max_length=500, default=None, blank=True, null=True)
-    user_afdeling = models.CharField(max_length=500, default=None, blank=True, null=True)
+    invitee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="invitee")
     expires = models.DateTimeField(auto_now=False)
     key = models.CharField(max_length=100)
 
