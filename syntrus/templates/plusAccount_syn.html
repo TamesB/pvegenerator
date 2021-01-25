@@ -18,9 +18,9 @@
             {% csrf_token %}
             <label class="formtitle" for="{{ form.rang.id_for_label }}">Rang gebruiker:</label>
             <p class="formbox">{{ form.rang }}</p>
-            <label class="formtitle" for="{{ form.project.id_for_label }}">Voor project:</label>
+            <label class="formtitle" for="{{ form.project.id_for_label }}">Voor project (optioneel):</label>
             <p class="formbox">{{ form.project }}</p>
-            <label class="formtitle" for="{{ form.organisatie.id_for_label }}">Organisatie:</label>
+            <label class="formtitle" for="{{ form.organisatie.id_for_label }}">Organisatie (optioneel):</label>
             <p class="formbox">{{ form.organisatie }}</p>
             <label class="formtitle" for="{{ form.invitee.id_for_label }}">E-mail voor uitnodiging:</label>
             <p class="formbox">{{ form.invitee }}</p>        

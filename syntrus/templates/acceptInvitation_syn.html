@@ -11,8 +11,6 @@
         <p class="description">Registreer een account, en u wordt doorgewezen naar de project pagina waar u opmerkingen kan geven op het PVE en het PVE kan downloaden.</p>
     <form action="{% url 'acceptinvite_syn' key %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-            <label for="{{ form.username.id_for_label }}">Gebruikersnaam:</label>
-            <p class="formbox">{{ form.username }}</p>
             <label for="{{ form.password1.id_for_label }}">Wachtwoord:</label>
             <p class="formbox">{{ form.password1 }}</p>
             <label for="{{ form.password2.id_for_label }}">Herhaal wachtwoord:</label>

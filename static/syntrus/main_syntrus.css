@@ -410,8 +410,7 @@ body, html {
       -ms-flex-pack: justify;
           justify-content: space-between;
   background: #f7f7f8;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(80%, #f7f7f8), color-stop(80%, #00aca9));
-  background: linear-gradient(0deg, #f7f7f8 80%, #00aca9 80%);
+  background: linear-gradient(180deg, #00aca9 40px, #f7f7f8 40px);
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   border-radius: 1.6em;
@@ -519,6 +518,17 @@ body, html {
 
 #main .layerOneInner .article .article_content .main_content_div .project_overview_content img:hover {
   opacity: 0.7;
+}
+
+#main .layerOneInner .article .article_content .searchable_table_input {
+  background-image: url("/css/searchicon.png");
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
 }
 
 #main .layerOneInner .article .article_content .profile_box {

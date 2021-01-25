@@ -11,31 +11,35 @@
 {% block main %}
 
 <div class="opmerking_project_list">
-    <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Organisaties <a href="{% url 'addorganisatie_syn' %}" style="float:right;"><button class="ui icon green button"><i class="icon plus"></i>Maak Organisatie Aan</button></a></p> </div>
-<input type="text" class="searchable_table_input" id="myInput" onkeyup="searchableLookup()" placeholder="Zoek op organisatie.." title="Typ een organisatie in">
+    <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Werknemers <a href="{% url 'plusaccount_syn' %}" style="float:right;"><button class="ui icon green button"><i class="icon plus"></i>Nodig werknemer uit</button></a></p> </div>
+<input type="text" class="searchable_table_input" id="myInput" onkeyup="searchableLookup()" placeholder="Zoek op werknemer.." title="Typ een werknemer in">
 
 <div class="main_content_div">
 
     <table class="project_overview_content" id="myTable">
         <tr class="table_title">
+          <th>Naam (E-mail)</th>
+          <th>Laatst gezien</th>
+          <th>Rang</th>
           <th>Organisatie</th>
           <th>Projecten</th>
-          <th>Werknemers</th>
           <th>Acties</th>
         </tr>
-        {% if organisaties %}
-            {% for organisatie in organisaties %}
+        {% if werknemers %}
+            {% for werknemer in werknemers %}
         <tr class="table_content">
-          <td>{{ organisatie.naam }}</td>
-          <td>{% if organisatie.projecten.all %}{% for project in organisatie.projecten.all %}{{ project }}, {% endfor %}{% else %}<i>Geen</i>{% endif %}</td>
-          <td>{% for gebruiker in organisatie.gebruikers.all %}{{ gebruiker }} ({{ gebruiker.email }}), {% endfor %} <a href="{% url 'addusersorganisatie_syn' organisatie.id %}"><img src="{% static 'syntrus/img/plus.png' %}"></img></a></td>
-          <td><a href="{% url 'deleteorganisatie_syn' organisatie.id %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></td>
+          <td>{{ werknemer.username }} (<a onclick="copyToClipboard()" id="emailClip">{{ werknemer.email }}</a>)</td>
+          <td>{{ werknemer.last_visit }}</td>
+          <td>{% if werknemer.type_user == "SD"%}Derde{% endif %}{% if werknemer.type_user == "SOG"%}Syntrus Projectmanager{% endif %}</td>
+          <td>{% if werknemer.organisatie %}{{ werknemer.organisatie }}{% else %}<i>Geen</i>{% endif %}</td>
+          <td>{% if werknemer.organisatie.projecten.all %}{% for project in werknemer.organisatie.projecten.all %}{{ project }}, {% endfor %}{% else %}<i>Geen</i>{% endif %}</td>
+          <td><a href="#"><button class="ui icon basic button"><i class="icon edit"></i></button></a></td>
         </tr>
         {% endfor %}
         {% else %}
         <tr>
           <td>
-          <i>Nog geen organisaties toegevoegd.</i>
+          <i>Nog geen werknemers toegevoegd.</i>
           </td>
         </tr>
         {% endif %}
@@ -85,5 +89,19 @@ function searchableLookup() {
   }
 }
 
+function copyToClipboard() {
+  /* Get the text field */
+  var copyText = document.getElementById("emailClip");
+
+  /* Select the text field */
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+  /* Copy the text inside the text field */
+  document.execCommand("copy");
+
+  /* Alert the copied text */
+  alert("Tekst gekopieerd: " + copyText.value);
+}
 </script>
 {% endblock %}

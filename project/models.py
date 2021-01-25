@@ -25,8 +25,11 @@ class Project(models.Model):
     vhe = models.FloatField(max_length=100, default=None)
     pensioenfonds = models.CharField(max_length=100, default=None)
     statuscontract = models.ForeignKey(ContractStatus, on_delete=models.CASCADE)
-    datum = models.DateTimeField(auto_now=True)
+    datum_aangemaakt = models.DateTimeField(auto_now=True)
     belegger = models.ForeignKey(Beleggers, on_delete=models.CASCADE, null=True)
+
+    datum_recent_verandering = models.DateTimeField('recente_verandering', auto_now=True)
+
 
     organisaties = models.ManyToManyField('users.Organisatie', default=None, related_name="organisaties", blank=True, null=True)
     projectmanager = models.ForeignKey('users.CustomUser', default=None, on_delete=models.CASCADE, blank=True, null=True)

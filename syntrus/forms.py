@@ -7,6 +7,7 @@ from project.models import Project, PVEItemAnnotation, BijlageToAnnotation
 from users.models import Invitation, CustomUser, Organisatie
 from syntrus.models import CommentStatus
 from django.contrib.gis import forms
+from multi_email_field.forms import MultiEmailField
 
 class LoginForm(forms.Form):
     attrs = {
@@ -103,9 +104,9 @@ class PlusAccountForm(ModelForm):
         }
         labels = {
             'rang':'Rang gebruiker:',
-            'project':'Voor project:',
+            'project':'Project (Optioneel):',
             'invitee':'E-Mail:',
-            'organisatie':'Organisatie:',
+            'organisatie':'Organisatie (Optioneel):',
         }
 
 class CheckboxInput(forms.CheckboxInput):
@@ -141,6 +142,30 @@ class AddOrganisatieForm(forms.Form):
     class Meta:
         labels = {
             'naam':'Organisatienaam:',
+        }
+
+class AddUserToOrganisatieForm(forms.Form):
+    werknemer = forms.ModelChoiceField(queryset=CustomUser.objects.filter(type_user="SD"), label='Werknemer:')
+
+    class Meta:
+        labels = {
+            'werknemer':'Werknemer:',
+        }
+
+class AddProjectmanagerToProjectForm(forms.Form):
+    projectmanager = forms.ModelChoiceField(queryset=CustomUser.objects.filter(type_user="SOG"), label='Projectmanager:')
+
+    class Meta:
+        labels = {
+            'projectmanager':'Projectmanager:',
+        }
+
+class AddOrganisatieToProjectForm(forms.Form):
+    organisatie = forms.ModelChoiceField(queryset=Organisatie.objects.all(), label='Organisatie:')
+
+    class Meta:
+        labels = {
+            'organisatie':'Organisatie:',
         }
 
 class StartProjectForm(ModelForm):

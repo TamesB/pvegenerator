@@ -18,10 +18,10 @@ $('.mini.modal')
   <div class="content">
     <form action="{% url 'deleteorganisatie_syn' organisatie.id %}" class="ui form" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="submit" style="float: right;" class="ui basic red button" value="Verwijder">
+        <input type="submit" style="float: right;" class="ui red button" value="Verwijder">
     </form>  
 
-    <p><a href="{% url 'deleteorganisatie_syn' organisatie.id %}" class="bewerk_button"><button style="float: left;" class="ui green button">Behoud</button></a></p> 
+    <p><a href="{% url 'manageorganisaties_syn' %}" class="bewerk_button"><button style="float: left;" class="ui basic green button">Behoud</button></a></p> 
   </div>
 </div>
 

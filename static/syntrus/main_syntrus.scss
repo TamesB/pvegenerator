@@ -363,7 +363,7 @@ body, html {
                     display: flex;
                     justify-content: space-between;
                     background: rgb(247,247,248);
-                    background: linear-gradient(0deg, rgba(247,247,248,1) 80%, rgba(0, 172, 169, 1) 80%);                    
+                    background: linear-gradient(180deg, rgba(0, 172, 169, 1) 40px, rgba(247,247,248,1) 40px);                    
                     -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                     -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                     box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
@@ -464,6 +464,17 @@ body, html {
 
                     }
                 }
+                .searchable_table_input {
+                    background-image: url('/css/searchicon.png');
+                    background-position: 10px 10px;
+                    background-repeat: no-repeat;
+                    width: 100%;
+                    font-size: 16px;
+                    padding: 12px 20px 12px 40px;
+                    border: 1px solid #ddd;
+                    margin-bottom: 12px;                  
+                }
+
 
                 .profile_box {
                     font-family: 'Montserrat';

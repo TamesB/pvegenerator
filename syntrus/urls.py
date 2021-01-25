@@ -12,10 +12,21 @@ urlpatterns = [
     path('faq', views.FAQView, name="faq_syn"),
     path('generate', views.GeneratePVEView, name="generate_syn"),
 
-    # organisaties (fondsen)
+    # organisatie beheer (groep van derden)
     path('organisaties', views.ManageOrganisaties, name="manageorganisaties_syn"),
     path('organisaties/add', views.AddOrganisatie, name="addorganisatie_syn"),
+    path('organisaties/<int:pk>/users/add', views.AddUserOrganisatie, name="addusersorganisatie_syn"),
     path('organisaties/<int:pk>/delete', views.DeleteOrganisatie, name="deleteorganisatie_syn"),
+
+    # projectbeheer
+    path('projectbeheer', views.ManageProjects, name="manageprojecten_syn"),
+    path('projectbeheer/<int:pk>/addprojmanager', views.AddProjectManager, name="projectenaddprojmanager_syn"),
+    path('projectbeheer/<int:pk>/addorganisatie', views.AddOrganisatieToProject, name="projectenaddorganisatie_syn"),
+
+
+    # werknemers beheer
+    path('werknemers', views.ManageWerknemers, name="managewerknemers_syn"),
+
 
     # project things
     path('projects', views.ViewProjectOverview, name="viewprojectoverview_syn"),

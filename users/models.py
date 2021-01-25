@@ -10,6 +10,7 @@ from project.models import Beleggers
 class Organisatie(models.Model):
     naam = models.CharField(max_length=500)
     gebruikers = models.ManyToManyField('users.CustomUser', default=None, related_name="gebruikers")
+    projecten = models.ManyToManyField('project.Project', default=None, related_name="projecten")
     
     def __str__(self):
         return self.naam
@@ -32,6 +33,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         help_text=_('Designates whether this user should be treated as '
                     'active. Unselect this instead of deleting accounts.'))
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    last_visit = models.DateTimeField(_('last visit'), default=timezone.now)
 
     type_choices = (
         ('B', 'Beheerder'),
@@ -83,8 +85,8 @@ class Invitation(models.Model):
     )    
     inviter = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     invitee = models.EmailField()
-    organisatie = models.ForeignKey(Organisatie, on_delete=models.CASCADE, null=True)
-    project = models.ForeignKey('project.Project', on_delete=models.CASCADE)
+    organisatie = models.ForeignKey(Organisatie, on_delete=models.CASCADE, null=True, blank=True)
+    project = models.ForeignKey('project.Project', on_delete=models.CASCADE, null=True, blank=True)
     expires = models.DateTimeField(auto_now=False)
     key = models.CharField(max_length=100)
     rang = models.CharField(max_length=3,

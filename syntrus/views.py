@@ -9,6 +9,7 @@ from django.forms import formset_factory, modelformset_factory
 from syntrus import forms
 from project.models import Project, PVEItemAnnotation, Beleggers, BijlageToAnnotation
 from users.models import Invitation, CustomUser, Organisatie
+from users.forms import AcceptInvitationForm
 from syntrus.models import FAQ, Room, CommentStatus, FrozenComments, CommentReply
 from syntrus.forms import AddOrganisatieForm, KoppelDerdeUserForm, StartProjectForm, BijlageToAnnotationForm, FirstFreezeForm
 from app import models
@@ -154,6 +155,96 @@ def DeleteOrganisatie(request, pk):
     context["organisatie"] = organisatie
     context["organisaties"] = Organisatie.objects.all()
     return render(request, 'organisatieDelete.html', context)
+
+@login_required(login_url='login_syn')
+def ManageProjects(request):
+    allowed_users = ["B", "SB"]
+
+    if request.user.type_user not in allowed_users:
+        return render(request, '404_syn.html')
+    
+    context = {}
+    context["projecten"] = Project.objects.all().order_by('-datum_recent_verandering')
+    return render(request, 'beheerProjecten_syn.html', context)
+
+@login_required(login_url='login_syn')
+def AddProjectManager(request, pk):
+    allowed_users = ["B", "SB"]
+
+    if request.user.type_user not in allowed_users:
+        return render(request, '404_syn.html')
+    
+    if not Project.objects.filter(id=pk):
+        return render(request, '404_syn.html')
+
+    project = Project.objects.filter(id=pk).first()
+
+    if request.method == "POST":
+        form = forms.AddProjectmanagerToProjectForm(request.POST)
+
+        if form.is_valid():
+            project.projectmanager = form.cleaned_data["projectmanager"]
+            project.save()
+            return redirect("manageprojecten_syn")
+
+    context = {}
+    context["projecten"] = Project.objects.all().order_by('-datum_recent_verandering')
+    context["project"] = Project.objects.filter(id=pk).first()
+    context["form"] = forms.AddProjectmanagerToProjectForm()
+    return render(request, 'beheerAddProjmanager.html', context)
+
+@login_required(login_url='login_syn')
+def AddOrganisatieToProject(request, pk):
+    allowed_users = ["B", "SB"]
+
+    if request.user.type_user not in allowed_users:
+        return render(request, '404_syn.html')
+    
+    if not Project.objects.filter(id=pk):
+        return render(request, '404_syn.html')
+
+    project = Project.objects.filter(id=pk).first()
+
+    if request.method == "POST":
+        form = forms.AddOrganisatieToProjectForm(request.POST)
+
+        if form.is_valid():
+            # voeg project toe aan organisatie
+            organisatie = form.cleaned_data["organisatie"]
+            organisatie.projecten.add(project)
+            organisatie.save()
+
+            # voeg organisatie toe aan project
+            project.organisaties.add(organisatie)
+            project.save()
+
+            # geef alle werknemers toegang aan het project
+            werknemers = organisatie.gebruikers.all()
+
+            for werknemer in werknemers:
+                project.permitted.add(werknemer)
+                project.save()
+
+            return redirect("manageprojecten_syn")
+
+    context = {}
+    context["projecten"] = Project.objects.all().order_by('-datum_recent_verandering')
+    context["project"] = Project.objects.filter(id=pk).first()
+    context["form"] = forms.AddOrganisatieToProjectForm()
+    return render(request, 'beheerAddOrganisatieToProject.html', context)
+
+
+@login_required(login_url='login_syn')
+def ManageWerknemers(request):
+    allowed_users = ["B", "SB"]
+
+    if request.user.type_user not in allowed_users:
+        return render(request, '404_syn.html')
+    
+    context = {}
+    context["werknemers"] = CustomUser.objects.filter(Q(type_user="SD") | Q(type_user="SOG")).order_by('-last_visit')
+    return render(request, 'beheerWerknemers_syn.html', context)
+
 
 # Create your views here.
 @login_required(login_url='login_syn')
@@ -865,7 +956,7 @@ def AddProject(request):
                 project.plaatsnamen = geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}").raw['address']['town']
 
             project.save()
-            return redirect('addusersproject_syn', pk=project.id)
+            return redirect('connectpve_syn', pk=project.id)
 
     context = {}
     context["form"] = StartProjectForm()
@@ -904,11 +995,13 @@ def InviteUsersToProject(request, pk):
                 for organisatie in organisaties:
                     gebruikerSet = [user for user in organisatie.gebruikers.all()]
                     gebruikers.append(gebruikerSet)
+                    organisatie.projecten.add(project)
+                    organisatie.save()
 
                 for gebruiker in gebruikers:
                     send_mail(
                         f"Syntrus Projecten - Uitnodiging voor project {project}",
-                        f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor het project { project } van Syntrus.
+                        f"""{ request.user } heeft u uitgenodigd om mee te werken aan het project { project } van Syntrus.
                         
                         U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
                         Link: https://pvegenerator.net/syntrus/project/{project.id}""",
@@ -935,7 +1028,7 @@ def InviteUsersToProject(request, pk):
                 for gebruiker in gebruikers:
                     send_mail(
                         f"Syntrus Projecten - Uitnodiging voor project {project}",
-                        f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor het project { project } van Syntrus.
+                        f"""{ request.user } heeft u uitgenodigd om mee te werken aan het project { project } van Syntrus.
                         
                         U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
                         Link: https://pvegenerator.net/syntrus/project/{project.id}""",
@@ -1068,7 +1161,7 @@ def ConnectPVE(request, pk):
             # succesfully connected, save the project
             project.pveconnected = True
             project.save()
-            return redirect('viewproject_syn', pk=project.id)
+            return redirect('projectenaddprojmanager_syn', pk=project.id)
 
     # form
     form = forms.PVEParameterForm()
@@ -1097,15 +1190,17 @@ def AddAccount(request):
             invitation = Invitation()
             invitation.inviter = request.user
             invitation.invitee = form.cleaned_data["invitee"]
-            invitation.project = form.cleaned_data["project"]
-            invitation.organisatie = form.cleaned_data["organisatie"]
+            invitation.rang = form.cleaned_data["rang"]
+
+            if form.cleaned_data["project"]:
+                invitation.project = form.cleaned_data["project"]
+            if form.cleaned_data["organisatie"]:
+                invitation.organisatie = form.cleaned_data["organisatie"]
             
             # Als syntrus beheerder invitatie doet kan hij ook rang geven (projectmanager/derde)
             manager = False
 
             if request.user.type_user in staff_users:
-                invitation.rang = form.cleaned_data["rang"]
-
                 if form.cleaned_data["rang"] == 'SOG':
                     manager = True
 
@@ -1118,10 +1213,10 @@ def AddAccount(request):
 
             if manager:
                 send_mail(
-                    f"Syntrus Projecten - Uitnodiging voor project {form.cleaned_data['project']}",
-                    f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor het project { form.cleaned_data['project'] } van Syntrus.
+                    f"Syntrus Projecten - Uitnodiging voor de PvE tool",
+                    f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor een of meerdere projecten van Syntrus.
                     
-                    Klik op de uitnodigingslink om rechtstreeks het project in te gaan.
+                    Klik op de uitnodigingslink om rechtstreeks de tool in te gaan.
                     Link: https://pvegenerator.net/syntrus/invite/{invitation.key}
                     
                     Deze link is 10 dagen geldig.""",
@@ -1131,11 +1226,11 @@ def AddAccount(request):
                 )
             else:
                 send_mail(
-                    f"Syntrus Projecten - Uitnodiging voor project {form.cleaned_data['project']}",
-                    f"""{ request.user } nodigt u uit voor het commentaar leveren en het checken van het Programma van Eisen voor het project { form.cleaned_data['project'] } van Syntrus.
+                    f"Syntrus Projecten - Uitnodiging voor de PvE tool",
+                    f"""{ request.user } nodigt u uit voor het commentaar leveren en het checken van het Programma van Eisen voor een of meerdere projecten van Syntrus.
                     
-                    Klik op de uitnodigingslink om rechtstreeks het project in te gaan.
-                    Link: https://pvegenerator.net/syntrus/project/{invitation.key}
+                    Klik op de uitnodigingslink om rechtstreeks de tool in te gaan.
+                    Link: https://pvegenerator.net/syntrus/invite/{invitation.key}
                     
                     Deze link is 10 dagen geldig.""",
                     'admin@pvegenerator.net',
@@ -1143,8 +1238,8 @@ def AddAccount(request):
                     fail_silently=False,
                 )
 
-            messages.warning(request, f"Uitnodiging verstuurd naar { form.cleaned_data['invitee'] } voor project { form.cleaned_data['project'] }. De uitnodiging zal verlopen in { expiry_length } dagen.)")
-            return redirect("viewproject_syn", pk=project.id)
+            messages.warning(request, f"Uitnodiging verstuurd naar { form.cleaned_data['invitee'] }. De uitnodiging zal verlopen in { expiry_length } dagen.)")
+            return redirect("managewerknemers_syn")
 
     projecten = Project.objects.filter(permitted__username__contains=request.user.username)
 
@@ -1162,6 +1257,51 @@ def AddAccount(request):
         return render(request, 'plusAccount_syn.html', context)
     else:
         return render(request, 'plusDerde_syn.html', context)
+
+@login_required(login_url='login_syn')
+def AddUserOrganisatie(request, pk):
+    allowed_users = ["B", "SB"]
+    staff_users = ["B", "SB"]
+    if request.user.type_user not in allowed_users:
+        return render(request, '404_syn.html')
+    if not Organisatie.objects.filter(id=pk):
+        return render(request, '404_syn.html')
+    
+    organisatie = Organisatie.objects.filter(id=pk).first()
+    organisaties = Organisatie.objects.all()
+
+    if request.method == "POST":
+        # get user entered form
+        form = forms.AddUserToOrganisatieForm(request.POST)
+
+        # check validity
+        if form.is_valid():
+            werknemer = form.cleaned_data["werknemer"]
+            organisatie.gebruikers.add(werknemer)
+            organisatie.save()
+
+            send_mail(
+                f"Syntrus Projecten - Toegevoegd aan organisatie {organisatie.naam}",
+                f"""{ request.user } heeft u toegevoegd aan de organisatie {organisatie.naam}.
+                
+                Een organisatie kan toegevoegd worden aan projecten en werknemers krijgen dan automatisch toegang tot deze projecten.
+                U kunt uw huidige projecten bekijken bij https://pvegenerator.net/syntrus/projects""",
+                'admin@pvegenerator.net',
+                [f'{werknemer.email}'],
+                fail_silently=False,
+            )
+            return redirect("manageorganisaties_syn")
+
+
+    form = forms.AddUserToOrganisatieForm()
+
+    context = {}
+    context["form"] = form
+    context["pk"] = pk
+    context["organisatie"] = organisatie
+    context["organisaties"] = organisaties
+    return render(request, 'organisatieAddUser.html', context)
+
 
 def AcceptInvite(request, key):
     if not key or not Invitation.objects.filter(key=key):
@@ -1181,27 +1321,45 @@ def AcceptInvite(request, key):
             username = invitation.invitee.split(sep, 1)[0]
             user = CustomUser.objects.create_user(username, password=form.cleaned_data["password1"])
             user.email = invitation.invitee
-            user.organisatie = invitation.organisatie
+            if invitation.organisatie:
+                user.organisatie = invitation.organisatie
             user.save()
             
             user = authenticate(request, username=username, password=form.cleaned_data["password1"])
 
             if invitation.rang:
                 user.type_user = invitation.rang
+                user.save()
 
-            project = invitation.project
-            project.permitted.add(user)
+            if invitation.project:
+                project = invitation.project
+                project.permitted.add(user)
+                project.save()
 
-            if invitation.rang:
-                if invitation.rang == "SOG":
-                    project.projectmanager = user
+                if invitation.rang:
+                    if invitation.rang == "SOG":
+                        project.projectmanager = user
+                        project.save()
+
+            if invitation.organisatie:
+                organisatie = invitation.organisatie
+                organisatie.gebruikers.add(user)
+                organisatie.save()
 
             invitation.delete()
-            project.save()
-            user.save()
+
+            send_mail(
+                f"Syntrus Projecten - Uw Logingegevens",
+                f"""Reeds heeft u zich aangemeld bij de PvE tool.
+                Voor het vervolgens inloggen op de tool is uw gebruikersnaam: <b>{user.username}</b>
+                    en het wachtwoord wat u heeft aangegeven bij het aanmelden.""",
+                'admin@pvegenerator.net',
+                [f'{form.cleaned_data["invitee"]}'],
+                fail_silently=False,
+            )
             if user is not None:
                 login(request, user)
-                return redirect('viewproject_syn', pk=project.id)
+                return redirect('viewprojectoverview_syn')
 
     form = AcceptInvitationForm()
     context = {}

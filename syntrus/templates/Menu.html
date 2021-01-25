@@ -2,19 +2,20 @@
 
 <div class="hamburger"><img src="{% static 'syntrus/svg/hamburger.svg' %}" ></img></div>
 <div class="menu_item"><a href="{% url 'dashboard_syn' %}" class="{{ 1|default:"" }}">Dashboard</a></div>
-<div class="menu_item"><a href="{% url 'viewprojectoverview_syn' %}" class="{{ 1|default:"" }}">Mijn Projecten</a></div>
 {% if type == 'derde' %}
+<div class="menu_item"><a href="{% url 'viewprojectoverview_syn' %}" class="{{ 1|default:"" }}">Mijn Projecten</a></div>
     <div class="menu_item"><a href="{% url 'plusopmerkingOverview_syn' %}" class="{{ 2|default:"" }}">+ Opmerking</a></div>
     <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' %}" class="{{ 3|default:"" }}">Download PVE</a></div>
 {% elif type == 'manager' %}
+<div class="menu_item"><a href="{% url 'viewprojectoverview_syn' %}" class="{{ 1|default:"" }}">Mijn Projecten</a></div>
     <div class="menu_item"><a href="{% url 'plusopmerkingOverview_syn' %} " class="{{ 2|default:"" }}">+ Opmerking</a></div>
     <div class="menu_item"><a href="{% url 'invite_syn' %}" class="{{ 3|default:"" }}">+ Derden</a></div>
     <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' %}" class="{{ 4|default:"" }}">Download PVE</a></div>
 {% elif type == 'beheerder' %}
-    <div class="menu_item"><a href="{% url 'manageorganisaties_syn' %}" class="{{ 2|default:"" }}">Manage Organisaties</a></div>
-    <div class="menu_item"><a href="{% url 'plusproject_syn' %}" class="{{ 3|default:"" }}">+ Project</a></div>
-    <div class="menu_item"><a href="{% url 'plusaccount_syn' %}" class="{{ 4|default:"" }}">+ Accounts</a></div>
-    <div class="menu_item"><a href="{% url 'generate_syn' %}" class="{{ 5|default:"" }}">Genereer PVE</a></div>
+    <div class="menu_item"><a href="{% url 'managewerknemers_syn' %}" class="{{ 2|default:"" }}">Beheer Werknemers</a></div>
+    <div class="menu_item"><a href="{% url 'manageorganisaties_syn' %}" class="{{ 3|default:"" }}">Beheer Organisaties</a></div>
+    <div class="menu_item"><a href="{% url 'manageprojecten_syn' %}" class="{{ 4|default:"" }}">Beheer Projecten</a></div>
+    <div class="menu_item"><a href="{% url 'generate_syn' %}" class="{{ 7|default:"" }}">Genereer PVE</a></div>
 {% elif type == 'checker' %}
     &nbsp;
 {% endif %}
