@@ -44,6 +44,8 @@ urlpatterns = [
     path('project/<int:projid>/comment/my/<int:annid>/delete', views.VerwijderAnnotationAttachment, name="verwijderbijlageopmerking_syn"),
 
     path('project/add', views.AddProject, name="plusproject_syn"),
+
+    # the addusers might be overkill, just add organisatie and users on the project
     path('project/<int:pk>/addusers', views.InviteUsersToProject, name="addusersproject_syn"),
     path('project/<int:pk>/addpve', views.ConnectPVE, name="connectpve_syn"),
     path('account/add', views.AddAccount, name="plusaccount_syn"),
