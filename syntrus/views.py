@@ -184,7 +184,19 @@ def AddProjectManager(request, pk):
 
         if form.is_valid():
             project.projectmanager = form.cleaned_data["projectmanager"]
+            project.permitted.add(form.cleaned_data["projectmanager"])
             project.save()
+
+            send_mail(
+                f"Syntrus Projecten - Uitnodiging voor project {project}",
+                f"""{ request.user } heeft u uitgenodigd projectmanager te zijn van het project { project } van Syntrus.
+                
+                U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan en de eerste PvE check uit te voeren.
+                Link: https://pvegenerator.net/syntrus/project/{project.id}""",
+                'admin@pvegenerator.net',
+                [f'{form.cleaned_data["projectmanager"].email}'],
+                fail_silently=False,
+            )
             return redirect("manageprojecten_syn")
 
     context = {}
@@ -224,6 +236,17 @@ def AddOrganisatieToProject(request, pk):
             for werknemer in werknemers:
                 project.permitted.add(werknemer)
                 project.save()
+
+                send_mail(
+                    f"Syntrus Projecten - Uitnodiging voor project {project}",
+                    f"""{ request.user } heeft u uitgenodigd om mee te werken aan het project { project } van Syntrus.
+                    
+                    U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
+                    Link: https://pvegenerator.net/syntrus/project/{project.id}""",
+                    'admin@pvegenerator.net',
+                    [f'{werknemer.email}'],
+                    fail_silently=False,
+                )
 
             return redirect("manageprojecten_syn")
 
