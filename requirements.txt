@@ -20,3 +20,4 @@ django-storages
 geopy
 twilio==6.10.1
 python-dotenv
+django-simple-history

@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'syntrus',
     'semanticuiforms',
     'storages',
-    'multi_email_field',
+    'simple_history',
 ]
 
 SITE_ID = 1
@@ -68,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'PVE.middleware.last_visit.last_visit_middleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'PVE.urls'
