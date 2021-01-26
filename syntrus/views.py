@@ -1301,6 +1301,15 @@ def AddUserOrganisatie(request, pk):
         if form.is_valid():
             werknemer = form.cleaned_data["werknemer"]
             organisatie.gebruikers.add(werknemer)
+
+            # add new user to all projects the organisation works with
+            projects = organisatie.projecten.all()
+
+            for project in projects:
+                if werknemer not in project.permitted.all():
+                    project.permitted.add(werknemer)
+                    project.save()
+
             organisatie.save()
 
             send_mail(
@@ -1374,8 +1383,8 @@ def AcceptInvite(request, key):
             send_mail(
                 f"Syntrus Projecten - Uw Logingegevens",
                 f"""Reeds heeft u zich aangemeld bij de PvE tool.
-                Voor het vervolgens inloggen op de tool is uw gebruikersnaam: <b>{user.username}</b>
-                    en het wachtwoord wat u heeft aangegeven bij het aanmelden.""",
+                Voor het vervolgens inloggen op de tool is uw gebruikersnaam: {user.username}
+                en het wachtwoord wat u heeft aangegeven bij het aanmelden.""",
                 'admin@pvegenerator.net',
                 [f'{invitation.invitee}'],
                 fail_silently=False,
