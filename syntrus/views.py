@@ -1354,7 +1354,7 @@ def AcceptInvite(request, key):
                 Voor het vervolgens inloggen op de tool is uw gebruikersnaam: <b>{user.username}</b>
                     en het wachtwoord wat u heeft aangegeven bij het aanmelden.""",
                 'admin@pvegenerator.net',
-                [f'{form.cleaned_data["invitee"]}'],
+                [f'{invitation.invitee}'],
                 fail_silently=False,
             )
             if user is not None:
