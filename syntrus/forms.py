@@ -7,7 +7,6 @@ from project.models import Project, PVEItemAnnotation, BijlageToAnnotation
 from users.models import Invitation, CustomUser, Organisatie
 from syntrus.models import CommentStatus
 from django.contrib.gis import forms
-from multi_email_field.forms import MultiEmailField
 
 class LoginForm(forms.Form):
     attrs = {
