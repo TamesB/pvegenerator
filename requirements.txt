@@ -21,3 +21,5 @@ geopy
 twilio==6.10.1
 python-dotenv
 django-simple-history
+django-debug-toolbar
+django-cached-modelforms

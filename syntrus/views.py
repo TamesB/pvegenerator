@@ -864,6 +864,9 @@ def AddComment(request, pk):
     if project.frozenLevel > 0:
         return render(request, '404_syn.html')
 
+    if not models.PVEItem.objects.filter(projects__id__contains=pk).exists():
+        return render(request, '404_syn.html')
+
     # multiple forms
     if request.method == "POST":
         item_id_list = [number for number in request.POST.getlist("item_id")]
@@ -882,8 +885,8 @@ def AddComment(request, pk):
         ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
 
         for form in ann_forms:
-            # true comment if either comment or voldoet
-            if form.cleaned_data["annotation"]:
+            # true comment if either status or voldoet
+            if form.cleaned_data["status"]:
                 if PVEItemAnnotation.objects.filter(item=models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()):
                     ann = PVEItemAnnotation.objects.filter(item=models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()).first()
                 else:
@@ -891,7 +894,8 @@ def AddComment(request, pk):
                 ann.project = project
                 ann.gebruiker = request.user
                 ann.item = models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()
-                ann.annotation = form.cleaned_data["annotation"]
+                if form.cleaned_data["annotation"]:
+                    ann.annotation = form.cleaned_data["annotation"]
                 ann.status = form.cleaned_data["status"]
                 #bijlage uit cleaned data halen en opslaan!
                 if form.cleaned_data["kostenConsequenties"]:
@@ -901,57 +905,73 @@ def AddComment(request, pk):
         # remove duplicate entries
         return redirect('mijnopmerkingen_syn', pk=project.id)
 
-    if models.PVEItem.objects.filter(projects__id__contains=pk):
-        items = models.PVEItem.objects.filter(projects__id__contains=pk).order_by('id')
+    items = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(projects__id__contains=pk).order_by('id')
+    annotations = {}
 
-        ann_forms = []
-        for item in items:
-            if not PVEItemAnnotation.objects.filter(Q(project=project) & Q(gebruiker=request.user) & Q(item=item)):
-                ann_forms.append(forms.PVEItemAnnotationForm(initial={'item_id':item.id}))
-            else:
-                opmerking = PVEItemAnnotation.objects.filter(Q(project=project) & Q(gebruiker=request.user) & Q(item=item)).first()
-                ann_forms.append(forms.PVEItemAnnotationForm(initial={
-                    'item_id':opmerking.item.id,
-                    'annotation':opmerking.annotation,
-                    'status':opmerking.status,
-                    'kostenConsequenties':opmerking.kostenConsequenties,
-                    }))
+    for annotation in PVEItemAnnotation.objects.select_related("item").select_related("status").filter(Q(project=project) & Q(gebruiker=request.user)):
+        annotations[annotation.item] = annotation
 
+    ann_forms = []
+    hoofdstuk_ordered_items = {}
 
-        hoofdstuk_ordered_items = {}
+    for item in items:
+        opmerking = None
 
-        for item in items:
-            if item.paragraaf:
-                if item.hoofdstuk not in hoofdstuk_ordered_items.keys():
-                    	hoofdstuk_ordered_items[item.hoofdstuk] = {}
-
-                if item.paragraaf in hoofdstuk_ordered_items[item.hoofdstuk]:
-                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append(item)
-                else:
-                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [item]
-            else:
-                if item.hoofdstuk in hoofdstuk_ordered_items:
-                    hoofdstuk_ordered_items[item.hoofdstuk].append(item)
-                else:
-                    hoofdstuk_ordered_items[item.hoofdstuk] = [item]
-
-        # easy entrance to item ids
-        form_item_ids = [item.id for item in items]
-
-        aantal_opmerkingen_gedaan = PVEItemAnnotation.objects.filter(Q(project=project) & Q(gebruiker=request.user)).count()
-
-        if aantal_opmerkingen_gedaan < items.count():
-            progress = "niet_klaar"
+        # create forms
+        if item not in annotations.keys():
+            ann_forms.append(forms.PVEItemAnnotationForm(initial={'item_id':item.id}))
         else:
-            progress = "klaar"
+            opmerking = annotations[item]
+            ann_forms.append(forms.PVEItemAnnotationForm(initial={
+                'item_id':opmerking.item.id,
+                'annotation':opmerking.annotation,
+                'status':opmerking.status,
+                'kostenConsequenties':opmerking.kostenConsequenties,
+                }))
 
-        context["forms"] = ann_forms
-        context["items"] = items
-        context["progress"] = progress
-        context["aantal_opmerkingen_gedaan"] = aantal_opmerkingen_gedaan
-        context["form_item_ids"] = form_item_ids
-        context["hoofdstuk_ordered_items"] = hoofdstuk_ordered_items
+        # create ordered items
+        if item.paragraaf:
+            if item.hoofdstuk not in hoofdstuk_ordered_items.keys():
+                    hoofdstuk_ordered_items[item.hoofdstuk] = {}
 
+            if item.paragraaf in hoofdstuk_ordered_items[item.hoofdstuk]:
+                if opmerking:
+                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append([item, item.id, opmerking.status])
+                else:
+                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append([item, item.id, None])
+            else:
+                if opmerking:
+                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [[item, item.id, opmerking.status]]
+                else:
+                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [[item, item.id, None]]
+        else:
+            if item.hoofdstuk in hoofdstuk_ordered_items:
+                if opmerking:
+                    hoofdstuk_ordered_items[item.hoofdstuk].append([item, item.id, opmerking.status])
+                else:
+                    hoofdstuk_ordered_items[item.hoofdstuk].append([item, item.id, None])
+            else:
+                if opmerking:
+                    hoofdstuk_ordered_items[item.hoofdstuk] = [[item, item.id, opmerking.status]]
+                else:
+                    hoofdstuk_ordered_items[item.hoofdstuk] = [[item, item.id, None]]
+
+    # easy entrance to item ids
+    form_item_ids = [item.id for item in items]
+
+    aantal_opmerkingen_gedaan = len(annotations.keys())
+
+    if aantal_opmerkingen_gedaan < items.count():
+        progress = "niet_klaar"
+    else:
+        progress = "klaar"
+
+    context["forms"] = ann_forms
+    context["items"] = items
+    context["progress"] = progress
+    context["aantal_opmerkingen_gedaan"] = aantal_opmerkingen_gedaan
+    context["form_item_ids"] = form_item_ids
+    context["hoofdstuk_ordered_items"] = hoofdstuk_ordered_items
     context["project"] = project
     return render(request, 'plusOpmerking_syn.html', context)
 

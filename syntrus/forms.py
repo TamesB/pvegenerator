@@ -7,6 +7,9 @@ from project.models import Project, PVEItemAnnotation, BijlageToAnnotation
 from users.models import Invitation, CustomUser, Organisatie
 from syntrus.models import CommentStatus
 from django.contrib.gis import forms
+from django.core.cache import cache
+from django.views.decorators.cache import cache_page
+from cached_modelforms import CachedModelChoiceField
 
 class LoginForm(forms.Form):
     attrs = {
@@ -118,10 +121,9 @@ class CheckboxInput(forms.CheckboxInput):
             return self.default
         return super(CheckboxInput, self).value_from_datadict(data, files, name)
 
-
 class PVEItemAnnotationForm(forms.Form):
     item_id = forms.IntegerField(label='item_id')
-    status = forms.ModelChoiceField(queryset=CommentStatus.objects.all(), required=False)
+    status = CachedModelChoiceField(objects=lambda:CommentStatus.objects.all(), required=False)
     annotation = forms.CharField(label='annotation', max_length=1000, widget=forms.Textarea, required=False)
     kostenConsequenties = forms.DecimalField(label='(Optioneel) Kosten Consequenties', required=False)
 

@@ -31,6 +31,12 @@ DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = ["*"]
 
+# debug toolbar
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
+
 # register pdf fonts
 pdfmetrics.registerFont(TTFont('Calibri', os.path.join(BASE_DIR, 'utils/calibri.ttf')))
 pdfmetrics.registerFont(TTFont('Calibri-Bold', os.path.join(BASE_DIR, 'utils/calibrib.ttf')))
@@ -54,6 +60,8 @@ INSTALLED_APPS = [
     'semanticuiforms',
     'storages',
     'simple_history',
+    'debug_toolbar',
+    'cached_modelforms',
 ]
 
 SITE_ID = 1
@@ -69,6 +77,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'PVE.middleware.last_visit.last_visit_middleware',
     'simple_history.middleware.HistoryRequestMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'PVE.urls'

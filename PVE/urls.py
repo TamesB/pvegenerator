@@ -6,8 +6,10 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.conf.urls import url
 from PVE.views import LandingView, token
+import debug_toolbar
 
 urlpatterns = [
+    path('__debug__/', include(debug_toolbar.urls)),
     path('', LandingView, name="landingpage"),
     path('beheer/', include('app.urls')),
     path('beheer/project/', include('project.urls')),

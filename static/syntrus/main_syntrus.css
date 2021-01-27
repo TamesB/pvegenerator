@@ -1124,25 +1124,43 @@ body, html {
   display: block;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list p {
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   font-size: 1.5vh;
-  text-align: left;
+  cursor: pointer;
   padding-top: 0.5vh;
   padding-bottom: 0.5vh;
-  margin: 0;
-  padding-left: 4vw;
-  cursor: pointer;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list p:nth-child(even) {
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .text_left {
+  padding-left: 4vw;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 75%;
+          flex: 0 0 75%;
+  text-align: left;
+  overflow: auto;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .text_right {
+  padding-top: 1vh;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  color: green;
+  font-weight: 700;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content:nth-child(even) {
   background-color: white;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list p:nth-child(odd) {
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content:nth-child(odd) {
   background-color: #daedf2;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list p:hover {
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content:hover {
   opacity: 0.7;
 }
 

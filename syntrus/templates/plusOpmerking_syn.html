@@ -38,13 +38,13 @@
             <button type="button" class="paragraaf">{{ paragraaf.paragraaf }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></button>
             <div class="paragraaf_content">
                 {% for item in items %}
-                    <p onClick="document.getElementById('{{ item.id }}').style.display='block'">{{ item.inhoud }}</p>
+                    <div class="item_content" onClick="document.getElementById('{{ item|index:1 }}').style.display='block'"><div class="text_left"><p>{{ item|index:0 }}</p></div><div class="text_right">{% if item|index:2 %}{{ item|index:2 }}{% endif %}</div></div>
                 {% endfor %}
             </div>
         {% endfor %}
     {% else %}
         {% for item in one_deep %}
-        <p onClick="document.getElementById('{{ item.id }}').style.display='block'">{{ item.inhoud }}</p>
+        <div class="item_content" onClick="document.getElementById('{{ item|index:1 }}').style.display='block'"><div class="text_left"><p>{{ item|index:0 }}</p></div><div class="text_right">{% if item|index:2 %}{{ item|index:2 }}{% endif %}</div></div>
         {% endfor %}  
     {% endif %}
     </div>
@@ -118,8 +118,5 @@ $('.leavecomment').click(function(e){
       $(this).next().show();
 });
 
-$(document).ready(function(){
-     $('option[value=""]').remove();
-});
 </script>
 {% endblock %}
