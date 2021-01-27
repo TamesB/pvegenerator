@@ -405,10 +405,8 @@ def download_pve(request, pk):
             raise Http404('404')
 
     project = Project.objects.filter(id=pk).first()
-    basic_PVE = models.PVEItem.objects.filter(projects__id__contains=pk)
+    basic_PVE = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(projects__id__contains=pk).order_by('id')
 
-    # make sure pve is ordered
-    basic_PVE = basic_PVE.order_by('id')
     # make pdf
     parameters = []
 
@@ -434,12 +432,13 @@ def download_pve(request, pk):
     kostenverschil = 0
 
     if PVEItemAnnotation.objects.filter(project=project):
-        for opmerking in PVEItemAnnotation.objects.filter(project=project):
+        for opmerking in PVEItemAnnotation.objects.select_related("item").filter(project=project):
             opmerkingen[opmerking.item.id] = opmerking
             if opmerking.kostenConsequenties:
                 kostenverschil += opmerking.kostenConsequenties
-            if BijlageToAnnotation.objects.filter(ann=opmerking):
-                bijlagen[opmerking.item.id] = BijlageToAnnotation.objects.filter(ann=opmerking).first()
+            if BijlageToAnnotation.objects.filter(ann=opmerking).exists():
+                bijlage = BijlageToAnnotation.objects.get(ann=opmerking)
+                bijlagen[opmerking.item.id] = bijlage
 
     pdfmaker = writePdf.PDFMaker()
     pdfmaker.kostenverschil = kostenverschil
@@ -448,8 +447,9 @@ def download_pve(request, pk):
     # get bijlagen
     bijlagen = [item for item in basic_PVE if item.bijlage]
 
-    if BijlageToAnnotation.objects.filter(ann__project=project):
-        for item in BijlageToAnnotation.objects.filter(ann__project=project):
+    if BijlageToAnnotation.objects.filter(ann__project=project).exists():
+        bijlagen = BijlageToAnnotation.objects.filter(ann__project=project)
+        for item in bijlagen:
             bijlagen.append(item)
             
     if bijlagen:
@@ -548,11 +548,10 @@ def MyComments(request, pk):
 
     if project.frozenLevel > 0:
         return render(request, '404_syn.html')
-
-
-    if not Project.objects.filter(permitted__username__contains=request.user.username):
-        return render(request, '404_syn.html')
     
+    if request.user != project.projectmanager:
+        return render(request, '404_syn.html')
+
         # multiple forms
     if request.method == "POST":
         item_id_list = [number for number in request.POST.getlist("item_id")]
@@ -571,12 +570,13 @@ def MyComments(request, pk):
         ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
         for form in ann_forms:
             # true comment if either comment or voldoet
-            if form.cleaned_data["annotation"] != "":
+            if form.cleaned_data["status"]:
                 ann = PVEItemAnnotation.objects.filter(item=models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()).first()
                 ann.project = project
                 ann.gebruiker = request.user
                 ann.item = models.PVEItem.objects.filter(id=form.cleaned_data["item_id"]).first()
-                ann.annotation = form.cleaned_data["annotation"]
+                if form.cleaned_data["annotation"]:
+                    ann.annotation = form.cleaned_data["annotation"]
                 ann.status = form.cleaned_data["status"]
                 #bijlage uit cleaned data halen en opslaan!
                 if form.cleaned_data["kostenConsequenties"]:
@@ -600,7 +600,7 @@ def MyComments(request, pk):
     ann_forms = []
     form_item_ids = []
 
-    comments = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user).order_by('id')
+    comments = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user).order_by('-datum')
     for comment in comments:
         ann_forms.append(forms.PVEItemAnnotationForm(initial={
             'item_id':comment.item.id,
@@ -611,6 +611,7 @@ def MyComments(request, pk):
         
         form_item_ids.append(comment.item.id)
 
+    aantal_opmerkingen_gedaan = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user).count()
     context["ann_forms"] = ann_forms
     context["form_item_ids"] = form_item_ids
     context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
@@ -618,6 +619,7 @@ def MyComments(request, pk):
     context["project"] = project
     context["bijlages"] = bijlages
     context["totale_kosten"] = totale_kosten
+    context["aantal_opmerkingen_gedaan"] = aantal_opmerkingen_gedaan
     return render(request, 'MyComments.html', context)
 
 @login_required(login_url='login_syn')
@@ -645,12 +647,15 @@ def MyCommentsDelete(request, pk):
         else:
             bijlages.append(None)
 
+    aantal_opmerkingen_gedaan = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user).count()
+
     context = {}
     context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
     context["comments"] = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user).order_by('id')
     context["project"] = project
     context["bijlages"] = bijlages
     context["totale_kosten"] = totale_kosten
+    context["aantal_opmerkingen_gedaan"] = aantal_opmerkingen_gedaan
     return render(request, 'MyCommentsDelete.html', context)
 
 @login_required(login_url='login_syn')
@@ -841,7 +846,7 @@ def AllComments(request, pk):
         gebruiker = PVEItemAnnotation.objects.filter(project=project).first()
         auteur = gebruiker.gebruiker
         context["gebruiker"] = gebruiker
-        context["comments"] = PVEItemAnnotation.objects.filter(project=project).order_by('gebruiker')
+        context["comments"] = PVEItemAnnotation.objects.filter(project=project).order_by('-datum')
 
     context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id).order_by('id')
     context["project"] = project
@@ -858,7 +863,7 @@ def AddComment(request, pk):
 
     project = Project.objects.filter(id=pk).first()
 
-    if request.user not in project.permitted.all():
+    if request.user != project.projectmanager:
         return render(request, '404_syn.html')
 
     if project.frozenLevel > 0:

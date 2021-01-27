@@ -4,12 +4,9 @@
 <div class="menu_item"><a href="{% url 'dashboard_syn' %}" class="{{ 1|default:"" }}">Dashboard</a></div>
 {% if type == 'derde' %}
 <div class="menu_item"><a href="{% url 'viewprojectoverview_syn' %}" class="{{ 1|default:"" }}">Mijn Projecten</a></div>
-    <div class="menu_item"><a href="{% url 'plusopmerkingOverview_syn' %}" class="{{ 2|default:"" }}">+ Opmerking</a></div>
     <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' %}" class="{{ 3|default:"" }}">Download PVE</a></div>
 {% elif type == 'manager' %}
 <div class="menu_item"><a href="{% url 'viewprojectoverview_syn' %}" class="{{ 1|default:"" }}">Mijn Projecten</a></div>
-    <div class="menu_item"><a href="{% url 'plusopmerkingOverview_syn' %} " class="{{ 2|default:"" }}">+ Opmerking</a></div>
-    <div class="menu_item"><a href="{% url 'invite_syn' %}" class="{{ 3|default:"" }}">+ Derden</a></div>
     <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' %}" class="{{ 4|default:"" }}">Download PVE</a></div>
 {% elif type == 'beheerder' %}
     <div class="menu_item"><a href="{% url 'managewerknemers_syn' %}" class="{{ 2|default:"" }}">Beheer Werknemers</a></div>

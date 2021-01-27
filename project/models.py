@@ -72,7 +72,7 @@ class PVEItemAnnotation(models.Model):
     datum = models.DateTimeField(auto_now=True)
     kostenConsequenties = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=None)
     bijlage = models.BooleanField(default=False, blank=True, null=True)
-
+    
     def __str__(self):
         return f"{self.annotation}"
 

@@ -236,22 +236,24 @@ class PDFMaker:
                                     if item.id in opmerkingen:
                                         p = Paragraph(f"{inhoud}".replace('\n','<br />\n'), self.regelStyle)
 
-                                        opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}, Status: {opmerkingen[item.id].status}."
+                                        if opmerkingen[item.id].annotation:
+                                            opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: Status: {opmerkingen[item.id].status}. Opmerking: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}"
+                                        else:
+                                            opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: Status: {opmerkingen[item.id].status}."
+
                                         if opmerkingen[item.id].kostenConsequenties:
                                             opmrk += f" Kostenverschil: €{opmerkingen[item.id].kostenConsequenties}."
-                                        else:
-                                            opmrk += f" Geen kostenverschil."
                                         if opmerkingen[item.id].bijlage:
                                             opmrk += f" Zie bijlage '{bijlagen[item.id].bijlage}'."
                                         opmrk = (opmrk)
 
                                         # groen als akkoord, rood als andere status
                                         if str(opmerkingen[item.id].status) == "akkoord":
-                                            j = Paragraph(f"Opmerking: {opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
+                                            j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
                                         elif str(opmerkingen[item.id].status) == "niet akkoord":
-                                            j = Paragraph(f"Opmerking: {opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrk)
+                                            j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrk)
                                         else:
-                                            j = Paragraph(f"Opmerking: {opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkOrange)
+                                            j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkOrange)
 
                                         Story.append(p)
                                         Story.append(j)
@@ -267,22 +269,25 @@ class PDFMaker:
                                     if item.id in opmerkingen:
                                         p = Paragraph(f"{inhoud}".replace('\n','<br />\n'), self.regelStyleSwitch)
 
-                                        opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}, Status: {opmerkingen[item.id].status}."
+                                        if opmerkingen[item.id].annotation:
+                                            opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: Status: {opmerkingen[item.id].status}. Opmerking: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}"
+                                        else:
+                                            opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: Status: {opmerkingen[item.id].status}."
+
                                         if opmerkingen[item.id].kostenConsequenties:
                                             opmrk += f" Kostenverschil: €{opmerkingen[item.id].kostenConsequenties}."
-                                        else:
-                                            opmrk += f" Geen kostenverschil."
+
                                         if opmerkingen[item.id].bijlage:
                                             opmrk += f" Zie bijlage '{bijlagen[item.id].bijlage}'."
                                         opmrk = (opmrk)
                                         
                                         # groen als akkoord, rood als andere status
                                         if str(opmerkingen[item.id].status) == "akkoord":
-                                            j = Paragraph(f"Opmerking: {opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkGreen)
+                                            j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkGreen)
                                         elif str(opmerkingen[item.id].status) == "niet akkoord":
-                                            j = Paragraph(f"Opmerking: {opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrk)
+                                            j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrk)
                                         else:
-                                            j = Paragraph(f"Opmerking: {opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkOrange)
+                                            j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkOrange)
                                         
                                         Story.append(p)
                                         Story.append(j)

@@ -48,32 +48,50 @@
 
 {% if project.frozenLevel == 0 %}
 <div class="project_progress_bar">
-  <label for="file">Status: Eerste opmerkingen ({{ comment_count }}/{{ pve_item_count}} voltooid)</label>
+  <label for="file">Status: Eerste statusaanwijzing ({{ comment_count }}/{{ pve_item_count}} voltooid)</label>
   <span><progress id="file" value="{{ comment_count }}" max="{{ pve_item_count }}">{{ done_percentage }}%</progress></span>
 </div>
 {% endif %}
 {% if project.frozenLevel == 1 %}
 <div class="project_progress_bar">
-  <label for="file">Status: Opmerkingsoverleg ({{ frozencomments_done }}/{{ frozencomments_todo_first }} afgewerkt)</label>
+  <label for="file">Status: Statusoverleg ({{ frozencomments_done }}/{{ frozencomments_todo_first }} voltooid)</label>
   <span><progress id="file" value="{{ frozencomments_done }}" max="{{ frozencomments_todo_first }}">{{ frozencomments_percentage }}%</progress></span>
 </div>
 {% endif %}
 
 <div class="flex_projectpagina">
-<div class="main_content_div messages_box" style="display: inline-block;">
-<div class="chatroom">
-<div class="chat-title">Project Chat</div>
-          <div id="messages"></div>
-          <form id="message-form">
-            <div class="field">
-              <div class="control">
-                <textarea class="textarea" id="message-input" placeholder="Jouw bericht hier" rows="1" autofocus></textarea>
-              </div>
-              <button type="submit" id="chatSend" class="button">Verstuur</button>
-            </div>
-          </form>
+
+<div class="project_acties">
+<div class="acties_title">Te Doen</div>
+<div class="acties">
+{% if project.frozenLevel == 0 %}
+{% if request.user.type_user == "SOG" %}
+<div class="actie_item" onClick="javascript:location.href='{% url 'plusopmerking_syn' project.id %}'">
+    <img class="actie-img" src="{% static 'syntrus/img/opmerking.png' %}"></img>
+    <p class="subtext">+ Statussen</p>
+</div>
+{% endif %}
+{% endif %}
+{% if highest_frozen_level > 0 %}
+{% if highest_frozen_level|divisibleby:2 %}
+{% if request.user.type_user == "SOG" %}
+<div class="actie_item" onClick="javascript:location.href='{% url 'commentscheck_syn' project.id %}'">
+    <img class="actie-img" src="{% static 'syntrus/img/accountsderden.png' %}"></img>
+    <p class="subtext">Status Check</p>
+</div>
+{% endif %}
+{% else %}
+{% if request.user.type_user == "SD" %}
+<div class="actie_item" onClick="javascript:location.href='{% url 'commentscheck_syn' project.id %}'">
+    <img class="actie-img" src="{% static 'syntrus/img/accountsderden.png' %}"></img>
+    <p class="subtext">Status Check</p>
+</div>
+{% endif %}
+{% endif %}
+{% endif %}
 </div>
 </div>
+
 
 <div class="project_acties">
 <div class="acties_title">Acties</div>
@@ -83,47 +101,17 @@
       <p class="subtext">PvE</p>
   </div>
 {% if project.frozenLevel == 0 %}
-<div class="actie_item" onClick="javascript:location.href='{% url 'plusopmerking_syn' project.id %}'">
-    <img class="actie-img" src="{% static 'syntrus/img/opmerking.png' %}"></img>
-    <p class="subtext">+ Opmrk</p>
-</div>
+{% if request.user.type_user == "SOG" %}
 <div class="actie_item" onClick="javascript:location.href='{% url 'mijnopmerkingen_syn' project.id %}'">
     <img class="actie-img" src="{% static 'syntrus/img/opmerking.png' %}"></img>
     <p class="subtext">Mijn Opmrk</p>
 </div>
+{% endif %}
 
-{% if request.user.type_user == "SOG" %}
 <div class="actie_item" onClick="javascript:location.href='{% url 'alleopmerkingen_syn' project.id %}'">
-    <img class="actie-img" src="{% static 'syntrus/img/opmerking.png' %}"></img>
-    <p class="subtext">Alle Opmrk</p>
-</div>
-
-<div class="actie_item" onClick="javascript:location.href='{% url 'plusaccount_syn' %}'">
-    <img class="actie-img" src="{% static 'syntrus/img/accountsderden.png' %}"></img>
-    <p class="subtext">+ Derde</p>
-</div>
-{% endif %}
-{% endif %}
-{% if highest_frozen_level > 0 %}
-<div class="actie_item" onClick="javascript:location.href='{% url 'frozenprogress_syn' project.id %}'">
     <img class="actie-img" src="{% static 'syntrus/img/opmerking.png' %}"></img>
     <p class="subtext">Voortgang</p>
 </div>
-{% if highest_frozen_level|divisibleby:2 %}
-{% if request.user.type_user == "SOG" %}
-<div class="actie_item" onClick="javascript:location.href='{% url 'commentscheck_syn' project.id %}'">
-    <img class="actie-img" src="{% static 'syntrus/img/accountsderden.png' %}"></img>
-    <p class="subtext">Opmrk Check</p>
-</div>
-{% endif %}
-{% else %}
-{% if request.user.type_user == "SOC" %}
-<div class="actie_item" onClick="javascript:location.href='{% url 'commentscheck_syn' project.id %}'">
-    <img class="actie-img" src="{% static 'syntrus/img/accountsderden.png' %}"></img>
-    <p class="subtext">Opmrk Check</p>
-</div>
-{% endif %}
-{% endif %}
 {% endif %}
 </div>
 </div>

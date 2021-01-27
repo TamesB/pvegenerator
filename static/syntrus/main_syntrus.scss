@@ -940,8 +940,30 @@ body, html {
                         }
                     }
 
+                    .titel_plusopmerking {
+                        background-color: #287183;
+                        color: white;
+                        padding: 18px;
+                        margin: 0;
+                        width: 100%;
+                        border: none;
+                        outline: none;
+                        font-size: 1.8vh;
+                        font-weight: bold;
+                        display: flex;
+
+                        .left {
+                            flex: 0 0 75%;
+                            text-align: left;
+                        }
+
+                        .right {
+                            flex: 1;
+                            text-align: center;
+                        }
+                    }
+
                     .item_opmerking_list {
-                        margin-top: 4vh;
                         height: 75vh;
                         max-height: 75vh;
                         overflow-y: auto;
@@ -1031,12 +1053,17 @@ body, html {
                                 text-align: left;
                                 overflow: auto;
                             }
-                            .text_right {
+                            .status_added {
                                 padding-top: 1vh;
                                 flex: 1;
                                 color:green;
                                 font-weight:700;
-
+                            }
+                            .status_not_added {
+                                padding-top: 1vh;
+                                flex: 1;
+                                color:red;
+                                font-weight:700;
                             }
                         }
                         .item_content:nth-child(even) {

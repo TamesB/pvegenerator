@@ -1044,8 +1044,36 @@ body, html {
           transform: translateY(4px);
 }
 
+#main .layerOneInner .article .article_content .opmerking_form .titel_plusopmerking {
+  background-color: #287183;
+  color: white;
+  padding: 18px;
+  margin: 0;
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 1.8vh;
+  font-weight: bold;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .titel_plusopmerking .left {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 75%;
+          flex: 0 0 75%;
+  text-align: left;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .titel_plusopmerking .right {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  text-align: center;
+}
+
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list {
-  margin-top: 4vh;
   height: 75vh;
   max-height: 75vh;
   overflow-y: auto;
@@ -1143,12 +1171,21 @@ body, html {
   overflow: auto;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .text_right {
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .status_added {
   padding-top: 1vh;
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
   color: green;
+  font-weight: 700;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .status_not_added {
+  padding-top: 1vh;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  color: red;
   font-weight: 700;
 }
 
