@@ -48,13 +48,13 @@
 
 {% if project.frozenLevel == 0 %}
 <div class="project_progress_bar">
-  <label for="file">Status: Eerste statusaanwijzing ({{ comment_count }}/{{ pve_item_count}} voltooid)</label>
+  <label for="file"><p>Status: Eerste statusaanwijzing ({{ comment_count }}/{{ pve_item_count}} voltooid)</p></label>
   <span><progress id="file" value="{{ comment_count }}" max="{{ pve_item_count }}">{{ done_percentage }}%</progress></span>
 </div>
 {% endif %}
 {% if project.frozenLevel == 1 %}
 <div class="project_progress_bar">
-  <label for="file">Status: Statusoverleg ({{ frozencomments_done }}/{{ frozencomments_todo_first }} voltooid)</label>
+  <label for="file"><p>Status: Statusoverleg ({{ frozencomments_done }}/{{ frozencomments_todo_first }} voltooid)</p></label>
   <span><progress id="file" value="{{ frozencomments_done }}" max="{{ frozencomments_todo_first }}">{{ frozencomments_percentage }}%</progress></span>
 </div>
 {% endif %}
@@ -62,7 +62,7 @@
 <div class="flex_projectpagina">
 
 <div class="project_acties">
-<div class="acties_title">Te Doen</div>
+<div class="acties_title"><p>Te Doen</p></div>
 <div class="acties">
 {% if project.frozenLevel == 0 %}
 {% if request.user.type_user == "SOG" %}
@@ -89,12 +89,13 @@
 {% endif %}
 {% endif %}
 {% endif %}
+<div class="no_todo"><i>(Nog) niets.</i></div>
 </div>
 </div>
 
 
 <div class="project_acties">
-<div class="acties_title">Acties</div>
+<div class="acties_title"><p>Acties</p></div>
 <div class="acties">
   <div class="actie_item" onClick="javascript:location.href='{% url 'download_pve_syn' project.id %}'">
       <img class="actie-img" src="{% static 'syntrus/img/download.png' %}"></img>
@@ -122,7 +123,7 @@
 </div>
 
 <div class="extra_proj_info">
-<div class="title">Extra info</div>
+<div class="title"><p>Extra info</p></div>
   <div class="content">
   <table>
     <tr>

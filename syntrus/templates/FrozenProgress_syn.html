@@ -15,9 +15,9 @@
         <table class="frozencomments_list">
         <tr class="table_head">
             <th><img src="{% static 'syntrus/svg/logo.svg' %}" class="syntr_logo"></a></th>
-            <th>Huidige Status</th>
+            <th><p>Huidige Status</p></th>
             {% for info in infos %}
-                <th>{{ info }}e opmerkingslaag</th>
+                <th><p>{{ info }}e opmerkingslaag</p></th>
             {% endfor %}
         </tr>
         {% for key, value in regels.items %}

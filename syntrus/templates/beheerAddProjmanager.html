@@ -13,7 +13,7 @@ $('.mini.modal')
 
 <div class="ui mini modal">
   <div class="header">
-    Wijs projectmanager aan bij {{ project.naam }}
+    <p>Wijs projectmanager aan bij {{ project.naam }}</p>
   </div>
   <div class="content">
     <form action="{% url 'projectenaddprojmanager_syn' project.id %}" class="ui form" method="POST" enctype="multipart/form-data">

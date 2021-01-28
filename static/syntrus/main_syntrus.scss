@@ -201,8 +201,8 @@ body, html {
             a {
                 color: white;
                 display: block;
-                margin-bottom: 3em;
-                margin-top: 3em;
+                margin-top: 4vh;
+                margin-bottom: 4vh;
                 text-decoration: none;
                 cursor: pointer;
                 visibility: hidden;
@@ -264,8 +264,8 @@ body, html {
                 a {
                     color: white;
                     display: block;
-                    margin-bottom: 4vh;
-                    margin-top: 2vh;
+                    margin-bottom: 0.5vh;
+                    margin-top: 0.5vh;
                 }
 
                 .hori-menu-logout {
@@ -281,7 +281,7 @@ body, html {
 
             .menu:hover {
                 min-width: 100vw;
-                min-height: 28vh;
+                min-height: 32vh;
                 z-index: 3;
             }
         }
@@ -359,17 +359,16 @@ body, html {
                 }
 
                 .main_content_div {
-                    margin-bottom: 3vh;
                     display: flex;
                     justify-content: space-between;
                     background: rgb(247,247,248);
-                    background: linear-gradient(180deg, rgba(0, 172, 169, 1) 40px, rgba(247,247,248,1) 40px);                    
                     -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                     -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                     box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                     border-radius: 1.6em;
                     overflow-x: scroll;
-                    min-height: 180px;
+                    -ms-overflow-style: none;  /* IE and Edge */
+                    scrollbar-width: none; 
 
                     .opmerking_info {
                         flex-direction: column;
@@ -402,67 +401,89 @@ body, html {
                             text-align: center;
                         }
                     }
+                }
 
-                    .project_overview_content {
-                        width: 100%;
-                        height: 100%;
-                        padding-left: 2vw;
-                        padding-right: 2vw;
-                        padding-top: 4vh;
-                        padding-bottom: 2vh;
-                        z-index: 1;
-                        font-size: 1.5vh;
-                        text-align: left;
-                        min-width: 720px;
-                        overflow-x: scroll;
+                .base_info_table {
+                    background-color:rgba(0, 172, 169, 1);
+                    display: table;
+                    justify-content: space-between;
+                    -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    border-radius: 0.5em;
+                    overflow-x: hidden;
+                    width: 100%; 
+                    border-spacing:0;
+                    overflow-wrap: break-word;
+                    padding-bottom: 1vh;
+                    padding-top: 1vh;
 
-                        caption {
-                            margin-top: 1.8vh;
-                            caption-side: top;
-                            font-size: 2vh;
-                            letter-spacing: 0.1em;
-                            font-weight: 900;
-                            color: white;
+                    tbody {
+                        min-width: 100%;
+
+                        tr {
+                            min-width: 100%;
                         }
-
-                        @media screen and (max-width: 768px) {
-                            caption {
-                                text-align: left;
-                                margin-left: 5vw;
-                            }
-                        }
-
-                        .table_title {
-                            max-width: 100vw;
-                            color: #4f4b4c;
-                            letter-spacing: 0.1em;
-                            font-weight: bold;
-                            
-                            th {
-                                padding-bottom: 3em;
-                            }
-                        }
-
-                        .table_content {
-                            overflow-x: scroll;
-                            color: #918f8f;
-                            letter-spacing: 0.1em;
-                            font-size: 1.5vh;
-
-                            td {
-                                padding-bottom: 1em;
-                            }
-                        }
-
-                        img {
-                            height: 2vh;
-                        }
-                        
-                        img:hover {
-                            opacity: 0.7;
-                        }
-
                     }
+
+                    caption {
+                        margin-top: 1.8vh;
+                        caption-side: top;
+                        font-size: 2vh;
+                        letter-spacing: 0.1em;
+                        font-weight: 900;
+                        color: white;
+                    }
+
+                    @media screen and (max-width: 768px) {
+                        caption {
+                            text-align: left;
+                            margin-left: 5vw;
+                        }
+                    }
+
+                    .table_title {
+                        background-color: rgba(0, 172, 169, 1);
+                        letter-spacing: 0.1em;
+                        font-weight: 900;
+                        width: 100%; 
+                        font-size: 2vh;
+                        color: white;
+
+                        th {
+                            margin-left: 1vw;
+                            padding-bottom: 1vh;
+                            margin-bottom: 3vh;
+                            cursor: pointer;
+                        }
+                    }
+
+                    .table_content {
+                        width: 100%; 
+                        letter-spacing: 0.1em;
+                        border-bottom: 3px solid rgb(0, 0, 0);
+                        margin-bottom: 3px;
+
+                        td {
+                            padding-top: 0.5vh;
+                            padding-bottom: 0.5vh;
+                            background-color: white;
+                        }
+                        td:nth-of-type(even) {
+                            background-color: #f1f1f1;
+                        }
+                    }
+
+
+
+                    img {
+                        height: 2vh;
+                    }
+                    
+                    img:hover {
+                        opacity: 0.7;
+                    }
+
                 }
                 .searchable_table_input {
                     background-image: url('/css/searchicon.png');
@@ -479,24 +500,19 @@ body, html {
                 .profile_box {
                     font-family: 'Montserrat';
                     font-size: 2vh;
-                    background: linear-gradient(0deg, rgba(0, 172, 169, 1) 20%, rgba(247,247,248,1) 20%);
                     display: grid;
                     grid-template-areas:
                     'profile-left profile-right profile-right profile-right profile-right profile-right profile-right profile-right'
                     'profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom';
-                    
+                    padding-top: 3vh;
                     overflow: hidden;
                                         
                     .profile_left {
                         grid-area: profile-left;
-
+                        padding-left: 3vw;
+                        padding-bottom: 1vh;
                         img {
-                            height: 70%;
-                            width: 70%;
                             max-width: 10vw;
-                            margin-top: 7%;
-                            margin-bottom: 7%;
-                            margin-left: 12%;
                             background-color: white;
                             border-radius: 50%;
                             min-width:150px;
@@ -506,16 +522,17 @@ body, html {
 
                     .profile_right {
                         grid-area: profile-right;
-                        
+                        padding-right: 3vw;
+
                         .profile-title {
                             width: 80%;
                             font-weight: 900;
+                            margin-right: 3vw;
                         }
 
                         table {
                             width: 80%;
                             height: 60%;
-                            margin-top: 5vh;
                             tr {
                                 text-align: left;
                                 td {
@@ -527,11 +544,13 @@ body, html {
                     .profile_bottom {
                         grid-area: profile-bottom;
                         text-align: left;
-                        margin-left: 3vw;
-                        margin-bottom: 1vh;
+                        padding-top: 1vh;
+                        padding-left: 3vw;
+                        padding-bottom: 1vh;
                         font-weight: bold;
                         color: white;
                         letter-spacing: 0.2vw;
+                        background-color: rgba(0, 172, 169, 1);
                     }
                 }
 
@@ -899,7 +918,6 @@ body, html {
                     .main_content_div {
                         .project_overview_content {
                             width: 100%;
-                            padding-top: 1.5vh;
                             .table_title {
                                 margin-top: 1vh;
                                 color: white;
@@ -1250,7 +1268,6 @@ body, html {
                         -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                         -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                         box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
-                        background: linear-gradient(180deg, rgba(0, 172, 169, 1) 15%, rgba(247,247,248,1) 15%);
 
                         .acties_title {
                             font-size: 2.5vh;
@@ -1258,8 +1275,11 @@ body, html {
                             padding-top: 0.5vh;
                             color: white;
                             width: 100%;
-                            padding-top: 2vh;
-                            padding-bottom: 2vh;
+                            padding-top: 0.3vh;
+                            padding-bottom: 0.3vh;
+                            background-color: rgba(0, 172, 169, 1);
+                            border-top-left-radius: 1.6vh;
+                            border-top-right-radius: 1.6vh;
 
                         }
                         .acties {
@@ -1319,6 +1339,13 @@ body, html {
                             .actie_item:active {
                                 transition-duration: .1s;
                                 transform: translateY(4px);
+                            }
+                            
+                            .no_todo {
+                                display: none;
+                            }
+                            .no_todo:only-child {
+                                display: block;
                             }
                         }
                     }
@@ -1453,28 +1480,28 @@ body, html {
                         -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                         box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                         background: #f7f7f7;
-                        padding-left: 2vw;
-                        padding-right: 2vw;
-                        padding-top: 2vh;
-                        padding-bottom: 5vh;
                         margin-top: 2vh;
                         overflow-x: scroll;
-                        background: linear-gradient(180deg, rgba(0, 172, 169, 1) 15%, rgba(247,247,248,1) 15%);
 
 
                         .title {
-                            display: flex;
+                            background: rgba(0, 172, 169, 1);
                             min-width: 100%;
-                            margin-bottom: 2vh;
                             width: 100%;
                             font-size: 2.5vh;
                             color: white;
                             float: center;
+                            border-top-left-radius: 1.6vh;
+                            border-top-right-radius: 1.6vh;
+                            padding-top: 0.5vh;
+                            padding-bottom: 0.5vh;
                         }
 
                         .content {
                             display: flex;
                             width: 100%;
+                            padding-left: 1vw;
+                            padding-right: 1vw;
                         }
 
                     }
@@ -1496,7 +1523,8 @@ body, html {
                         }
 
                         .title {
-                            margin-top: 1vh;
+                            margin-top: 0.8vh;
+                            margin-bottom: 0.8vh;
                             font-size: 2.5vh;
                             color: white;
                             font-weight: bold;
@@ -1525,6 +1553,7 @@ body, html {
                     -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                     box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                     margin-bottom: 2vh;
+                    margin-top: 2vh;
                     display: inline-block;
                     width: 100%;
                     
@@ -1532,7 +1561,7 @@ body, html {
                         font-weight: bold;
                         text-align: left;
                         float: left;
-                        padding-top: 3.5vh;
+                        padding-top: 2vh;
                         padding-left: 2vw;
                         font-size: 2.5vh;
                         font-style: bold;

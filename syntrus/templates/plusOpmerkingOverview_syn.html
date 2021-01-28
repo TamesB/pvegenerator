@@ -16,16 +16,16 @@
     <table class="project_overview_content">
       <thead>
         <tr class="table_title">
-          <th>Project</th>
-          <th>Opmerking</th>
+          <th><p>Project</p></th>
+          <th><p>Opmerking</p></th>
         </tr>
       </thead>
       <tbody>
         {% if projects %}
             {% for project in projects %}
         <tr class="table_content">
-          <td>{{ project.naam }}</td>
-          <td class="link">{% if project.frozenLevel == 0 %}<a href="{% url 'plusopmerking_syn' project.id %}"><img src="{% static 'syntrus/img/plus.png' %}"></img></a>{% else %}<i>Bevroren</i>{% endif %}</td>
+          <td><p>{{ project.naam }}</p></td>
+          <td class="link"><p>{% if project.frozenLevel == 0 %}<a href="{% url 'plusopmerking_syn' project.id %}"><img src="{% static 'syntrus/img/plus.png' %}"></img></a>{% else %}<i>Bevroren</i>{% endif %}</p></td>
         </tr>
         {% endfor %}
         {% else %}

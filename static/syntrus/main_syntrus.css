@@ -238,8 +238,8 @@ body, html {
 #main .layerOneInner .menu a {
   color: white;
   display: block;
-  margin-bottom: 3em;
-  margin-top: 3em;
+  margin-top: 4vh;
+  margin-bottom: 4vh;
   text-decoration: none;
   cursor: pointer;
   visibility: hidden;
@@ -300,8 +300,8 @@ body, html {
   #main .layerOneInner .menu a {
     color: white;
     display: block;
-    margin-bottom: 4vh;
-    margin-top: 2vh;
+    margin-bottom: 0.5vh;
+    margin-top: 0.5vh;
   }
   #main .layerOneInner .menu .hori-menu-logout {
     display: inline-block;
@@ -313,7 +313,7 @@ body, html {
   }
   #main .layerOneInner .menu:hover {
     min-width: 100vw;
-    min-height: 28vh;
+    min-height: 32vh;
     z-index: 3;
   }
 }
@@ -402,7 +402,6 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .main_content_div {
-  margin-bottom: 3vh;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -410,12 +409,13 @@ body, html {
       -ms-flex-pack: justify;
           justify-content: space-between;
   background: #f7f7f8;
-  background: linear-gradient(180deg, #00aca9 40px, #f7f7f8 40px);
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   border-radius: 1.6em;
   overflow-x: scroll;
-  min-height: 180px;
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
 }
 
 #main .layerOneInner .article .article_content .main_content_div .opmerking_info {
@@ -460,21 +460,32 @@ body, html {
   text-align: center;
 }
 
-#main .layerOneInner .article .article_content .main_content_div .project_overview_content {
+#main .layerOneInner .article .article_content .base_info_table {
+  background-color: #00aca9;
+  display: table;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  border-radius: 0.5em;
+  overflow-x: hidden;
   width: 100%;
-  height: 100%;
-  padding-left: 2vw;
-  padding-right: 2vw;
-  padding-top: 4vh;
-  padding-bottom: 2vh;
-  z-index: 1;
-  font-size: 1.5vh;
-  text-align: left;
-  min-width: 720px;
-  overflow-x: scroll;
+  border-spacing: 0;
+  overflow-wrap: break-word;
+  padding-bottom: 1vh;
+  padding-top: 1vh;
 }
 
-#main .layerOneInner .article .article_content .main_content_div .project_overview_content caption {
+#main .layerOneInner .article .article_content .base_info_table tbody {
+  min-width: 100%;
+}
+
+#main .layerOneInner .article .article_content .base_info_table tbody tr {
+  min-width: 100%;
+}
+
+#main .layerOneInner .article .article_content .base_info_table caption {
   margin-top: 1.8vh;
   caption-side: top;
   font-size: 2vh;
@@ -484,39 +495,50 @@ body, html {
 }
 
 @media screen and (max-width: 768px) {
-  #main .layerOneInner .article .article_content .main_content_div .project_overview_content caption {
+  #main .layerOneInner .article .article_content .base_info_table caption {
     text-align: left;
     margin-left: 5vw;
   }
 }
 
-#main .layerOneInner .article .article_content .main_content_div .project_overview_content .table_title {
-  max-width: 100vw;
-  color: #4f4b4c;
+#main .layerOneInner .article .article_content .base_info_table .table_title {
+  background-color: #00aca9;
   letter-spacing: 0.1em;
-  font-weight: bold;
+  font-weight: 900;
+  width: 100%;
+  font-size: 2vh;
+  color: white;
 }
 
-#main .layerOneInner .article .article_content .main_content_div .project_overview_content .table_title th {
-  padding-bottom: 3em;
+#main .layerOneInner .article .article_content .base_info_table .table_title th {
+  margin-left: 1vw;
+  padding-bottom: 1vh;
+  margin-bottom: 3vh;
+  cursor: pointer;
 }
 
-#main .layerOneInner .article .article_content .main_content_div .project_overview_content .table_content {
-  overflow-x: scroll;
-  color: #918f8f;
+#main .layerOneInner .article .article_content .base_info_table .table_content {
+  width: 100%;
   letter-spacing: 0.1em;
-  font-size: 1.5vh;
+  border-bottom: 3px solid black;
+  margin-bottom: 3px;
 }
 
-#main .layerOneInner .article .article_content .main_content_div .project_overview_content .table_content td {
-  padding-bottom: 1em;
+#main .layerOneInner .article .article_content .base_info_table .table_content td {
+  padding-top: 0.5vh;
+  padding-bottom: 0.5vh;
+  background-color: white;
 }
 
-#main .layerOneInner .article .article_content .main_content_div .project_overview_content img {
+#main .layerOneInner .article .article_content .base_info_table .table_content td:nth-of-type(even) {
+  background-color: #f1f1f1;
+}
+
+#main .layerOneInner .article .article_content .base_info_table img {
   height: 2vh;
 }
 
-#main .layerOneInner .article .article_content .main_content_div .project_overview_content img:hover {
+#main .layerOneInner .article .article_content .base_info_table img:hover {
   opacity: 0.7;
 }
 
@@ -534,11 +556,10 @@ body, html {
 #main .layerOneInner .article .article_content .profile_box {
   font-family: 'Montserrat';
   font-size: 2vh;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(20%, #00aca9), color-stop(20%, #f7f7f8));
-  background: linear-gradient(0deg, #00aca9 20%, #f7f7f8 20%);
   display: -ms-grid;
   display: grid;
       grid-template-areas: 'profile-left profile-right profile-right profile-right profile-right profile-right profile-right profile-right' 'profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom';
+  padding-top: 3vh;
   overflow: hidden;
 }
 
@@ -546,15 +567,12 @@ body, html {
   -ms-grid-row: 1;
   -ms-grid-column: 1;
   grid-area: profile-left;
+  padding-left: 3vw;
+  padding-bottom: 1vh;
 }
 
 #main .layerOneInner .article .article_content .profile_box .profile_left img {
-  height: 70%;
-  width: 70%;
   max-width: 10vw;
-  margin-top: 7%;
-  margin-bottom: 7%;
-  margin-left: 12%;
   background-color: white;
   border-radius: 50%;
   min-width: 150px;
@@ -565,17 +583,18 @@ body, html {
   -ms-grid-column: 2;
   -ms-grid-column-span: 7;
   grid-area: profile-right;
+  padding-right: 3vw;
 }
 
 #main .layerOneInner .article .article_content .profile_box .profile_right .profile-title {
   width: 80%;
   font-weight: 900;
+  margin-right: 3vw;
 }
 
 #main .layerOneInner .article .article_content .profile_box .profile_right table {
   width: 80%;
   height: 60%;
-  margin-top: 5vh;
 }
 
 #main .layerOneInner .article .article_content .profile_box .profile_right table tr {
@@ -592,11 +611,13 @@ body, html {
   -ms-grid-column-span: 8;
   grid-area: profile-bottom;
   text-align: left;
-  margin-left: 3vw;
-  margin-bottom: 1vh;
+  padding-top: 1vh;
+  padding-left: 3vw;
+  padding-bottom: 1vh;
   font-weight: bold;
   color: white;
   letter-spacing: 0.2vw;
+  background-color: #00aca9;
 }
 
 @media screen and (max-width: 540px) {
@@ -1006,7 +1027,6 @@ body, html {
 
 #main .layerOneInner .article .article_content .opmerking_project_list .main_content_div .project_overview_content {
   width: 100%;
-  padding-top: 1.5vh;
 }
 
 #main .layerOneInner .article .article_content .opmerking_project_list .main_content_div .project_overview_content .table_title {
@@ -1381,8 +1401,6 @@ body, html {
   border-radius: 1.6vh;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(15%, #00aca9), color-stop(15%, #f7f7f8));
-  background: linear-gradient(180deg, #00aca9 15%, #f7f7f8 15%);
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .project_acties .acties_title {
@@ -1391,8 +1409,11 @@ body, html {
   padding-top: 0.5vh;
   color: white;
   width: 100%;
-  padding-top: 2vh;
-  padding-bottom: 2vh;
+  padding-top: 0.3vh;
+  padding-bottom: 0.3vh;
+  background-color: #00aca9;
+  border-top-left-radius: 1.6vh;
+  border-top-right-radius: 1.6vh;
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .project_acties .acties {
@@ -1469,6 +1490,14 @@ body, html {
           transition-duration: .1s;
   -webkit-transform: translateY(4px);
           transform: translateY(4px);
+}
+
+#main .layerOneInner .article .article_content .flex_projectpagina .project_acties .acties .no_todo {
+  display: none;
+}
+
+#main .layerOneInner .article .article_content .flex_projectpagina .project_acties .acties .no_todo:only-child {
+  display: block;
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .messages_box {
@@ -1624,26 +1653,21 @@ body, html {
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   background: #f7f7f7;
-  padding-left: 2vw;
-  padding-right: 2vw;
-  padding-top: 2vh;
-  padding-bottom: 5vh;
   margin-top: 2vh;
   overflow-x: scroll;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(15%, #00aca9), color-stop(15%, #f7f7f8));
-  background: linear-gradient(180deg, #00aca9 15%, #f7f7f8 15%);
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .extra_proj_info .title {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  background: #00aca9;
   min-width: 100%;
-  margin-bottom: 2vh;
   width: 100%;
   font-size: 2.5vh;
   color: white;
   float: center;
+  border-top-left-radius: 1.6vh;
+  border-top-right-radius: 1.6vh;
+  padding-top: 0.5vh;
+  padding-bottom: 0.5vh;
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .extra_proj_info .content {
@@ -1651,6 +1675,8 @@ body, html {
   display: -ms-flexbox;
   display: flex;
   width: 100%;
+  padding-left: 1vw;
+  padding-right: 1vw;
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .card {
@@ -1675,7 +1701,8 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .card .title {
-  margin-top: 1vh;
+  margin-top: 0.8vh;
+  margin-bottom: 0.8vh;
   font-size: 2.5vh;
   color: white;
   font-weight: bold;
@@ -1699,6 +1726,7 @@ body, html {
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   margin-bottom: 2vh;
+  margin-top: 2vh;
   display: inline-block;
   width: 100%;
 }
@@ -1707,7 +1735,7 @@ body, html {
   font-weight: bold;
   text-align: left;
   float: left;
-  padding-top: 3.5vh;
+  padding-top: 2vh;
   padding-left: 2vw;
   font-size: 2.5vh;
   font-style: bold;

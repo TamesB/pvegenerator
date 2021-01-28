@@ -14,39 +14,40 @@
     <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Werknemers <a href="{% url 'plusaccount_syn' %}" style="float:right;"><button class="ui icon green button"><i class="icon plus"></i>Nodig werknemer uit</button></a></p> </div>
 <input type="text" class="searchable_table_input" id="myInput" onkeyup="searchableLookup()" placeholder="Zoek op werknemer.." title="Typ een werknemer in">
 
-<div class="main_content_div">
 
-    <table class="project_overview_content" id="myTable">
+<table class="base_info_table" id="myTable">
+<tbody>
         <tr class="table_title">
-          <th>Naam (E-mail)</th>
-          <th>Laatst gezien</th>
-          <th>Rang</th>
-          <th>Organisatie</th>
-          <th>Projecten</th>
-          <th>Acties</th>
+          <th><p>Naam (E-mail)</p></th>
+          <th><p>Laatst gezien</p></th>
+          <th><p>Rang</p></th>
+          <th><p>Organisatie</p></th>
+          <th><p>Projecten</p></th>
+          <th><p>Acties</p></th>
         </tr>
         {% if werknemers %}
             {% for werknemer in werknemers %}
         <tr class="table_content">
-          <td>{{ werknemer.username }} (<a onclick="copyToClipboard()" id="emailClip">{{ werknemer.email }}</a>)</td>
-          <td>{{ werknemer.last_visit }}</td>
-          <td>{% if werknemer.type_user == "SD"%}Derde{% endif %}{% if werknemer.type_user == "SOG"%}Syntrus Projectmanager{% endif %}</td>
-          <td>{% if werknemer.organisatie %}{{ werknemer.organisatie }}{% else %}<i>Geen</i>{% endif %}</td>
-          <td>{% if werknemer.organisatie.projecten.all %}{% for project in werknemer.organisatie.projecten.all %}{{ project }}, {% endfor %}{% else %}<i>Geen</i>{% endif %}</td>
-          <td><a href="#"><button class="ui icon basic button"><i class="icon edit"></i></button></a></td>
+          <td><p>{{ werknemer.username }} (<a onclick="copyToClipboard()" id="emailClip">{{ werknemer.email }}</a>)</p></td>
+          <td><p>{{ werknemer.last_visit }}</p></td>
+          <td><p>{% if werknemer.type_user == "SD"%}Derde{% endif %}{% if werknemer.type_user == "SOG"%}Syntrus Projectmanager{% endif %}</p></td>
+          <td><p>{% if werknemer.organisatie %}{{ werknemer.organisatie }}{% else %}<i>Geen</i>{% endif %}</p></td>
+          <td><p>{% if werknemer.organisatie.projecten.all %}{% for project in werknemer.organisatie.projecten.all %}{{ project }}, {% endfor %}{% else %}<i>Geen</i>{% endif %}</p></td>
+          <td><p><a href="#"><button class="ui icon basic button"><i class="icon edit"></i></button></a></p></td>
         </tr>
         {% endfor %}
         {% else %}
         <tr>
-          <td>
+          <td><p>
           <i>Nog geen werknemers toegevoegd.</i>
-          </td>
+          </p></td>
         </tr>
         {% endif %}
         <tr>
-            <td>
-            </td>
+            <td><p>
+            </p></td>
         </tr>
+        </tbody>
     </table>
 </div>
 </div>
