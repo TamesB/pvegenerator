@@ -38,3 +38,15 @@ class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
         fields = ("username",)
+
+
+class ForgotPassForm(forms.Form):
+    email = forms.CharField(max_length=100, label="Gebruikersnaam of e-mail:")
+
+class ResetPassForm(UserCreationForm):
+    class Meta:
+        model = CustomUser
+        fields = ("password1", "password2")
+        labels = {
+            'password1':'Nieuw Wachtwoord:', 'password2':'Herhaal wachtwoord:'
+        }

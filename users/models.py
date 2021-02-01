@@ -104,3 +104,8 @@ class CommentCheckInvitation(models.Model):
 
     def __str__(self):
         return f"{ self.inviter } invited { self.invitee }. Expires { self.expires }"
+
+class ForgotPassInvite(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    key = models.CharField(max_length=100)
+    expires = models.DateTimeField(auto_now=False)

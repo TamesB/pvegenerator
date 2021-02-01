@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import ugettext_lazy as _
 
-from users.models import CustomUser, Invitation, CommentCheckInvitation, Organisatie
+from users.models import CustomUser, Invitation, CommentCheckInvitation, Organisatie, ForgotPassInvite
 from users.forms import CustomUserChangeForm, CustomUserCreationForm
 
 class CustomUserAdmin(UserAdmin):
@@ -33,3 +33,4 @@ admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(CommentCheckInvitation)
 admin.site.register(Invitation)
 admin.site.register(Organisatie)
+admin.site.register(ForgotPassInvite)
