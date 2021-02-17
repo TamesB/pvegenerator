@@ -58,6 +58,7 @@ def ForgotPassword(request):
         if form.is_valid():
             invitation = models.ForgotPassInvite()
 
+            # filter either username or email from the input
             if "@" in form.cleaned_data["email"]:
                 if not models.CustomUser.objects.filter(email=form.cleaned_data["email"]):
                     return redirect("login_syn")

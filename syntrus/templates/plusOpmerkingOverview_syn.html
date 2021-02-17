@@ -9,6 +9,11 @@
 {% endblock %}
 
 {% block main %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Checklists</div>
+</div>
 
 <div class="opmerking_project_list">
     <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>+ Opmerking</p></div>

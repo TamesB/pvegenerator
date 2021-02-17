@@ -1,0 +1,57 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+{% block menu %}
+{% include 'MenuTypes.html' %}
+{% endblock %}
+
+{% block main %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewprojectoverview_syn' %}">Mijn Projecten</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewproject_syn' project.id %}">Project: {{ project.naam }}</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'commentscheck_syn' project.id %}">Checklist</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Laatste check</div>
+</div>
+
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Laatste Check, project {{ project.naam }}
+<input type="button" class="{{ progress }}" onClick="javascript:location.href='{% url 'sendreplies_syn' project.id %}';" value="Stuur opmerkingen door ({{ aantal_opmerkingen_gedaan }} / {{ items|length }})"></input>
+<a style="float: right;" href="{% url 'myreplies_syn' project.id %}"><button class="ui blue button"><i class="icon check"></i>Gereed</button></a></p></div>
+
+<table class="opmerkingtable_wrapper">
+  <tr class="table_head">
+    <th><img src="{% static 'syntrus/svg/logo.svg' %}" class="syntr_logo"></a></th>
+    <th><p>Akkoord</p></th>
+    <th><p>Nieuwe Status</p></th>
+    <th><p>Opmerking</p></th>
+    <th><p>Acties</p></th>
+    <th><p>Bijlage</p></th>
+    <th><p>Datum bewerkt</p></th>
+  </tr>
+  {% if replies %}
+  {% for reply in replies %}
+  <tr class="table_content">
+    <td class="inhoud_box"><p>{{ reply.onComment.item.inhoud }}</p></td>
+    <td class="voldoening"><p>{% if reply.accept %}Ja{% else %}&nbsp;{% endif %}</p></td>
+    <td class="voldoening"><p>{% if reply.status %}{{ reply.status }}{% else %}&nbsp;{% endif %}</p></td>
+    <td class="voldoening"><p>{% if reply.comment %}{{ reply.comment }}{% else %}&nbsp;{% endif %}</p></td>
+    <td class="voldoening"><a href="{% url 'deletereply_syn' project.id comment.id %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></p></td>
+    <td class="voldoening">{% if not comment.bijlage %}<p><i>Leeg</i></p>{% else %}<a href="{% url 'downloadreplyattachment_syn' project.id reply.id %}" style="float:left;" target="_blank"><button class="ui icon basic button"><i class="icon download"></i></button></a><p><a href="{% url 'deletereplyattachment_syn' project.id comment.id %}" style="float: right;"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></p>{% endif %}</td>
+    <td class="voldoening"><p>{{ reply.datum }}</p></td>
+  </tr>
+  {% endfor %}
+
+  {% else %}
+  <td class="inhoud_box"><p>Nog geen opmerkingen geplaatst.</p></td>
+  {% endif %}
+</table>
+{% endblock %}
+{% block modal %}
+{% endblock %}

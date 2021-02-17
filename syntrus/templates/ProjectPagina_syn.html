@@ -17,6 +17,14 @@
 {% endblock %}
 
 {% block main %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewprojectoverview_syn' %}">Mijn Projecten</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Project: {{ project.naam }}</div>
+</div>
+
 <div class="main_content_div profile_box">
   <div class="profile_left"><img class="round-profile" src="{% static 'syntrus/img/plusproject.png' %}"></img></div>
   <div class="profile_right">
@@ -49,13 +57,23 @@
 {% if project.frozenLevel == 0 %}
 <div class="project_progress_bar">
   <label for="file"><p>Status: Eerste statusaanwijzing ({{ comment_count }}/{{ pve_item_count}} voltooid)</p></label>
-  <span><progress id="file" value="{{ comment_count }}" max="{{ pve_item_count }}">{{ done_percentage }}%</progress></span>
+  <span><div class="ui teal progress" data-percent="{{ done_percentage }}" id="example1"><div class="bar"></div></div>
+  </span>
 </div>
 {% endif %}
-{% if project.frozenLevel == 1 %}
+{% if not project.fullyFrozen %}
+{% if project.frozenLevel >= 1 %}
 <div class="project_progress_bar">
-  <label for="file"><p>Status: Statusoverleg ({{ frozencomments_done }}/{{ frozencomments_todo_first }} voltooid)</p></label>
-  <span><progress id="file" value="{{ frozencomments_done }}" max="{{ frozencomments_todo_first }}">{{ frozencomments_percentage }}%</progress></span>
+  <label for="file"><p>Status: Checklist afwerking ({{ frozencomments_accepted }}/{{ frozencomments_total }} akkoord)</p></label>
+  <span><div class="ui teal progress" data-percent="{{ frozencomments_percentage }}" id="example1"><div class="bar"></div></div>
+  </span>
+</div>
+{% endif %}
+{% else %}
+<div class="project_progress_bar">
+  <label for="file"><p>Status: First freeze</p></label>
+  <span><div class="ui teal progress" data-percent="100" id="example1"><div class="bar"></div></div>
+  </span>
 </div>
 {% endif %}
 
@@ -64,32 +82,35 @@
 <div class="project_acties">
 <div class="acties_title"><p>Te Doen</p></div>
 <div class="acties">
-{% if project.frozenLevel == 0 %}
-{% if request.user.type_user == "SOG" %}
-<div class="actie_item" onClick="javascript:location.href='{% url 'plusopmerking_syn' project.id %}'">
-    <img class="actie-img" src="{% static 'syntrus/img/opmerking.png' %}"></img>
-    <p class="subtext">+ Statussen</p>
-</div>
-{% endif %}
-{% endif %}
-{% if highest_frozen_level > 0 %}
-{% if highest_frozen_level|divisibleby:2 %}
-{% if request.user.type_user == "SOG" %}
-<div class="actie_item" onClick="javascript:location.href='{% url 'commentscheck_syn' project.id %}'">
-    <img class="actie-img" src="{% static 'syntrus/img/accountsderden.png' %}"></img>
-    <p class="subtext">Status Check</p>
-</div>
-{% endif %}
-{% else %}
-{% if request.user.type_user == "SD" %}
-<div class="actie_item" onClick="javascript:location.href='{% url 'commentscheck_syn' project.id %}'">
-    <img class="actie-img" src="{% static 'syntrus/img/accountsderden.png' %}"></img>
-    <p class="subtext">Status Check</p>
-</div>
-{% endif %}
-{% endif %}
-{% endif %}
-<div class="no_todo"><i>(Nog) niets.</i></div>
+  {% if project.frozenLevel == 0 %}
+  {% if request.user.type_user == "SOG" %}
+  <div class="actie_item" onClick="javascript:location.href='{% url 'plusopmerking_syn' project.id %}'">
+      <img class="actie-img" src="{% static 'syntrus/img/opmerking.png' %}"></img>
+      <p class="subtext">+ Statussen</p>
+  </div>
+  {% endif %}
+  {% endif %}
+
+  {% if not project.fullyFrozen %}
+  {% if project.frozenLevel > 0 %}
+  {% if project.frozenLevel|divisibleby:2 %}
+  {% if request.user.type_user == "SOG" %}
+  <div class="actie_item" onClick="javascript:location.href='{% url 'commentscheck_syn' project.id %}'">
+      <img class="actie-img" src="{% static 'syntrus/img/accountsderden.png' %}"></img>
+      <p class="subtext">Checklist</p>
+  </div>
+  {% endif %}
+  {% else %}
+  {% if request.user.type_user == "SD" %}
+  <div class="actie_item" onClick="javascript:location.href='{% url 'commentscheck_syn' project.id %}'">
+      <img class="actie-img" src="{% static 'syntrus/img/accountsderden.png' %}"></img>
+      <p class="subtext">Checklist</p>
+  </div>
+  {% endif %}
+  {% endif %}
+  {% endif %}
+  {% endif %}
+  <div class="no_todo"><i>Beurt van andere partij.</i></div>
 </div>
 </div>
 
@@ -108,11 +129,26 @@
     <p class="subtext">Mijn Opmrk</p>
 </div>
 {% endif %}
+{% endif %}
 
-<div class="actie_item" onClick="javascript:location.href='{% url 'alleopmerkingen_syn' project.id %}'">
+{% if not project.fullyFrozen %}
+{% if project.frozenLevel > 0 %}
+{% if project.frozenLevel|divisibleby:2 %}
+{% if request.user.type_user == "SOG" %}
+<div class="actie_item" onClick="javascript:location.href='{% url 'myreplies_syn' project.id %}'">
     <img class="actie-img" src="{% static 'syntrus/img/opmerking.png' %}"></img>
-    <p class="subtext">Voortgang</p>
+    <p class="subtext">Mijn Reacties</p>
 </div>
+{% endif %}
+{% else %}
+{% if request.user.type_user == "SD" %}
+<div class="actie_item" onClick="javascript:location.href='{% url 'myreplies_syn' project.id %}'">
+    <img class="actie-img" src="{% static 'syntrus/img/opmerking.png' %}"></img>
+    <p class="subtext">Mijn Reacties</p>
+</div>
+{% endif %}
+{% endif %}
+{% endif %}
 {% endif %}
 </div>
 </div>
@@ -138,10 +174,14 @@
       <td><p class="conttitle">Status Project: </p></td>
       <td><p class="contcontent">
       {% if project.frozenLevel == 0 %}
-      Opmerkingen op het PvE maken
+      Eerste statusaanwijzing PvE
       {% endif %}
-      {% if project.frozenLevel == 1 %}
-      Opmerkingsoverleg
+      {% if not project.fullyFrozen %}
+      {% if project.frozenLevel >= 1 %}
+      Checklist afwerking
+      {% endif %}
+      {% else %}
+      First freeze
       {% endif %}
       </p></td>
     </tr>
@@ -160,6 +200,7 @@
   </table>
   </div>
 </div>
+
 </div>
 {% endblock %}
 
@@ -182,8 +223,6 @@ input.addEventListener("keyup", function(event) {
   }
 });
 
-  </script>
-<script type="text/javascript">
 function map_init(map, options) {
     // get point lat and lon
     var lon = "{{ project.plaats.x }}";
@@ -192,5 +231,8 @@ function map_init(map, options) {
     map.setView([lat, lon], 12);
     var point = L.marker([lat, lon]).addTo(map);
 
-}</script>
+}
+
+$('#example1').progress();
+</script>
 {% endblock %}

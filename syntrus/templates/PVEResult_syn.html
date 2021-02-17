@@ -9,6 +9,26 @@
 {% endblock %}
 
 {% block main %}
+{% if project %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewprojectoverview_syn' %}">Mijn Projecten</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewproject_syn' project.id %}">Project: {{ project.naam }}</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">PvE Download</div>
+</div>
+{% else %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+<a class="section" href="{% url 'generate_syn' %}">Genereer PvE</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Resultaat</div>
+</div>
+{% endif %}
+
 <div class="generate_result_box">
     <div class="box">
         <h1>Programma van Eisen</h1>

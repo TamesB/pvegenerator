@@ -44,7 +44,9 @@ class FrozenComments(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     level = models.IntegerField(default=1, blank=True, null=True)
     comments = models.ManyToManyField(PVEItemAnnotation)
-
+    accepted_comments = models.ManyToManyField(PVEItemAnnotation, related_name="accepted_comments")
+    todo_comments = models.ManyToManyField(PVEItemAnnotation, related_name="todo_comments")
+    
     def __str__(self):
         return f"Level: {self.level}, Project: {self.project}"
 
@@ -53,6 +55,12 @@ class CommentReply(models.Model):
     commentphase = models.ForeignKey(FrozenComments, on_delete=models.CASCADE, null=True)
     onComment = models.ForeignKey(PVEItemAnnotation, on_delete=models.CASCADE, null=True)
     comment = models.TextField(max_length=1000, default=None, null=True)
-
-    def __str__(self):
-        return self.comment
+    accept = models.BooleanField(default=False, blank=True, null=True)
+    bijlage = models.BooleanField(default=False, blank=True, null=True)
+    status = models.ForeignKey(CommentStatus, on_delete=models.CASCADE, null=True, blank=True)
+    gebruiker = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    datum = models.DateTimeField(auto_now=True)
+    
+class BijlageToReply(models.Model):
+    reply = models.ForeignKey(CommentReply, on_delete=models.CASCADE, default=None)
+    bijlage = models.FileField(blank=True, null=True, upload_to='OpmerkingBijlages/')

@@ -8,6 +8,7 @@
         <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
         <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'Semantic-UI-Alert.css' %}">
         {% block head %}{% endblock %}
         <title>PvE Generator</title>
     </head>
@@ -58,7 +59,23 @@
       </footer>
       <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
       <script src="{% static 'semantic.min.js' %}"></script>
+      <script type="text/javascript" src="{% static 'Semantic-UI-Alert.js' %}"></script>
       <script src="{% static 'scripts.js' %}"></script>
+      <script>
+        {% for message in messages %}
+        function() {
+        $.uiAlert({
+        textHead: 'Info', // header
+        text: '{{ message }}', // Text
+        bgcolor: '#55a9ee', // background-color
+        textcolor: '#fff', // color
+        position: 'top-center',// position . top And bottom ||  left / center / right
+        icon: 'info circle', // icon in semantic-UI
+        time: 5, // time
+          })
+        };
+        {% endfor %}
+      </script>
             {% block scripts %}{% endblock %}
     </body>
 </html>

@@ -113,7 +113,6 @@ body, html {
 .divider {
   margin-top: 3vh;
   margin-bottom: 3vh;
-  min-width: 100%;
 }
 
 #main {
@@ -205,7 +204,7 @@ body, html {
   }
 }
 
-#main .layerOneInner .menu {
+#main .layerOneInner .menu_left {
   left: 0;
   text-align: center;
   font-family: 'Montserrat';
@@ -226,7 +225,7 @@ body, html {
   min-width: 40px;
 }
 
-#main .layerOneInner .menu .hamburger {
+#main .layerOneInner .menu_left .hamburger {
   visibility: visible;
   width: 2vw;
   min-width: 30px;
@@ -235,7 +234,7 @@ body, html {
   z-index: 3;
 }
 
-#main .layerOneInner .menu a {
+#main .layerOneInner .menu_left a {
   color: white;
   display: block;
   margin-top: 4vh;
@@ -245,15 +244,15 @@ body, html {
   visibility: hidden;
 }
 
-#main .layerOneInner .menu a:hover {
+#main .layerOneInner .menu_left a:hover {
   color: #ccc;
 }
 
-#main .layerOneInner .menu .active {
+#main .layerOneInner .menu_left .active {
   color: #ccc;
 }
 
-#main .layerOneInner .menu .hori-menu-logout {
+#main .layerOneInner .menu_left .hori-menu-logout {
   display: inline-block;
   font-size: 1.5vh;
   visibility: hidden;
@@ -261,7 +260,7 @@ body, html {
   display: none;
 }
 
-#main .layerOneInner .menu .hori-menu-logout a {
+#main .layerOneInner .menu_left .hori-menu-logout a {
   visibility: hidden;
   display: none;
   margin-right: 2vw;
@@ -270,18 +269,18 @@ body, html {
   border-right: 0.4vw solid #373737;
 }
 
-#main .layerOneInner .menu:hover {
+#main .layerOneInner .menu_left:hover {
   width: 17.5vw;
   min-width: 200px;
   z-index: 1000;
 }
 
-#main .layerOneInner .menu:hover a {
+#main .layerOneInner .menu_left:hover a {
   visibility: visible;
 }
 
 @media screen and (max-width: 768px) {
-  #main .layerOneInner .menu {
+  #main .layerOneInner .menu_left {
     top: 0;
     text-align: center;
     min-width: 100%;
@@ -294,24 +293,24 @@ body, html {
     z-index: 3;
     min-height: 40px;
   }
-  #main .layerOneInner .menu .hamburger {
+  #main .layerOneInner .menu_left .hamburger {
     margin-left: 2vw;
   }
-  #main .layerOneInner .menu a {
+  #main .layerOneInner .menu_left a {
     color: white;
     display: block;
     margin-bottom: 0.5vh;
     margin-top: 0.5vh;
   }
-  #main .layerOneInner .menu .hori-menu-logout {
+  #main .layerOneInner .menu_left .hori-menu-logout {
     display: inline-block;
     visibility: visible;
   }
-  #main .layerOneInner .menu .hori-menu-logout a {
+  #main .layerOneInner .menu_left .hori-menu-logout a {
     visibility: visible;
     display: inline-block;
   }
-  #main .layerOneInner .menu:hover {
+  #main .layerOneInner .menu_left:hover {
     min-width: 100vw;
     min-height: 32vh;
     z-index: 3;
@@ -469,12 +468,13 @@ body, html {
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   border-radius: 0.5em;
-  overflow-x: hidden;
+  overflow-x: auto;
   width: 100%;
   border-spacing: 0;
   overflow-wrap: break-word;
   padding-bottom: 1vh;
   padding-top: 1vh;
+  min-width: 800px;
 }
 
 #main .layerOneInner .article .article_content .base_info_table tbody {
@@ -573,7 +573,6 @@ body, html {
 
 #main .layerOneInner .article .article_content .profile_box .profile_left img {
   max-width: 10vw;
-  background-color: white;
   border-radius: 50%;
   min-width: 150px;
 }
@@ -646,6 +645,37 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .general_title p, #main .layerOneInner .article .article_content .general_title label {
+  font-weight: bold;
+  text-align: left;
+  padding-top: 2vh;
+  padding-left: 7vw;
+  font-size: 2.5vh;
+  font-style: bold;
+  width: 100%;
+  padding-right: 2vw;
+  color: #2b786e;
+}
+
+#main .layerOneInner .article .article_content .margin_title {
+  height: 7vh;
+  background: #f7f7f8;
+  border-radius: 1.6vh;
+  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  margin-bottom: 3vh;
+  margin-top: 3vh;
+}
+
+#main .layerOneInner .article .article_content .margin_title .title_img {
+  height: 5vh;
+  float: left;
+  margin-top: 1vh;
+  margin-left: 2vw;
+  margin-bottom: 1vh;
+  min-width: 40px;
+}
+
+#main .layerOneInner .article .article_content .margin_title p, #main .layerOneInner .article .article_content .margin_title label {
   font-weight: bold;
   text-align: left;
   padding-top: 2vh;
@@ -1094,8 +1124,7 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list {
-  height: 75vh;
-  max-height: 75vh;
+  max-height: 64vh;
   overflow-y: auto;
 }
 
@@ -1744,12 +1773,12 @@ body, html {
   color: #2b786e;
 }
 
-#main .layerOneInner .article .article_content .project_progress_bar progress {
+#main .layerOneInner .article .article_content .project_progress_bar .progress {
   float: right;
   width: 30%;
   margin-right: 2vw;
-  margin-top: 2vh;
-  height: 50%;
+  margin-top: 2.5vh;
+  height: 30%;
 }
 
 #main .layerOneInner .article .article_content .opmerkingtable_wrapper {
@@ -1807,6 +1836,14 @@ body, html {
 #main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .inhoud_box p .inhopmerking {
   color: red;
   font-weight: bold;
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .inhoud_box .green {
+  background-color: #2fff5c;
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .inhoud_box .red {
+  background-color: #ff6d6d;
 }
 
 #main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .voldoening {

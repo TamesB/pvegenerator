@@ -35,7 +35,7 @@ class PDFMaker:
         self.BottomPadding = 20
         self.TopPadding = 33
         self.RightPadding = 55
-
+        self.TopRightPadding = 0
         self.kostenverschil = 0
 
         self.InhoudWidth = self.PAGE_WIDTH - self.LeftPadding - (self.RightPadding / 3)
@@ -167,7 +167,7 @@ class PDFMaker:
         canvas.setFont('Calibri',8)
         canvas.drawCentredString(self.PAGE_WIDTH/2.0, self.PAGE_HEIGHT- self.TopPadding, self.Centered)
         canvas.drawString(self.LeftPadding, self.PAGE_HEIGHT- self.TopPadding, self.Topleft)
-        canvas.drawString(self.PAGE_WIDTH - self.RightPadding, self.PAGE_HEIGHT- self.TopPadding, self.Topright)
+        canvas.drawString(self.PAGE_WIDTH - self.RightPadding - self.TopRightPadding, self.PAGE_HEIGHT- self.TopPadding, self.Topright)
         canvas.drawString(self.LeftPadding, self.BottomPadding, "%s" % self.Bottomleft)
         canvas.drawString(self.PAGE_WIDTH - self.RightPadding, self.BottomPadding, "Pagina %s" % doc.page)
 
@@ -181,13 +181,13 @@ class PDFMaker:
         canvas.setFont('Calibri',8)
         canvas.drawCentredString(self.PAGE_WIDTH/2.0, self.PAGE_HEIGHT- self.TopPadding, self.Centered)
         canvas.drawString(self.LeftPadding, self.PAGE_HEIGHT- self.TopPadding, self.Topleft)
-        canvas.drawString(self.PAGE_WIDTH - self.RightPadding, self.PAGE_HEIGHT- self.TopPadding, self.Topright)
+        canvas.drawString(self.PAGE_WIDTH - self.RightPadding - self.TopRightPadding, self.PAGE_HEIGHT- self.TopPadding, self.Topright)
         canvas.drawString(self.LeftPadding, self.BottomPadding, "%s" % self.Bottomleft)
         canvas.drawString(self.PAGE_WIDTH - self.RightPadding, self.BottomPadding, "Pagina %s" % doc.page)
 
         canvas.restoreState()
 
-    def makepdf(self, filename, PVEItems, opmerkingen, bijlagen, parameters):
+    def makepdf(self, filename, PVEItems, opmerkingen, bijlagen, reacties, reactiebijlagen, parameters):
         # for switching background styles between added items
         
         item_added = 0
@@ -236,17 +236,36 @@ class PDFMaker:
                                     if item.id in opmerkingen:
                                         p = Paragraph(f"{inhoud}".replace('\n','<br />\n'), self.regelStyle)
 
+                                        opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: "
                                         if opmerkingen[item.id].annotation:
-                                            opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: Status: {opmerkingen[item.id].status}. Opmerking: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}"
-                                        else:
-                                            opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: Status: {opmerkingen[item.id].status}."
-
+                                            opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
+                                        if opmerkingen[item.id].status:
+                                            opmrk += f"Status: {opmerkingen[item.id].status}. "
                                         if opmerkingen[item.id].kostenConsequenties:
-                                            opmrk += f" Kostenverschil: €{opmerkingen[item.id].kostenConsequenties}."
+                                            opmrk += f"Kostenverschil: €{opmerkingen[item.id].kostenConsequenties}. "
                                         if opmerkingen[item.id].bijlage:
-                                            opmrk += f" Zie bijlage '{bijlagen[item.id].bijlage}'."
-                                        opmrk = (opmrk)
+                                            opmrk += f"Zie bijlage '{bijlagen[item.id].bijlage}'. "
+                                        
+                                        if item.id in reacties:
+                                            reactie_str = f""
+                                            for reactie in reacties[item.id]:
+                                                if reactie.comment:
+                                                    if len(reactie_str) == 0:
+                                                        reactie_str += f"Opmerkingen: "
+                                                    reactie_str += f"'{reactie.comment}' -{reactie.gebruiker}. "
 
+                                                if reactie.id in reactiebijlagen:
+                                                    if len(reactie_str) == 0:
+                                                        reactie_str += f"Opmerkingen: "
+                                                    reactie_str += f"Zie bijlage '{reactiebijlagen[reactie.id].bijlage}'. "
+                                                
+                                            opmrk += reactie_str
+
+                                        if len(opmrk) == len(opmerkingen[item.id].datum.strftime('%Y-%m-%d')) + 2:
+                                            opmrk = ""
+                                        
+                                        opmrk = (opmrk)
+     
                                         # groen als akkoord, rood als andere status
                                         if str(opmerkingen[item.id].status) == "akkoord":
                                             j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
@@ -269,18 +288,36 @@ class PDFMaker:
                                     if item.id in opmerkingen:
                                         p = Paragraph(f"{inhoud}".replace('\n','<br />\n'), self.regelStyleSwitch)
 
+                                        opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: "
                                         if opmerkingen[item.id].annotation:
-                                            opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: Status: {opmerkingen[item.id].status}. Opmerking: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}"
-                                        else:
-                                            opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: Status: {opmerkingen[item.id].status}."
-
+                                            opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
+                                        if opmerkingen[item.id].status:
+                                            opmrk += f"Status: {opmerkingen[item.id].status}. "
                                         if opmerkingen[item.id].kostenConsequenties:
-                                            opmrk += f" Kostenverschil: €{opmerkingen[item.id].kostenConsequenties}."
-
+                                            opmrk += f"Kostenverschil: €{opmerkingen[item.id].kostenConsequenties}. "
                                         if opmerkingen[item.id].bijlage:
-                                            opmrk += f" Zie bijlage '{bijlagen[item.id].bijlage}'."
-                                        opmrk = (opmrk)
+                                            opmrk += f"Zie bijlage '{bijlagen[item.id].bijlage}'. "
                                         
+                                        if item.id in reacties:
+                                            reactie_str = f""
+                                            for reactie in reacties[item.id]:
+                                                if reactie.comment:
+                                                    if len(reactie_str) == 0:
+                                                        reactie_str += f"Opmerkingen: "
+                                                    reactie_str += f"'{reactie.comment}' -{reactie.gebruiker}. "
+
+                                                if reactie.id in reactiebijlagen:
+                                                    if len(reactie_str) == 0:
+                                                        reactie_str += f"Opmerkingen: "
+                                                    reactie_str += f"Zie bijlage '{reactiebijlagen[reactie.id].bijlage}'. "
+                                                
+                                            opmrk += reactie_str
+                                        
+                                        if len(opmrk) == len(opmerkingen[item.id].datum.strftime('%Y-%m-%d')) + 2:
+                                            opmrk = ""
+
+                                        opmrk = (opmrk)
+
                                         # groen als akkoord, rood als andere status
                                         if str(opmerkingen[item.id].status) == "akkoord":
                                             j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkGreen)
@@ -308,12 +345,104 @@ class PDFMaker:
                             
                             if (item_added % 2) == 0:
                                 item_added += 1
-                                p = Paragraph(inhoud.replace('\n','<br />\n'), self.regelStyle)
+                                # opmerkingen en alles printen
+                                if item.id in opmerkingen:
+                                    p = Paragraph(f"{inhoud}".replace('\n','<br />\n'), self.regelStyle)
+
+                                    opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: "
+                                    if opmerkingen[item.id].annotation:
+                                        opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
+                                    if opmerkingen[item.id].status:
+                                        opmrk += f"Status: {opmerkingen[item.id].status}. "
+                                    if opmerkingen[item.id].kostenConsequenties:
+                                        opmrk += f"Kostenverschil: €{opmerkingen[item.id].kostenConsequenties}. "
+                                    if opmerkingen[item.id].bijlage:
+                                        opmrk += f"Zie bijlage '{bijlagen[item.id].bijlage}'. "
+                                    
+                                    if item.id in reacties:
+                                        reactie_str = f""
+                                        for reactie in reacties[item.id]:
+                                            if reactie.comment:
+                                                if len(reactie_str) == 0:
+                                                    reactie_str += f"Opmerkingen: "
+                                                reactie_str += f"'{reactie.comment}' -{reactie.gebruiker}. "
+
+                                            if reactie.id in reactiebijlagen:
+                                                if len(reactie_str) == 0:
+                                                    reactie_str += f"Opmerkingen: "
+                                                reactie_str += f"Zie bijlage '{reactiebijlagen[reactie.id].bijlage}'. "
+                                            
+                                        opmrk += reactie_str
+                                                                            
+                                    if len(opmrk) == len(opmerkingen[item.id].datum.strftime('%Y-%m-%d')) + 2:
+                                        opmrk = ""
+
+                                    opmrk = (opmrk)
+
+                                    # groen als akkoord, rood als andere status
+                                    if str(opmerkingen[item.id].status) == "akkoord":
+                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
+                                    elif str(opmerkingen[item.id].status) == "niet akkoord":
+                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrk)
+                                    else:
+                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkOrange)
+                                    
+                                    Story.append(p)
+                                    Story.append(j)
+
+                                else:
+                                    p = Paragraph(inhoud.replace('\n','<br />\n'), self.regelStyle)
+                                    Story.append(p)
                             else:
                                 item_added += 1
-                                p = Paragraph(inhoud.replace('\n','<br />\n'), self.regelStyleSwitch)
-                                
-                            Story.append(p)
-        
+                                # opmerkingen en alles printen
+                                if item.id in opmerkingen:
+                                    p = Paragraph(f"{inhoud}".replace('\n','<br />\n'), self.regelStyleSwitch)
+
+                                    opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: "
+                                    if opmerkingen[item.id].annotation:
+                                        opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
+                                    if opmerkingen[item.id].status:
+                                        opmrk += f"Status: {opmerkingen[item.id].status}. "
+                                    if opmerkingen[item.id].kostenConsequenties:
+                                        opmrk += f"Kostenverschil: €{opmerkingen[item.id].kostenConsequenties}. "
+                                    if opmerkingen[item.id].bijlage:
+                                        opmrk += f"Zie bijlage '{bijlagen[item.id].bijlage}'. "
+                                    
+                                    if item.id in reacties:
+                                        reactie_str = f""
+                                        for reactie in reacties[item.id]:
+                                            if reactie.comment:
+                                                if len(reactie_str) == 0:
+                                                    reactie_str += f"Opmerkingen: "
+                                                reactie_str += f"'{reactie.comment}' -{reactie.gebruiker}. "
+
+                                            if reactie.id in reactiebijlagen:
+                                                if len(reactie_str) == 0:
+                                                    reactie_str += f"Opmerkingen: "
+                                                reactie_str += f"Zie bijlage '{reactiebijlagen[reactie.id].bijlage}'. "
+                                            
+                                        opmrk += reactie_str
+                                                                        
+                                    if len(opmrk) == len(opmerkingen[item.id].datum.strftime('%Y-%m-%d')) + 2:
+                                        opmrk = ""
+
+                                    opmrk = (opmrk)
+
+                                    # groen als akkoord, rood als andere status
+                                    if str(opmerkingen[item.id].status) == "akkoord":
+                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkGreen)
+                                    elif str(opmerkingen[item.id].status) == "niet akkoord":
+                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrk)
+                                    else:
+                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkOrange)
+                                    
+                                    Story.append(p)
+                                    Story.append(j)
+
+                                else:
+                                    p = Paragraph(inhoud.replace('\n','<br />\n'), self.regelStyleSwitch)
+                                    Story.append(p)
+                                        
         self.Centered = " / ".join(parameters)
         doc.build(Story, onFirstPage=self.myFirstPage, onLaterPages=self.myLaterPages)

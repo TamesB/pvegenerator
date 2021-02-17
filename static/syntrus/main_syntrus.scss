@@ -96,7 +96,6 @@ body, html {
 .divider {
     margin-top: 3vh;
     margin-bottom: 3vh;
-    min-width: 100%;
 }
 
 #main {
@@ -171,7 +170,7 @@ body, html {
             }
         }
 
-        .menu {
+        .menu_left {
             left: 0;
             text-align: center;
             font-family: 'Montserrat';
@@ -234,7 +233,7 @@ body, html {
 
         }
 
-        .menu:hover {
+        .menu_left:hover {
             width: 17.5vw;
             min-width: 200px;
             z-index: 1000;
@@ -245,7 +244,7 @@ body, html {
         }
 
         @media screen and (max-width: 768px) {
-            .menu {
+            .menu_left {
                 top: 0;
                 text-align: center;
                 min-width: 100%;
@@ -279,7 +278,7 @@ body, html {
                 }
             }
 
-            .menu:hover {
+            .menu_left:hover {
                 min-width: 100vw;
                 min-height: 32vh;
                 z-index: 3;
@@ -411,12 +410,13 @@ body, html {
                     -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                     box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                     border-radius: 0.5em;
-                    overflow-x: hidden;
+                    overflow-x: auto;
                     width: 100%; 
                     border-spacing:0;
                     overflow-wrap: break-word;
                     padding-bottom: 1vh;
                     padding-top: 1vh;
+                    min-width: 800px;
 
                     tbody {
                         min-width: 100%;
@@ -513,7 +513,6 @@ body, html {
                         padding-bottom: 1vh;
                         img {
                             max-width: 10vw;
-                            background-color: white;
                             border-radius: 50%;
                             min-width:150px;
                         }
@@ -591,7 +590,37 @@ body, html {
                         color: #2b786e;
                     }
                 }
-
+                .margin_title {
+                    height: 7vh;    
+                    background: rgba(247,247,248,1);
+                    border-radius: 1.6vh;
+                    -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    margin-bottom: 3vh;
+                    margin-top: 3vh;
+                    
+                    .title_img {
+                        height: 5vh;
+                        float: left;
+                        margin-top: 1vh;
+                        margin-left: 2vw;
+                        margin-bottom: 1vh;
+                        min-width: 40px;
+                    }
+                    
+                    p, label {
+                        font-weight: bold;
+                        text-align: left;
+                        padding-top: 2vh;
+                        padding-left: 7vw;
+                        font-size: 2.5vh;
+                        font-style: bold;
+                        width: 100%;
+                        padding-right: 2vw;
+                        color: #2b786e;
+                    }   
+                }
                 .generator_form {
                     form {
                         .parameter_container {
@@ -982,8 +1011,7 @@ body, html {
                     }
 
                     .item_opmerking_list {
-                        height: 75vh;
-                        max-height: 75vh;
+                        max-height: 64vh;
                         overflow-y: auto;
 
                         .arrow-down {
@@ -1570,12 +1598,12 @@ body, html {
                         color: #2b786e;
                     }
 
-                    progress {
+                    .progress {
                         float: right;
                         width: 30%;
                         margin-right: 2vw;
-                        margin-top: 2vh;
-                        height: 50%;
+                        margin-top: 2.5vh;
+                        height: 30%;
                     }
 
                 }
@@ -1629,6 +1657,13 @@ body, html {
                                     color: red;
                                     font-weight: bold;
                                 }
+                            }
+
+                            .green {
+                                background-color: rgb(47, 255, 92);
+                            }
+                            .red {
+                                background-color: rgb(255, 109, 109);
                             }
 
                         }

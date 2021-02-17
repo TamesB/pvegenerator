@@ -9,6 +9,16 @@
 {% endblock %}
 
 {% block main %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+<a class="section" href="{% url 'manageprojecten_syn' %}">Projecten</a>
+  <i class="right chevron icon divider"></i>
+<a class="active section">Start Project</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Voeg PvE Toe</div>
+</div>
+
 <div class="general_title"><img src="{% static 'syntrus/img/genereer.png'%}" class="title_img"></img><p>+ Programma van Eisen</p></div>
 <div class="generator_form">
     <form action="{% url 'connectpve_syn' project.id %}" method="POST" enctype="multipart/form-data">

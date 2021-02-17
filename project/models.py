@@ -67,12 +67,13 @@ class PVEItemAnnotation(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, default=None)
     item = models.ForeignKey('app.PVEItem', on_delete=models.CASCADE, default=None)
     annotation = models.TextField(max_length=1000, default=None, null=True)
-    status = models.ForeignKey('syntrus.CommentStatus', on_delete=models.CASCADE, default=None)
+    status = models.ForeignKey('syntrus.CommentStatus', on_delete=models.CASCADE, default=None, null=True)
     gebruiker = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, default=None, null=True)
     datum = models.DateTimeField(auto_now=True)
     kostenConsequenties = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=None)
     bijlage = models.BooleanField(default=False, blank=True, null=True)
-    
+    init_accepted = models.BooleanField(default=False, blank=True, null=True)
+
     def __str__(self):
         return f"{self.annotation}"
 

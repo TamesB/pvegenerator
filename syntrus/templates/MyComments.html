@@ -9,16 +9,20 @@
 {% endblock %}
 
 {% block main %}
-<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Mijn Opmerkingen, project {{ project.naam }} 
-{% if project.frozenLevel == 0 %}
-{% if aantal_opmerkingen_gedaan == 4 %}
-<input type="button" class="{{ progress }}" onClick="javascript:location.href='{% url 'firstfreeze_syn' project.id %}';" value="Stuur opmerkingen door ({{ aantal_opmerkingen_gedaan }} / {{ items|length }})"></input>
-{% else %}
-<input type="button" class="{{ progress }}" disabled onClick="javascript:location.href='#';" value="Stuur opmerkingen door ({{ aantal_opmerkingen_gedaan }} / {{ items|length }})"></input>
-{% endif %}
-{% else %}
-<input type="button" class="{{ progress }}" disabled onClick="javascript:location.href='#';" value="{{ aantal_opmerkingen_gedaan }} opmerkingen doorgestuurd"></input>
-{% endif %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewprojectoverview_syn' %}">Mijn Projecten</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewproject_syn' project.id %}">Project: {{ project.naam }}</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'plusopmerking_syn' project.id %}">Eerste statusaanwijzing</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Laatste check</div>
+</div>
+
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Laatste check, project {{ project.naam }} 
+<input type="button" class="{{ progress }}" onClick="javascript:location.href='{% url 'firstfreeze_syn' project.id %}';" value="Stuur door naar derden ({{ aantal_opmerkingen_gedaan }} / {{ items|length }})"></input>
 <a style="float: right;" href="{% url 'mijnopmerkingendelete_syn' project.id %}"><button class="ui basic red button"><i class="icon trash"></i>Verwijder opmerking</button></a></p></div>
 
 <table class="opmerkingtable_wrapper">
@@ -45,7 +49,7 @@
   {% endfor %}
 
   {% else %}
-  <td class="inhoud_box"><p>Nog geen opmerkingen geplaatst.</p></td>
+  <td class="inhoud_box"><p>Nog geen regels aangewezen.</p></td>
   {% endif %}
 </table>
 
@@ -61,11 +65,11 @@
                         <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}">
                         <label class="item_label">Item:</label>
                         <p class="inhoud">{{ items|index:forloop.counter0|slice:":100" }}</p>
-                        <label for="{{ form.voldoet.id_for_label }}">Status:</label>
+                        <label for="{{ form.voldoet.id_for_label }}">(Optioneel) Status:</label>
                         <p class="formbox">{{ form.status }}</p>
-                        <label for="{{ form.annotation.id_for_label }}">Opmerking:</label>
+                        <label for="{{ form.annotation.id_for_label }}">(Optioneel) Opmerking:</label>
                         <p class="formbox">{{ form.annotation }}</p>
-                        <label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil:</label>
+                        <label for="{{ form.kostenConsequenties.id_for_label }}">(Optioneel) Kostenverschil:</label>
                         <p class="formbox">{{ form.kostenConsequenties }}</p>                    
                         <span class="form_buttons">
                           <div onclick="document.getElementById('{{ form_item_ids|previous_one:forloop.counter0 }}').style.display='block'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
@@ -81,11 +85,4 @@
 </form>
 {% endblock %}
 {% block modal %}
-{% endblock %}
-{% block scripts %}
-<script>
-$(document).ready(function(){
-     $('option[value=""]').remove();
-});
-</script>
 {% endblock %}

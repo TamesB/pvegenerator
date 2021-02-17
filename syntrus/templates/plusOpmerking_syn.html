@@ -9,17 +9,22 @@
 {% endblock %}
 
 {% block main %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewprojectoverview_syn' %}">Mijn Projecten</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewproject_syn' project.id %}">Project: {{ project.naam }}</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Eerste statusaanwijzing</div>
+</div>
+
 <form class="opmerking_form" action="{% url 'plusopmerking_syn' project.id %}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 
-<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Eerste statusaanwijzing<input type="submit" class="submit_button" value="Opslaan"></input></p></div>
-<ul class="list">
-  {% for message in messages %}
-    <li>{{ message }}</li>
-  {% endfor %}
-</ul>
-{% if items %}
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Eerste statusaanwijzing<input type="submit" class="submit_button" value="Opslaan >"></input></p></div>
 
+{% if items %}
 <div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>Groen = status is al opgeslagen. Geel = u heeft net een wijziging gemaakt. Rood = nog geen status aangegeven.</p></span></popup-notify></div></div>
 <div class="item_opmerking_list">
 {% for hoofdstuk, one_deep in hoofdstuk_ordered_items.items %}
@@ -35,7 +40,7 @@
                     <p>Status: {{ item|index:2 }}</p></div>
                     {% else %}
                     <div class="status_not_added" id="status-{{ item|index:1 }}">
-                    <p>Voeg status toe</p></div>{% endif %}
+                    <p>+ Status</p></div>{% endif %}
                     </div>
                 {% endfor %}
             </div>
@@ -48,7 +53,7 @@
             <p>Status: {{ item|index:2 }}</p></div>
             {% else %}
             <div class="status_not_added" id="status-{{ item|index:1 }}">
-            <p>Voeg status toe</p></div>{% endif %}
+            <p>+ Status</p></div>{% endif %}
         </div>
         {% endfor %}  
     {% endif %}

@@ -9,16 +9,21 @@
 {% endblock %}
 
 {% block main %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewprojectoverview_syn' %}">Mijn Projecten</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewproject_syn' project.id %}">Project: {{ project.naam }}</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'plusopmerking_syn' project.id %}">Eerste statusaanwijzing</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Laatste check</div>
+</div>
+
 <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Mijn Opmerkingen, project {{ project.naam }}
-{% if project.frozenLevel == 0 %}
-{% if aantal_opmerkingen_gedaan == 4 %}
 <input type="button" class="{{ progress }}" onClick="javascript:location.href='{% url 'firstfreeze_syn' project.id %}';" value="Stuur opmerkingen door ({{ aantal_opmerkingen_gedaan }} / {{ items|length }})"></input>
-{% else %}
-<input type="button" class="{{ progress }}" disabled onClick="javascript:location.href='#';" value="Stuur opmerkingen door ({{ aantal_opmerkingen_gedaan }} / {{ items|length }})"></input>
-{% endif %}
-{% else %}
-<input type="button" class="{{ progress }}" disabled onClick="javascript:location.href='#';" value="{{ aantal_opmerkingen_gedaan }} opmerkingen doorgestuurd"></input>
-{% endif %}<a style="float: right;" href="{% url 'mijnopmerkingen_syn' project.id %}"><button class="ui blue button"><i class="icon check"></i>Gereed</button></a></p></div>
+<a style="float: right;" href="{% url 'mijnopmerkingen_syn' project.id %}"><button class="ui blue button"><i class="icon check"></i>Gereed</button></a></p></div>
 
 <table class="opmerkingtable_wrapper">
   <tr class="table_head">

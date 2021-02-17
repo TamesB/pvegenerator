@@ -9,6 +9,7 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'syntrus/favicon.ico' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'syntrus/main_syntrus.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'Semantic-UI-Alert.css' %}">
     <style type="text/css">
       body > .grid {
         height: 100%;
@@ -20,27 +21,14 @@
         max-width: 450px;
       }
     </style>
-    <title>PvE Generator</title>
+    <title>PvE Tool</title>
   </head>
   <body>
         <div class="loader" style="display: none;"></div>
     <div class="centered_login">
     <div class="login_box">
       <img src="{% static 'syntrus/svg/logo.svg' %}">
-      <p>Projecten</p>
-      {% if messages %}
-      <div class="ui info floating message">
-        <i class="close icon"></i>
-          <div class="header">
-            Info
-          </div>
-            <ul class="list">
-              {% for message in messages %}
-                <li>{{ message }}</li>
-              {% endfor %}
-          </ul>
-      </div>
-      {% endif %}
+      <p>PvE Tool</p>
       <form action="{% url 'login_syn' %}" class="ui form" method="post">
           {% csrf_token %}
           {% render_form form %}
@@ -51,7 +39,23 @@
   </div>
     <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
     <script src="{% static 'semantic.min.js' %}"></script>
+      <script type="text/javascript" src="{% static 'Semantic-UI-Alert.js' %}"></script>
     <script src="{% static 'syntrus/main_syntrus.js' %}"></script>
     <script src="{% static 'syntrus/fadeLogin.js' %}"></script>
+      <script>
+        {% for message in messages %}
+        $(document).ready(function() {
+        $.uiAlert({
+        textHead: 'Info', // header
+        text: '{{ message }}', // Text
+        bgcolor: '#55a9ee', // background-color
+        textcolor: '#fff', // color
+        position: 'top-center',// position . top And bottom ||  left / center / right
+        icon: 'info circle', // icon in semantic-UI
+        time: 3, // time
+          })
+        });
+        {% endfor %}
+      </script>
 </body>
 </html>

@@ -33,8 +33,8 @@
 <p><b>Aantal verhuureenheden: </b><i>{{ project.vhe }}</i></p>
 <p><b>Contractstatus: </b><i>{{ project.statuscontract }}</i></p>
 <p><b>Aangemaakt op: </b><i>{{ project.datum }}</i></p>
-
 </div>
+
 <div class="ui divider"></div>
 <div>
 <h3 class="ui header">Basis handelingen</h1>
@@ -52,8 +52,8 @@
 {% if request.user.type_user == 'OG' or request.user.type_user == 'B' %}
 <p><span><a href="#"><button class="ui basic button"><i class="icon plus"></i>Voeg derde toe</button></a></span></p>
 {% endif %}
-
 </div>
+
 <div class="ui divider"></div>
 
 <div class="card">

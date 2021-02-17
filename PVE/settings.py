@@ -33,7 +33,7 @@ ALLOWED_HOSTS = ["*"]
 
 # debug toolbar
 INTERNAL_IPS = [
-    '127.0.0.1',
+    #'127.0.0.1',
 ]
 
 
@@ -191,12 +191,6 @@ LOGIN_REDIRECT_URL = "/home"
 
 #bulkform
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
-
-TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
-TWILIO_API_KEY = os.environ.get('TWILIO_API_KEY')
-TWILIO_API_SECRET = os.environ.get('TWILIO_API_SECRET')
-TWILIO_CHAT_SERVICE_SID = os.environ.get('TWILIO_CHAT_SERVICE_SID')
-
 
 ANNOTATION_ATTACHMENT_DIR = 'OpmerkingBijlages/'
 

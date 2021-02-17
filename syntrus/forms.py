@@ -5,7 +5,7 @@ from django.forms import ModelForm
 from app.models import Bouwsoort, TypeObject, Doelgroep, PVEItem
 from project.models import Project, PVEItemAnnotation, BijlageToAnnotation
 from users.models import Invitation, CustomUser, Organisatie
-from syntrus.models import CommentStatus
+from syntrus.models import CommentStatus, BijlageToReply
 from django.contrib.gis import forms
 from django.core.cache import cache
 from django.views.decorators.cache import cache_page
@@ -16,7 +16,7 @@ class LoginForm(forms.Form):
         "type": "password"
     }
 
-    username = forms.CharField(label='Gebruikersnaam', max_length=100)
+    username = forms.CharField(label='Gebruikersnaam of e-mail', max_length=100)
     password = forms.CharField(label='Wachtwoord', max_length=100, widget=forms.TextInput(attrs=attrs))
 
     widgets = {
@@ -200,8 +200,8 @@ class InviteProjectStartForm(ModelForm):
             'permitted': forms.SelectMultiple(choices=CustomUser.objects.filter(type_user="SD"), attrs={'class': 'ui dropdown'}),
             'organisaties': forms.SelectMultiple(choices=Organisatie.objects.all(), attrs={'class': 'ui dropdown'}),
         }
-class FirstFreezeForm(ModelForm):
-    confirm = forms.CheckboxInput()
+class FirstFreezeForm(forms.Form):
+    confirm = forms.BooleanField()
 
     class Meta:
         labels = {
@@ -210,6 +210,18 @@ class FirstFreezeForm(ModelForm):
 
 
 class CommentReplyForm(forms.Form):
+    CHOICES = [('True', 'Ja'), ('False', 'Nee')]
+
     comment_id = forms.IntegerField(label='comment_id')
-    status = forms.ModelChoiceField(queryset=CommentStatus.objects.all(), required=False)
+    status = CachedModelChoiceField(objects=lambda:CommentStatus.objects.all(), required=False)
     annotation = forms.CharField(label='annotation', max_length=1000, widget=forms.Textarea, required=False)
+    accept = forms.ChoiceField(choices=CHOICES, required=False)
+
+class BijlageToReplyForm(ModelForm):
+    class Meta:
+        model = BijlageToReply
+        fields = ('reply', 'bijlage')
+        labels = {
+            'reply':'Reactie:', 'bijlage':'Bijlage:',
+        }
+        widgets = {'reply': forms.HiddenInput()}

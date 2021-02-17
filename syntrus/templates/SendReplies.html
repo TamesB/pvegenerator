@@ -16,18 +16,16 @@
   <i class="right chevron icon divider"></i>
   <a class="section" href="{% url 'viewproject_syn' project.id %}">Project: {{ project.naam }}</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'plusopmerking_syn' project.id %}">Eerste statusaanwijzing</a>
+  <a class="section" href="{% url 'commentscheck_syn' project.id %}">Checklist</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'mijnopmerkingen_syn' project.id %}">Laatste check</a>
-  <i class="right chevron icon divider"></i>
-  <div class="active section">Stuur door</div>
+  <div class="active section">Doorsturen</div>
 </div>
 
 <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png' %}" class="title_img"></img><p>Doorsturen</p></div>
 <div class="invite-container">
     <div class="box">
-            <p class="description">Stuur uw eerste statusaanwijzing en afwijkingen door aan de derde partijen om het PvE verder op te merken. Regels waar nog geen status/opmerking aan is toegevoegd worden genoteerd als geaccepteerd.</p>
-        <form action="{% url 'firstfreeze_syn' pk %}" method="post">
+            <p class="description">Stuur uw reacties en afwijkingen door. Regels waar geen wijziging aan is toegevoegd worden genoteerd als geaccepteerd, of als TODO als er nog geen originele status is aan toegevoegd.</p>
+        <form action="{% url 'sendreplies_syn' pk %}" method="post">
             {% csrf_token %}
             <label class="formtitle" for="{{ form.confirm.id_for_label }}">Vink aan voor bevestiging.</label>
             <p class="formbox">{{ form.confirm }}</p>

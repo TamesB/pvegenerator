@@ -9,6 +9,14 @@
 {% endblock %}
 
 {% block main %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+<a class="section" href="{% url 'manageprojecten_syn' %}">Projecten</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Start Project</div>
+</div>
+
 <div class="general_title"><img src="{% static 'syntrus/img/plusproject.png'%}" class="title_img"></img><p>Start project</p></div>
 <div class="invite-container">
     <div class="box">

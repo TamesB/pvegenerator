@@ -5,7 +5,7 @@ from django.urls import include, path
 from django.conf.urls.static import static
 from django.conf import settings
 from django.conf.urls import url
-from PVE.views import LandingView, token
+from PVE.views import LandingView
 import debug_toolbar
 
 urlpatterns = [
@@ -17,7 +17,6 @@ urlpatterns = [
     path('beheer/users/', include('users.urls')),
     path('admin/', admin.site.urls),
     path('syntrus/', include('syntrus.urls')),
-    url(r'token$', token, name="token"),
 ]
 
 if settings.DEBUG:

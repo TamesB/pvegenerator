@@ -9,10 +9,11 @@
         <link rel="stylesheet" type="text/css" href="{% static 'syntrus/main_syntrus.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'syntrus/syntrus_spinner.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'Semantic-UI-Alert.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'syntrus/w3.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'syntrus/tooltip.css' %}">
               {% block head %}{% endblock %}
-        <title>PvE Generator</title>
+        <title>PvE Tool</title>
     </head>
     <body>
         <div id="main">
@@ -30,7 +31,7 @@
                     {% endif %}
                     </ul>
                 </span>
-                <span class="menu">{% block menu %}{% endblock %}</span> 
+                <span class="menu_left">{% block menu %}{% endblock %}</span> 
                 <span class="article">
                 <div class="loader" style="display: none;"></div>
                 <div class="article_content">
@@ -42,9 +43,25 @@
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="{% static 'semantic.min.js' %}"></script>  
+      <script type="text/javascript" src="{% static 'Semantic-UI-Alert.js' %}"></script>
         <script src="{% static 'syntrus/main_syntrus.js' %}"></script>
         <script src="{% static 'syntrus/fadeArticle.js' %}"></script>
         <script src="{% static 'syntrus/tooltip.js' %}"></script>
+      <script>
+        {% for message in messages %}
+        $(document).ready(function() {
+        $.uiAlert({
+        textHead: 'Info', // header
+        text: '{{ message }}', // Text
+        bgcolor: '#55a9ee', // background-color
+        textcolor: '#fff', // color
+        position: 'bottom-left',// position . top And bottom ||  left / center / right
+        icon: 'info circle', // icon in semantic-UI
+        time: 3, // time
+          })
+        });
+        {% endfor %}
+      </script>
         {% block scripts %}{% endblock %}
     </body>
 </html>

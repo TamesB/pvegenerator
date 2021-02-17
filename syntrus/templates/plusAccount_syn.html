@@ -10,6 +10,13 @@
 {% endblock %}
 
 {% block main %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'managewerknemers_syn' %}">Werknemers</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Uitnodigen</div>
+</div>
 <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>+ Account</p></div>
 <div class="invite-container">
     <div class="box">
