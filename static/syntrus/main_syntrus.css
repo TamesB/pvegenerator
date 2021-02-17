@@ -382,11 +382,8 @@ body, html {
 #main .layerOneInner .article .article_content .flex-container .flex-item .flex-img {
   margin: 2vh;
   margin-bottom: 3vh;
-  width: 7vw;
   height: 9vh;
-  min-width: 100px;
   min-height: 70px;
-  max-width: 120px;
 }
 
 #main .layerOneInner .article .article_content .flex-item:hover {
@@ -635,13 +632,11 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .general_title .title_img {
-  width: 4vw;
   height: 5vh;
   float: left;
   margin-top: 1vh;
   margin-left: 2vw;
   margin-bottom: 1vh;
-  min-width: 40px;
 }
 
 #main .layerOneInner .article .article_content .general_title p, #main .layerOneInner .article .article_content .general_title label {
@@ -1491,7 +1486,6 @@ body, html {
   display: flex;
   max-width: 100%;
   width: 100%;
-  max-height: 70%;
   border-radius: 1.6vh;
 }
 

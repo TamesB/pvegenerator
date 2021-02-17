@@ -440,25 +440,27 @@ def download_pve(request, pk):
     reactiebijlagen = {}
     kostenverschil = 0
 
-    if PVEItemAnnotation.objects.filter(project=project):
-        for opmerking in PVEItemAnnotation.objects.select_related("item").filter(project=project):
-            opmerkingen[opmerking.item.id] = opmerking
-            if opmerking.kostenConsequenties:
-                kostenverschil += opmerking.kostenConsequenties
-            if BijlageToAnnotation.objects.filter(ann=opmerking).exists():
-                bijlage = BijlageToAnnotation.objects.get(ann=opmerking)
-                bijlagen[opmerking.item.id] = bijlage
-            
-            if CommentReply.objects.filter(onComment=opmerking).exists():
-                for reply in CommentReply.objects.filter(onComment=opmerking):
-                    if opmerking.item.id in reacties.keys():
-                        reacties[opmerking.item.id].append(reply)
-                    else:
-                        reacties[opmerking.item.id] = [reply]
+    comments = PVEItemAnnotation.objects.select_related("item").select_related("status").select_related("gebruiker").filter(project=project)
 
-                    if BijlageToReply.objects.filter(reply=reply).exists():
-                        bijlage = BijlageToReply.objects.get(reply=reply)
-                        reactiebijlagen[reply.id] = bijlage
+    for opmerking in comments:
+        opmerkingen[opmerking.item.id] = opmerking
+        if opmerking.kostenConsequenties:
+            kostenverschil += opmerking.kostenConsequenties
+        if opmerking.bijlage:
+            bijlage = BijlageToAnnotation.objects.get(ann=opmerking)
+            bijlagen[opmerking.item.id] = bijlage
+            
+    replies = CommentReply.objects.select_related("gebruiker").select_related("onComment").select_related("onComment__item").filter(commentphase__project=project)
+
+    for reply in replies:
+        if reply.onComment.item.id in reacties.keys():
+            reacties[reply.onComment.item.id].append(reply)
+        else:
+            reacties[reply.onComment.item.id] = [reply]
+
+        if reply.bijlage:
+            bijlage = BijlageToReply.objects.get(reply=reply)
+            reactiebijlagen[reply.id] = bijlage
 
     pdfmaker = writePdf.PDFMaker()
 
@@ -480,7 +482,7 @@ def download_pve(request, pk):
         for item in bijlagen:
             bijlagen.append(item)
     
-    if BijlageToReply.objects.filter(reply__onComment__project=project).exists:
+    if BijlageToReply.objects.filter(reply__onComment__project=project).exists():
         replybijlagen = BijlageToReply.objects.filter(reply__onComment__project=project)
         for bijlage in replybijlagen:
             bijlagen.append(bijlage)

@@ -339,12 +339,8 @@ body, html {
                         .flex-img {
                             margin: 2vh;
                             margin-bottom: 3vh;
-                            width: 7vw;
                             height: 9vh;
-                            min-width: 100px;
                             min-height: 70px;
-                            max-width: 120px;
-
                         }
                     }
                 }
@@ -569,13 +565,11 @@ body, html {
                     box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                     
                     .title_img {
-                        width: 4vw;
                         height: 5vh;
                         float: left;
                         margin-top: 1vh;
                         margin-left: 2vw;
                         margin-bottom: 1vh;
-                        min-width: 40px;
                     }
                     
                     p, label {
@@ -1342,7 +1336,6 @@ body, html {
                                     display: flex;
                                     max-width: 100%;
                                     width: 100%;
-                                    max-height: 70%;
                                     border-radius: 1.6vh;
                                 }
 
