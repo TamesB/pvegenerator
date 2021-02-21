@@ -209,8 +209,8 @@ SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = 'Strict'
 
 CSP_DEFAULT_SRC = ("'none'",)
-CSP_STYLE_SRC = ("'self'", 'ajax.googleapis.com', 'fonts.googleapis.com')
-CSP_SCRIPT_SRC = ("'self'", 'ajax.googleapis.com')
+CSP_STYLE_SRC = ("'self'", 'ajax.googleapis.com', 'fonts.googleapis.com', 'sha256-Y7kgPWQdS/jgNu5itxfRoU6O5xEw/w7EBBi5d7MG+28=', 'sha256-biLFinpqYMtWHmXfkA1BPeCY0/fNt46SAZ+BBk5YUog=')
+CSP_SCRIPT_SRC = ("'self'", 'ajax.googleapis.com', 'sha256-85/9BrizOkSpDOJIc1bvbYi66vI0uMNcuSZ0Fb7E2Ms=')
 CSP_FONT_SRC = ("'self'", 'ajax.googleapis.com', 'fonts.gstatic.com', 'fonts.googleapis.com')
 CSP_IMG_SRC = ("'self'",)
 
