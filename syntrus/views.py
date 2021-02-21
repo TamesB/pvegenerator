@@ -905,7 +905,7 @@ def AddComment(request, pk):
                     ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
                     
                 ann.save()
-
+        messages.warning(request, "Opmerkingen opgeslagen. U kunt later altijd terug naar deze pagina of naar de opmerkingpagina om uw opmerkingen te bewerken voordat u ze opstuurt.")
         # remove duplicate entries
         return redirect('mijnopmerkingen_syn', pk=project.id)
 
@@ -1574,7 +1574,8 @@ def CheckComments(request, proj_id):
                 else:
                     ann.accept = False                
                 ann.save()
-
+                
+        messages.warning(request, "Opmerkingen opgeslagen. U kunt later altijd terug naar deze pagina of naar de opmerkingpagina om uw opmerkingen te bewerken voordat u ze opstuurt.")
         # redirect to project after posting replies for now
         return redirect('myreplies_syn', pk=project.id)
 
