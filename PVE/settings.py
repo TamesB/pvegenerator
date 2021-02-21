@@ -191,13 +191,15 @@ SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
 #X-Content-Type-Options
 SECURE_CONTENT_TYPE_NOSNIFF = True
+
+############## All True in Deployment
+## that requests over HTTP are redirected to HTTPS. aslo can config in webserver
+SECURE_SSL_REDIRECT = True 
 ## Strict-Transport-Security
 SECURE_HSTS_SECONDS = 63072000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
-
-## that requests over HTTP are redirected to HTTPS. aslo can config in webserver
-SECURE_SSL_REDIRECT = True 
+##############
 
 # for more security
 CSRF_COOKIE_SECURE = True
@@ -206,11 +208,16 @@ CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = 'Strict'
 
-CSP_DEFAULT_SRC = ["'none'"]
+CSP_DEFAULT_SRC = ["'self'"]
 CSP_SCRIPT_SRC = [
+    "'self'",
     "https://ajax.googleapis.com",
 ]
-CSP_STYLE_SRC = ["https://fonts.googleapis.com/"]
+CSP_STYLE_SRC = [
+    "'self'",
+    "https://fonts.googleapis.com/",
+]
+
 CSP_IMG_SRC = ["'self'"]
 
 
