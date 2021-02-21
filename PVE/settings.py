@@ -194,11 +194,11 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 
 ############## All True in Deployment
 ## that requests over HTTP are redirected to HTTPS. aslo can config in webserver
-SECURE_SSL_REDIRECT = True 
+#SECURE_SSL_REDIRECT = True 
 ## Strict-Transport-Security
-SECURE_HSTS_SECONDS = 63072000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+#SECURE_HSTS_SECONDS = 63072000
+#SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#SECURE_HSTS_PRELOAD = True
 ##############
 
 # for more security
@@ -208,18 +208,11 @@ CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = 'Strict'
 
-CSP_DEFAULT_SRC = ["'self'"]
-CSP_SCRIPT_SRC = [
-    "'self'",
-    "https://ajax.googleapis.com",
-]
-CSP_STYLE_SRC = [
-    "'self'",
-    "https://fonts.googleapis.com/",
-]
-
-CSP_IMG_SRC = ["'self'"]
-
+CSP_DEFAULT_SRC = ("'none'",)
+CSP_STYLE_SRC = ("'self'", 'ajax.googleapis.com', 'fonts.googleapis.com')
+CSP_SCRIPT_SRC = ("'self'",)
+CSP_FONT_SRC = ("'self'", 'ajax.googleapis.com', 'fonts.gstatic.com')
+CSP_IMG_SRC = ("'self'",)
 
 #bulkform
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
