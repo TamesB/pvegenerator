@@ -186,6 +186,7 @@ LOGIN_REDIRECT_URL = "/home"
 # Use in the pvegenerator.net production
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+SECURE_BROWSER_XSS_FILTER = True
 ## X-Frame-Options
 X_FRAME_OPTIONS = 'DENY'
 #X-Content-Type-Options
