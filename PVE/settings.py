@@ -36,7 +36,6 @@ INTERNAL_IPS = [
     #'127.0.0.1',
 ]
 
-
 # register pdf fonts
 pdfmetrics.registerFont(TTFont('Calibri', os.path.join(BASE_DIR, 'utils/calibri.ttf')))
 pdfmetrics.registerFont(TTFont('Calibri-Bold', os.path.join(BASE_DIR, 'utils/calibrib.ttf')))
@@ -78,6 +77,7 @@ MIDDLEWARE = [
     'PVE.middleware.last_visit.last_visit_middleware',
     'simple_history.middleware.HistoryRequestMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'PVE.urls'
@@ -191,7 +191,7 @@ X_FRAME_OPTIONS = 'DENY'
 #X-Content-Type-Options
 SECURE_CONTENT_TYPE_NOSNIFF = True
 ## Strict-Transport-Security
-SECURE_HSTS_SECONDS = 10
+SECURE_HSTS_SECONDS = 63072000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
@@ -204,6 +204,13 @@ CSRF_USE_SESSIONS = True
 CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = 'Strict'
+
+CSP_DEFAULT_SRC = ["'none'"]
+CSP_SCRIPT_SRC = [
+    "https://ajax.googleapis.com",
+]
+CSP_STYLE_SRC = ["https://fonts.googleapis.com/"]
+CSP_IMG_SRC = ["'self'"]
 
 
 #bulkform
