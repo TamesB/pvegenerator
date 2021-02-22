@@ -77,7 +77,7 @@ MIDDLEWARE = [
     'PVE.middleware.last_visit.last_visit_middleware',
     'simple_history.middleware.HistoryRequestMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'csp.middleware.CSPMiddleware',
+    #'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'PVE.urls'
