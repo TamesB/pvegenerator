@@ -538,6 +538,12 @@ def ViewProject(request, pk):
         context["frozencomments_todo"] = frozencomments_todo
         context["frozencomments_total"] = frozencomments_total
         context["frozencomments_percentage"] = int(100 * (frozencomments_accepted) / frozencomments_total)
+
+        freeze_ready = False
+        if frozencomments_total == frozencomments_accepted:
+            freeze_ready = True 
+        
+        context["freeze_ready"] = freeze_ready
     
     context["project"] = project
     context["medewerkers"] = medewerkers
@@ -1574,7 +1580,7 @@ def CheckComments(request, proj_id):
                 else:
                     ann.accept = False                
                 ann.save()
-                
+
         messages.warning(request, "Opmerkingen opgeslagen. U kunt later altijd terug naar deze pagina of naar de opmerkingpagina om uw opmerkingen te bewerken voordat u ze opstuurt.")
         # redirect to project after posting replies for now
         return redirect('myreplies_syn', pk=project.id)
