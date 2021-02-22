@@ -36,6 +36,8 @@ INTERNAL_IPS = [
     #'127.0.0.1',
 ]
 
+CONN_MAX_AGE = 60
+
 # register pdf fonts
 pdfmetrics.registerFont(TTFont('Calibri', os.path.join(BASE_DIR, 'utils/calibri.ttf')))
 pdfmetrics.registerFont(TTFont('Calibri-Bold', os.path.join(BASE_DIR, 'utils/calibrib.ttf')))
@@ -191,20 +193,20 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 
 ############## All True in Deployment
 ## that requests over HTTP are redirected to HTTPS. aslo can config in webserver
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True 
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#SECURE_SSL_REDIRECT = True 
 ## Strict-Transport-Security
-SECURE_HSTS_SECONDS = 63072000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+#SECURE_HSTS_SECONDS = 63072000
+#SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#SECURE_HSTS_PRELOAD = True
 ##############
 
 # for more security
-CSRF_COOKIE_SECURE = True
-CSRF_USE_SESSIONS = True
-CSRF_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = 'Strict'
+#CSRF_COOKIE_SECURE = True
+#CSRF_USE_SESSIONS = True
+#CSRF_COOKIE_HTTPONLY = True
+#SESSION_COOKIE_SECURE = True
+#SESSION_COOKIE_SAMESITE = 'Strict'
 
 #CSP_DEFAULT_SRC = ("'none'",)
 #CSP_STYLE_SRC = ("'self'", 'ajax.googleapis.com', 'fonts.googleapis.com', 'sha256-Y7kgPWQdS/jgNu5itxfRoU6O5xEw/w7EBBi5d7MG+28=', 'sha256-biLFinpqYMtWHmXfkA1BPeCY0/fNt46SAZ+BBk5YUog=')

@@ -398,7 +398,7 @@ def GeneratePVEView(request):
 
 @login_required
 def download_pve_overview(request):    
-    projects = Project.objects.filter(permitted__username__contains=request.user.username)
+    projects = Project.objects.filter(permitted__username__contains=request.user.username).distinct()
 
     context = {}
     context["projects"] = projects
@@ -503,7 +503,7 @@ def download_pve(request, pk):
 
 @login_required(login_url='login_syn')
 def ViewProjectOverview(request):
-    projects = Project.objects.filter(belegger__naam='Syntrus', permitted__username__contains=request.user.username)
+    projects = Project.objects.filter(belegger__naam='Syntrus', permitted__username__contains=request.user.username).distinct()
 
     context = {}
     context["projects"] = projects
