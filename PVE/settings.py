@@ -102,6 +102,8 @@ TEMPLATES = [
     },
 ]
 
+WSGI_APPLICATION = "PVE.wsgi.application"
+
 TEMPLATE_LOADERS = ['django.template.loaders.filesystem.Loader',
 'django.template.loaders.app_directories.Loader'
 ]
