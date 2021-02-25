@@ -8,11 +8,11 @@ SECURE_HSTS_PRELOAD = True
 ##############
 
 # for more security
-#CSRF_COOKIE_SECURE = True
-#CSRF_USE_SESSIONS = True
-#CSRF_COOKIE_HTTPONLY = True
-#SESSION_COOKIE_SECURE = True
-#SESSION_COOKIE_SAMESITE = 'Strict'
+CSRF_COOKIE_SECURE = True
+CSRF_USE_SESSIONS = True
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'Strict'
 
 #CSP_DEFAULT_SRC = ("'none'",)
 #CSP_STYLE_SRC = ("'self'", 'ajax.googleapis.com', 'fonts.googleapis.com', 'sha256-Y7kgPWQdS/jgNu5itxfRoU6O5xEw/w7EBBi5d7MG+28=', 'sha256-biLFinpqYMtWHmXfkA1BPeCY0/fNt46SAZ+BBk5YUog=')
