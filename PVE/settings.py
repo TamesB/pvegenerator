@@ -166,7 +166,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = ( os.path.join('static'), )
 
-STATICFILES_STORAGE = 'PVE.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
 GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
