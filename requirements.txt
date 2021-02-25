@@ -4,6 +4,7 @@ gunicorn
 dj_database_url
 psycopg2
 psycopg2-binary
+opencv-python-headless
 django-heroku
 reportlab==3.5.42
 django-semanticui-forms==1.6.5
