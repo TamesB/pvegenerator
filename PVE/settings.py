@@ -167,7 +167,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = ( os.path.join('static'), )
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 WHITENOISE_MANIFEST_STRICT = False
 
 GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
