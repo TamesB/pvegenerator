@@ -22,3 +22,4 @@ python-dotenv
 django-simple-history
 django-debug-toolbar
 django-cached-modelforms
+django-jsignature

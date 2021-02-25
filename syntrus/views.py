@@ -1629,10 +1629,10 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
         last_accept = False
         # set the PVEItem from the comment
         item = comment.item
-        
+
+        temp_bijlage_list = []
         temp_commentbulk_list_non_accept = []
         string = ""
-
 
         if comment.status:
             string = f"Status: {comment.status}"
@@ -1650,6 +1650,9 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
 
             for reply in commentreplys:
                 temp_commentbulk_list_non_accept.append(reply.comment)
+
+                if reply.bijlage:
+                    temp_bijlage_list.append(reply.id)
             
             string += f", Opmerkingen: "
 
@@ -1670,14 +1673,14 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
                     hoofdstuk_ordered_items_non_accept[item.hoofdstuk] = {}
 
             if item.paragraaf in hoofdstuk_ordered_items_non_accept[item.hoofdstuk]:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf].append([item.inhoud, item.id, comment.id, string, comment.annotation, last_accept])
+                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf].append([item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list])
             else:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf] = [[item.inhoud, item.id, comment.id, string, comment.annotation, last_accept]]
+                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf] = [[item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list]]
         else:
             if item.hoofdstuk in hoofdstuk_ordered_items_non_accept:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk].append([item.inhoud, item.id, comment.id, string, comment.annotation, last_accept])
+                hoofdstuk_ordered_items_non_accept[item.hoofdstuk].append([item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list])
             else:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk] = [[item.inhoud, item.id, comment.id, string, comment.annotation, last_accept]]
+                hoofdstuk_ordered_items_non_accept[item.hoofdstuk] = [[item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list]]
 
     return hoofdstuk_ordered_items_non_accept
 
@@ -1997,13 +2000,13 @@ def SendReplies(request, pk):
                 new_phase.level = commentphase.level + 1
                 new_phase.project = project
                 new_phase.save()
-
+                                
                 # split comments in previously accepted and non accepted
                 non_accepted_comments_ids = []
                 accepted_comment_ids = []
                 todo_comment_ids = []
                 total_comments_ids = []
-                comments = CommentReply.objects.select_related("onComment").filter(commentphase=commentphase)
+                comments = CommentReply.objects.select_related("onComment").select_related("status").filter(commentphase=commentphase)
 
                 for comment in comments:
                     if comment.accept:

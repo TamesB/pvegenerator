@@ -50,7 +50,11 @@
                     {% endif %}
                     <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
                     {% if item|index:3 %}<div class="status_added" id="status-{{ item|index:1 }}">
-                    <p>{{ item|index:3 }}</p></div>
+                    <p>{{ item|index:3 }}
+                    {% if item|index:6 %}
+                    <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
+                    {% endif %}
+                    </p></div>
                     {% else %}
                     <div class="status_not_added" id="status-{{ item|index:1 }}">
                     <p>+ Status</p></div>{% endif %}
@@ -66,7 +70,11 @@
           <div class="item_content" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
           {% endif %}<div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
           {% if item|index:3 %}<div class="status_added" id="status-{{ item|index:1 }}">
-          <p>{{ item|index:3 }}</p></div>
+          <p>{{ item|index:3 }}
+          {% if item|index:6 %}
+          <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
+          {% endif %}
+          </p></div>          
           {% else %}
           <div class="status_not_added" id="status-{{ item|index:1 }}">
           <p>+ Status</p></div>{% endif %}
@@ -124,7 +132,11 @@
                     {% endif %}
                     <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
                     {% if item|index:3 %}<div class="status_added" id="status-{{ item|index:1 }}">
-                    <p>{{ item|index:3 }}</p></div>
+                    <p>{{ item|index:3 }}
+                    {% if item|index:6 %}
+                    <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
+                    {% endif %}
+                    </p></div>                      
                     {% else %}
                     <div class="status_not_added" id="status-{{ item|index:1 }}">
                     <p>+ Status of Akkoord</p></div>{% endif %}
@@ -140,7 +152,11 @@
           <div class="item_content" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
           {% endif %}<div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
           {% if item|index:3 %}<div class="status_added" id="status-{{ item|index:1 }}">
-          <p>{{ item|index:3 }}</p></div>
+          <p>{{ item|index:3 }}
+          {% if item|index:6 %}
+          <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
+          {% endif %}
+          </p></div>  
           {% else %}
           <div class="status_not_added" id="status-{{ item|index:1 }}">
           <p>+ Status of Akkoord</p></div>{% endif %}
@@ -197,7 +213,11 @@
                     {% endif %}
                     <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
                     {% if item|index:3 %}<div class="status_added" id="status-{{ item|index:1 }}">
-                    <p>{{ item|index:3 }}</p></div>
+                    <p>{{ item|index:3 }}
+                    {% if item|index:6 %}
+                    <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
+                    {% endif %}
+                    </p></div>                      
                     {% else %}
                     <div class="status_not_added" id="status-{{ item|index:1 }}">
                     <p>+ Status of Akkoord</p></div>{% endif %}
@@ -214,7 +234,11 @@
           {% endif %}
           <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
           {% if item|index:3 %}<div class="status_added" id="status-{{ item|index:1 }}">
-          <p>{{ item|index:3 }}</p></div>
+          <p>{{ item|index:3 }}
+          {% if item|index:6 %}
+          <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
+          {% endif %}
+          </p></div>            
           {% else %}
           <div class="status_not_added" id="status-{{ item|index:1 }}">
           <p>+ Status of Akkoord</p></div>{% endif %}
