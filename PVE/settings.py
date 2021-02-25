@@ -7,6 +7,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 import platform
 import dj_database_url
+from django.utils.log import DEFAULT_LOGGING
 
 root = environ.Path(__file__)
 env = environ.Env()
@@ -30,6 +31,8 @@ SECRET_KEY = env.str("SECRET_KEY")
 DEBUG = env.bool('DEBUG', default=False)
 
 CONN_MAX_AGE = 60
+
+DEFAULT_LOGGING['handlers']['console']['filters'] = []
 
 # register pdf fonts
 pdfmetrics.registerFont(TTFont('Calibri', os.path.join(BASE_DIR, 'utils/calibri.ttf')))
