@@ -170,12 +170,7 @@ STATIC_URL = STATIC_HOST + '/static/'
 
 STATICFILES_DIRS = ( os.path.join('static'), )
 
-<<<<<<< HEAD
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-=======
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
->>>>>>> b8ed118b08af8b1abd76aca3d1c7d0dbf79a3493
-
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
 GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
 
