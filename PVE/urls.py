@@ -1,7 +1,7 @@
 # Author: Tames Boon
 
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, re_path, path
 from django.conf.urls.static import static
 from django.conf import settings
 from django.conf.urls import url
@@ -19,5 +19,6 @@ urlpatterns = [
     path('syntrus/', include('syntrus.urls')),
 ]
 
-urlpatterns += static(settings.EXPORTS_URL, document_root=settings.EXPORTS_ROOT)
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.EXPORTS_URL, document_root=settings.EXPORTS_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
