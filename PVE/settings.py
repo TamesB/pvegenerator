@@ -27,7 +27,7 @@ if os.name == 'nt':
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "pvegenerator.herokuapp.com"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "pvegenerator.herokuapp.com", "pvegenerator.net"]
 
 SECRET_KEY = env.str("SECRET_KEY")
 DEBUG = env.bool('DEBUG', default=False)
