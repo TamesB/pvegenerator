@@ -1,5 +1,5 @@
 from django.db import connection
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse
@@ -1543,15 +1543,16 @@ def CheckComments(request, proj_id):
     # the POST method
     if request.method == "POST":
         comment_id_list = [number for number in request.POST.getlist("comment_id")]
-        print(request.POST.getlist("comment_id"), request.POST.getlist("annotation"), request.POST.getlist("status"), request.POST.getlist("accept"))
+
         ann_forms = [
             # todo: fix bijlages toevoegen
-            forms.CommentReplyForm(dict(comment_id=comment_id, annotation=opmrk, status=status, accept=accept))
-            for comment_id, opmrk, status, accept in zip(
+            forms.CommentReplyForm(dict(comment_id=comment_id, annotation=opmrk, status=status, accept=accept, kostenConsequenties=kostenConsequenties))
+            for comment_id, opmrk, status, accept, kostenConsequenties in zip(
                 request.POST.getlist("comment_id"),
                 request.POST.getlist("annotation"),
                 request.POST.getlist("status"),
                 request.POST.getlist("accept"),
+                request.POST.getlist("kostenConsequenties"),
             )
         ]
 
@@ -1559,7 +1560,7 @@ def CheckComments(request, proj_id):
         ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
 
         for form in ann_forms:
-            if form.cleaned_data["status"] or form.cleaned_data["accept"] == "True" or form.cleaned_data["annotation"]:
+            if form.cleaned_data["status"] or form.cleaned_data["accept"] == "True" or form.cleaned_data["annotation"] or form.cleaned_data["kostenConsequenties"]:
                 # get the original comment it was on
                 originalComment = PVEItemAnnotation.objects.filter(id=form.cleaned_data["comment_id"]).first()
 
@@ -1575,6 +1576,8 @@ def CheckComments(request, proj_id):
                     ann.status = form.cleaned_data["status"]
                 if form.cleaned_data["annotation"]: 
                     ann.comment = form.cleaned_data["annotation"]
+                if form.cleaned_data["kostenConsequenties"]:
+                    ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
                 if form.cleaned_data["accept"] == 'True':
                     ann.accept = True
                 else:
@@ -1611,6 +1614,7 @@ def CheckComments(request, proj_id):
     context["hoofdstuk_ordered_items_non_accept"] = hoofdstuk_ordered_items_non_accept
     context["hoofdstuk_ordered_items_accept"] = hoofdstuk_ordered_items_accept
     context["hoofdstuk_ordered_items_todo"] = hoofdstuk_ordered_items_todo
+    context["totale_kosten"] = PVEItemAnnotation.objects.filter(project=project).aggregate(Sum('kostenConsequenties'))["kostenConsequenties__sum"]
     return render(request, 'CheckComments_syn.html', context)
 
 def order_comments_for_commentcheck(comments_entry, proj_id):
@@ -1659,7 +1663,7 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
             comment_added = False
             for comment_str in temp_commentbulk_list_non_accept:
                 if comment_str:
-                    string += f"'{ comment_str }', "
+                    string += f""""{ comment_str }", """
                     comment_added = True
             
             if not comment_added:
@@ -1673,14 +1677,14 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
                     hoofdstuk_ordered_items_non_accept[item.hoofdstuk] = {}
 
             if item.paragraaf in hoofdstuk_ordered_items_non_accept[item.hoofdstuk]:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf].append([item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list])
+                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf].append([item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list, comment.kostenConsequenties])
             else:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf] = [[item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list]]
+                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf] = [[item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list, comment.kostenConsequenties]]
         else:
             if item.hoofdstuk in hoofdstuk_ordered_items_non_accept:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk].append([item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list])
+                hoofdstuk_ordered_items_non_accept[item.hoofdstuk].append([item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list, comment.kostenConsequenties])
             else:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk] = [[item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list]]
+                hoofdstuk_ordered_items_non_accept[item.hoofdstuk] = [[item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list, comment.kostenConsequenties]]
 
     return hoofdstuk_ordered_items_non_accept
 
@@ -1705,6 +1709,7 @@ def make_ann_forms(comments, frozencomments):
                     'annotation':reply.comment,
                     'accept':'True',
                     'status':reply.status,
+                    'kostenConsequenties':reply.kostenConsequenties,
                     }))
             else:
                 ann_forms.append(forms.CommentReplyForm(initial={
@@ -1712,6 +1717,7 @@ def make_ann_forms(comments, frozencomments):
                     'annotation':reply.comment,
                     'accept':'False',
                     'status':reply.status,
+                    'kostenConsequenties':reply.kostenConsequenties,
                     }))
     return ann_forms
 
@@ -2014,11 +2020,18 @@ def SendReplies(request, pk):
                     else:
                         non_accepted_comments_ids.append(comment.onComment.id)
 
+                    # change original comments status if reply has it
                     if comment.status:
                         original_comment = comment.onComment
                         original_comment.status = comment.status
                         original_comment.save()
                     
+                    # add costs to original comment if reply has it.
+                    if comment.kostenConsequenties:
+                        original_comment = comment.onComment
+                        original_comment.kostenConsequenties = comment.kostenConsequenties
+                        original_comment.save()
+
                     total_comments_ids.append(comment.onComment.id)
                     
                 

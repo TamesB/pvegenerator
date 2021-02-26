@@ -215,6 +215,7 @@ class CommentReplyForm(forms.Form):
     comment_id = forms.IntegerField(label='comment_id')
     status = CachedModelChoiceField(objects=lambda:CommentStatus.objects.all(), required=False)
     annotation = forms.CharField(label='annotation', max_length=1000, widget=forms.Textarea, required=False)
+    kostenConsequenties = forms.DecimalField(label='(Optioneel) Kosten Consequenties', required=False)
     accept = forms.ChoiceField(choices=CHOICES, required=False)
 
 class BijlageToReplyForm(ModelForm):

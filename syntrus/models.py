@@ -57,6 +57,7 @@ class CommentReply(models.Model):
     comment = models.TextField(max_length=1000, default=None, null=True)
     accept = models.BooleanField(default=False, blank=True, null=True)
     bijlage = models.BooleanField(default=False, blank=True, null=True)
+    kostenConsequenties = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=None)
     status = models.ForeignKey(CommentStatus, on_delete=models.CASCADE, null=True, blank=True)
     gebruiker = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     datum = models.DateTimeField(auto_now=True)

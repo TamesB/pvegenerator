@@ -17,6 +17,8 @@
   <a class="section" href="{% url 'viewproject_syn' project.id %}">Project: {{ project.naam }}</a>
   <i class="right chevron icon divider"></i>
   <a class="section" href="{% url 'commentscheck_syn' project.id %}">Checklist</a>
+  <i class="right chevron icon divider"></i>  
+  <a class="section" href="{% url 'myreplies_syn' project.id %}">Laatste check</a>
   <i class="right chevron icon divider"></i>
   <div class="active section">Doorsturen</div>
 </div>

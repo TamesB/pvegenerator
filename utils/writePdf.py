@@ -252,7 +252,7 @@ class PDFMaker:
                                                 if reactie.comment:
                                                     if len(reactie_str) == 0:
                                                         reactie_str += f"Opmerkingen: "
-                                                    reactie_str += f"'{reactie.comment}' -{reactie.gebruiker}. "
+                                                    reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
 
                                                 if reactie.id in reactiebijlagen:
                                                     if len(reactie_str) == 0:
@@ -266,13 +266,8 @@ class PDFMaker:
                                         
                                         opmrk = (opmrk)
      
-                                        # groen als akkoord, rood als andere status
-                                        if str(opmerkingen[item.id].status) == "akkoord":
-                                            j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
-                                        elif str(opmerkingen[item.id].status) == "niet akkoord":
-                                            j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrk)
-                                        else:
-                                            j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkOrange)
+                                        # kleur aanvullingen/opmerkingen als groen
+                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
 
                                         Story.append(p)
                                         Story.append(j)
@@ -318,13 +313,8 @@ class PDFMaker:
 
                                         opmrk = (opmrk)
 
-                                        # groen als akkoord, rood als andere status
-                                        if str(opmerkingen[item.id].status) == "akkoord":
-                                            j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkGreen)
-                                        elif str(opmerkingen[item.id].status) == "niet akkoord":
-                                            j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrk)
-                                        else:
-                                            j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkOrange)
+                                        # kleur aanvullingen/opmerkingen als groen
+                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
                                         
                                         Story.append(p)
                                         Story.append(j)
@@ -379,13 +369,8 @@ class PDFMaker:
 
                                     opmrk = (opmrk)
 
-                                    # groen als akkoord, rood als andere status
-                                    if str(opmerkingen[item.id].status) == "akkoord":
-                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
-                                    elif str(opmerkingen[item.id].status) == "niet akkoord":
-                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrk)
-                                    else:
-                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkOrange)
+                                    # kleur aanvullingen/opmerkingen als groen
+                                    j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
                                     
                                     Story.append(p)
                                     Story.append(j)
@@ -429,13 +414,8 @@ class PDFMaker:
 
                                     opmrk = (opmrk)
 
-                                    # groen als akkoord, rood als andere status
-                                    if str(opmerkingen[item.id].status) == "akkoord":
-                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkGreen)
-                                    elif str(opmerkingen[item.id].status) == "niet akkoord":
-                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrk)
-                                    else:
-                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkOrange)
+                                    # kleur aanvullingen/opmerkingen als groen
+                                    j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
                                     
                                     Story.append(p)
                                     Story.append(j)

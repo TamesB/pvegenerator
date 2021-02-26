@@ -22,7 +22,7 @@
 <form class="opmerking_form" action="{% url 'commentscheck_syn' project.id %}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 
-<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Checklist<input type="submit" class="submit_button" value="Opslaan >"></input></p></div>
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Checklist (Huidig kostenverschil: &#8364;{{ totale_kosten }})<input type="submit" class="submit_button" value="Opslaan >"></input></p></div>
 
 <div class="ui top attached tabular menu">
   <a class="item active" data-tab="todo_comments">Status nog aan te wijzen</a>
@@ -54,6 +54,9 @@
                     {% if item|index:6 %}
                     <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
                     {% endif %}
+                    {% if item|index:7 %}
+                    <br>Kostenverschil: &#8364;{{ item|index:7 }}
+                    {% endif %}
                     </p></div>
                     {% else %}
                     <div class="status_not_added" id="status-{{ item|index:1 }}">
@@ -73,6 +76,9 @@
           <p>{{ item|index:3 }}
           {% if item|index:6 %}
           <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
+          {% endif %}
+          {% if item|index:7 %}
+          <br>Kostenverschil: &#8364;{{ item|index:7 }}
           {% endif %}
           </p></div>          
           {% else %}
@@ -98,6 +104,8 @@
                         <p class="formbox">{{ form.status }}</p>
                         <label for="{{ form.annotation.id_for_label }}">(Optioneel) Reactie:</label>
                         <p class="formbox">{{ form.annotation }}</p>
+                        <label for="{{ form.kostenConsequenties.id_for_label }}">(Optioneel) Nieuw Kostenverschil:</label>
+                        <p class="formbox">{{ form.kostenConsequenties }}</p>
                         <span class="form_buttons">
                           <div onclick="document.getElementById('{{ form.comment_id.value|add:"-1" }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
                           <div onclick="document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button center"><p>Gereed</p></div>
@@ -136,6 +144,9 @@
                     {% if item|index:6 %}
                     <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
                     {% endif %}
+                    {% if item|index:7 %}
+                    <br>Kostenverschil: &#8364;{{ item|index:7 }}
+                    {% endif %}
                     </p></div>                      
                     {% else %}
                     <div class="status_not_added" id="status-{{ item|index:1 }}">
@@ -155,6 +166,9 @@
           <p>{{ item|index:3 }}
           {% if item|index:6 %}
           <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
+          {% endif %}
+          {% if item|index:7 %}
+          <br>Kostenverschil: &#8364;{{ item|index:7 }}
           {% endif %}
           </p></div>  
           {% else %}
@@ -179,6 +193,8 @@
                         <p class="formbox">{{ form.status }}</p>
                         <label for="{{ form.annotation.id_for_label }}">(Optioneel) Reactie:</label>
                         <p class="formbox">{{ form.annotation }}</p>
+                        <label for="{{ form.kostenConsequenties.id_for_label }}">(Optioneel) Nieuw Kostenverschil:</label>
+                        <p class="formbox">{{ form.kostenConsequenties }}</p>
                         <span class="form_buttons">
                           <div onclick="document.getElementById('{{ form.comment_id.value|add:"-1" }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
                           <div onclick="document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button center"><p>Gereed</p></div>
@@ -217,6 +233,9 @@
                     {% if item|index:6 %}
                     <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
                     {% endif %}
+                    {% if item|index:7 %}
+                    <br>Kostenverschil: &#8364;{{ item|index:7 }}
+                    {% endif %}
                     </p></div>                      
                     {% else %}
                     <div class="status_not_added" id="status-{{ item|index:1 }}">
@@ -237,6 +256,9 @@
           <p>{{ item|index:3 }}
           {% if item|index:6 %}
           <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
+          {% endif %}
+          {% if item|index:7 %}
+          <br>Kostenverschil: &#8364;{{ item|index:7 }}
           {% endif %}
           </p></div>            
           {% else %}
@@ -261,6 +283,8 @@
                         <p class="formbox">{{ form.status }}</p>
                         <label for="{{ form.annotation.id_for_label }}">(Optioneel) Reactie:</label>
                         <p class="formbox">{{ form.annotation }}</p>
+                        <label for="{{ form.kostenConsequenties.id_for_label }}">(Optioneel) Nieuw Kostenverschil:</label>
+                        <p class="formbox">{{ form.kostenConsequenties }}</p>
                         <span class="form_buttons">
                           <div onclick="document.getElementById('{{ form.comment_id.value|add:"-1" }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
                           <div onclick="document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button center"><p>Gereed</p></div>

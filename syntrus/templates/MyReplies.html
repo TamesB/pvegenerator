@@ -30,7 +30,7 @@
     <th><img src="{% static 'syntrus/svg/logo.svg' %}" class="syntr_logo"></a></th>
     <th><p>Akkoord</p></th>
     <th><p>Nieuwe Status</p></th>
-    <th><p>Opmerking</p></th>
+    <th><p>Inhoud</p></th>
     <th><p>Acties</p></th>
     <th><p>Bijlage</p></th>
     <th><p>Datum bewerkt</p></th>
@@ -41,7 +41,7 @@
     <td class="inhoud_box"><p>{{ reply.onComment.item.inhoud }}</p></td>
     <td class="voldoening"><p>{% if reply.accept %}Ja{% else %}&nbsp;{% endif %}</p></td>
     <td class="voldoening"><p>{% if reply.status %}{{ reply.status }}{% else %}&nbsp;{% endif %}</p></td>
-    <td class="voldoening"><p>{% if reply.comment %}{{ reply.comment }}{% else %}&nbsp;{% endif %}</p></td>
+    <td class="voldoening"><p>{% if reply.comment %}{{ reply.comment }}{% else %}&nbsp;{% endif %}{% if reply.bijlage %}<i>Bijlage: <a href="{% url 'downloadreplyattachment_syn' project.id reply.id %}" style="float:left;" target="_blank"><button class="ui icon basic button"><i class="icon download"></i></button></a></i>{% endif %}{% if reply.kostenConsequenties %}<i>Kostenverschil: &#8364; {{ reply.kostenConsequenties }}</i>{% endif %}</p></td>
     <td class="voldoening"><p style="float: left;" onClick="document.getElementById('{{ reply.onComment.id }}').style.display='block'"><button class="ui icon basic button"><i class="icon edit"></i></button></p></td>
     <td class="voldoening">{% if not reply.bijlage %}<p><a href="{% url 'addreplyattachment_syn' project.id reply.id %}"><button class="ui icon basic button"><i class="icon plus"></i></button></a></p>{% else %}<a href="{% url 'downloadreplyattachment_syn' project.id reply.id %}" style="float:left;" target="_blank"><button class="ui icon basic button"><i class="icon download"></i></button></a>{% endif %}</td>
     <td class="voldoening"><p>{{ reply.datum }}</p></td>
@@ -69,6 +69,8 @@
                         <p class="formbox">{{ form.status }}</p>
                         <label for="{{ form.annotation.id_for_label }}">(Optioneel) Opmerking:</label>
                         <p class="formbox">{{ form.annotation }}</p>
+                        <label for="{{ form.kostenConsequenties.id_for_label }}">(Optioneel) Kostenverschil:</label>
+                        <p class="formbox">{{ form.kostenConsequenties }}</p>
                         <span class="form_buttons">
                           <div onclick="document.getElementById('{{ form.comment_id.value|add:"-1" }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
                           <input type="submit" class="done_button" value="Gereed"></input>
