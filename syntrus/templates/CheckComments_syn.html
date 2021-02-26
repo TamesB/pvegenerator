@@ -33,7 +33,7 @@
 
 <div class="ui bottom attached tab segment active" data-tab="todo_comments">
 {% if todo_comments %}
-<div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>Groen = status is al opgeslagen. Geel = u heeft net een wijziging gemaakt. Rood = nog geen status aangegeven.</p></span></popup-notify></div></div>
+<div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>De status, opgevolgd door de opmerkingen op de regel en op elkaar. Mits er bijlages zijn toegevoegd, zijn deze downloadbaar hierna. "Nieuwe Status" betekent dat de status veranderd is bij de laatste check.</p></span></popup-notify></div></div>
 <div class="item_opmerking_list">
 {% for hoofdstuk, one_deep in hoofdstuk_ordered_items_todo.items %}
     <button type="button" class="hoofdstuk">{{ hoofdstuk.hoofdstuk }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></button>
@@ -115,7 +115,7 @@
 
 <div class="ui bottom attached tab segment" data-tab="non_accepted_comments">
 {% if non_accepted_comments %}
-<div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>Groen = status is al opgeslagen. Geel = u heeft net een wijziging gemaakt. Rood = nog geen status aangegeven.</p></span></popup-notify></div></div>
+<div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>De status, opgevolgd door de opmerkingen op de regel en op elkaar. Mits er bijlages zijn toegevoegd, zijn deze downloadbaar hierna. "Nieuwe Status" betekent dat de status veranderd is bij de laatste check.</p></span></popup-notify></div></div>
 <div class="item_opmerking_list">
 {% for hoofdstuk, one_deep in hoofdstuk_ordered_items_non_accept.items %}
     <button type="button" class="hoofdstuk">{{ hoofdstuk.hoofdstuk }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></button>
@@ -139,7 +139,7 @@
                     </p></div>                      
                     {% else %}
                     <div class="status_not_added" id="status-{{ item|index:1 }}">
-                    <p>+ Status of Akkoord</p></div>{% endif %}
+                    <p>+ Opmerking of Akkoord</p></div>{% endif %}
                     </div>
                 {% endfor %}
             </div>
@@ -159,7 +159,7 @@
           </p></div>  
           {% else %}
           <div class="status_not_added" id="status-{{ item|index:1 }}">
-          <p>+ Status of Akkoord</p></div>{% endif %}
+          <p>+ Opmerking of Akkoord</p></div>{% endif %}
           </div>
         {% endfor %}  
     {% endif %}
@@ -196,7 +196,7 @@
 
 <div class="ui bottom attached tab segment" data-tab="accepted_comments">
 {% if accepted_comments %}
-<div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>Groen = status is al opgeslagen. Geel = u heeft net een wijziging gemaakt. Rood = nog geen status aangegeven.</p></span></popup-notify></div></div>
+<div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>De status, opgevolgd door de opmerkingen op de regel en op elkaar. Mits er bijlages zijn toegevoegd, zijn deze downloadbaar hierna. "Nieuwe Status" betekent dat de status veranderd is bij de laatste check.</p></span></popup-notify></div></div>
 <div class="item_opmerking_list">
 {% for hoofdstuk, one_deep in hoofdstuk_ordered_items_accept.items %}
     <button type="button" class="hoofdstuk">{{ hoofdstuk.hoofdstuk }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></button>
@@ -220,7 +220,7 @@
                     </p></div>                      
                     {% else %}
                     <div class="status_not_added" id="status-{{ item|index:1 }}">
-                    <p>+ Status of Akkoord</p></div>{% endif %}
+                    <p>+ Opmerking of Akkoord</p></div>{% endif %}
                     </div>
                 {% endfor %}
             </div>
@@ -241,7 +241,7 @@
           </p></div>            
           {% else %}
           <div class="status_not_added" id="status-{{ item|index:1 }}">
-          <p>+ Status of Akkoord</p></div>{% endif %}
+          <p>+ Opmerking of Akkoord</p></div>{% endif %}
           </div>
         {% endfor %}  
     {% endif %}

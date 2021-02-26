@@ -22,8 +22,8 @@
 <form class="opmerking_form" action="{% url 'plusopmerking_syn' project.id %}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 
-<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Eerste statusaanwijzing<input type="submit" class="submit_button" value="Opslaan >"></input></p></div>
-
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Eerste statusaanwijzing / Aanvullingen op regels<input type="submit" class="submit_button" value="Opslaan >"></input></p></div>
+<div style="height:6vh;"></div>
 {% if items %}
 <div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>Groen = status is al opgeslagen. Geel = u heeft net een wijziging gemaakt. Rood = nog geen status aangegeven.</p></span></popup-notify></div></div>
 <div class="item_opmerking_list">
@@ -40,7 +40,7 @@
                     <p>Status: {{ item|index:2 }}</p></div>
                     {% else %}
                     <div class="status_not_added" id="status-{{ item|index:1 }}">
-                    <p>+ Status</p></div>{% endif %}
+                    <p>+ Status of Aanvulling</p></div>{% endif %}
                     </div>
                 {% endfor %}
             </div>
@@ -53,7 +53,7 @@
             <p>Status: {{ item|index:2 }}</p></div>
             {% else %}
             <div class="status_not_added" id="status-{{ item|index:1 }}">
-            <p>+ Status</p></div>{% endif %}
+            <p>+ Status of Aanvulling</p></div>{% endif %}
         </div>
         {% endfor %}  
     {% endif %}
@@ -70,7 +70,7 @@
                         <p class="inhoud">{{ items|index:forloop.counter0|slice:":100" }}</p>
                         <label for="{{ form.status.id_for_label }}">Status:</label>
                         <p class="formbox">{{ form.status }}</p>
-                        <label for="{{ form.annotation.id_for_label }}">Opmerking (optioneel):</label>
+                        <label for="{{ form.annotation.id_for_label }}">Aanvulling (optioneel):</label>
                         <p class="formbox">{{ form.annotation }}</p>
                         <label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil (optioneel):</label>
                         <p class="formbox">{{ form.kostenConsequenties }}</p>                    
