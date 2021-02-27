@@ -27,6 +27,8 @@ class PDFMaker:
         self.year = self.date.strftime("%Y")
         self.Topleft = f"PVE SAREF {self.year}"
         self.BijlageDisclaimer = f"Bijlages van regels zijn in het mapje BasisBijlages, bijlagen van opmerkingen in het mapje OpmerkingBijlages."
+        self.GeaccepteerdDisclaimer = f"Geaccepteerde statussen zijn in het groen."
+        self.NietGeaccepteerdDisclaimer = f"Niet geaccepteerde statussen zijn in het rood."
         self.Topright = "CONCEPT"
         self.Centered = "PARAMETERS"
         self.Bottomleft = "%s-%s-%s" % (self.date.strftime("%d"), self.date.strftime("%m"), self.year)
@@ -153,9 +155,13 @@ class PDFMaker:
         canvas.setFont('Calibri',8)
         canvas.drawString(self.LeftPadding + 1, self.OpmerkingBoxPadding + self.OpmerkingBoxHeight + 2, f"PROGRAMMA VAN EISEN {self.year}")
         #   rode kleur voor disclaimer
-        canvas.setFillColorRGB(255, 0, 0)
-        canvas.drawString(self.LeftPadding + 4, self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 2) - 2, self.BijlageDisclaimer)
         canvas.drawString(self.LeftPadding + 4, self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 2) + 8, f"Huidige kostenverschil: €{self.kostenverschil},-")
+        canvas.drawString(self.LeftPadding + 4, self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 2) - 2, self.BijlageDisclaimer)
+        canvas.setFillColorRGB(0, 128, 0)
+        canvas.drawString(self.LeftPadding + 4, self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 2) - 12, self.GeaccepteerdDisclaimer)
+        canvas.setFillColorRGB(255, 0, 0)
+        canvas.drawString(self.LeftPadding + 4, self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 2) - 22, self.NietGeaccepteerdDisclaimer)
+
         canvas.setFillColorRGB(0, 0, 0)
         # Blauwe Box voordat PVE begint
         canvas.setFillColorRGB(75/255, 172/255, 198/255)
@@ -187,7 +193,7 @@ class PDFMaker:
 
         canvas.restoreState()
 
-    def makepdf(self, filename, PVEItems, opmerkingen, bijlagen, reacties, reactiebijlagen, parameters):
+    def makepdf(self, filename, PVEItems, opmerkingen, bijlagen, reacties, reactiebijlagen, parameters, accepted_comment_ids):
         # for switching background styles between added items
         
         item_added = 0
@@ -266,8 +272,11 @@ class PDFMaker:
                                         
                                         opmrk = (opmrk)
      
-                                        # kleur aanvullingen/opmerkingen als groen
-                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
+                                        # kleur geaccepteerde aanvullingen/opmerkingen als groen
+                                        if opmerkingen[item.id].id in accepted_comment_ids:
+                                            j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
+                                        else:
+                                            j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrk)
 
                                         Story.append(p)
                                         Story.append(j)
@@ -314,8 +323,11 @@ class PDFMaker:
                                         opmrk = (opmrk)
 
                                         # kleur aanvullingen/opmerkingen als groen
-                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkGreen)
-                                        
+                                        if opmerkingen[item.id].id in accepted_comment_ids:
+                                            j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkGreen)
+                                        else:
+                                            j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrk)
+
                                         Story.append(p)
                                         Story.append(j)
 
@@ -369,8 +381,10 @@ class PDFMaker:
 
                                     opmrk = (opmrk)
 
-                                    # kleur aanvullingen/opmerkingen als groen
-                                    j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
+                                    if opmerkingen[item.id].id in accepted_comment_ids:
+                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
+                                    else:
+                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrk)
                                     
                                     Story.append(p)
                                     Story.append(j)
@@ -414,8 +428,10 @@ class PDFMaker:
 
                                     opmrk = (opmrk)
 
-                                    # kleur aanvullingen/opmerkingen als groen
-                                    j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkGreen)
+                                    if opmerkingen[item.id].id in accepted_comment_ids:
+                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkGreen)
+                                    else:
+                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrk)
                                     
                                     Story.append(p)
                                     Story.append(j)

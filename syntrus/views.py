@@ -372,7 +372,7 @@ def GeneratePVEView(request):
             reacties = {}
             reactiebijlagen = {}
 
-            pdfmaker.makepdf(filename, basic_PVE, opmerkingen, bijlagen, reacties, reactiebijlagen, parameters)
+            pdfmaker.makepdf(filename, basic_PVE, opmerkingen, bijlagen, reacties, reactiebijlagen, parameters, [])
 
             # get bijlagen
             bijlagen = [item for item in basic_PVE if item.bijlage]
@@ -462,6 +462,12 @@ def download_pve(request, pk):
             bijlage = BijlageToReply.objects.get(reply=reply)
             reactiebijlagen[reply.id] = bijlage
 
+    geaccepteerde_regels_ids = []
+
+    if project.frozenLevel > 0:
+        commentphase = FrozenComments.objects.filter(project=project, level=project.frozenLevel).first()
+        geaccepteerde_regels_ids = [accepted_id.id for accepted_id in commentphase.accepted_comments.all()]
+
     pdfmaker = writePdf.PDFMaker()
 
     # verander CONCEPT naar DEFINITIEF als het project volbevroren is.
@@ -472,7 +478,7 @@ def download_pve(request, pk):
         pdfmaker.TopRightPadding = 75
 
     pdfmaker.kostenverschil = kostenverschil
-    pdfmaker.makepdf(filename, basic_PVE, opmerkingen, bijlagen, reacties, reactiebijlagen, parameters)
+    pdfmaker.makepdf(filename, basic_PVE, opmerkingen, bijlagen, reacties, reactiebijlagen, parameters, geaccepteerde_regels_ids)
 
     # get bijlagen
     bijlagen = [item for item in basic_PVE if item.bijlage]
