@@ -8,7 +8,8 @@
 {% endblock %}
 
 {% block main %}
-<div class="main_content_div profile_box">
+<div class="profile_box">
+  <div class="profile_content">
   <div class="profile_left"><img class="round-profile" src="{% static 'syntrus/svg/anonprofile.svg' %}"></img></div>
   <div class="profile_right">
   <table>
@@ -21,6 +22,7 @@
       <td><p>{% if request.user.organisatie %}{{ request.user.organisatie }}{% else %}<i>Geen</i>{% endif %}</p></td>
     </tr>
   </table>
+  </div>
   </div>
   <div class="profile_bottom">
     <p>Medewerker</p>

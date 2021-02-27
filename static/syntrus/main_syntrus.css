@@ -556,63 +556,59 @@ body, html {
 #main .layerOneInner .article .article_content .profile_box {
   font-family: 'Montserrat';
   font-size: 2vh;
-  display: -ms-grid;
-  display: grid;
-      grid-template-areas: 'profile-left profile-right profile-right profile-right profile-right profile-right profile-right profile-right' 'profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom';
-  padding-top: 3vh;
+  background: #f7f7f8;
+  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  border-radius: 1.6em;
   overflow: hidden;
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
 }
 
-#main .layerOneInner .article .article_content .profile_box .profile_left {
-  -ms-grid-row: 1;
-  -ms-grid-column: 1;
-  grid-area: profile-left;
-  padding-left: 3vw;
-  padding-bottom: 1vh;
+#main .layerOneInner .article .article_content .profile_box .profile_content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
-#main .layerOneInner .article .article_content .profile_box .profile_left img {
+#main .layerOneInner .article .article_content .profile_box .profile_content .profile_left {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 20%;
+          flex: 0 0 20%;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  margin-left: 1vw;
+}
+
+#main .layerOneInner .article .article_content .profile_box .profile_content .profile_left img {
   max-width: 10vw;
   border-radius: 50%;
   min-width: 150px;
 }
 
-#main .layerOneInner .article .article_content .profile_box .profile_right {
-  -ms-grid-row: 1;
-  -ms-grid-column: 2;
-  -ms-grid-column-span: 7;
-  grid-area: profile-right;
+#main .layerOneInner .article .article_content .profile_box .profile_content .profile_right {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
   padding-right: 3vw;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  margin-left: 2vw;
 }
 
-#main .layerOneInner .article .article_content .profile_box .profile_right .profile-title {
+#main .layerOneInner .article .article_content .profile_box .profile_content .profile_right .profile-title {
   width: 80%;
   font-weight: 900;
   margin-right: 3vw;
 }
 
-#main .layerOneInner .article .article_content .profile_box .profile_right table {
-  width: 80%;
-  height: 60%;
-}
-
-#main .layerOneInner .article .article_content .profile_box .profile_right table tr {
-  text-align: left;
-}
-
-#main .layerOneInner .article .article_content .profile_box .profile_right table tr td {
-  text-align: left;
-}
-
 #main .layerOneInner .article .article_content .profile_box .profile_bottom {
-  -ms-grid-row: 2;
-  -ms-grid-column: 1;
-  -ms-grid-column-span: 8;
-  grid-area: profile-bottom;
   text-align: left;
   padding-top: 1vh;
   padding-left: 3vw;
   padding-bottom: 1vh;
+  width: 100%;
   font-weight: bold;
   color: white;
   letter-spacing: 0.2vw;
@@ -627,7 +623,6 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .general_title {
-  height: 7vh;
   background: #f7f7f8;
   border-radius: 1.6vh;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
@@ -647,11 +642,60 @@ body, html {
   text-align: left;
   padding-top: 2vh;
   padding-left: 7vw;
+  padding-bottom: 2vh;
   font-size: 2.5vh;
   font-style: bold;
   width: 100%;
   padding-right: 2vw;
   color: #2b786e;
+}
+
+#main .layerOneInner .article .article_content .general_title a {
+  float: right;
+}
+
+#main .layerOneInner .article .article_content .general_title input {
+  float: right;
+}
+
+@media screen and (max-width: 880px) {
+  #main .layerOneInner .article .article_content .general_title a {
+    float: none;
+  }
+  #main .layerOneInner .article .article_content .general_title input {
+    float: none;
+  }
+}
+
+#main .layerOneInner .article .article_content .general_title .submit_button {
+  font-family: 'Montserrat';
+  padding: 0;
+  font-size: 1.5vh;
+  height: 100%;
+  min-width: 90px;
+  margin-bottom: 1vh;
+  margin-left: 1vw;
+  margin-right: 1vw;
+  padding-left: 1vw;
+  padding-right: 1vw;
+  background-color: #026189;
+  border-radius: 16px;
+  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  outline: none;
+  border-style: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#main .layerOneInner .article .article_content .general_title .submit_button:hover {
+  opacity: 0.7;
+}
+
+#main .layerOneInner .article .article_content .general_title .submit_button:active {
+  -webkit-transform: translateY(4px);
+          transform: translateY(4px);
 }
 
 #main .layerOneInner .article .article_content .margin_title {
@@ -1067,7 +1111,6 @@ body, html {
   font-family: 'Montserrat';
   padding: 0;
   font-size: 1.5vh;
-  float: right;
   height: 100%;
   width: 8vw;
   min-width: 90px;
@@ -1109,8 +1152,8 @@ body, html {
 
 #main .layerOneInner .article .article_content .opmerking_form .titel_plusopmerking .left {
   -webkit-box-flex: 0;
-      -ms-flex: 0 0 75%;
-          flex: 0 0 75%;
+      -ms-flex: 0 0 60%;
+          flex: 0 0 60%;
   text-align: left;
 }
 
@@ -1142,7 +1185,9 @@ body, html {
   background-color: #31859a;
   color: white;
   cursor: pointer;
-  padding: 18px;
+  padding-top: 1vh;
+  padding-bottom: 1vh;
+  padding-left: 1vw;
   width: 100%;
   border: none;
   text-align: left;
@@ -1167,8 +1212,8 @@ body, html {
   background-color: #b6dde8;
   color: #215967;
   cursor: pointer;
-  padding-top: 1em;
-  padding-bottom: 1em;
+  padding-top: 1vh;
+  padding-bottom: 1vh;
   padding-left: 2vw;
   padding-right: 18px;
   width: 100%;
@@ -1212,8 +1257,8 @@ body, html {
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .text_left {
   padding-left: 4vw;
   -webkit-box-flex: 0;
-      -ms-flex: 0 0 75%;
-          flex: 0 0 75%;
+      -ms-flex: 0 0 60%;
+          flex: 0 0 60%;
   text-align: left;
   overflow: auto;
 }
@@ -1746,12 +1791,24 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .extra_proj_info .content {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
   width: 100%;
+  height: 100%;
   padding-left: 1vw;
   padding-right: 1vw;
+}
+
+#main .layerOneInner .article .article_content .flex_projectpagina .extra_proj_info .content table {
+  width: 100%;
+  height: 100%;
+}
+
+#main .layerOneInner .article .article_content .flex_projectpagina .extra_proj_info .content table tbody tr {
+  border-bottom: 3px solid black;
+  margin-bottom: 3px;
+}
+
+#main .layerOneInner .article .article_content .flex_projectpagina .extra_proj_info .content table tbody tr .conttitle {
+  font-weight: 700;
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .project_locatie {
@@ -1769,8 +1826,10 @@ body, html {
       -ms-flex-align: center;
           align-items: center;
   margin-top: 2vh;
-  max-width: 45%;
-  min-width: 45%;
+  min-width: 40%;
+  max-width: 40%;
+  min-height: 40%;
+  max-height: 40%;
   border-radius: 1.6vh;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
@@ -1859,6 +1918,10 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .opmerkingtable_wrapper {
+  overflow-x: scroll;
+}
+
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper table {
   margin-top: 2vh;
   width: 100%;
   height: 80%;
@@ -1873,74 +1936,74 @@ body, html {
   overflow-y: auto;
 }
 
-#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_head {
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_head {
   font-size: 2vh;
   font-weight: bold;
   width: 100%;
   padding-bottom: 2vh;
 }
 
-#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_head th {
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_head th {
   padding-bottom: 2vh;
 }
 
-#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_head th .rodo {
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_head th .rodo {
   color: red;
 }
 
-#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_head .syntr_logo {
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_head .syntr_logo {
   min-width: 275px;
   max-width: 20%;
 }
 
-#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content {
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_content {
   font-size: 1.5vh;
   word-wrap: break-word;
 }
 
-#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .inhoud_box {
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_content .inhoud_box {
   padding-bottom: 1vh;
   font-size: 1.5vh;
   max-width: 75px;
 }
 
-#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .inhoud_box p {
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_content .inhoud_box p {
   overflow-y: auto;
   max-width: 100%;
   max-height: 75px;
 }
 
-#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .inhoud_box p .inhopmerking {
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_content .inhoud_box p .inhopmerking {
   color: red;
   font-weight: bold;
 }
 
-#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .inhoud_box .green {
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_content .inhoud_box .green {
   background-color: #2fff5c;
 }
 
-#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .inhoud_box .red {
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_content .inhoud_box .red {
   background-color: #ff6d6d;
 }
 
-#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .voldoening {
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_content .voldoening {
   padding-right: 2%;
   padding-left: 2%;
   max-width: 10%;
   min-width: 10%;
 }
 
-#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content .kosten {
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_content .kosten {
   max-width: 30px;
   padding-top: 2vh;
   min-width: 20%;
 }
 
-#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content:nth-child(even) {
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_content:nth-child(even) {
   background-color: white;
 }
 
-#main .layerOneInner .article .article_content .opmerkingtable_wrapper .table_content:nth-child(odd) {
+#main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_content:nth-child(odd) {
   background-color: #daedf2;
 }
 

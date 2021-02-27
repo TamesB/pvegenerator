@@ -11,7 +11,8 @@
 {% block main %}
 <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Recente statusaanwijzingen, project {{ project.naam }}</p></div>
 {% if comments %}
-<table class="opmerkingtable_wrapper">
+<div class="opmerkingtable_wrapper">
+<table>
   <tr class="table_head">
     <th><img src="{% static 'syntrus/svg/logo.svg' %}" class="syntr_logo"></a></th>
     <th><p>Status</p></th>
@@ -42,4 +43,5 @@
 {% else %}
 <p>Nog geen opmerkingen op het PvE geplaatst!</p>
 {% endif %}
+</div>
 {% endblock %}

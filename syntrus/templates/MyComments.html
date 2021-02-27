@@ -21,11 +21,12 @@
   <div class="active section">Laatste check</div>
 </div>
 
-<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Laatste check, project {{ project.naam }} 
-<input type="button" class="{{ progress }}" onClick="javascript:location.href='{% url 'firstfreeze_syn' project.id %}';" value="Stuur door naar derden ({{ aantal_opmerkingen_gedaan }} / {{ items|length }})"></input>
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Laatste Check
+<input type="button" class="submit_button" onClick="javascript:location.href='{% url 'firstfreeze_syn' project.id %}';" value="Stuur door >"></input>
 <a style="float: right;" href="{% url 'mijnopmerkingendelete_syn' project.id %}"><button class="ui basic red button"><i class="icon trash"></i>Verwijder opmerking</button></a></p></div>
 
-<table class="opmerkingtable_wrapper">
+<div class="opmerkingtable_wrapper">
+<table>
   <tr class="table_head">
     <th><img src="{% static 'syntrus/svg/logo.svg' %}" class="syntr_logo"></a></th>
     <th><p>Status</p></th>
@@ -52,6 +53,7 @@
   <td class="inhoud_box"><p>Nog geen regels aangewezen.</p></td>
   {% endif %}
 </table>
+</div>
 
 <form class="opmerking_form" action="{% url 'mijnopmerkingen_syn' project.id %}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}

@@ -23,15 +23,15 @@
       <tbody>
         <tr class="table_title">
           <th><p>Project</p></th>
-          <th><p>Laatst veranderd</p></th>
           <th><p>Checklist Status</p></th>
+          <th><p>Laatst veranderd</p></th>
         </tr>
         {% if projects %}
             {% for project in projects %}
         <tr class="table_content">
-      <td><p><a href="{% url 'viewproject_syn' project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
-                <td><p>{{ project.datum_recent_verandering }}</p></td>
-          <td><p>{% if project.frozenLevel == 0 %}{% if request.user.type_user == "SOG" %}<a href="{% url 'plusopmerking_syn' project.id %}"><button class="ui basic button">Eerste statusaanwijzing<i class="right arrow icon"></i></button></a>{% else %}<i>Eerste statusaanwijzing</i>{% endif %}{% else %}{% if request.user.type_user == "SD" %}{% if not project.frozenLevel|divisibleby:2 %}<a href="{% url 'commentscheck_syn' project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>{% else %}<i>Beurt van opdrachtgever</i>{% endif %}{% else %}{% if request.user.type_user == "SOG" %}{% if project.frozenLevel|divisibleby:2 %}<a href="{% url 'commentscheck_syn' project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>{% else %}<i>Beurt van derden</i>{% endif %}{% endif %}{% endif %}{% endif %}</p></td>
+          <td><p><a href="{% url 'viewproject_syn' project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
+          <td><p>{% if project.frozenLevel == 0 %}{% if request.user.type_user == "SOG" %}<a href="{% url 'plusopmerking_syn' project.id %}"><button class="ui basic button">Eerste statusaanwijzing<i class="right arrow icon"></i></button></a>{% else %}<i>Eerste statusaanwijzing</i>{% endif %}{% else %}{% if request.user.type_user == "SD" %}{% if not project.frozenLevel|divisibleby:2 %}<a href="{% url 'commentscheck_syn' project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>{% else %}<i>Beurt van opdrachtgever</i>{% endif %}{% else %}{% if request.user.type_user == "SOG" %}{% if project.frozenLevel|divisibleby:2 %}<a href="{% url 'commentscheck_syn' project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>{% else %}<i>Beurt van derden</i>{% endif %}{% endif %}{% endif %}{% endif %}</p></td> 
+          <td><p>{{ project.datum_recent_verandering }}</p></td>
         </tr>
         {% endfor %}
         {% else %}

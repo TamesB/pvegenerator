@@ -500,52 +500,51 @@ body, html {
                 .profile_box {
                     font-family: 'Montserrat';
                     font-size: 2vh;
-                    display: grid;
-                    grid-template-areas:
-                    'profile-left profile-right profile-right profile-right profile-right profile-right profile-right profile-right'
-                    'profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom profile-bottom';
-                    padding-top: 3vh;
+                    background: rgb(247,247,248);
+                    -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                    border-radius: 1.6em;
                     overflow: hidden;
-                                        
-                    .profile_left {
-                        grid-area: profile-left;
-                        padding-left: 3vw;
-                        padding-bottom: 1vh;
-                        img {
-                            max-width: 10vw;
-                            border-radius: 50%;
-                            min-width:150px;
+                    -ms-overflow-style: none;  /* IE and Edge */
+                    scrollbar-width: none;
+
+                    .profile_content {    
+                        display: flex;
+   
+                        .profile_left {
+                            flex: 0 0 20%;
+                            margin-top: 2vh;
+                            margin-bottom: 2vh;
+                            margin-left: 1vw;
+
+                            img {
+                                max-width: 10vw;
+                                border-radius: 50%;
+                                min-width:150px;
+                            }
+
                         }
 
-                    }
-
-                    .profile_right {
-                        grid-area: profile-right;
-                        padding-right: 3vw;
-
-                        .profile-title {
-                            width: 80%;
-                            font-weight: 900;
-                            margin-right: 3vw;
-                        }
-
-                        table {
-                            width: 80%;
-                            height: 60%;
-                            tr {
-                                text-align: left;
-                                td {
-                                    text-align: left;
-                                }
+                        .profile_right {
+                            flex: 1;
+                            padding-right: 3vw;
+                            margin-top: 2vh;
+                            margin-bottom: 2vh;
+                            margin-left: 2vw;
+                            .profile-title {
+                                width: 80%;
+                                font-weight: 900;
+                                margin-right: 3vw;
                             }
                         }
                     }
                     .profile_bottom {
-                        grid-area: profile-bottom;
                         text-align: left;
                         padding-top: 1vh;
                         padding-left: 3vw;
                         padding-bottom: 1vh;
+                        width: 100%;
                         font-weight: bold;
                         color: white;
                         letter-spacing: 0.2vw;
@@ -561,7 +560,6 @@ body, html {
                 }
 
                 .general_title {
-                    height: 7vh;    
                     background: rgba(247,247,248,1);
                     border-radius: 1.6vh;
                     -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
@@ -581,11 +579,59 @@ body, html {
                         text-align: left;
                         padding-top: 2vh;
                         padding-left: 7vw;
+                        padding-bottom: 2vh;
                         font-size: 2.5vh;
                         font-style: bold;
                         width: 100%;
                         padding-right: 2vw;
                         color: #2b786e;
+                    }
+
+                    a {
+                        float:right;
+                    }
+
+                    input {
+                        float: right;
+                    }
+
+                    @media screen and (max-width: 880px) {
+                        a {
+                            float: none;
+                        }
+                        input {
+                            float: none;
+                        }
+                    }
+
+                    .submit_button {
+                        font-family: 'Montserrat';
+                        padding: 0;
+                        font-size: 1.5vh;
+                        height: 100%;
+                        min-width: 90px;
+                        margin-bottom: 1vh;
+                        margin-left: 1vw;
+                        margin-right: 1vw;
+                        padding-left: 1vw;
+                        padding-right: 1vw;
+                        background-color: #026189;
+                        border-radius: 16px;
+                        -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                        -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                        box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                        outline: none;
+                        border-style: none;
+                        color: white;
+                        font-weight: bold;
+                        cursor: pointer;
+                    }
+                    .submit_button:hover {
+                        opacity: 0.7;
+                    }
+            
+                    .submit_button:active {
+                        transform: translateY(4px);
                     }
                 }
                 .margin_title {
@@ -960,7 +1006,6 @@ body, html {
                             font-family: 'Montserrat';
                             padding: 0;
                             font-size: 1.5vh;
-                            float: right;
                             height: 100%;
                             width: 8vw;
                             min-width: 90px;
@@ -998,7 +1043,7 @@ body, html {
                         display: flex;
 
                         .left {
-                            flex: 0 0 75%;
+                            flex: 0 0 60%;
                             text-align: left;
                         }
 
@@ -1027,7 +1072,9 @@ body, html {
                             background-color: #31859a;
                             color: white;
                             cursor: pointer;
-                            padding: 18px;
+                            padding-top: 1vh;
+                            padding-bottom: 1vh;
+                            padding-left: 1vw;
                             width: 100%;
                             border: none;
                             text-align: left;
@@ -1051,8 +1098,8 @@ body, html {
                             background-color: #b6dde8;
                             color: #215967;
                             cursor: pointer;
-                            padding-top: 1em;
-                            padding-bottom: 1em;
+                            padding-top: 1vh;
+                            padding-bottom: 1vh;
                             padding-left: 2vw;
                             padding-right: 18px;
                             width: 100%;
@@ -1093,7 +1140,7 @@ body, html {
 
                             .text_left {
                                 padding-left: 4vw;  
-                                flex: 0 0 75%;
+                                flex: 0 0 60%;
                                 text-align: left;
                                 overflow: auto;
                             }
@@ -1120,7 +1167,6 @@ body, html {
                             opacity: 0.7;
                         }
                     }
-
 
                     .opmerking_form_modal {
                         .w3-modal {
@@ -1567,10 +1613,26 @@ body, html {
                         }
 
                         .content {
-                            display: flex;
                             width: 100%;
+                            height: 100%;
                             padding-left: 1vw;
                             padding-right: 1vw;
+
+                            table {
+                                width: 100%;
+                                height: 100%;
+
+                                tbody {
+                                    tr {
+                                        border-bottom: 3px solid rgb(0, 0, 0); 
+                                        margin-bottom: 3px;
+
+                                        .conttitle {
+                                            font-weight: 700;
+                                        }
+                                    }
+                                }
+                            }
                         }
 
                     }
@@ -1581,8 +1643,10 @@ body, html {
                         flex-direction: column;
                         align-items: center;
                         margin-top: 2vh;
-                        max-width: 45%;
-                        min-width: 45%;
+                        min-width: 40%;
+                        max-width: 40%;
+                        min-height: 40%;
+                        max-height: 40%;
                         border-radius: 1.6vh;
                         -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                         -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
@@ -1600,7 +1664,7 @@ body, html {
                             padding-top: 0.5vh;
                             padding-bottom: 0.5vh;
                         }
-                        
+
                         #card {
                             display: flex;
                             width: 100%;
@@ -1675,89 +1739,93 @@ body, html {
 
                 }
                 .opmerkingtable_wrapper {
-                    margin-top: 2vh;
-                    width: 100%;
-                    height: 80%;
-                    padding-top: 2vh;
-                    padding-left: 2vw;
-                    padding-right: 2vw;
-                    border-radius: 16px;
-                    text-align: left;
-                    -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
-                    -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
-                    box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
-                    background: linear-gradient(180deg, rgba(0, 172, 169, 1) 95px, rgba(247,247,248,1) 95px);
-                    overflow-y: auto;
+                    overflow-x: scroll;
 
-                    .table_head {
-                        font-size: 2vh;
-                        font-weight:bold;
+                    table {
+                        margin-top: 2vh;
                         width: 100%;
-                        padding-bottom: 2vh;
-                        
-                        th {
+                        height: 80%;
+                        padding-top: 2vh;
+                        padding-left: 2vw;
+                        padding-right: 2vw;
+                        border-radius: 16px;
+                        text-align: left;
+                        -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                        -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                        box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                        background: linear-gradient(180deg, rgba(0, 172, 169, 1) 95px, rgba(247,247,248,1) 95px);
+                        overflow-y: auto;
+
+                        .table_head {
+                            font-size: 2vh;
+                            font-weight:bold;
+                            width: 100%;
                             padding-bottom: 2vh;
+                            
+                            th {
+                                padding-bottom: 2vh;
 
-                            .rodo {
-                                color: red;
-                            }
-                        }
-                        .syntr_logo {
-                            min-width: 275px;
-                            max-width: 20%;
-                        }
-                    }
-
-                    .table_content {
-                        font-size: 1.5vh;
-                        word-wrap: break-word;
-
-                        .inhoud_box {
-                            padding-bottom: 1vh;
-                            font-size: 1.5vh;     
-                            max-width: 75px;                       
-                            p {
-                                overflow-y: auto;
-                                max-width: 100%;
-                                max-height: 75px;
-                                .inhopmerking {
+                                .rodo {
                                     color: red;
-                                    font-weight: bold;
                                 }
                             }
-
-                            .green {
-                                background-color: rgb(47, 255, 92);
+                            .syntr_logo {
+                                min-width: 275px;
+                                max-width: 20%;
                             }
-                            .red {
-                                background-color: rgb(255, 109, 109);
+                        }
+
+                        .table_content {
+                            font-size: 1.5vh;
+                            word-wrap: break-word;
+
+                            .inhoud_box {
+                                padding-bottom: 1vh;
+                                font-size: 1.5vh;     
+                                max-width: 75px;                       
+                                p {
+                                    overflow-y: auto;
+                                    max-width: 100%;
+                                    max-height: 75px;
+                                    .inhopmerking {
+                                        color: red;
+                                        font-weight: bold;
+                                    }
+                                }
+
+                                .green {
+                                    background-color: rgb(47, 255, 92);
+                                }
+                                .red {
+                                    background-color: rgb(255, 109, 109);
+                                }
+
+                            }
+                            .voldoening {
+                                padding-right: 2%;
+                                padding-left: 2%;
+
+                                max-width: 10%;
+                                min-width: 10%;
+
+                            }                        
+                            
+                            .kosten {
+                                max-width: 30px;                       
+
+                                padding-top: 2vh;
+
+                                min-width: 20%;
                             }
 
                         }
-                        .voldoening {
-                            padding-right: 2%;
-                            padding-left: 2%;
 
-                            max-width: 10%;
-                            min-width: 10%;
-
-                        }                        
-                        
-                        .kosten {
-                            max-width: 30px;                       
-
-                            padding-top: 2vh;
-
-                            min-width: 20%;
+                        .table_content:nth-child(even) {
+                            background-color: white;
+                        }                            
+                        .table_content:nth-child(odd) {
+                            background-color: #daedf2;
                         }
-
-                    }
-
-                    .table_content:nth-child(even) {
-                        background-color: white;
-                    }                            
-                    .table_content:nth-child(odd) {
-                        background-color: #daedf2;
                     }
 
                 }

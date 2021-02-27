@@ -28,11 +28,11 @@
 <div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>Groen = status is al opgeslagen. Geel = u heeft net een wijziging gemaakt. Rood = nog geen status aangegeven.</p></span></popup-notify></div></div>
 <div class="item_opmerking_list">
 {% for hoofdstuk, one_deep in hoofdstuk_ordered_items.items %}
-    <button type="button" class="hoofdstuk">{{ hoofdstuk.hoofdstuk }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></button>
+    <button type="button" class="hoofdstuk"><p>{{ hoofdstuk.hoofdstuk }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></p></button>
     <div class="hoofdstuk_content">
     {% if one_deep.items %}
         {% for paragraaf, items in one_deep.items %}
-            <button type="button" class="paragraaf">{{ paragraaf.paragraaf }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></button>
+            <button type="button" class="paragraaf"><p>{{ paragraaf.paragraaf }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></p></button>
             <div class="paragraaf_content">
                 {% for item in items %}
                     <div class="item_content" onClick="document.getElementById('{{ item|index:1 }}').style.display='block'; document.getElementById('status-{{ item|index:1 }}').style.color='#E6BF00'"><div class="text_left"><p>{{ item|index:0 }}{% if item|index:3 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p></div>

@@ -36,11 +36,11 @@
 <div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>De status, opgevolgd door de opmerkingen op de regel en op elkaar. Mits er bijlages zijn toegevoegd, zijn deze downloadbaar hierna. "Nieuwe Status" betekent dat de status veranderd is bij de laatste check.</p></span></popup-notify></div></div>
 <div class="item_opmerking_list">
 {% for hoofdstuk, one_deep in hoofdstuk_ordered_items_todo.items %}
-    <button type="button" class="hoofdstuk">{{ hoofdstuk.hoofdstuk }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></button>
+    <button type="button" class="hoofdstuk"><p>{{ hoofdstuk.hoofdstuk }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></p></button>
     <div class="hoofdstuk_content">
     {% if one_deep.items %}
         {% for paragraaf, items in one_deep.items %}
-            <button type="button" class="paragraaf">{{ paragraaf.paragraaf }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></button>
+            <button type="button" class="paragraaf"><p>{{ paragraaf.paragraaf }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></p></button>
             <div class="paragraaf_content">
                 {% for item in items %}
                     {% if item|index:5 %}
@@ -127,11 +127,11 @@
 <div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>De status, opgevolgd door de opmerkingen op de regel en op elkaar. Mits er bijlages zijn toegevoegd, zijn deze downloadbaar hierna. "Nieuwe Status" betekent dat de status veranderd is bij de laatste check.</p></span></popup-notify></div></div>
 <div class="item_opmerking_list">
 {% for hoofdstuk, one_deep in hoofdstuk_ordered_items_non_accept.items %}
-    <button type="button" class="hoofdstuk">{{ hoofdstuk.hoofdstuk }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></button>
+    <button type="button" class="hoofdstuk"><p>{{ hoofdstuk.hoofdstuk }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></p></button>
     <div class="hoofdstuk_content">
     {% if one_deep.items %}
         {% for paragraaf, items in one_deep.items %}
-            <button type="button" class="paragraaf">{{ paragraaf.paragraaf }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></button>
+            <button type="button" class="paragraaf"><p>{{ paragraaf.paragraaf}} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></p></button>
             <div class="paragraaf_content">
                 {% for item in items %}
                     {% if item|index:5 %}
@@ -217,11 +217,11 @@
 <div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>De status, opgevolgd door de opmerkingen op de regel en op elkaar. Mits er bijlages zijn toegevoegd, zijn deze downloadbaar hierna. "Nieuwe Status" betekent dat de status veranderd is bij de laatste check.</p></span></popup-notify></div></div>
 <div class="item_opmerking_list">
 {% for hoofdstuk, one_deep in hoofdstuk_ordered_items_accept.items %}
-    <button type="button" class="hoofdstuk">{{ hoofdstuk.hoofdstuk }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></button>
+    <button type="button" class="hoofdstuk"><p>{{ hoofdstuk.hoofdstuk }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></p></button>
     <div class="hoofdstuk_content">
     {% if one_deep.items %}
         {% for paragraaf, items in one_deep.items %}
-            <button type="button" class="paragraaf">{{ paragraaf.paragraaf }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></button>
+            <button type="button" class="paragraaf"><p>{{ paragraaf.paragraaf}} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></p></button>
             <div class="paragraaf_content">
                 {% for item in items %}
                     {% if item|index:5 %}

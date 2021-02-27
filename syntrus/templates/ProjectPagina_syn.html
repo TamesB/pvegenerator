@@ -23,29 +23,31 @@
   <div class="active section">Project: {{ project.naam }}</div>
 </div>
 
-<div class="main_content_div profile_box">
-  <div class="profile_left"><img class="round-profile" src="{% static 'syntrus/img/plusproject.png' %}"></img></div>
-  <div class="profile_right">
-    <table>
-      {% if project.bouwsoort1 %}
-        <tr>
-          <td><p class="profile-title">Hoofd:</p></td>
-          <td><p>Bouwsoort: <i>{{ project.bouwsoort1.parameter }}</i>, Type Object: <i>{{ project.typeObject1.parameter }}</i>, Doelgroep: <i>{{ project.doelgroep1.parameter }}</i></p></td>
-        </tr>
-      {% endif %}
-      {% if project.bouwsoort2 %}
-        <tr>
-          <td><p class="profile-title">Sub:</p></td>
-          <td><p>Bouwsoort: <i>{{ project.bouwsoort2.parameter }}</i>, Type Object: <i>{{ project.typeObject2.parameter }}</i>, Doelgroep: <i>{{ project.doelgroep2.parameter }}</i></p></td>
-        </tr>
-      {% endif %}
-      {% if project.bouwsoort3 %}
-        <tr>
-          <td><p class="profile-title">Sub:</p></td>
-          <td><p>Bouwsoort: <i>{{ project.bouwsoort3.parameter }}</i>, Type Object: <i>{{ project.typeObject3.parameter }}</i>, Doelgroep: <i>{{ project.doelgroep3.parameter }}</i></p></td>
-        </tr>
-      {% endif %}
-    </table>
+<div class="profile_box">
+  <div class="profile_content">
+    <div class="profile_left"><img class="round-profile" src="{% static 'syntrus/img/plusproject.png' %}"></img></div>
+    <div class="profile_right">
+      <table>
+        {% if project.bouwsoort1 %}
+          <tr>
+            <td><p class="profile-title">Hoofd Object:</p></td>
+            <td><p>Bouwsoort: <i>{{ project.bouwsoort1.parameter }}</i>, Type Object: <i>{{ project.typeObject1.parameter }}</i>, Doelgroep: <i>{{ project.doelgroep1.parameter }}</i></p></td>
+          </tr>
+        {% endif %}
+        {% if project.bouwsoort2 %}
+          <tr>
+            <td><p class="profile-title">Sub Object:</p></td>
+            <td><p>Bouwsoort: <i>{{ project.bouwsoort2.parameter }}</i>, Type Object: <i>{{ project.typeObject2.parameter }}</i>, Doelgroep: <i>{{ project.doelgroep2.parameter }}</i></p></td>
+          </tr>
+        {% endif %}
+        {% if project.bouwsoort3 %}
+          <tr>
+            <td><p class="profile-title">Sub Object:</p></td>
+            <td><p>Bouwsoort: <i>{{ project.bouwsoort3.parameter }}</i>, Type Object: <i>{{ project.typeObject3.parameter }}</i>, Doelgroep: <i>{{ project.doelgroep3.parameter }}</i></p></td>
+          </tr>
+        {% endif %}
+      </table>
+    </div>
   </div>
   <div class="profile_bottom">
     <p>Project: {{ project.naam }}</p>
