@@ -26,7 +26,7 @@
 <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png' %}" class="title_img"></img><p>Doorsturen</p></div>
 <div class="invite-container">
     <div class="box">
-            <p class="description">Stuur uw eerste statusaanwijzing en afwijkingen door aan de derde partijen om het PvE verder op te merken. Regels waar nog geen status/opmerking aan is toegevoegd worden genoteerd als geaccepteerd.</p>
+            <p class="description">Stuur uw eerste statusaanwijzing en afwijkingen door aan de derde partijen om het PvE verder op te merken. Regels waar nog geen status/opmerking aan is toegevoegd worden genoteerd als TODO voor de andere partij.</p>
         <form action="{% url 'firstfreeze_syn' pk %}" method="post">
             {% csrf_token %}
             <label class="formtitle" for="{{ form.confirm.id_for_label }}">Vink aan voor bevestiging.</label>
