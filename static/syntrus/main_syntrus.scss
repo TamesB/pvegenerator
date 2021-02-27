@@ -399,85 +399,89 @@ body, html {
                 }
 
                 .base_info_table {
-                    background-color:rgba(0, 172, 169, 1);
-                    display: table;
-                    justify-content: space-between;
-                    -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
-                    -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
-                    box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
-                    border-radius: 0.5em;
-                    overflow-x: auto;
-                    width: 100%; 
-                    border-spacing:0;
-                    overflow-wrap: break-word;
-                    padding-bottom: 1vh;
-                    padding-top: 1vh;
-                    min-width: 800px;
+                    overflow-x: scroll;
 
-                    tbody {
-                        min-width: 100%;
+                    table {
+                        background-color:rgba(0, 172, 169, 1);
+                        display: table;
+                        justify-content: space-between;
+                        -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                        -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                        box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
+                        border-radius: 0.5em;
+                        width: 100%; 
+                        border-spacing:0;
+                        overflow-wrap: break-word;
+                        padding-bottom: 1vh;
+                        padding-top: 1vh;
+                        min-width: 800px;
 
-                        tr {
+                        tbody {
                             min-width: 100%;
+
+                            tr {
+                                min-width: 100%;
+                            }
                         }
-                    }
 
-                    caption {
-                        margin-top: 1.8vh;
-                        caption-side: top;
-                        font-size: 2vh;
-                        letter-spacing: 0.1em;
-                        font-weight: 900;
-                        color: white;
-                    }
-
-                    @media screen and (max-width: 768px) {
                         caption {
-                            text-align: left;
-                            margin-left: 5vw;
+                            margin-top: 1.8vh;
+                            caption-side: top;
+                            font-size: 2vh;
+                            letter-spacing: 0.1em;
+                            font-weight: 900;
+                            color: white;
                         }
-                    }
 
-                    .table_title {
-                        background-color: rgba(0, 172, 169, 1);
-                        letter-spacing: 0.1em;
-                        font-weight: 900;
-                        width: 100%; 
-                        font-size: 2vh;
-                        color: white;
-
-                        th {
-                            margin-left: 1vw;
-                            padding-bottom: 1vh;
-                            margin-bottom: 3vh;
-                            cursor: pointer;
+                        @media screen and (max-width: 768px) {
+                            caption {
+                                text-align: left;
+                                margin-left: 5vw;
+                            }
                         }
-                    }
 
-                    .table_content {
-                        width: 100%; 
-                        letter-spacing: 0.1em;
-                        border-bottom: 3px solid rgb(0, 0, 0);
-                        margin-bottom: 3px;
+                        .table_title {
+                            background-color: rgba(0, 172, 169, 1);
+                            letter-spacing: 0.1em;
+                            font-weight: 900;
+                            width: 100%; 
+                            font-size: 2vh;
+                            color: white;
 
-                        td {
-                            padding-top: 0.5vh;
-                            padding-bottom: 0.5vh;
-                            background-color: white;
+                            th {
+                                margin-left: 1vw;
+                                padding-bottom: 1vh;
+                                margin-bottom: 3vh;
+                                cursor: pointer;
+                            }
                         }
-                        td:nth-of-type(even) {
-                            background-color: #f1f1f1;
+
+                        .table_content {
+                            width: 100%; 
+                            letter-spacing: 0.1em;
+                            border-bottom: 3px solid rgb(0, 0, 0);
+                            margin-bottom: 3px;
+
+                            td {
+                                padding-top: 0.5vh;
+                                padding-bottom: 0.5vh;
+                                background-color: white;
+                            }
+                            td:nth-of-type(even) {
+                                background-color: #f1f1f1;
+                            }
                         }
-                    }
 
 
 
-                    img {
-                        height: 2vh;
-                    }
-                    
-                    img:hover {
-                        opacity: 0.7;
+                        img {
+                            height: 2vh;
+                        }
+                        
+                        img:hover {
+                            opacity: 0.7;
+                        }
+
                     }
 
                 }
@@ -1408,6 +1412,8 @@ body, html {
                                         display: none;
                                     }
                                 }
+
+
                             }
 
                         }
@@ -1568,30 +1574,38 @@ body, html {
                         }
 
                     }
-                    .card   {
+
+                    .project_locatie {
+                        display: flex;
+                        justify-content: space-between;
+                        flex-direction: column;
+                        align-items: center;
                         margin-top: 2vh;
-                        background: rgba(247,247,248,1);
-                        background: linear-gradient(180deg, rgba(0, 172, 169, 1) 18%, rgba(247,247,248,1) 18%);
-                        float:right;
-                        max-width: 40%;
-                        min-width: 40%;
+                        max-width: 45%;
+                        min-width: 45%;
                         border-radius: 1.6vh;
                         -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                         -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                         box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
-                        .project_locatie {
-                            display: flex;
-                            max-width: 45%;
-                            min-width: 45%;
-                        }
 
                         .title {
-                            margin-top: 0.8vh;
-                            margin-bottom: 0.8vh;
+                            background: rgba(0, 172, 169, 1);
+                            min-width: 100%;
+                            width: 100%;
                             font-size: 2.5vh;
                             color: white;
-                            font-weight: bold;
-
+                            float: center;
+                            border-top-left-radius: 1.6vh;
+                            border-top-right-radius: 1.6vh;
+                            padding-top: 0.5vh;
+                            padding-bottom: 0.5vh;
+                        }
+                        
+                        #card {
+                            display: flex;
+                            width: 100%;
+                            height: 100%;
+                            z-index: 2;
                         }
                     }
 
@@ -1605,11 +1619,28 @@ body, html {
                         box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
 
                     }
-    
-                }
 
+
+                }
+                @media screen and (max-width: 770px) {
+                    .flex_projectpagina {
+                        display: block;
+
+                        .project_acties {
+                            max-width: 100%;
+                            margin-bottom: 2vh;
+                        }
+
+                        .project_locatie {
+                            max-width: 100%;
+                        }
+
+                        .extra_proj_info {
+                            max-width: 100%;
+                        }
+                    }     
+                }
                 .project_progress_bar {
-                    height: 7vh;    
                     background: rgba(247,247,248,1);
                     border-radius: 1.6vh;
                     -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
@@ -1626,6 +1657,7 @@ body, html {
                         float: left;
                         padding-top: 2vh;
                         padding-left: 2vw;
+                        padding-bottom: 2vh;
                         font-size: 2.5vh;
                         font-style: bold;
                         width: 65%;

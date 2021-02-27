@@ -457,6 +457,10 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .base_info_table {
+  overflow-x: scroll;
+}
+
+#main .layerOneInner .article .article_content .base_info_table table {
   background-color: #00aca9;
   display: table;
   -webkit-box-pack: justify;
@@ -465,7 +469,6 @@ body, html {
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   border-radius: 0.5em;
-  overflow-x: auto;
   width: 100%;
   border-spacing: 0;
   overflow-wrap: break-word;
@@ -474,15 +477,15 @@ body, html {
   min-width: 800px;
 }
 
-#main .layerOneInner .article .article_content .base_info_table tbody {
+#main .layerOneInner .article .article_content .base_info_table table tbody {
   min-width: 100%;
 }
 
-#main .layerOneInner .article .article_content .base_info_table tbody tr {
+#main .layerOneInner .article .article_content .base_info_table table tbody tr {
   min-width: 100%;
 }
 
-#main .layerOneInner .article .article_content .base_info_table caption {
+#main .layerOneInner .article .article_content .base_info_table table caption {
   margin-top: 1.8vh;
   caption-side: top;
   font-size: 2vh;
@@ -492,13 +495,13 @@ body, html {
 }
 
 @media screen and (max-width: 768px) {
-  #main .layerOneInner .article .article_content .base_info_table caption {
+  #main .layerOneInner .article .article_content .base_info_table table caption {
     text-align: left;
     margin-left: 5vw;
   }
 }
 
-#main .layerOneInner .article .article_content .base_info_table .table_title {
+#main .layerOneInner .article .article_content .base_info_table table .table_title {
   background-color: #00aca9;
   letter-spacing: 0.1em;
   font-weight: 900;
@@ -507,35 +510,35 @@ body, html {
   color: white;
 }
 
-#main .layerOneInner .article .article_content .base_info_table .table_title th {
+#main .layerOneInner .article .article_content .base_info_table table .table_title th {
   margin-left: 1vw;
   padding-bottom: 1vh;
   margin-bottom: 3vh;
   cursor: pointer;
 }
 
-#main .layerOneInner .article .article_content .base_info_table .table_content {
+#main .layerOneInner .article .article_content .base_info_table table .table_content {
   width: 100%;
   letter-spacing: 0.1em;
   border-bottom: 3px solid black;
   margin-bottom: 3px;
 }
 
-#main .layerOneInner .article .article_content .base_info_table .table_content td {
+#main .layerOneInner .article .article_content .base_info_table table .table_content td {
   padding-top: 0.5vh;
   padding-bottom: 0.5vh;
   background-color: white;
 }
 
-#main .layerOneInner .article .article_content .base_info_table .table_content td:nth-of-type(even) {
+#main .layerOneInner .article .article_content .base_info_table table .table_content td:nth-of-type(even) {
   background-color: #f1f1f1;
 }
 
-#main .layerOneInner .article .article_content .base_info_table img {
+#main .layerOneInner .article .article_content .base_info_table table img {
   height: 2vh;
 }
 
-#main .layerOneInner .article .article_content .base_info_table img:hover {
+#main .layerOneInner .article .article_content .base_info_table table img:hover {
   opacity: 0.7;
 }
 
@@ -1751,33 +1754,48 @@ body, html {
   padding-right: 1vw;
 }
 
-#main .layerOneInner .article .article_content .flex_projectpagina .card {
+#main .layerOneInner .article .article_content .flex_projectpagina .project_locatie {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   margin-top: 2vh;
-  background: #f7f7f8;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(18%, #00aca9), color-stop(18%, #f7f7f8));
-  background: linear-gradient(180deg, #00aca9 18%, #f7f7f8 18%);
-  float: right;
-  max-width: 40%;
-  min-width: 40%;
+  max-width: 45%;
+  min-width: 45%;
   border-radius: 1.6vh;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
 }
 
-#main .layerOneInner .article .article_content .flex_projectpagina .card .project_locatie {
+#main .layerOneInner .article .article_content .flex_projectpagina .project_locatie .title {
+  background: #00aca9;
+  min-width: 100%;
+  width: 100%;
+  font-size: 2.5vh;
+  color: white;
+  float: center;
+  border-top-left-radius: 1.6vh;
+  border-top-right-radius: 1.6vh;
+  padding-top: 0.5vh;
+  padding-bottom: 0.5vh;
+}
+
+#main .layerOneInner .article .article_content .flex_projectpagina .project_locatie #card {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  max-width: 45%;
-  min-width: 45%;
-}
-
-#main .layerOneInner .article .article_content .flex_projectpagina .card .title {
-  margin-top: 0.8vh;
-  margin-bottom: 0.8vh;
-  font-size: 2.5vh;
-  color: white;
-  font-weight: bold;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .recente_opmerkingen {
@@ -1791,8 +1809,23 @@ body, html {
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
 }
 
+@media screen and (max-width: 770px) {
+  #main .layerOneInner .article .article_content .flex_projectpagina {
+    display: block;
+  }
+  #main .layerOneInner .article .article_content .flex_projectpagina .project_acties {
+    max-width: 100%;
+    margin-bottom: 2vh;
+  }
+  #main .layerOneInner .article .article_content .flex_projectpagina .project_locatie {
+    max-width: 100%;
+  }
+  #main .layerOneInner .article .article_content .flex_projectpagina .extra_proj_info {
+    max-width: 100%;
+  }
+}
+
 #main .layerOneInner .article .article_content .project_progress_bar {
-  height: 7vh;
   background: #f7f7f8;
   border-radius: 1.6vh;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
@@ -1809,6 +1842,7 @@ body, html {
   float: left;
   padding-top: 2vh;
   padding-left: 2vw;
+  padding-bottom: 2vh;
   font-size: 2.5vh;
   font-style: bold;
   width: 65%;

@@ -29,7 +29,6 @@
   <tr class="table_head">
     <th><img src="{% static 'syntrus/svg/logo.svg' %}" class="syntr_logo"></a></th>
     <th><p>Akkoord</p></th>
-    <th><p>Nieuwe Status</p></th>
     <th><p>Inhoud</p></th>
     <th><p>Acties</p></th>
     <th><p>Bijlage</p></th>
@@ -40,8 +39,7 @@
   <tr class="table_content">
     <td class="inhoud_box"><p>{{ reply.onComment.item.inhoud }}</p></td>
     <td class="voldoening"><p>{% if reply.accept %}Ja{% else %}&nbsp;{% endif %}</p></td>
-    <td class="voldoening"><p>{% if reply.status %}{{ reply.status }}{% else %}&nbsp;{% endif %}</p></td>
-    <td class="voldoening"><p>{% if reply.comment %}{{ reply.comment }}{% else %}&nbsp;{% endif %}{% if reply.bijlage %}<i>Bijlage: <a href="{% url 'downloadreplyattachment_syn' project.id reply.id %}" style="float:left;" target="_blank"><button class="ui icon basic button"><i class="icon download"></i></button></a></i>{% endif %}{% if reply.kostenConsequenties %}<i>Kostenverschil: &#8364; {{ reply.kostenConsequenties }}</i>{% endif %}</p></td>
+    <td class="voldoening"><p>{% if reply.status %}Nieuwe status: <i>{{ reply.status }}</i>{% else %}&nbsp;{% endif %}{% if reply.comment %}<br>Opmerking: <i>{{ reply.comment }}</i>{% else %}&nbsp;{% endif %}{% if reply.bijlage %}<br>Bijlage: <a href="{% url 'downloadreplyattachment_syn' project.id reply.id %}" style="float:left;" target="_blank"><button class="ui icon basic button"><i class="icon download"></i></button></a>{% endif %}{% if reply.kostenConsequenties %}<br>Kostenverschil: &#8364; {{ reply.kostenConsequenties }}{% endif %}</p></td>
     <td class="voldoening"><a href="{% url 'deletereply_syn' project.id comment.id %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></p></td>
     <td class="voldoening">{% if not comment.bijlage %}<p><i>Leeg</i></p>{% else %}<a href="{% url 'downloadreplyattachment_syn' project.id reply.id %}" style="float:left;" target="_blank"><button class="ui icon basic button"><i class="icon download"></i></button></a><p><a href="{% url 'deletereplyattachment_syn' project.id comment.id %}" style="float: right;"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></p>{% endif %}</td>
     <td class="voldoening"><p>{{ reply.datum }}</p></td>

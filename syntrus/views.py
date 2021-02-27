@@ -946,25 +946,25 @@ def AddComment(request, pk):
 
             if item.paragraaf in hoofdstuk_ordered_items[item.hoofdstuk]:
                 if opmerking:
-                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append([item, item.id, opmerking.status])
+                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append([item, item.id, opmerking.status, item.bijlage])
                 else:
-                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append([item, item.id, None])
+                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append([item, item.id, None, item.bijlage])
             else:
                 if opmerking:
-                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [[item, item.id, opmerking.status]]
+                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [[item, item.id, opmerking.status, item.bijlage]]
                 else:
-                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [[item, item.id, None]]
+                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [[item, item.id, None, item.bijlage]]
         else:
             if item.hoofdstuk in hoofdstuk_ordered_items:
                 if opmerking:
-                    hoofdstuk_ordered_items[item.hoofdstuk].append([item, item.id, opmerking.status])
+                    hoofdstuk_ordered_items[item.hoofdstuk].append([item, item.id, opmerking.status, item.bijlage])
                 else:
-                    hoofdstuk_ordered_items[item.hoofdstuk].append([item, item.id, None])
+                    hoofdstuk_ordered_items[item.hoofdstuk].append([item, item.id, None, item.bijlage])
             else:
                 if opmerking:
-                    hoofdstuk_ordered_items[item.hoofdstuk] = [[item, item.id, opmerking.status]]
+                    hoofdstuk_ordered_items[item.hoofdstuk] = [[item, item.id, opmerking.status, item.bijlage]]
                 else:
-                    hoofdstuk_ordered_items[item.hoofdstuk] = [[item, item.id, None]]
+                    hoofdstuk_ordered_items[item.hoofdstuk] = [[item, item.id, None, item.bijlage]]
 
     # easy entrance to item ids
     form_item_ids = [item.id for item in items]
@@ -1677,14 +1677,14 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
                     hoofdstuk_ordered_items_non_accept[item.hoofdstuk] = {}
 
             if item.paragraaf in hoofdstuk_ordered_items_non_accept[item.hoofdstuk]:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf].append([item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list, comment.kostenConsequenties])
+                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf].append([item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list, comment.kostenConsequenties, item.bijlage])
             else:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf] = [[item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list, comment.kostenConsequenties]]
+                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf] = [[item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list, comment.kostenConsequenties, item.bijlage]]
         else:
             if item.hoofdstuk in hoofdstuk_ordered_items_non_accept:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk].append([item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list, comment.kostenConsequenties])
+                hoofdstuk_ordered_items_non_accept[item.hoofdstuk].append([item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list, comment.kostenConsequenties, item.bijlage])
             else:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk] = [[item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list, comment.kostenConsequenties]]
+                hoofdstuk_ordered_items_non_accept[item.hoofdstuk] = [[item.inhoud, item.id, comment.id, string, comment.annotation, last_accept, temp_bijlage_list, comment.kostenConsequenties, item.bijlage]]
 
     return hoofdstuk_ordered_items_non_accept
 
@@ -1737,18 +1737,19 @@ def MyReplies(request, pk):
         item_id_list = [number for number in request.POST.getlist("comment_id")]
         ann_forms = [
             # todo: fix bijlages toevoegen
-            forms.CommentReplyForm(dict(comment_id=comment_id, annotation=opmrk, status=status, accept=accept))
-            for comment_id, opmrk, status, accept in zip(
+            forms.CommentReplyForm(dict(comment_id=comment_id, annotation=opmrk, status=status, accept=accept, kostenConsequenties=kostenConsequenties))
+            for comment_id, opmrk, status, accept, kostenConsequenties in zip(
                 request.POST.getlist("comment_id"),
                 request.POST.getlist("annotation"),
                 request.POST.getlist("status"),
                 request.POST.getlist("accept"),
+                request.POST.getlist("kostenConsequenties"),
             )
         ]
         # only use valid forms
         ann_forms = [ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()]
         for form in ann_forms:
-            if form.cleaned_data["accept"] == "True" or form.cleaned_data["status"] or form.cleaned_data["annotation"]:
+            if form.cleaned_data["accept"] == "True" or form.cleaned_data["status"] or form.cleaned_data["annotation"] or form.cleaned_data["kostenConsequenties"]:
                 # true comment if either comment or voldoet
                 original_comment = PVEItemAnnotation.objects.filter(id=form.cleaned_data["comment_id"]).first()
                 reply = CommentReply.objects.filter(Q(commentphase=commentphase) & Q(onComment=original_comment)).first()
@@ -1758,6 +1759,9 @@ def MyReplies(request, pk):
 
                 if form.cleaned_data["status"]:
                     reply.status = form.cleaned_data["status"]
+
+                if form.cleaned_data["kostenConsequenties"]:
+                    reply.status = form.cleaned_data["kostenConsequenties"]
 
                 if form.cleaned_data["accept"] == 'True':
                     reply.accept = True
@@ -1787,6 +1791,7 @@ def MyReplies(request, pk):
                 'annotation':reply.comment,
                 'status':reply.status,
                 'accept':'True',
+                'kostenConsequenties':reply.kostenConsequenties,
                 }))
         else:
             ann_forms.append(forms.CommentReplyForm(initial={
@@ -1794,6 +1799,7 @@ def MyReplies(request, pk):
                 'annotation':reply.comment,
                 'status':reply.status,
                 'accept':'False',
+                'kostenConsequenties':reply.kostenConsequenties,
                 }))
         form_item_ids.append(reply.onComment.id)
 

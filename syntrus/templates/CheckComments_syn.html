@@ -48,11 +48,11 @@
                     {% else %}
                     <div class="item_content" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
                     {% endif %}
-                    <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
+                    <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}{% if item|index:8 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
                     {% if item|index:3 %}<div class="status_added" id="status-{{ item|index:1 }}">
                     <p>{{ item|index:3 }}
                     {% if item|index:6 %}
-                    <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
+                    <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
                     {% endif %}
                     {% if item|index:7 %}
                     <br>Kostenverschil: &#8364;{{ item|index:7 }}
@@ -71,11 +71,12 @@
           <div class="item_content" style="background-color: #bcf5bc;" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
           {% else %}
           <div class="item_content" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
-          {% endif %}<div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
+          {% endif %}
+          <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}{% if item|index:8 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
           {% if item|index:3 %}<div class="status_added" id="status-{{ item|index:1 }}">
           <p>{{ item|index:3 }}
           {% if item|index:6 %}
-          <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
+          <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
           {% endif %}
           {% if item|index:7 %}
           <br>Kostenverschil: &#8364;{{ item|index:7 }}
@@ -138,11 +139,11 @@
                     {% else %}
                     <div class="item_content" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
                     {% endif %}
-                    <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
+                    <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}{% if item|index:8 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
                     {% if item|index:3 %}<div class="status_added" id="status-{{ item|index:1 }}">
                     <p>{{ item|index:3 }}
                     {% if item|index:6 %}
-                    <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
+                    <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
                     {% endif %}
                     {% if item|index:7 %}
                     <br>Kostenverschil: &#8364;{{ item|index:7 }}
@@ -161,11 +162,12 @@
           <div class="item_content" style="background-color: #bcf5bc;" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
           {% else %}
           <div class="item_content" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
-          {% endif %}<div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
+          {% endif %}
+          <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}{% if item|index:8 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
           {% if item|index:3 %}<div class="status_added" id="status-{{ item|index:1 }}">
           <p>{{ item|index:3 }}
           {% if item|index:6 %}
-          <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
+          <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
           {% endif %}
           {% if item|index:7 %}
           <br>Kostenverschil: &#8364;{{ item|index:7 }}
@@ -227,11 +229,11 @@
                     {% else %}
                     <div class="item_content" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
                     {% endif %}
-                    <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
+                    <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}{% if item|index:8 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
                     {% if item|index:3 %}<div class="status_added" id="status-{{ item|index:1 }}">
                     <p>{{ item|index:3 }}
                     {% if item|index:6 %}
-                    <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
+                    <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
                     {% endif %}
                     {% if item|index:7 %}
                     <br>Kostenverschil: &#8364;{{ item|index:7 }}
@@ -251,11 +253,11 @@
           {% else %}
           <div class="item_content" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
           {% endif %}
-          <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
+          <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}{% if item|index:8 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
           {% if item|index:3 %}<div class="status_added" id="status-{{ item|index:1 }}">
           <p>{{ item|index:3 }}
           {% if item|index:6 %}
-          <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
+          <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
           {% endif %}
           {% if item|index:7 %}
           <br>Kostenverschil: &#8364;{{ item|index:7 }}

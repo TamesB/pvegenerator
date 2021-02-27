@@ -631,7 +631,7 @@ def viewItemView(request, pk):
     return render(request, 'PVEItemView.html', context)
 
 
-@staff_member_required(login_url='/404')
+@login_required(login_url='/404')
 def downloadBijlageView(request, pk):
     access_key = settings.AWS_ACCESS_KEY_ID
     secret_key = settings.AWS_SECRET_ACCESS_KEY

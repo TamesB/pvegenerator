@@ -314,7 +314,7 @@ class PDFMaker:
                                         opmrk = (opmrk)
 
                                         # kleur aanvullingen/opmerkingen als groen
-                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
+                                        j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkGreen)
                                         
                                         Story.append(p)
                                         Story.append(j)
@@ -415,7 +415,7 @@ class PDFMaker:
                                     opmrk = (opmrk)
 
                                     # kleur aanvullingen/opmerkingen als groen
-                                    j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleOpmrkGreen)
+                                    j = Paragraph(f"{opmrk}".replace('\n','<br />\n'), self.regelStyleSwitchOpmrkGreen)
                                     
                                     Story.append(p)
                                     Story.append(j)

@@ -38,7 +38,8 @@
   </div>
 </div>
 
-<table class="base_info_table" id="myTable">
+<div class="base_info_table">
+  <table id="myTable">
       <tbody>
         <tr class="table_title">
           <th><p>Projectnummer</p></th>
@@ -63,7 +64,7 @@
         </tr>
         {% endfor %}
       </tbody>
-    </table>
+  </table>
 </div>
 
 <div style="display:none; font-family: 'Montserrat'; font-size: 1vh;" class="popup_wrapper">
@@ -79,7 +80,7 @@
         {% for project in projects %}
           <tr>
             <td><p>{{ project.naam }}</p></td>
-            <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' project.id %}"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% else %}Niet beschikbaar{% endif %}</p></td>
+            <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' project.id %}"><img class="dimg" style="align-self: right; max-height: 2vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% else %}Niet beschikbaar{% endif %}</p></td>
           </tr>
         {% endfor %}
         </tbody>
@@ -103,7 +104,7 @@
                         {% if not project.frozenLevel|divisibleby:2 %}
         <tr class="table_content">
           <td><p>{{ project.naam }}</p></td>
-          <td class="link"><a href="{% url 'commentscheck_syn' project.id %}"><img style="max-width: 1vw;" src="{% static 'syntrus/img/plus.png' %}"></img></a></p></td>
+          <td class="link"><a href="{% url 'commentscheck_syn' project.id %}"><img style="max-height: 2vh;" src="{% static 'syntrus/img/plus.png' %}"></img></a></p></td>
         </tr>
         {% endif %}
         {% endif %}
