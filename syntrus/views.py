@@ -1761,7 +1761,7 @@ def MyReplies(request, pk):
                     reply.status = form.cleaned_data["status"]
 
                 if form.cleaned_data["kostenConsequenties"]:
-                    reply.status = form.cleaned_data["kostenConsequenties"]
+                    reply.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
 
                 if form.cleaned_data["accept"] == 'True':
                     reply.accept = True
