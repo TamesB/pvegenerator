@@ -295,43 +295,45 @@ def GeneratePVEView(request):
                 form.cleaned_data["Doelgroep3"], form.cleaned_data["Smarthome"],
                 form.cleaned_data["AED"], form.cleaned_data["EntreeUpgrade"],
                 form.cleaned_data["Pakketdient"], form.cleaned_data["JamesConcept"] )
+
+            versie = models.ActieveVersie.objects.get(belegger__naam="Syntrus").versie
             # Entered parameters are in the manytomany parameters of the object
-            basic_PVE = models.PVEItem.objects.filter(basisregel=True)
-            basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(Bouwsoort__parameter__contains=Bouwsoort1))
+            basic_PVE = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie=versie, basisregel=True)
+            basic_PVE = basic_PVE.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie=versie, Bouwsoort__parameter__contains=Bouwsoort1))
 
             if Bouwsoort2:
-                basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(Bouwsoort__parameter__contains=Bouwsoort2))
+                basic_PVE = basic_PVE.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie=versie, Bouwsoort__parameter__contains=Bouwsoort2))
             if Bouwsoort3:
-                basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(Bouwsoort__parameter__contains=Bouwsoort3))
+                basic_PVE = basic_PVE.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie=versie, Bouwsoort__parameter__contains=Bouwsoort3))
             if TypeObject1:
-                basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(TypeObject__parameter__contains=TypeObject1))
+                basic_PVE = basic_PVE.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie=versie, TypeObject__parameter__contains=TypeObject1))
             if TypeObject2:
-                basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(TypeObject__parameter__contains=TypeObject2))
+                basic_PVE = basic_PVE.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie=versie, TypeObject__parameter__contains=TypeObject2))
             if TypeObject3:
-                basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(TypeObject__parameter__contains=TypeObject3))
+                basic_PVE = basic_PVE.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie=versie, TypeObject__parameter__contains=TypeObject3))
             if Doelgroep1:
-                basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(Doelgroep__parameter__contains=Doelgroep1))
+                basic_PVE = basic_PVE.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie=versie, Doelgroep__parameter__contains=Doelgroep1))
             if Doelgroep2:
-                basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(Doelgroep__parameter__contains=Doelgroep2))
+                basic_PVE = basic_PVE.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie=versie, Doelgroep__parameter__contains=Doelgroep2))
             if Doelgroep3:
-                basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(Doelgroep__parameter__contains=Doelgroep3))
+                basic_PVE = basic_PVE.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie=versie, Doelgroep__parameter__contains=Doelgroep3))
             # If line is extra (AED, Smarthome, Entree Upgrade); Always include
             # if box checked
             if AED:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(Q(AED=True)))
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(Q(versie=versie) & Q(AED=True)))
             if Smarthome:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(Q(Smarthome=True)))
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(Q(versie=versie) & Q(Smarthome=True)))
             if EntreeUpgrade:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(Q(EntreeUpgrade=True)))
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(Q(versie=versie) & Q(EntreeUpgrade=True)))
             if Pakketdient:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(Q(Pakketdient=True)))
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(Q(versie=versie) & Q(Pakketdient=True)))
             if JamesConcept:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(Q(JamesConcept=True)))
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(Q(versie=versie) & Q(JamesConcept=True)))
 
             basic_PVE = basic_PVE.order_by('id')
             # make pdf
@@ -411,7 +413,7 @@ def download_pve(request, pk):
             raise Http404('404')
 
     project = get_object_or_404(Project, id=pk)
-
+    
     basic_PVE = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(projects__id__contains=pk).order_by('id')
 
     # make pdf
@@ -1137,84 +1139,88 @@ def ConnectPVE(request, pk):
                 form.cleaned_data["Doelgroep3"], form.cleaned_data["Smarthome"],
                 form.cleaned_data["AED"], form.cleaned_data["EntreeUpgrade"],
                 form.cleaned_data["Pakketdient"], form.cleaned_data["JamesConcept"] )
+
+            # we get the active version of the pve based on what is active right now
+            versie = models.ActieveVersie.objects.filter(belegger__naam="Syntrus").versie
+
             # Entered parameters are in the manytomany parameters of the object
-            basic_PVE = models.PVEItem.objects.filter(basisregel=True)
-            basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(Bouwsoort__parameter__contains=Bouwsoort1))
-            project.bouwsoort1 = models.Bouwsoort.objects.filter(parameter=Bouwsoort1).first()
+            basic_PVE = models.PVEItem.objects.filter(versie=versie, basisregel=True)
+            basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(versie=versie, Bouwsoort__parameter__contains=Bouwsoort1))
+            project.bouwsoort1 = models.Bouwsoort.objects.filter(versie=versie, parameter=Bouwsoort1).first()
 
             if Bouwsoort2:
                 basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(
-                        Bouwsoort__parameter__contains=Bouwsoort2))
-                project.bouwsoort2 = models.Bouwsoort.objects.filter(parameter=Bouwsoort2).first()
+                        versie=versie, Bouwsoort__parameter__contains=Bouwsoort2))
+                project.bouwsoort2 = models.Bouwsoort.objects.filter(versie=versie, parameter=Bouwsoort2).first()
 
             if Bouwsoort3:
                 basic_PVE = basic_PVE.union(
                    models.PVEItem.objects.filter(
-                        Bouwsoort__parameter__contains=Bouwsoort3))
-                project.bouwsoort2 = models.Bouwsoort.objects.filter(parameter=Bouwsoort3).first()
+                        versie=versie, Bouwsoort__parameter__contains=Bouwsoort3))
+                project.bouwsoort2 = models.Bouwsoort.objects.filter(versie=versie, parameter=Bouwsoort3).first()
 
             if TypeObject1:
                 basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(
-                        TypeObject__parameter__contains=TypeObject1))
-                project.typeObject1 = models.TypeObject.objects.filter(parameter=TypeObject1).first()
+                        versie=versie, TypeObject__parameter__contains=TypeObject1))
+                project.typeObject1 = models.TypeObject.objects.filter(versie=versie, parameter=TypeObject1).first()
 
             if TypeObject2:
                 basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(
-                        TypeObject__parameter__contains=TypeObject2))
-                project.typeObject2 = models.TypeObject.objects.filter(parameter=TypeObject2).first()
+                        versie=versie, TypeObject__parameter__contains=TypeObject2))
+                project.typeObject2 = models.TypeObject.objects.filter(versie=versie, parameter=TypeObject2).first()
 
             if TypeObject3:
                 basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(
-                        TypeObject__parameter__contains=TypeObject3))
-                project.typeObject2 = models.TypeObject.objects.filter(parameter=TypeObject3).first()
+                        versie=versie, TypeObject__parameter__contains=TypeObject3))
+                project.typeObject2 = models.TypeObject.objects.filter(versie=versie, parameter=TypeObject3).first()
 
             if Doelgroep1:
                 basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(
-                        Doelgroep__parameter__contains=Doelgroep1))
-                project.doelgroep1 = models.Doelgroep.objects.filter(parameter=Doelgroep1).first()
+                        versie=versie, Doelgroep__parameter__contains=Doelgroep1))
+                project.doelgroep1 = models.Doelgroep.objects.filter(versie=versie, parameter=Doelgroep1).first()
 
             if Doelgroep2:
                 basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(
-                        Doelgroep__parameter__contains=Doelgroep2))
-                project.doelgroep2 = models.Doelgroep.objects.filter(parameter=Doelgroep2).first()
+                        versie=versie, Doelgroep__parameter__contains=Doelgroep2))
+                project.doelgroep2 = models.Doelgroep.objects.filter(versie=versie, parameter=Doelgroep2).first()
             
             if Doelgroep3:
                 basic_PVE = basic_PVE.union(
                     models.PVEItem.objects.filter(
-                        Doelgroep__parameter__contains=Doelgroep3))
-                project.doelgroep2 = models.Doelgroep.objects.filter(parameter=Doelgroep3).first()
+                        versie=versie, Doelgroep__parameter__contains=Doelgroep3))
+                project.doelgroep2 = models.Doelgroep.objects.filter(versie=versie, parameter=Doelgroep3).first()
             # If line is extra (AED, Smarthome, Entree Upgrade); Always include
             # if box checked
             if AED:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(Q(AED=True)))
+                    models.PVEItem.objects.filter(Q(versie=versie) & Q(AED=True)))
                 project.AED = True
 
             if Smarthome:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(Q(Smarthome=True)))
+                    models.PVEItem.objects.filter(Q(versie=versie) &Q(Smarthome=True)))
                 # add the parameter to the project
                 project.Smarthome = True
 
             if EntreeUpgrade:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(Q(EntreeUpgrade=True)))
+                    models.PVEItem.objects.filter(Q(versie=versie) &Q(EntreeUpgrade=True)))
                 project.EntreeUpgrade = True
 
             if Pakketdient:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(Q(Pakketdient=True)))
+                    models.PVEItem.objects.filter(Q(versie=versie) &Q(Pakketdient=True)))
                 project.Pakketdient = True
 
             if JamesConcept:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(Q(JamesConcept=True)))
+                    models.PVEItem.objects.filter(Q(versie=versie) &Q(JamesConcept=True)))
                 project.JamesConcept = True
 
             # add the project to all the pve items
@@ -1223,6 +1229,9 @@ def ConnectPVE(request, pk):
 
             # succesfully connected, save the project
             project.pveconnected = True
+
+            # set current pve version to project
+            project.pve_versie = versie
             project.save()
             return redirect('projectenaddprojmanager_syn', pk=project.id)
         else:

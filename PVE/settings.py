@@ -36,6 +36,12 @@ CONN_MAX_AGE = 60
 
 DEFAULT_LOGGING['handlers']['console']['filters'] = []
 
+# debug toolbar
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
+
 # register pdf fonts
 pdfmetrics.registerFont(TTFont('Calibri', os.path.join(BASE_DIR, 'utils/calibri.ttf')))
 pdfmetrics.registerFont(TTFont('Calibri-Bold', os.path.join(BASE_DIR, 'utils/calibrib.ttf')))

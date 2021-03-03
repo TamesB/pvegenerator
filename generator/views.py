@@ -36,7 +36,7 @@ def GeneratePVEView(request, versie_pk):
                 form.cleaned_data["Doelgroep3"], form.cleaned_data["Smarthome"],
                 form.cleaned_data["AED"], form.cleaned_data["EntreeUpgrade"],
                 form.cleaned_data["Pakketdient"], form.cleaned_data["JamesConcept"] )
-
+            
             # Entered parameters are in the manytomany parameters of the object
             basic_PVE = models.PVEItem.objects.filter(versie__id=versie_pk, 
                 basisregel=True)

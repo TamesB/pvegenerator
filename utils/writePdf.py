@@ -204,8 +204,11 @@ class PDFMaker:
         
         Story = [Spacer(0, 224)]
         style = self.styles["Normal"]
-        
-        hoofdstukken = models.PVEHoofdstuk.objects.all()
+
+        # get pve versie
+        versie = models.ActieveVersie.objects.get(belegger__naam="Syntrus").versie
+
+        hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie)
         hoofdstuknamen = [hoofdstuk.hoofdstuk for hoofdstuk in hoofdstukken]
             
         # Excel tabel simulasie
