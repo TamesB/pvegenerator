@@ -1,7 +1,7 @@
 # Author: Tames Boon
 
 from django import forms
-from .models import PVEItem, Bouwsoort, TypeObject, Doelgroep, PVEHoofdstuk, PVEParagraaf, PVEOnderdeel, PVEVersie
+from .models import PVEItem, Bouwsoort, TypeObject, Doelgroep, PVEHoofdstuk, PVEParagraaf, PVEOnderdeel, PVEVersie, ActieveVersie
 from project.models import Beleggers
 from django.forms import ModelForm
 
@@ -46,6 +46,14 @@ class SectionForm(ModelForm):
         fields = ('naam',)
         labels = {
             'naam':'Naam:',
+        }
+
+class ActieveVersieEditForm(ModelForm):
+    class Meta:
+        model = ActieveVersie
+        fields = ('versie',)
+        labels = {
+            'versie':'Versie:',
         }
 
 class ChapterForm(ModelForm):

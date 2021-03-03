@@ -12,6 +12,13 @@ class PVEVersie(models.Model):
     def __str__(self):
         return f"{self.belegger}: Versie {self.versie}"
     
+class ActieveVersie(models.Model):
+    belegger = models.ForeignKey(Beleggers, on_delete=models.CASCADE)
+    versie = models.ForeignKey(PVEVersie, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.belegger}: Versie {self.versie.versie}"
+    
 
 class Bouwsoort(models.Model):
     versie = models.ForeignKey(PVEVersie, on_delete=models.CASCADE, null=True)

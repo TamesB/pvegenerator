@@ -1,10 +1,11 @@
 # Author: Tames Boon
 
 from django.contrib import admin
-from .models import PVEVersie, Bouwsoort, TypeObject, Doelgroep, PVEHoofdstuk, PVEParagraaf, PVEItem
+from .models import PVEVersie, Bouwsoort, TypeObject, Doelgroep, PVEHoofdstuk, PVEParagraaf, PVEItem, ActieveVersie
 
 # Register your models here.
 admin.site.register(PVEVersie)
+admin.site.register(ActieveVersie)
 admin.site.register(Bouwsoort)
 admin.site.register(TypeObject)
 admin.site.register(Doelgroep)

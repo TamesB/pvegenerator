@@ -1,0 +1,38 @@
+{% extends "layout.html" %} {% load semanticui %} {% block main %}
+<input type="button" class="ui primary button d-inline" onclick="javascript:window.location='{% url 'dashboard' %}'" value="< Dashboard" />
+<h1 class="ui header center aligned">Actieve PvE versies</h1>
+{% if actieve_versies %}
+<br><br>
+<div>
+	<table class="ui fixed multiple line blue table">
+		<thead>
+			<tr>
+				<th>
+          Belegger			
+			</th>
+				<th>
+          Actieve Versie			
+			</th>
+			</tr>
+		</thead>
+		<tbody>
+				{% for item in actieve_versies %}
+				<tr>
+				<td> 
+					{{ item.belegger.naam }}
+                </td>
+                <td>
+                    Versie {{ item.versie.versie }}
+					<div class="d-inline" style="float: right;">
+						<a href="{% url 'actieveversiesedit' item.id %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a>										
+					</div>
+				</td>
+				</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+<p>Nog geen PvE versies!</p>
+{% endif %}
+{% block modal %}{% endblock %} 
+{% endblock %}

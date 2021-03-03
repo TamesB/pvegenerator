@@ -134,6 +134,14 @@ def AddPvEVersie(request, belegger_pk):
         # check whether it's valid:
         if form.is_valid():
             form.save()
+
+            # if first version. set as active version of the belegger
+            if models.PVEVersie.objects.filter(belegger=belegger).count() == 1:
+                actieve_versie = models.ActieveVersie()
+                actieve_versie.belegger = belegger
+                actieve_versie.versie = models.PVEVersie.objects.all().first()
+                actieve_versie.save()
+
             return redirect('beleggerversieoverview')
 
     # form
@@ -153,6 +161,31 @@ def AddPvEVersie(request, belegger_pk):
     context["form"] = form
     context["belegger"] = belegger
     return render(request, 'addPvEVersie.html', context)
+
+@staff_member_required(login_url='/404')
+def ActievePVEVersieOverview(request):
+    actieve_versies = models.ActieveVersie.objects.all()
+    context = {}
+    context["actieve_versies"] = actieve_versies
+    return render(request, 'ActieveVersiesOverview.html', context)
+
+@staff_member_required(login_url='/404')
+def ActievePVEVersieEdit(request, pk):
+    actieve_versie = models.ActieveVersie.objects.get(id=pk)
+
+    if request.method == "POST":
+        form = forms.ActieveVersieEditForm(request.POST)
+        if form.is_valid():
+            actieve_versie.versie = form.cleaned_data["versie"]
+            actieve_versie.save()
+            return redirect('actieveversies')
+
+    actieve_versies = models.ActieveVersie.objects.all()
+    context = {}
+    context["actieve_versies"] = actieve_versies
+    context["form"] = forms.ActieveVersieEditForm(instance=actieve_versie)
+    context["belegger"] = actieve_versie.belegger
+    return render(request, 'ActieveVersiesEdit.html', context)
 
 @staff_member_required(login_url='/404')
 def PVEBewerkOverview(request, versie_pk):
@@ -221,7 +254,6 @@ def PVEaddhoofdstukView(request, versie_pk):
         # check whether it's valid:
         if form.is_valid():
             PVEHoofdstuk = models.PVEHoofdstuk()
-            PVEHoofdstuk.onderdeel = specifiek_onderdeel
             PVEHoofdstuk.hoofdstuk = form.cleaned_data["hoofdstuk"]
             PVEHoofdstuk.versie = versie
             PVEHoofdstuk.save()

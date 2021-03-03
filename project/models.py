@@ -30,6 +30,7 @@ class Project(models.Model):
 
     datum_recent_verandering = models.DateTimeField('recente_verandering', auto_now=True)
 
+    pve_versie = models.ForeignKey('app.PVEVersie', on_delete=models.CASCADE, null=True)
 
     organisaties = models.ManyToManyField('users.Organisatie', default=None, related_name="organisaties", blank=True, null=True)
     projectmanager = models.ForeignKey('users.CustomUser', default=None, on_delete=models.CASCADE, blank=True, null=True)
