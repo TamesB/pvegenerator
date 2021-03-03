@@ -2066,16 +2066,19 @@ def SendReplies(request, pk):
                 # add all the comments and divide up into accepted or non accepted or todo
                 for comment in non_accepted_comments_ids:
                     new_phase.comments.add(comment)
-                    new_phase.save()
+
+                new_phase.save()
 
                 for comment in accepted_comment_ids:
                     new_phase.accepted_comments.add(comment)
-                    new_phase.save()
 
+                new_phase.save()
+                
                 for comment in todo_comment_ids:
                     new_phase.todo_comments.add(comment)
-                    new_phase.save()
 
+                new_phase.save()
+                
                 if request.user.type_user == "SOG":
                     allprojectusers = project.permitted.all()
                     filteredDerden = [user.email for user in allprojectusers if user.type_user == "SD"]
