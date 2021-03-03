@@ -2132,6 +2132,32 @@ def FinalFreeze(request, pk):
         if form.is_valid():
             project.fullyFrozen = True
             project.save()
+            allprojectusers = project.permitted.all()
+            filteredDerden = [user.email for user in allprojectusers if user.type_user == "SD"]
+            send_mail(
+                f"Syntrus Projecten - Project {project} is bevroren, download het PvE",
+                f"""Alle regels in het project {project} zijn akkoord mee gegaan en de projectmanager heeft het project afgesloten.
+                
+                Klik op de link om het PvE met alle opmerkingen en bijlages te downloaden.
+                Link: https://pvegenerator.net/syntrus/project/{project.id}/pve
+                """,
+                'admin@pvegenerator.net',
+                filteredDerden,
+                fail_silently=False,
+            )
+            projectmanager = project.projectmanager
+
+            send_mail(
+                f"Syntrus Projecten - Project {project} is bevroren, download het PvE",
+                f"""Alle regels in het project {project} zijn akkoord mee gegaan en de projectmanager heeft het project afgesloten.
+                
+                Klik op de link om het PvE met alle opmerkingen en bijlages te downloaden.
+                Link: https://pvegenerator.net/syntrus/project/{project.id}/pve
+                """,
+                'admin@pvegenerator.net',
+                [f'{projectmanager.email}'],
+                fail_silently=False,
+            ) 
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 

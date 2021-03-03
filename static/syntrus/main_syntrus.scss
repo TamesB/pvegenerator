@@ -318,7 +318,7 @@ body, html {
                         margin-left: 3vw;
                         margin-right: 3vw;
                         background: rgb(178,219,221);
-                        background: linear-gradient(0deg, rgba(0, 172, 169, 1) 20%, rgba(247,247,248,1) 20%);
+                        background: linear-gradient(0deg, #00A4A5 20%, rgba(247,247,248,1) 20%);
                         border-radius: 1.6vh;
                         -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                         -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
@@ -402,7 +402,7 @@ body, html {
                     overflow-x: scroll;
 
                     table {
-                        background-color:rgba(0, 172, 169, 1);
+                        background-color:#00A4A5;
                         display: table;
                         justify-content: space-between;
                         -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
@@ -441,7 +441,7 @@ body, html {
                         }
 
                         .table_title {
-                            background-color: rgba(0, 172, 169, 1);
+                            background-color: #00A4A5;
                             letter-spacing: 0.1em;
                             font-weight: 900;
                             width: 100%; 
@@ -548,7 +548,7 @@ body, html {
                         font-weight: bold;
                         color: white;
                         letter-spacing: 0.2vw;
-                        background-color: rgba(0, 172, 169, 1);
+                        background-color: #00A4A5;
                     }
                 }
 
@@ -686,7 +686,7 @@ body, html {
                                 width: 20vw;
                                 min-width: 225px;
                                 background: rgb(178,219,221);
-                                background: linear-gradient(0deg, rgba(0, 172, 169, 1) 15%, rgba(247,247,248,1) 15%);
+                                background: linear-gradient(0deg, #00A4A5 15%, rgba(247,247,248,1) 15%);
                                 border-radius: 1.6vh;
                                 -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                                 -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
@@ -894,7 +894,7 @@ body, html {
                         box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                         border-radius: 1.6em;
                         background: rgb(178,219,221);
-                        background: linear-gradient(0deg, rgba(0, 172, 169, 1) 10%, rgba(247,247,248,1) 10%);
+                        background: linear-gradient(0deg, #00A4A5 10%, rgba(247,247,248,1) 10%);
 
                         .title {
                             font-size: 2vh;
@@ -1349,7 +1349,7 @@ body, html {
                             width: 100%;
                             padding-top: 0.3vh;
                             padding-bottom: 0.3vh;
-                            background-color: rgba(0, 172, 169, 1);
+                            background-color: #00A4A5;
                             border-top-left-radius: 1.6vh;
                             border-top-right-radius: 1.6vh;
 
@@ -1476,7 +1476,7 @@ body, html {
                         font-size: 1.5vh;
                         border: #f7f7f7;
                         background: #f7f7f7;
-                        background: linear-gradient(180deg, rgba(0, 172, 169, 1) 15%, rgba(247,247,248,1) 15%);
+                        background: linear-gradient(180deg, #00A4A5 15%, rgba(247,247,248,1) 15%);
 
                     
                       
@@ -1600,7 +1600,7 @@ body, html {
 
 
                         .title {
-                            background: rgba(0, 172, 169, 1);
+                            background: #00A4A5;
                             min-width: 100%;
                             width: 100%;
                             font-size: 2.5vh;
@@ -1653,7 +1653,7 @@ body, html {
                         box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
 
                         .title {
-                            background: rgba(0, 172, 169, 1);
+                            background: #00A4A5;
                             min-width: 100%;
                             width: 100%;
                             font-size: 2.5vh;
@@ -1753,7 +1753,7 @@ body, html {
                         -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                         -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                         box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
-                        background: linear-gradient(180deg, rgba(0, 172, 169, 1) 95px, rgba(247,247,248,1) 95px);
+                        background: linear-gradient(180deg, #00A4A5 95px, rgba(247,247,248,1) 95px);
                         overflow-y: auto;
 
                         .table_head {
@@ -1842,7 +1842,7 @@ body, html {
                     -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                     -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
                     box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0,0,0,0.41);
-                    background: linear-gradient(180deg, rgba(0, 172, 169, 1) 95px, rgba(247,247,248,1) 95px);
+                    background: linear-gradient(180deg, #00A4A5 95px, rgba(247,247,248,1) 95px);
                     overflow-y: auto;
 
                     .table_head {
@@ -1953,7 +1953,7 @@ body, html {
  .loader {
     border: 16px solid #f3f3f3;
     border-radius: 50%;
-    border-top: 16px solid rgba(0, 172, 169, 1);
+    border-top: 16px solid #00A4A5;
     width: 5em;
     height: 5em;
     margin-top: 20%;

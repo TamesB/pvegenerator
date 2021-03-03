@@ -1,4 +1,4 @@
-{% extends "PVEListHfstEdit.html" %}
+{% extends "PVEVersieOverview.html" %}
 
 {% load semanticui %}
 
@@ -13,13 +13,13 @@ $('.mini.modal')
 
 <div class="ui mini modal">
   <div class="header">
-    Bewerk onderdeel
+    Voeg PvE versie toe voor {{ belegger.naam }}
   </div>
   <div class="content">
-    <form action="{% url 'editonderdeel' onderdeel_id %}" class="ui form" method="POST" enctype="multipart/form-data">
+    <form action="{% url 'addpveversie' belegger.id %}" class="ui form" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {% render_form form %}
-        <input type="submit" class="ui green button" value="Bewerk">
+        <input type="submit" class="ui green button" value="Voeg toe">
     </form>  
   </div>
 </div>

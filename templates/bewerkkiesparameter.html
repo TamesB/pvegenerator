@@ -16,7 +16,7 @@ $('.mini.modal')
     Bewerk parameter
   </div>
   <div class="content">
-    <form action="{% url 'kiesparameteredit' type_id item_id %}" class="ui form" method="POST" enctype="multipart/form-data">
+    <form action="{% url 'kiesparameteredit' versie_pk type_id item_id %}" class="ui form" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {% render_form form %}
         <input type="submit" class="ui green button" value="Bewerk">

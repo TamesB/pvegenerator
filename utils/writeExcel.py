@@ -6,8 +6,8 @@ import datetime
 
 class ExcelMaker:
 
-    def linewriter(self):
-        PVEItems = models.PVEItem.objects.all()
+    def linewriter(self, versie_pk):
+        PVEItems = models.PVEItem.objects.filter(versie__id=versie_pk)
 
         date = datetime.datetime.now()
         filename = "PVEWORKSHEET-%s%s%s%s%s%s" % (
@@ -32,9 +32,9 @@ class ExcelMaker:
         row = 0
         column = 0
 
-        Bouwsoorten = [bouwsrt for bouwsrt in models.Bouwsoort.objects.all()]
-        TypeObjecten = [typeobj for typeobj in models.TypeObject.objects.all()]
-        Doelgroepen = [doelgrp for doelgrp in models.Doelgroep.objects.all()]
+        Bouwsoorten = [bouwsrt for bouwsrt in models.Bouwsoort.objects.filter(versie__id=versie_pk)]
+        TypeObjecten = [typeobj for typeobj in models.TypeObject.objects.filter(versie__id=versie_pk)]
+        Doelgroepen = [doelgrp for doelgrp in models.Doelgroep.objects.filter(versie__id=versie_pk)]
 
         # Titel row
         column = 1
@@ -56,7 +56,7 @@ class ExcelMaker:
         row += 1
         column = 0
 
-        hoofdstukken = models.PVEHoofdstuk.objects.all()
+        hoofdstukken = models.PVEHoofdstuk.objects.filter(versie__id=versie_pk)
         hoofdstuknamen = [hoofdstuk.hoofdstuk for hoofdstuk in hoofdstukken]
 
         # Run door de items heen
@@ -64,15 +64,15 @@ class ExcelMaker:
         cell_format.set_text_wrap()
 
         for hoofdstuk in hoofdstukken:
-            if models.PVEItem.objects.filter(hoofdstuk=hoofdstuk):
+            if models.PVEItem.objects.filter(versie__id=versie_pk, hoofdstuk=hoofdstuk):
                 worksheet.write(row, column, hoofdstuk.hoofdstuk, bold)
                 row += 1
                 
-                paragraven = models.PVEParagraaf.objects.filter(hoofdstuk=hoofdstuk)
+                paragraven = models.PVEParagraaf.objects.filter(versie__id=versie_pk, hoofdstuk=hoofdstuk)
                 
                 if paragraven.exists():
                     for paragraaf in paragraven:
-                        if models.PVEItem.objects.filter(paragraaf=paragraaf):
+                        if models.PVEItem.objects.filter(versie__id=versie_pk, paragraaf=paragraaf):
                             items = [item for item in PVEItems if item.hoofdstuk == hoofdstuk and item.paragraaf == paragraaf]
 
                             worksheet.write(row, column, paragraaf.paragraaf, bold)

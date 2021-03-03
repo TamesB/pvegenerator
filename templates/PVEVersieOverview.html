@@ -1,0 +1,50 @@
+{% extends "layout.html" %} {% load semanticui %} {% block main %}
+<input type="button" class="ui primary button d-inline" onclick="javascript:window.location='{% url 'dashboard' %}'" value="< Dashboard" />
+<h1 class="ui header center aligned">Kies Belegger / PvE versie</h1>
+{% if beleggers %}
+<br><br>
+<div>
+	{% for key, queryset in BeleggerVersieQuerySet.items %}
+	<table class="ui fixed multiple line blue table">
+		<thead>
+			<tr>
+				<th>
+					{{ key.naam }} <!-- Beleggernaam -->
+					<div class="d-inline" style="float: right;">
+					<span class="float right"><a href="{% url 'addpveversie' key.id %}"><button class="ui icon green button"><i class="icon plus"></i>Versie</button></a></span>
+					</div>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+        {% if queryset %}
+				{% for item in queryset %}
+				<tr>
+				<td> 
+					<a href="{% url 'pvebewerkoverview' item.id %}">Versie {{ item.versie }}</a> &nbsp; 
+					<div class="d-inline" style="float: right;">
+						<input class="ui primary button d-inline" onclick="window.location.href='{% url 'pvebewerkoverview' item.id %}';" type="button" value="Open">
+					</div>
+				</td>
+				</tr>
+				{% endfor %}
+        {% else %}
+				<tr>
+        <td>Nog geen PvE versies.</td>
+				</tr>
+        {% endif %}
+		</tbody>
+	</table>
+	{% endfor %}
+	<div class="ui divider"></div>
+	<div style="float: center;">
+	<a href="{% url 'addbelegger' %}"><button class="ui green button"><i class="icon plus"></i>Voeg belegger toe</button></a>
+	</div>
+{% else %}
+<p>Nog geen beleggers!</p>
+<div class="d-inline" style="float: left;">
+	<span class="float right"><a href="{% url 'addbelegger' %}"><button class="ui green button"><i class="icon plus"></i>Voeg belegger toe</button></a></span>
+					</div>
+{% endif %}
+{% block modal %}{% endblock %} 
+{% endblock %}

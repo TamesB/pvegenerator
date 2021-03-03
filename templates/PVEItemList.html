@@ -1,15 +1,15 @@
 {% extends "layout.html" %} {% load semanticui %} {% block main %}
 {% if paragraaf_id == 0 %}
 <div class="ui big breadcrumb">
-  <a class="section" href="{% url 'sectionview' %}">Overzicht</a>
+  <a class="section" href="{% url 'hoofdstukview' versie_pk %}">Overzicht</a>
   <i class="right chevron icon divider"></i>
   <a class="active section">{{ hoofdstuk }}</a>
 </div>
 {% else %}
 <div class="ui big breadcrumb">
-  <a class="section" href="{% url 'sectionview' %}">Overzicht</a>
+  <a class="section" href="{% url 'hoofdstukview' versie_pk %}">Overzicht</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'viewParagraaf' hoofdstuk_id %}">{{ hoofdstuk }}</a>
+  <a class="section" href="{% url 'viewParagraaf' versie_pk hoofdstuk_id %}">{{ hoofdstuk }}</a>
 	<i class="right chevron icon divider"></i>
   <a class="active section">{{ paragraaf }}</a>
 </div>
@@ -17,10 +17,10 @@
 <br><br>
 {% if queryset %}
 <div class="d-inline" style="float: left;">
-	<a href="{% url 'itemlistviewedit' hoofdstuk_id paragraaf_id %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a>
+	<a href="{% url 'itemlistviewedit' versie_pk hoofdstuk_id paragraaf_id %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a>
 </div>
 <div class="d-inline" style="float: right;">
-	<span><a href="{% url 'itemlistviewdelete' hoofdstuk_id paragraaf_id %}"><button class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></a></span>
+	<span><a href="{% url 'itemlistviewdelete' versie_pk hoofdstuk_id paragraaf_id %}"><button class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></a></span>
 </div>
 <br><br>
 
@@ -32,7 +32,7 @@
 					Regels
 				</th>
         <th><div class="d-inline" style="float: right;">
-					<span class="float right"><a href="{% url 'additem' hoofdstuk_id paragraaf_id %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
+					<span class="float right"><a href="{% url 'additem' versie_pk hoofdstuk_id paragraaf_id %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
         					</div></th>
 			</tr>
 		</thead>
@@ -42,14 +42,14 @@
 				<td>{{ item.inhoud|linebreaks }}</td>
         <td>
 					<div class="d-inline" style="float: right;">
-						<input class="ui primary button d-inline" onclick="window.location.href='{% url 'viewitem' item.id %}';" type="button" value="Bekijk">									
+						<input class="ui primary button d-inline" onclick="window.location.href='{% url 'viewitem' versie_pk item.id %}';" type="button" value="Bekijk">									
 				</td>
 			</tr>
       {% endfor %}
 		</tbody>
 	</table>
 </div>{% else %}
-<p>Geen regels in deze sectie! <input class="ui primary button d-inline" onclick="window.location.href='{% url 'additem' hoofdstuk_id paragraaf_id %}';" type="button" value="Voeg er een toe"></p>{% endif %}
+<p>Geen regels in deze sectie! <input class="ui primary button d-inline" onclick="window.location.href='{% url 'additem' versie_pk hoofdstuk_id paragraaf_id %}';" type="button" value="Voeg er een toe"></p>{% endif %}
 
 {% block modal %}{% endblock %}
 

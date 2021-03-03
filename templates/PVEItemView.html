@@ -7,7 +7,7 @@
 {% block modal %}
 <div class="ui long modal">
   <div class="header">
-    PvE Itemnummer {{ PVEItem.id }} <span class="float right" style="float: right;"><a href="{% url 'edititem' PVEItem.id %}"><button class="ui basic button"><i class="icon edit"></i>Bewerk</button></a></span>
+    PvE Itemnummer {{ PVEItem.id }} <span class="float right" style="float: right;"><a href="{% url 'edititem' versie_pk PVEItem.id %}"><button class="ui basic button"><i class="icon edit"></i>Bewerk</button></a></span>
   </div>
   <div class="very padded description" style="margin-left: 3em; margin-right: 3em; margin-top: 1em; margin-bottom: 1em; "> 
     <h3 class="ui header">Inhoud</h3>
@@ -38,8 +38,8 @@
     {% endif %}
   </div>
   <div class="actions" style="margin-bottom: 1em;">
-    <span><a href="{% url 'deleteitem' PVEItem.id %}"><button class="ui basic red button"><i class="icon trash alternate outline"></i>Verwijder</button></a></span>
-    <span class="float right"><a href="{% url 'itemlistview' hoofdstuk_id paragraaf_id %}"><button class="ui green button"><i class="icon check"></i>Gereed</button></a></span>
+    <span><a href="{% url 'deleteitem' versie_pk PVEItem.id %}"><button class="ui basic red button"><i class="icon trash alternate outline"></i>Verwijder</button></a></span>
+    <span class="float right"><a href="{% url 'itemlistview' versie_pk hoofdstuk_id paragraaf_id %}"><button class="ui green button"><i class="icon check"></i>Gereed</button></a></span>
   </div>
 </div>
 </div>

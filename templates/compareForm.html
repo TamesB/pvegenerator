@@ -3,8 +3,8 @@
 {% load semanticui %}
 
 {% block main %}
-<input type="button" class="ui primary button d-inline" onclick="javascript:history.back();" value="< Terug" />
-<form action="{% url 'compareform' pk %}" class="ui form" method="POST" enctype="multipart/form-data">
+<input type="button" class="ui primary button d-inline" onclick="javascript:window.location='{% url 'compare' versie_pk %}'" value="< Terug" />
+<form action="{% url 'compareform' versie_pk pk %}" class="ui form" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {% render_form form %}
     <button type="submit" class="ui primary button" value="generate">Genereer</button>

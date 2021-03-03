@@ -1,7 +1,8 @@
 # Author: Tames Boon
 
 from django import forms
-from .models import PVEItem, Bouwsoort, TypeObject, Doelgroep, PVEHoofdstuk, PVEParagraaf, PVEOnderdeel
+from .models import PVEItem, Bouwsoort, TypeObject, Doelgroep, PVEHoofdstuk, PVEParagraaf, PVEOnderdeel, PVEVersie
+from project.models import Beleggers
 from django.forms import ModelForm
 
 class LoginForm(forms.Form):
@@ -18,7 +19,27 @@ class LoginForm(forms.Form):
 
 class KiesParameterForm(forms.Form):
     parameter = forms.CharField(label='Naam', max_length=100)
-    
+
+class BeleggerForm(ModelForm):
+    class Meta:
+        model = Beleggers
+        fields = ('naam',)
+        labels = {
+            'naam':'Naam:',
+        }
+
+class PVEVersieForm(ModelForm):
+    class Meta:
+        model = PVEVersie
+        fields = ('versie', 'belegger')
+        labels = {
+            'versie':'Versie:',
+        }
+        widgets = {
+            'belegger': forms.HiddenInput()
+        }
+
+
 class SectionForm(ModelForm):
     class Meta:
         model = PVEOnderdeel

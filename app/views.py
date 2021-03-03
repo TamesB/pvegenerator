@@ -16,7 +16,7 @@ from django.conf import settings
 import mimetypes
 from . import models
 from users.models import CustomUser
-from project.models import Project
+from project.models import Project, Beleggers
 from . import forms
 import magic
 from django.core.mail import send_mail
@@ -86,37 +86,98 @@ def DashboardView(request):
     return render(request, 'dashboard.html', context)
 
 @staff_member_required(login_url='/404')
-def PVEsectionView(request):
-    Onderdelen = models.PVEOnderdeel.objects.all()
-    SectionQuerySets = {}
+def PVEBeleggerVersieOverview(request):
+    beleggers = Beleggers.objects.all()
 
-    for onderdeel in Onderdelen:
-        SectionQuerySets[onderdeel] = models.PVEHoofdstuk.objects.filter(
-            onderdeel__naam=onderdeel.naam)
+    BeleggerVersieQuerySet = {}
+
+    for belegger in beleggers:
+        BeleggerVersieQuerySet[belegger] = models.PVEVersie.objects.filter(belegger=belegger)
 
     context = {}
-    context["SectionQuerySets"] = SectionQuerySets.items()
-    context["onderdelen"] = Onderdelen
+    context["BeleggerVersieQuerySet"] = BeleggerVersieQuerySet
+    context["beleggers"] = beleggers
+    return render(request, 'PVEVersieOverview.html', context)
 
+@staff_member_required(login_url='/404')
+def AddBelegger(request):
+    if request.method == 'POST':
+        form = forms.BeleggerForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            form.save()
+            return redirect('beleggerversieoverview')
+
+    # form
+    form = forms.BeleggerForm()
+
+    # View below modal
+    beleggers = Beleggers.objects.all()
+
+    BeleggerVersieQuerySet = {}
+
+    for belegger in beleggers:
+        BeleggerVersieQuerySet[belegger] = models.PVEVersie.objects.filter(belegger=belegger)
+
+    context = {}
+    context["BeleggerVersieQuerySet"] = BeleggerVersieQuerySet
+    context["beleggers"] = beleggers
+    context["form"] = form
+    return render(request, 'addBelegger.html', context)
+
+@staff_member_required(login_url='/404')
+def AddPvEVersie(request, belegger_pk):
+    belegger = Beleggers.objects.get(id=belegger_pk)
+
+    if request.method == 'POST':
+        form = forms.PVEVersieForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            form.save()
+            return redirect('beleggerversieoverview')
+
+    # form
+    form = forms.PVEVersieForm(initial={'belegger': belegger})
+
+    # View below modal
+    beleggers = Beleggers.objects.all()
+
+    BeleggerVersieQuerySet = {}
+
+    for belegger in beleggers:
+        BeleggerVersieQuerySet[belegger] = models.PVEVersie.objects.filter(belegger=belegger)
+
+    context = {}
+    context["BeleggerVersieQuerySet"] = BeleggerVersieQuerySet
+    context["beleggers"] = beleggers
+    context["form"] = form
+    context["belegger"] = belegger
+    return render(request, 'addPvEVersie.html', context)
+
+@staff_member_required(login_url='/404')
+def PVEBewerkOverview(request, versie_pk):
+    pve_versie = models.PVEVersie.objects.get(id=versie_pk)
+
+    context = {}
+    context["pve_versie"] = pve_versie
+    return render(request, 'PVEBewerkOverview.html', context)
+
+
+@staff_member_required(login_url='/404')
+def PVEHoofdstukListView(request, versie_pk):
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie)
+    context = {}
+    context["hoofdstukken"] = hoofdstukken
+    context["versie_pk"] = versie_pk
     return render(request, 'PVEListHfst.html', context)
 
 @staff_member_required(login_url='/404')
-def deleteSection(request, pk):
-    if not models.PVEOnderdeel.objects.filter(pk=pk):
-        return Http404("404")
-
-    onderdeel = models.PVEOnderdeel.objects.filter(pk=pk).first()
-    onderdeel.delete()
-
-    return redirect('sectionviewdelete')
-
-
-@staff_member_required(login_url='/404')
-def DownloadWorksheet(request):
+def DownloadWorksheet(request, versie_pk):
     fl_path = settings.EXPORTS_ROOT
 
     worksheet = writeExcel.ExcelMaker()
-    filename = worksheet.linewriter()
+    filename = worksheet.linewriter(versie_pk)
 
     filename = f"/{filename}.xlsx"
 
@@ -132,114 +193,28 @@ def DownloadWorksheet(request):
 
 
 @staff_member_required(login_url='/404')
-def PVEsectionViewEdit(request):
-    Onderdelen = models.PVEOnderdeel.objects.all()
-    SectionQuerySets = {}
-
-    for onderdeel in Onderdelen:
-        SectionQuerySets[onderdeel] = models.PVEHoofdstuk.objects.filter(
-            onderdeel__naam=onderdeel.naam)
-
+def PVEHoofdstukListViewEdit(request, versie_pk):
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie)
     context = {}
-    context["SectionQuerySets"] = SectionQuerySets.items()
-    context["onderdelen"] = Onderdelen
+    context["hoofdstukken"] = hoofdstukken
+    context["versie_pk"] = versie_pk
 
     return render(request, 'PVEListHfstEdit.html', context)
 
-@staff_member_required(login_url='/404')
-def PVEsectionEdit(request, pk):
-    if not models.PVEOnderdeel.objects.filter(pk=pk):
-        return Http404("404")
-
-    onderdeel = models.PVEOnderdeel.objects.filter(pk=pk).first()
-
-    if request.method == 'POST':
-        form = forms.SectionForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            onderdeel = models.PVEOnderdeel.objects.filter(pk=pk).first()
-            onderdeel.naam = form.cleaned_data["naam"]
-            onderdeel.save()
-            return redirect('sectionviewedit')
-
-    # form, initial chapter in specific onderdeel
-    form = forms.SectionForm(initial={'naam': onderdeel.naam})
-
-    # View below modal
-    Onderdelen = models.PVEOnderdeel.objects.all()
-    SectionQuerySets = {}
-
-    for onderdeel in Onderdelen:
-        SectionQuerySets[onderdeel] = models.PVEHoofdstuk.objects.filter(
-            onderdeel__naam=onderdeel.naam)
-            
-    context = {}
-    context["SectionQuerySets"] = SectionQuerySets.items()
-    context["onderdelen"] = Onderdelen
-    context["onderdeel_id"] = onderdeel.id
-    context["form"] = form
-    return render(request, 'changeonderdeel.html', context)
-
 
 @staff_member_required(login_url='/404')
-def PVEsectionViewDelete(request):
-    Onderdelen = models.PVEOnderdeel.objects.all()
-    SectionQuerySets = {}
-
-    for onderdeel in Onderdelen:
-        SectionQuerySets[onderdeel] = models.PVEHoofdstuk.objects.filter(
-            onderdeel__naam=onderdeel.naam)
-
+def PVEHoofdstukListViewDelete(request, versie_pk):
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie)
     context = {}
-    context["SectionQuerySets"] = SectionQuerySets.items()
-    context["onderdelen"] = Onderdelen
-
+    context["hoofdstukken"] = hoofdstukken
+    context["versie_pk"] = versie_pk
     return render(request, 'PVEListHfstDelete.html', context)
 
 @staff_member_required(login_url='/404')
-def PVEsectionDelete(request, pk):
-    if not models.PVEOnderdeel.objects.filter(pk=pk):
-        return Http404("404")
-
-    onderdeel = models.PVEOnderdeel.objects.filter(pk=pk).first()
-    onderdeel.delete()
-    return redirect('sectionviewdelete')
-
-@staff_member_required(login_url='/404')
-def PVEaddsectionView(request):
-    if request.method == 'POST':
-        form = forms.SectionForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            onderdeel = models.PVEOnderdeel()
-            onderdeel.naam = form.cleaned_data["naam"]
-            onderdeel.save()
-            return redirect('sectionview')
-
-    # View below modal
-    Onderdelen = models.PVEOnderdeel.objects.all()
-    SectionQuerySets = {}
-
-    for onderdeel in Onderdelen:
-        SectionQuerySets[onderdeel] = models.PVEHoofdstuk.objects.filter(
-            onderdeel__naam=onderdeel.naam)
-
-    # form
-    form = forms.SectionForm()
-
-    context = {}
-    context["SectionQuerySets"] = SectionQuerySets.items()
-    context["onderdelen"] = Onderdelen
-    context["form"] = form
-    return render(request, 'addsectionform.html', context)
-
-
-@staff_member_required(login_url='/404')
-def PVEaddhoofdstukView(request, pk):
-    if not models.PVEOnderdeel.objects.filter(id=pk):
-        return Http404("404")
-
-    specifiek_onderdeel = models.PVEOnderdeel.objects.filter(id=pk).first()
+def PVEaddhoofdstukView(request, versie_pk):
+    versie = models.PVEVersie.objects.get(id=versie_pk)
 
     if request.method == 'POST':
         form = forms.ChapterForm(request.POST)
@@ -248,30 +223,25 @@ def PVEaddhoofdstukView(request, pk):
             PVEHoofdstuk = models.PVEHoofdstuk()
             PVEHoofdstuk.onderdeel = specifiek_onderdeel
             PVEHoofdstuk.hoofdstuk = form.cleaned_data["hoofdstuk"]
+            PVEHoofdstuk.versie = versie
             PVEHoofdstuk.save()
-            return redirect('sectionview')
+            return redirect('hoofdstukview', versie_pk=versie_pk)
 
-    # View below modal
-    Onderdelen = models.PVEOnderdeel.objects.all()
-    SectionQuerySets = {}
-
-    for onderdeel in Onderdelen:
-        SectionQuerySets[onderdeel] = models.PVEHoofdstuk.objects.filter(
-            onderdeel__naam=onderdeel.naam)
+    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie)
 
     # form, initial chapter in specific onderdeel
-    form = forms.ChapterForm(initial={'onderdeel': specifiek_onderdeel})
-
+    form = forms.ChapterForm()
     context = {}
-    context["SectionQuerySets"] = SectionQuerySets.items()
-    context["onderdelen"] = Onderdelen
-    context["onderdeel"] = specifiek_onderdeel
+    context["hoofdstukken"] = hoofdstukken
+    context["versie_pk"] = versie_pk
     context["form"] = form
     return render(request, 'addchapterform.html', context)
 
 
 @staff_member_required(login_url='/404')
-def PVEedithoofdstukView(request, pk):
+def PVEedithoofdstukView(request, versie_pk, pk):
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+
     if not models.PVEHoofdstuk.objects.filter(id=pk):
         return Http404("404")
 
@@ -284,87 +254,85 @@ def PVEedithoofdstukView(request, pk):
             PVEhoofdstuk.save()
             return redirect('sectionview')
 
-    # View below modal
-    Onderdelen = models.PVEOnderdeel.objects.all()
-    SectionQuerySets = {}
-
-    for onderdeel in Onderdelen:
-        SectionQuerySets[onderdeel] = models.PVEHoofdstuk.objects.filter(
-            onderdeel__naam=onderdeel.naam)
-
     # form, initial chapter in specific onderdeel
-    hoofdstuk = models.PVEHoofdstuk.objects.filter(id=pk).first()
+    hoofdstuk = models.PVEHoofdstuk.objects.filter(versie=versie, id=pk).first()
     form = forms.ChapterForm(instance=hoofdstuk)
 
+    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie)
+
+    # form, initial chapter in specific onderdeel
     context = {}
-    context["SectionQuerySets"] = SectionQuerySets.items()
-    context["onderdelen"] = Onderdelen
+    context["hoofdstukken"] = hoofdstukken
+    context["hoofdstuk"] = hoofdstuk
+    context["versie_pk"] = versie_pk
     context["form"] = form
-    context["chapter_id"] = pk
     return render(request, 'changechapterform.html', context)
 
 
 @staff_member_required(login_url='/404')
-def paragraaflistView(request, pk):
+def paragraaflistView(request, versie_pk, pk):
     pk = int(pk)
+    versie = models.PVEVersie.objects.get(id=versie_pk)
 
-    if models.PVEHoofdstuk.objects.filter(id=pk):
-        hoofdstuk = models.PVEHoofdstuk.objects.filter(id=pk).first()
+    if models.PVEHoofdstuk.objects.filter(versie=versie, id=pk):
+        hoofdstuk = models.PVEHoofdstuk.objects.filter(versie=versie, id=pk).first()
     else:
         raise Http404("404")
 
-    items = models.PVEItem.objects.filter(hoofdstuk=hoofdstuk)
+    items = models.PVEItem.objects.filter(versie=versie, hoofdstuk=hoofdstuk)
 
     # if an item is already in the chapter and doesnt have a paragraph ->
     # redirect to items
     if items:
         if items.first().paragraaf is None:
-            return redirect('itemlistview', chapter_id=pk, paragraph_id=0)
+            return redirect('itemlistview', versie_pk=versie_pk, chapter_id=pk, paragraph_id=0)
 
     # otherwise, show paragraphs
     context = {}
     context["paragraven"] = models.PVEParagraaf.objects.filter(
-        hoofdstuk=hoofdstuk)
+        hoofdstuk=hoofdstuk, versie=versie)
     context["sectie"] = hoofdstuk
+    context["versie_pk"] = versie_pk
     return render(request, 'PVEParagraphList.html', context)
 
 
 @staff_member_required(login_url='/404')
-def paragraaflistViewEdit(request, pk):
+def paragraaflistViewEdit(request, versie_pk, pk):
     pk = int(pk)
 
-    if models.PVEHoofdstuk.objects.filter(id=pk):
-        hoofdstuk = models.PVEHoofdstuk.objects.filter(id=pk).first()
+    if models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk):
+        hoofdstuk = models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk).first()
     else:
         raise Http404("404")
 
-    items = models.PVEItem.objects.filter(hoofdstuk=hoofdstuk)
+    items = models.PVEItem.objects.filter(versie__id=versie_pk, hoofdstuk=hoofdstuk)
 
     # if an item is already in the chapter and doesnt have a paragraph ->
     # redirect to items
     if items:
         if items.first().paragraaf is None:
-            return redirect('itemlistviewedit', chapter_id=pk, paragraph_id=0)
+            return redirect('itemlistviewedit', versie_pk=versie_pk, chapter_id=pk, paragraph_id=0)
 
     # otherwise, show paragraphs
     context = {}
     context["paragraven"] = models.PVEParagraaf.objects.filter(
-        hoofdstuk=hoofdstuk)
+        hoofdstuk=hoofdstuk, versie__id=versie_pk)
     context["sectie"] = hoofdstuk
     context["id"] = pk
+    context["versie_pk"] = versie_pk
     return render(request, 'PVEParagraphListEdit.html', context)
 
 
 @staff_member_required(login_url='/404')
-def paragraaflistViewDelete(request, pk):
+def paragraaflistViewDelete(request, versie_pk, pk):
     pk = int(pk)
 
-    if models.PVEHoofdstuk.objects.filter(id=pk):
-        hoofdstuk = models.PVEHoofdstuk.objects.filter(id=pk).first()
+    if models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk):
+        hoofdstuk = models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk).first()
     else:
         raise Http404("404")
 
-    items = models.PVEItem.objects.filter(hoofdstuk=hoofdstuk)
+    items = models.PVEItem.objects.filter(versie__id=versie_pk, hoofdstuk=hoofdstuk)
 
     # if an item is already in the chapter and doesnt have a paragraph ->
     # redirect to items
@@ -372,24 +340,26 @@ def paragraaflistViewDelete(request, pk):
         if items.first().paragraaf is None:
             return redirect(
                 'itemlistviewdelete',
+                versie_pk=versie_pk,
                 chapter_id=pk,
                 paragraph_id=0)
 
     # otherwise, show paragraphs
     context = {}
     context["paragraven"] = models.PVEParagraaf.objects.filter(
-        hoofdstuk=hoofdstuk)
+        versie__id=versie_pk, hoofdstuk=hoofdstuk)
     context["sectie"] = hoofdstuk
     context["id"] = pk
+    context["versie_pk"] = versie_pk
     return render(request, 'PVEParagraphListDelete.html', context)
 
 
 @staff_member_required(login_url='/404')
-def PVEaddparagraafView(request, pk):
+def PVEaddparagraafView(request, versie_pk, pk):
     pk = int(pk)
 
-    if models.PVEHoofdstuk.objects.filter(id=pk):
-        hoofdstuk = models.PVEHoofdstuk.objects.filter(id=pk).first()
+    if models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk):
+        hoofdstuk = models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk).first()
     else:
         raise Http404("404")
 
@@ -400,8 +370,9 @@ def PVEaddparagraafView(request, pk):
             PVEParagraaf = models.PVEParagraaf()
             PVEParagraaf.hoofdstuk = hoofdstuk
             PVEParagraaf.paragraaf = form.cleaned_data["paragraaf"]
+            PVEParagraaf.versie = models.PVEVersie.objects.get(id=versie_pk)
             PVEParagraaf.save()
-            return HttpResponseRedirect(reverse('viewParagraaf', args=(pk,)))
+            return HttpResponseRedirect(reverse('viewParagraaf', args=(versie_pk, pk)))
 
     # View below modal
     items = models.PVEItem.objects.filter(hoofdstuk=hoofdstuk)
@@ -410,7 +381,7 @@ def PVEaddparagraafView(request, pk):
     # redirect to items
     if items:
         if items.first().paragraaf is None:
-            return redirect('itemlistview', chapter_id=pk, paragraph_id=0)
+            return redirect('itemlistview', versie_pk=versie_pk, chapter_id=pk, paragraph_id=0)
 
     form = forms.ParagraafForm(initial={'hoofdstuk': hoofdstuk})
 
@@ -420,15 +391,17 @@ def PVEaddparagraafView(request, pk):
         hoofdstuk=hoofdstuk)
     context["sectie"] = hoofdstuk
     context["form"] = form
+    context["versie_pk"] = versie_pk
     return render(request, 'addparagraphform.html', context)
 
 
 @staff_member_required(login_url='/404')
-def PVEeditparagraafView(request, pk):
+def PVEeditparagraafView(request, versie_pk, pk):
     pk = int(pk)
+    versie = models.PVEVersie.objects.get(id=versie_pk)
 
-    if models.PVEParagraaf.objects.filter(id=pk):
-        paragraaf = models.PVEParagraaf.objects.filter(id=pk).first()
+    if models.PVEParagraaf.objects.filter(versie=versie, id=pk):
+        paragraaf = models.PVEParagraaf.objects.filter(versie=versie, id=pk).first()
         hoofdstuk = paragraaf.hoofdstuk
     else:
         raise Http404("404")
@@ -437,22 +410,25 @@ def PVEeditparagraafView(request, pk):
         form = forms.ParagraafForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            PVEparagraaf = models.PVEParagraaf.objects.filter(id=pk).first()
+            PVEparagraaf = models.PVEParagraaf.objects.filter(versie=versie, id=pk).first()
             PVEparagraaf.paragraaf = form.cleaned_data["paragraaf"]
+            PVEparagraaf.versie = versie
             PVEparagraaf.save()
             return HttpResponseRedirect(
                 reverse(
                     'viewParagraaf', args=(
+                        versie_pk,
                         hoofdstuk.id,)))
 
     # View below modal
-    items = models.PVEItem.objects.filter(hoofdstuk=hoofdstuk)
+    items = models.PVEItem.objects.filter(versie=versie, hoofdstuk=hoofdstuk)
     # if an item is already in the chapter and doesnt have a paragraph ->
     # redirect to items
     if items:
         if items.first().paragraaf is None:
             return redirect(
                 'itemlistview',
+                versie_pk=versie_pk,
                 chapter_id=hoofdstuk.id,
                 paragraph_id=0)
 
@@ -466,144 +442,145 @@ def PVEeditparagraafView(request, pk):
     context["paragraph_id"] = pk
     context["id"] = hoofdstuk.id
     context["form"] = form
+    context["versie_pk"] = versie_pk
     return render(request, 'changeparagraphform.html', context)
 
 
 @staff_member_required(login_url='/404')
-def itemListView(request, chapter_id, paragraph_id):
+def itemListView(request, versie_pk, chapter_id, paragraph_id):
     paragraph_id = int(paragraph_id)
     chapter_id = int(chapter_id)
 
     # Chapter_id doesnt exist
-    if not models.PVEHoofdstuk.objects.filter(id=chapter_id):
+    if not models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=chapter_id):
         raise Http404("404")
 
-    hoofdstuk = models.PVEHoofdstuk.objects.filter(id=chapter_id).first()
+    hoofdstuk = models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=chapter_id).first()
 
     # if no paragraph given but there are paragraphs in this chapter
     if paragraph_id == 0:
-        if models.PVEParagraaf.objects.filter(hoofdstuk__id=chapter_id):
+        if models.PVEParagraaf.objects.filter(versie__id=versie_pk, hoofdstuk__id=chapter_id):
             raise Http404("404")
 
     # if paragraphs arent connected to this chapter
     if paragraph_id != 0:
-        if not models.PVEParagraaf.objects.filter(hoofdstuk__id=chapter_id).filter(id=paragraph_id):
+        if not models.PVEParagraaf.objects.filter(versie__id=versie_pk, hoofdstuk__id=chapter_id).filter(id=paragraph_id):
             raise Http404("404")
         
-        paragraaf = models.PVEParagraaf.objects.filter(id=paragraph_id).first()
+        paragraaf = models.PVEParagraaf.objects.filter(versie__id=versie_pk, id=paragraph_id).first()
     
     context = {}
 
     # item niet in een paragraaf: haal ze van een hoofdstuk
     if paragraph_id == 0:
         context["queryset"] = models.PVEItem.objects.filter(
-            hoofdstuk__id=chapter_id)
+            versie__id=versie_pk, hoofdstuk__id=chapter_id)
         context["hoofdstuk"] = hoofdstuk
     else:
         context["queryset"] = models.PVEItem.objects.filter(
-            hoofdstuk__id=chapter_id).filter(
-            paragraaf__id=paragraph_id)
+            versie__id=versie_pk, hoofdstuk__id=chapter_id).filter(
+            versie__id=versie_pk, paragraaf__id=paragraph_id)
         context["paragraaf"] = paragraaf
         context["hoofdstuk"] = hoofdstuk
 
     context["paragraaf_id"] = paragraph_id
     context["hoofdstuk_id"] = chapter_id
-
+    context["versie_pk"] = versie_pk
     return render(request, 'PVEItemList.html', context)
 
 
 @staff_member_required(login_url='/404')
-def itemListViewEdit(request, chapter_id, paragraph_id):
+def itemListViewEdit(request, versie_pk, chapter_id, paragraph_id):
     paragraph_id = int(paragraph_id)
     chapter_id = int(chapter_id)
     
     # Chapter_id doesnt exist
-    if not models.PVEHoofdstuk.objects.filter(id=chapter_id):
+    if not models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=chapter_id):
         raise Http404("404")
 
-    hoofdstuk = models.PVEHoofdstuk.objects.filter(id=chapter_id).first()
+    hoofdstuk = models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=chapter_id).first()
 
     # if no paragraph given but there are paragraphs in this chapter
     if paragraph_id == 0:
-        if models.PVEParagraaf.objects.filter(hoofdstuk__id=chapter_id):
+        if models.PVEParagraaf.objects.filter(versie__id=versie_pk, hoofdstuk__id=chapter_id):
             raise Http404("404")
 
     # if paragraphs arent connected to this chapter
     if paragraph_id != 0:
-        if not models.PVEParagraaf.objects.filter(hoofdstuk__id=chapter_id).filter(id=paragraph_id):
+        if not models.PVEParagraaf.objects.filter(versie__id=versie_pk, hoofdstuk__id=chapter_id).filter(id=paragraph_id):
             raise Http404("404")
         
-        paragraaf = models.PVEParagraaf.objects.filter(id=paragraph_id).first()
+        paragraaf = models.PVEParagraaf.objects.filter(versie__id=versie_pk, id=paragraph_id).first()
 
     context = {}
 
     # item niet in een paragraaf: haal ze van een hoofdstuk
     if paragraph_id == 0:
         context["queryset"] = models.PVEItem.objects.filter(
-            hoofdstuk__id=chapter_id)
+            versie__id=versie_pk, hoofdstuk__id=chapter_id)
         context["hoofdstuk"] = hoofdstuk
     else:
         context["queryset"] = models.PVEItem.objects.filter(
-            hoofdstuk__id=chapter_id).filter(
-            paragraaf__id=paragraph_id)
+            versie__id=versie_pk, hoofdstuk__id=chapter_id).filter(
+            versie__id=versie_pk, paragraaf__id=paragraph_id)
         context["paragraaf"] = paragraaf
         context["hoofdstuk"] = hoofdstuk
 
     context["paragraaf_id"] = paragraph_id
     context["hoofdstuk_id"] = chapter_id
-
+    context["versie_pk"] = versie_pk
     return render(request, 'PVEItemListEdit.html', context)
 
 
 @staff_member_required(login_url='/404')
-def itemListViewDelete(request, chapter_id, paragraph_id):
+def itemListViewDelete(request, versie_pk, chapter_id, paragraph_id):
     paragraph_id = int(paragraph_id)
     chapter_id = int(chapter_id)
 
     # Chapter_id doesnt exist
-    if not models.PVEHoofdstuk.objects.filter(id=chapter_id):
+    if not models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=chapter_id):
         raise Http404("404")
 
-    hoofdstuk = models.PVEHoofdstuk.objects.filter(id=chapter_id).first()
+    hoofdstuk = models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=chapter_id).first()
 
     # if no paragraph given but there are paragraphs in this chapter
     if paragraph_id == 0:
-        if models.PVEParagraaf.objects.filter(hoofdstuk__id=chapter_id):
+        if models.PVEParagraaf.objects.filter(versie__id=versie_pk, hoofdstuk__id=chapter_id):
             raise Http404("404")
 
     # if paragraphs arent connected to this chapter
     if paragraph_id != 0:
-        if not models.PVEParagraaf.objects.filter(hoofdstuk__id=chapter_id).filter(id=paragraph_id):
+        if not models.PVEParagraaf.objects.filter(versie__id=versie_pk, hoofdstuk__id=chapter_id).filter(id=paragraph_id):
             raise Http404("404")
         
-        paragraaf = models.PVEParagraaf.objects.filter(id=paragraph_id).first()
+        paragraaf = models.PVEParagraaf.objects.filter(versie__id=versie_pk, id=paragraph_id).first()
                     
     context = {}
 
     # item niet in een paragraaf: haal ze van een hoofdstuk
     if paragraph_id == 0:
         context["queryset"] = models.PVEItem.objects.filter(
-            hoofdstuk__id=chapter_id)
+            versie__id=versie_pk, hoofdstuk__id=chapter_id)
         context["hoofdstuk"] = hoofdstuk
     else:
         context["queryset"] = models.PVEItem.objects.filter(
-            hoofdstuk__id=chapter_id).filter(
-            paragraaf__id=paragraph_id)
+            versie__id=versie_pk, hoofdstuk__id=chapter_id).filter(
+            versie__id=versie_pk, paragraaf__id=paragraph_id)
         context["paragraaf"] = paragraaf
         context["hoofdstuk"] = hoofdstuk
 
     context["paragraaf_id"] = paragraph_id
     context["hoofdstuk_id"] = chapter_id
-
+    context["versie_pk"] = versie_pk
     return render(request, 'PVEItemListDelete.html', context)
 
 
 @staff_member_required(login_url='/404')
-def viewItemView(request, pk):
+def viewItemView(request, versie_pk, pk):
     pk = int(pk)
 
-    if models.PVEItem.objects.filter(id=pk):
-        PVEItem = models.PVEItem.objects.filter(id=pk).first()
+    if models.PVEItem.objects.filter(versie__id=versie_pk, id=pk):
+        PVEItem = models.PVEItem.objects.filter(versie__id=versie_pk, id=pk).first()
     else:
         raise Http404("Item does not exist.")
 
@@ -615,19 +592,19 @@ def viewItemView(request, pk):
 
     if not PVEItem.paragraaf:
         context["queryset"] = models.PVEItem.objects.filter(
-            hoofdstuk=PVEItem.hoofdstuk)
+            versie__id=versie_pk, hoofdstuk=PVEItem.hoofdstuk)
         context["hoofdstuk"] = PVEItem.hoofdstuk
         context["paragraaf_id"] = 0
     else:
         context["queryset"] = models.PVEItem.objects.filter(
-            hoofdstuk=PVEItem.hoofdstuk).filter(
-            paragraaf=PVEItem.paragraaf)
+            versie__id=versie_pk, hoofdstuk=PVEItem.hoofdstuk).filter(
+            versie__id=versie_pk, paragraaf=PVEItem.paragraaf)
         context["paragraaf"] = PVEItem.paragraaf
         context["hoofdstuk"] = PVEItem.hoofdstuk
         context["paragraaf_id"] = PVEItem.paragraaf.id
 
     context["hoofdstuk_id"] = PVEItem.hoofdstuk.id
-
+    context["versie_pk"] = versie_pk
     return render(request, 'PVEItemView.html', context)
 
 
@@ -653,11 +630,11 @@ def downloadBijlageView(request, pk):
     return HttpResponseRedirect(response)
 
 @staff_member_required(login_url='/404')
-def editItemView(request, pk):
+def editItemView(request, versie_pk, pk):
     pk = int(pk)
 
-    if models.PVEItem.objects.filter(id=pk):
-        PVEItem = models.PVEItem.objects.filter(id=pk).first()
+    if models.PVEItem.objects.filter(versie__id=versie_pk, id=pk):
+        PVEItem = models.PVEItem.objects.filter(versie__id=versie_pk, id=pk).first()
     else:
         raise Http404("Item does not exist.")
 
@@ -685,17 +662,18 @@ def editItemView(request, pk):
             PVEItem.save()
 
             # and reverse
-            return HttpResponseRedirect(reverse('viewitem', args=(pk,)))
+            return HttpResponseRedirect(reverse('viewitem', args=(versie_pk, pk)))
 
     # if get method, just render the empty form
     context = {}
     context["form"] = forms.PVEItemEditForm(instance=PVEItem)
     context["id"] = pk
+    context["versie_pk"] = versie_pk
     return render(request, 'PVEItemEdit.html', context)
 
 
 @staff_member_required(login_url='/404')
-def addItemView(request, chapter_id, paragraph_id):
+def addItemView(request, versie_pk, chapter_id, paragraph_id):
     paragraph_id = int(paragraph_id)
 
     if request.method == "POST":
@@ -705,13 +683,14 @@ def addItemView(request, chapter_id, paragraph_id):
         # check validity
         if form.is_valid():
             PVEItem = models.PVEItem()
+            PVEItem.versie = models.PVEVersie.objects.get(id=versie_pk)
             # get parameters and save new item
             if int(paragraph_id) != 0:
                 PVEItem.paragraaf = models.PVEParagraaf.objects.filter(
-                    id=paragraph_id).first()
+                    versie__id=versie_pk, id=paragraph_id).first()
 
             PVEItem.hoofdstuk = models.PVEHoofdstuk.objects.filter(
-                id=chapter_id).first()
+                versie__id=versie_pk, id=chapter_id).first()
             PVEItem.inhoud = form.cleaned_data["inhoud"]
             PVEItem.bijlage = form.cleaned_data["bijlage"]
             PVEItem.save()
@@ -731,22 +710,22 @@ def addItemView(request, chapter_id, paragraph_id):
             pk = PVEItem.id
 
             # and reverse
-            return HttpResponseRedirect(reverse('viewitem', args=(pk,)))
+            return HttpResponseRedirect(reverse('viewitem', args=(versie_pk, pk)))
 
     context = {}
     context["form"] = forms.PVEItemEditForm()
     context["chapter_id"] = chapter_id
     context["paragraph_id"] = int(paragraph_id)
-
+    context["versie_pk"] = versie_pk
     return render(request, 'PVEAddItem.html', context)
 
 
 @staff_member_required(login_url='/404')
-def deleteItemView(request, pk):
+def deleteItemView(request, versie_pk, pk):
     pk = int(pk)
 
-    if models.PVEItem.objects.filter(id=pk):
-        PVEItem = models.PVEItem.objects.filter(id=pk).first()
+    if models.PVEItem.objects.filter(versie__id=versie_pk, id=pk):
+        PVEItem = models.PVEItem.objects.filter(versie__id=versie_pk, id=pk).first()
         hoofdstuk = PVEItem.hoofdstuk
         paragraaf = PVEItem.paragraaf
     else:
@@ -761,6 +740,7 @@ def deleteItemView(request, pk):
             reverse(
                 'viewParagraafDelete',
                 args=(
+                    versie_pk,
                     hoofdstuk.id,
                 )))
 
@@ -768,16 +748,17 @@ def deleteItemView(request, pk):
         reverse(
             'itemlistviewdelete',
             args=(
+                versie_pk,
                 hoofdstuk.id,
                 paragraaf.id)))
 
 
 @staff_member_required(login_url='/404')
-def PVEdeletehoofdstukView(request, pk):
+def PVEdeletehoofdstukView(request, versie_pk, pk):
     pk = int(pk)
 
-    if models.PVEHoofdstuk.objects.filter(id=pk):
-        PVEHoofdstuk = models.PVEHoofdstuk.objects.filter(id=pk).first()
+    if models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk):
+        PVEHoofdstuk = models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk).first()
         hoofdstuk = PVEHoofdstuk.hoofdstuk
     else:
         raise Http404("404.")
@@ -786,15 +767,15 @@ def PVEdeletehoofdstukView(request, pk):
 
     messages.success(request, f"Hoofdstuk {hoofdstuk} verwijderd.")
 
-    return redirect('sectionview')
+    return redirect('hoofdstukview', versie_pk=versie_pk)
 
 
 @staff_member_required(login_url='/404')
-def PVEdeleteparagraafView(request, pk):
+def PVEdeleteparagraafView(request, versie_pk, pk):
     pk = int(pk)
 
-    if models.PVEParagraaf.objects.filter(id=pk):
-        PVEParagraaf = models.PVEParagraaf.objects.filter(id=pk).first()
+    if models.PVEParagraaf.objects.filter(versie__id=versie_pk, id=pk):
+        PVEParagraaf = models.PVEParagraaf.objects.filter(versie__id=versie_pk, id=pk).first()
         hoofdstuk = PVEParagraaf.hoofdstuk
         paragraaf = PVEParagraaf.paragraaf
     else:
@@ -804,38 +785,41 @@ def PVEdeleteparagraafView(request, pk):
 
     messages.success(request, f"Paragraaf {paragraaf} verwijderd.")
 
-    return HttpResponseRedirect(reverse('viewParagraaf', args=(hoofdstuk.id,)))
+    return HttpResponseRedirect(reverse('viewParagraaf', args=(versie_pk, hoofdstuk.id)))
 
 
 @staff_member_required(login_url='/404')
-def kiesparametersView(request):
+def kiesparametersView(request, versie_pk):
     context = {}
-    context["bouwsoorten"] = models.Bouwsoort.objects.all()
-    context["typeObjecten"] = models.TypeObject.objects.all()
-    context["doelgroepen"] = models.Doelgroep.objects.all()
+    context["bouwsoorten"] = models.Bouwsoort.objects.filter(versie__id=versie_pk)
+    context["typeObjecten"] = models.TypeObject.objects.filter(versie__id=versie_pk)
+    context["doelgroepen"] = models.Doelgroep.objects.filter(versie__id=versie_pk)
+    context["versie_pk"] = versie_pk
     return render(request, 'kiesparameters.html', context)
 
 
 @staff_member_required(login_url='/404')
-def kiesparametersViewEdit(request):
+def kiesparametersViewEdit(request, versie_pk):
     context = {}
-    context["bouwsoorten"] = models.Bouwsoort.objects.all()
-    context["typeObjecten"] = models.TypeObject.objects.all()
-    context["doelgroepen"] = models.Doelgroep.objects.all()
+    context["bouwsoorten"] = models.Bouwsoort.objects.filter(versie__id=versie_pk)
+    context["typeObjecten"] = models.TypeObject.objects.filter(versie__id=versie_pk)
+    context["doelgroepen"] = models.Doelgroep.objects.filter(versie__id=versie_pk)
+    context["versie_pk"] = versie_pk
     return render(request, 'kiesparametersEdit.html', context)
 
 
 @staff_member_required(login_url='/404')
-def kiesparametersViewDelete(request):
+def kiesparametersViewDelete(request, versie_pk):
     context = {}
-    context["bouwsoorten"] = models.Bouwsoort.objects.all()
-    context["typeObjecten"] = models.TypeObject.objects.all()
-    context["doelgroepen"] = models.Doelgroep.objects.all()
+    context["bouwsoorten"] = models.Bouwsoort.objects.filter(versie__id=versie_pk)
+    context["typeObjecten"] = models.TypeObject.objects.filter(versie__id=versie_pk)
+    context["doelgroepen"] = models.Doelgroep.objects.filter(versie__id=versie_pk)
+    context["versie_pk"] = versie_pk
     return render(request, 'kiesparametersDelete.html', context)
 
 
 @staff_member_required(login_url='/404')
-def addkiesparameterView(request, type_id):
+def addkiesparameterView(request, versie_pk, type_id):
     type_id = int(type_id)
 
     if request.method == "POST":
@@ -859,9 +843,10 @@ def addkiesparameterView(request, type_id):
                 item = models.Doelgroep()
 
             item.parameter = form.cleaned_data["parameter"]
+            item.versie = PVEVersie.objects.filter(id=versie_pk)
             item.save()
 
-            return HttpResponseRedirect(reverse('kiesparametersview'))
+            return HttpResponseRedirect(reverse('kiesparametersview', versie_pk=versie_pk))
 
     form = forms.KiesParameterForm()
 
@@ -871,35 +856,36 @@ def addkiesparameterView(request, type_id):
     context["bouwsoorten"] = models.Bouwsoort.objects.all()
     context["typeObjecten"] = models.TypeObject.objects.all()
     context["doelgroepen"] = models.Doelgroep.objects.all()
-
+    context["versie_pk"] = versie_pk
     return render(request, "addkiesparameter.html", context)
 
 
 @staff_member_required(login_url='/404')
-def bewerkkiesparameterView(request, type_id, item_id):
+def bewerkkiesparameterView(request, versie_pk, type_id, item_id):
     type_id = int(type_id)
     item_id = int(item_id)
+    versie_pk = int(versie_pk)
 
     if type_id != 1 and type_id != 2 and type_id != 3:
         raise Http404("404")
 
     if type_id == 1:  # Bouwsoort
-        if not models.Bouwsoort.objects.filter(id=item_id):
+        if not models.Bouwsoort.objects.filter(versie__id=versie_pk, id=item_id):
             raise Http404("404")
 
-        item = models.Bouwsoort.objects.filter(id=item_id).first()
+        item = models.Bouwsoort.objects.filter(versie__id=versie_pk, id=item_id).first()
 
     if type_id == 2:  # Type Object
-        if not models.TypeObject.objects.filter(id=item_id):
+        if not models.TypeObject.objects.filter(versie__id=versie_pk, id=item_id):
             raise Http404("404")
 
-        item = models.TypeObject.objects.filter(id=item_id).first()
+        item = models.TypeObject.objects.filter(versie__id=versie_pk, id=item_id).first()
 
     if type_id == 3:  # Doelgroep
-        if not models.Doelgroep.objects.filter(id=item_id):
+        if not models.Doelgroep.objects.filter(versie__id=versie_pk, id=item_id):
             raise Http404("404")
 
-        item = models.Doelgroep.objects.filter(id=item_id).first()
+        item = models.Doelgroep.objects.filter(versie__id=versie_pk, id=item_id).first()
 
     if request.method == "POST":
         form = forms.KiesParameterForm(request.POST)
@@ -908,7 +894,7 @@ def bewerkkiesparameterView(request, type_id, item_id):
             item.parameter = form.cleaned_data["parameter"]
             item.save()
 
-            return HttpResponseRedirect(reverse('kiesparametersview'))
+            return HttpResponseRedirect(reverse('kiesparametersview', versie_pk=versie_pk))
 
     form = forms.KiesParameterForm(initial={'parameter': item.parameter})
 
@@ -916,45 +902,47 @@ def bewerkkiesparameterView(request, type_id, item_id):
     context["form"] = form
     context["type_id"] = type_id
     context["item_id"] = item_id
-    context["bouwsoorten"] = models.Bouwsoort.objects.all()
-    context["typeObjecten"] = models.TypeObject.objects.all()
-    context["doelgroepen"] = models.Doelgroep.objects.all()
+    context["versie_pk"] = versie_pk
+    context["bouwsoorten"] = models.Bouwsoort.objects.filter(versie__id=versie_pk)
+    context["typeObjecten"] = models.TypeObject.objects.filter(versie__id=versie_pk)
+    context["doelgroepen"] = models.Doelgroep.objects.filter(versie__id=versie_pk)
 
     return render(request, "bewerkkiesparameter.html", context)
 
 
 @staff_member_required(login_url='/404')
-def deletekiesparameterView(request, type_id, item_id):
+def deletekiesparameterView(request, versie_pk, type_id, item_id):
     type_id = int(type_id)
     item_id = int(item_id)
+    versie_pk = int(versie_pk)
 
     if type_id != 1 and type_id != 2 and type_id != 3:
         raise Http404("404")
 
     if type_id == 1:  # Bouwsoort
-        if not models.Bouwsoort.objects.filter(id=item_id):
+        if not models.Bouwsoort.objects.filter(versie__id=versie_pk, id=item_id):
             raise Http404("404")
 
-        item = models.Bouwsoort.objects.filter(id=item_id).first()
+        item = models.Bouwsoort.objects.filter(versie__id=versie_pk, id=item_id).first()
 
     if type_id == 2:  # Type Object
-        if not models.TypeObject.objects.filter(id=item_id):
+        if not models.TypeObject.objects.filter(versie__id=versie_pk, id=item_id):
             raise Http404("404")
 
-        item = models.TypeObject.objects.filter(id=item_id).first()
+        item = models.TypeObject.objects.filter(versie__id=versie_pk, id=item_id).first()
 
     if type_id == 3:  # Doelgroep
-        if not models.Doelgroep.objects.filter(id=item_id):
+        if not models.Doelgroep.objects.filter(versie__id=versie_pk, id=item_id):
             raise Http404("404")
 
-        item = models.Doelgroep.objects.filter(id=item_id).first()
+        item = models.Doelgroep.objects.filter(versie__id=versie_pk, id=item_id).first()
 
     parameter = item.parameter
     item.delete()
 
     messages.success(request, f"{parameter} verwijderd.")
 
-    return HttpResponseRedirect(reverse('kiesparametersviewdelete'))
+    return HttpResponseRedirect(reverse('kiesparametersviewdelete', versie_pk=versie_pk))
 
 @staff_member_required(login_url='/404')
 def projectHeatmap(request):

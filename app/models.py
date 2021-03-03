@@ -3,20 +3,32 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from utils.upload_rename import upload_to
+from project.models import Beleggers
+
+class PVEVersie(models.Model):
+    belegger = models.ForeignKey(Beleggers, on_delete=models.CASCADE)
+    versie = models.CharField(max_length=50, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.belegger}: Versie {self.versie}"
+    
 
 class Bouwsoort(models.Model):
+    versie = models.ForeignKey(PVEVersie, on_delete=models.CASCADE, null=True)
     parameter = models.CharField(max_length=256)
 
     def __str__(self):
         return self.parameter
 
 class TypeObject(models.Model):
+    versie = models.ForeignKey(PVEVersie, on_delete=models.CASCADE, null=True)
     parameter = models.CharField(max_length=256)
 
     def __str__(self):
         return self.parameter
 
 class Doelgroep(models.Model):
+    versie = models.ForeignKey(PVEVersie, on_delete=models.CASCADE, null=True)
     parameter = models.CharField(max_length=256)
 
     def __str__(self):
@@ -30,8 +42,10 @@ class PVEOnderdeel(models.Model):
         return self.naam
 
 class PVEHoofdstuk(models.Model):
+    versie = models.ForeignKey(PVEVersie, on_delete=models.CASCADE, null=True)
+
     onderdeel = models.ForeignKey(
-                        PVEOnderdeel, on_delete=models.CASCADE, default=1
+                        PVEOnderdeel, on_delete=models.CASCADE, default=1, null=True
                         )
     hoofdstuk = models.CharField(max_length=256, blank=True, null=True)
 
@@ -39,6 +53,8 @@ class PVEHoofdstuk(models.Model):
         return f"{self.hoofdstuk}"
 
 class PVEParagraaf(models.Model):
+    versie = models.ForeignKey(PVEVersie, on_delete=models.CASCADE, null=True)
+
     hoofdstuk = models.ForeignKey(
                         PVEHoofdstuk, on_delete=models.CASCADE, default=1
                         )
@@ -50,18 +66,9 @@ class PVEParagraaf(models.Model):
         else:
             return f"{self.hoofdstuk.hoofdstuk}"
 
-class PVESubparagraaf(models.Model):
-    sectie = models.ForeignKey(
-                        PVEParagraaf, on_delete=models.CASCADE, default=1
-                        )
-
-    subparagraaf = models.CharField(max_length=256, blank=True, null=True)
-    bijlage = models.FileField(blank=True, null=True)
-
-    def __str__(self):
-        return self.subparagraaf
-
 class PVEItem(models.Model):
+    versie = models.ForeignKey(PVEVersie, on_delete=models.CASCADE, null=True)
+
     hoofdstuk = models.ForeignKey(PVEHoofdstuk, on_delete=models.CASCADE, default=1)
     paragraaf = models.ForeignKey(PVEParagraaf, on_delete=models.CASCADE, blank=True, null=True)
     inhoud = models.TextField(max_length=5000)

@@ -16,7 +16,7 @@ $('.mini.modal')
     Bewerk paragraaf
   </div>
   <div class="content">
-    <form action="{% url 'editparagraph' paragraph_id %}" class="ui form" method="POST" enctype="multipart/form-data">
+    <form action="{% url 'editparagraph' versie_pk paragraph_id %}" class="ui form" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {% render_form form %}
         <input type="submit" class="ui green button" value="Bewerk">

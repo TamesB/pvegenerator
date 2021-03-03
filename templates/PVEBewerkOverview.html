@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% load semanticui %}
+
+{% load filename %}
+
+{% block main %}
+<input type="button" class="ui primary button d-inline" onclick="javascript:window.location='{% url 'beleggerversieoverview' %}'" value="< Versie Overview" />
+<h1 class="ui header">PvE van {{ pve_versie.belegger.naam }}; Versie {{ pve_versie.versie }}</h1>
+<div class="ui divider"></div>
+<div>
+<h2 class="ui header">Programma van Eisen</h2>
+	<a href="{% url 'generate' pve_versie.id %}"><button class="ui basic button"><i class="icon download"></i>Genereer voorbeeld PvE</button></a><br><br>
+	<a href="{% url 'compare' pve_versie.id %}"><button class="ui basic button"><i class="icon download"></i>Genereer afwijkingenlijst</button></a><br><br>
+	<a href="{% url 'hoofdstukview' pve_versie.id %}"><button class="ui basic button"><i class="icon edit"></i>Bewerk Programma van Eisen</button></a><br><br>
+	<a href="{% url 'kiesparametersview' pve_versie.id %}"><button class="ui basic button"><i class="icon edit"></i>Bewerk Keuzematrix</button></a>
+<div class="ui divider"></div>
+<!-- Manually generate pve -->
+<!-- Edit PvE workbook and keuzeparameters -->
+<!-- account configurations (view, add account, delete account etc) -->
+<!-- project configurations (list all, delete, add, edit etc) -->
+<!-- Future: analytics dashboard -->
+</div>
+
+{% endblock %}

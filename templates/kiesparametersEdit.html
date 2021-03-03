@@ -1,7 +1,7 @@
 {% extends "layout.html" %} {% load semanticui %} {% block main %}
 <h1 class="ui header center aligned">Bewerk Keuzematrix</h1>
 {% if bouwsoorten %}
-<input type="button" class="ui primary button d-inline" onclick="window.location.href='{% url 'kiesparametersview' %}';" value="< Klaar" />
+<input type="button" class="ui primary button d-inline" onclick="javascript:window.location='{% url 'kiesparametersview' versie_pk %}';" value="< Klaar" />
 <br><br>
 <div>
 	<table class="ui fixed multiple line blue table">
@@ -10,7 +10,7 @@
 				<th>
 				  Bouwsoorten
 					<div class="d-inline" style="float: right;">
-					<span class="float right"><a href="{% url 'addkiesparameter' 1 %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
+					<span class="float right"><a href="{% url 'addkiesparameter' versie_pk 1 %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
 					</div>
 				</th>
 			</tr>
@@ -21,7 +21,7 @@
 				<td> 
 					{{ bouwsoort.parameter }}
 					<div class="d-inline" style="float: right;">
-					<a href="{% url 'kiesparameteredit' 1 bouwsoort.id %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a>
+					<a href="{% url 'kiesparameteredit' versie_pk 1 bouwsoort.id %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a>
 					</div>
 				</td>
 				</tr>
@@ -31,7 +31,7 @@
 {% else %}
 <p>Nog geen bouwsoorten!</p>
 <div class="d-inline" style="float: left;">
-	<span class="float right"><a href="{% url 'addkiesparameter' 1 %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
+	<span class="float right"><a href="{% url 'addkiesparameter' versie_pk 1 %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
 					</div>
 {% endif %}
 {% if typeObjecten %}
@@ -42,7 +42,7 @@
 				<th>
 				  Type Objecten
 					<div class="d-inline" style="float: right;">
-					<span class="float right"><a href="{% url 'addkiesparameter' 2 %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
+					<span class="float right"><a href="{% url 'addkiesparameter' versie_pk 2 %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
 					</div>
 				</th>
 			</tr>
@@ -53,7 +53,7 @@
 				<td> 
 					{{ typeObject.parameter }}
 					<div class="d-inline" style="float: right;">
-					<a href="{% url 'kiesparameteredit' 2 typeObject.id %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a>
+					<a href="{% url 'kiesparameteredit' versie_pk 2 typeObject.id %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a>
 					</div>
 				</td>
 				</tr>
@@ -63,7 +63,7 @@
 {% else %}
 <p>Nog geen type objecten!</p>
 <div class="d-inline" style="float: left;">
-	<span class="float right"><a href="{% url 'addkiesparameter' 2 %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
+	<span class="float right"><a href="{% url 'addkiesparameter' versie_pk 2 %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
 					</div>
 {% endif %}
 {% if doelgroepen %}
@@ -74,7 +74,7 @@
 				<th>
 				  Doelgroepen
 					<div class="d-inline" style="float: right;">
-					<span class="float right"><a href="{% url 'addkiesparameter' 3 %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
+					<span class="float right"><a href="{% url 'addkiesparameter' versie_pk 3 %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
 					</div>
 				</th>
 			</tr>
@@ -85,7 +85,7 @@
 				<td> 
 					{{ doelgroep.parameter }}
 					<div class="d-inline" style="float: right;">
-					<a href="{% url 'kiesparameteredit' 3 doelgroep.id %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a>
+					<a href="{% url 'kiesparameteredit' versie_pk 3 doelgroep.id %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a>
 					</div>
 				</td>
 				</tr>
@@ -95,7 +95,7 @@
 {% else %}
 <p>Nog geen doelgroepen!</p>
 <div class="d-inline" style="float: left;">
-	<span class="float right"><a href="{% url 'addkiesparameter' 3 %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
+	<span class="float right"><a href="{% url 'addkiesparameter' versie_pk 3 %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
 					</div>
 {% endif %}
 {% block modal %}{% endblock %} 

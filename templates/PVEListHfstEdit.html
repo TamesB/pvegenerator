@@ -1,51 +1,35 @@
 {% extends "layout.html" %} {% load semanticui %} {% block main %}
+<input type="button" class="ui primary button d-inline" onclick="javascript:window.location='{% url 'pvebewerkoverview' versie_pk %}'" value="< PvE Bewerk Overview" />
 <h1 class="ui header center aligned">Bewerk Programma van Eisen</h1>
-<a href="{% url 'sectionview' %}"><input type="button" class="ui primary button d-inline" value="< Klaar" /></a>
+<a href="{% url 'hoofdstukview' versie_pk %}"><input type="button" class="ui primary button d-inline" value="< Klaar" /></a>
 <br><br>
-{% if onderdelen %}
+{% if hoofdstukken %}
 <div>
-	{% for key, queryset in SectionQuerySets %}
 	<table class="ui fixed multiple line blue table">
 		<thead>
 			<tr>
 				<th>
-					{{ key.naam }} <!-- PVEHfst -->
-					<span class="float right"><a href="{% url 'editonderdeel' key.id %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a></span>
-
-					<div class="d-inline" style="float: right;">
-					<span class="float right"><a href="{% url 'addchapter' key.id %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
-					</div>
-				</th>
+          Hoofdstukken	
+			</th>
 			</tr>
 		</thead>
 		<tbody>
-        {% if queryset %}
-				{% for item in queryset %}
+				{% for item in hoofdstukken %}
 				<tr>
 				<td> 
-					<a href="{% url 'viewParagraaf' item.id %}">{{ item.hoofdstuk}}</a> &nbsp; 
+					<a href="{% url 'viewParagraaf' versie_pk item.id %}">{{ item.hoofdstuk }}</a> &nbsp; 
 					<div class="d-inline" style="float: right;">
-					<a href="{% url 'editchapter' item.id %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a>
+					<a href="{% url 'editchapter' versie_pk %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a>
 					</div>
 				</td>
 				</tr>
 				{% endfor %}
-        {% else %}
-				<tr>
-        <td>Nog geen hoofdstukken.</td>
-				</tr>
-        {% endif %}
 		</tbody>
 	</table>
-	{% endfor %}
-	<div class="ui divider"></div>
-	<div style="float: center;">
-	<a href="{% url 'addsection' %}"><button class="ui green button"><i class="icon plus"></i>Voeg onderdeel toe</button></a>
-	</div>
 {% else %}
-<p>Nog geen PVE onderdelen!</p>
+<p>Nog geen hoofdstukken!</p>
 <div class="d-inline" style="float: left;">
-	<span class="float right"><a href="{% url 'addsection' %}"><button class="ui green button"><i class="icon plus"></i>Voeg onderdeel toe</button></a></span>
+	<span class="float right"><a href="{% url 'addchapter' versie_pk %}"><button class="ui green button"><i class="icon plus"></i>Voeg hoofdstuk toe</button></a></span>
 					</div>
 {% endif %}
 {% block modal %}{% endblock %} 
