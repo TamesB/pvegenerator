@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.gis import forms
-from django.contrib.gis.db import models
+from django.contrib.gis.db import models as gismodels
 from django.db import models
 
 from utils.upload_rename import upload_to
@@ -24,7 +24,7 @@ class ContractStatus(models.Model):
 class Project(models.Model):
     nummer = models.FloatField(max_length=100, default=None)
     naam = models.CharField(max_length=500, default=None)
-    plaats = models.PointField()
+    plaats = gismodels.PointField()
     plaatsnamen = models.CharField(max_length=250, default=None, null=True)
     vhe = models.FloatField(max_length=100, default=None)
     pensioenfonds = models.CharField(max_length=100, default=None)
