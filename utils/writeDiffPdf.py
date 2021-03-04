@@ -134,7 +134,7 @@ class PDFMaker:
 
         canvas.restoreState()
 
-    def makepdf(self, filename, PVEItems, parameters):
+    def makepdf(self, filename, PVEItems, versie_pk, parameters):
         # for switching background styles between added items
         
         item_added = 0
@@ -146,7 +146,10 @@ class PDFMaker:
         Story = [Spacer(0, 224)]
         style = self.styles["Normal"]
         
-        hoofdstukken = models.PVEHoofdstuk.objects.all()
+        versie = models.PVEVersie.objects.get(id=versie_pk)
+
+        hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie)
+
         hoofdstuknamen = [hoofdstuk.hoofdstuk for hoofdstuk in hoofdstukken]
             
         # Excel tabel simulasie

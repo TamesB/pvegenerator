@@ -21,8 +21,17 @@ def GeneratePVEView(request, versie_pk):
 
     if request.method == "POST":
 
-        # get user entered form
+        # get user entered form and set the parameters to its version
         form = forms.PVEParameterForm(request.POST)
+        form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(versie=pve_versie).all()
+        form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(versie=pve_versie).all()
+        form.fields["Bouwsoort3"].queryset = models.Bouwsoort.objects.filter(versie=pve_versie).all()
+        form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(versie=pve_versie).all()
+        form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(versie=pve_versie).all()
+        form.fields["TypeObject3"].queryset = models.TypeObject.objects.filter(versie=pve_versie).all()
+        form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(versie=pve_versie).all()
+        form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(versie=pve_versie).all()
+        form.fields["Doelgroep3"].queryset = models.Doelgroep.objects.filter(versie=pve_versie).all()
 
         # check validity
         if form.is_valid():
@@ -38,8 +47,9 @@ def GeneratePVEView(request, versie_pk):
                 form.cleaned_data["Pakketdient"], form.cleaned_data["JamesConcept"] )
             
             # Entered parameters are in the manytomany parameters of the object
-            basic_PVE = models.PVEItem.objects.filter(versie__id=versie_pk, 
-                basisregel=True)
+            basic_PVE = models.PVEItem.objects.filter(Q(versie__id=versie_pk) & 
+                Q(basisregel=True))
+
             basic_PVE = basic_PVE.union(
                 models.PVEItem.objects.filter(versie__id=versie_pk, 
                     Bouwsoort__parameter__contains=Bouwsoort1))
@@ -138,9 +148,9 @@ def GeneratePVEView(request, versie_pk):
             bijlagen = {}
             reacties = {}
             reactiebijlagen = {}
-            
+
             pdfmaker = writePdf.PDFMaker()
-            pdfmaker.makepdf(filename, basic_PVE, opmerkingen, bijlagen, reacties, reactiebijlagen, parameters, [])
+            pdfmaker.makepdf(filename, basic_PVE, versie_pk, opmerkingen, bijlagen, reacties, reactiebijlagen, parameters, [])
 
             # get bijlagen
             bijlagen = [item for item in basic_PVE if item.bijlage]
@@ -160,9 +170,21 @@ def GeneratePVEView(request, versie_pk):
         else:
             messages.warning(request, "Vul de verplichte keuzes in.")
 
+    form = forms.PVEParameterForm()
+    form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(versie=pve_versie).all()
+    form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(versie=pve_versie).all()
+    form.fields["Bouwsoort3"].queryset = models.Bouwsoort.objects.filter(versie=pve_versie).all()
+    form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(versie=pve_versie).all()
+    form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(versie=pve_versie).all()
+    form.fields["TypeObject3"].queryset = models.TypeObject.objects.filter(versie=pve_versie).all()
+    form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(versie=pve_versie).all()
+    form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(versie=pve_versie).all()
+    form.fields["Doelgroep3"].queryset = models.Doelgroep.objects.filter(versie=pve_versie).all()
+    
+
     # if get method, just render the empty form
     context = {}
-    context["form"] = forms.PVEParameterForm()
+    context["form"] = form
     context["versie_pk"] = versie_pk
     return render(request, 'GeneratePVE.html', context)
 
@@ -219,10 +241,19 @@ def compareFormView(request, versie_pk, pk):
         if pk == 1:
             # get user entered form
             form = forms.CompareFormBouwsoort(request.POST)
+            form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(versie__id=versie_pk).all()
+            form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(versie__id=versie_pk).all()
+
         if pk == 2:
             form = forms.CompareFormTypeObject(request.POST)
+            form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(versie__id=versie_pk).all()
+            form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(versie__id=versie_pk).all()
+
         if pk == 3:
             form = forms.CompareFormDoelgroep(request.POST)
+            form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(versie__id=versie_pk).all()
+            form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(versie__id=versie_pk).all()
+
 
         # check validity
         if form.is_valid():
@@ -261,7 +292,7 @@ def compareFormView(request, versie_pk, pk):
                 )
 
                 pdfmaker = writeDiffPdf.PDFMaker()
-                pdfmaker.makepdf(filename, afwijkingen, parameters)
+                pdfmaker.makepdf(filename, afwijkingen, versie_pk, parameters)
                 context["filename"] = filename
 
             context["afwijkingen"] = afwijkingen
@@ -270,10 +301,20 @@ def compareFormView(request, versie_pk, pk):
 
     # if get method, just render the empty form
     if pk == 1:
-        context["form"] = forms.CompareFormBouwsoort()
+        form = forms.CompareFormBouwsoort()
+        form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(versie__id=versie_pk).all()
+        form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(versie__id=versie_pk).all()
+
     if pk == 2:
-        context["form"] = forms.CompareFormTypeObject()
+        form = forms.CompareFormTypeObject()
+        form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(versie__id=versie_pk).all()
+        form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(versie__id=versie_pk).all()
+
     if pk == 3:
-        context["form"] = forms.CompareFormDoelgroep()
+        form = forms.CompareFormDoelgroep()
+        form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(versie__id=versie_pk).all()
+        form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(versie__id=versie_pk).all()
+    
+    context["form"] = form
 
     return render(request, 'compareForm.html', context)

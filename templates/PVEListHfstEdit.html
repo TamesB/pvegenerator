@@ -19,7 +19,7 @@
 				<td> 
 					<a href="{% url 'viewParagraaf' versie_pk item.id %}">{{ item.hoofdstuk }}</a> &nbsp; 
 					<div class="d-inline" style="float: right;">
-					<a href="{% url 'editchapter' versie_pk %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a>
+					<a href="{% url 'editchapter' versie_pk item.id %}"><button class="ui icon basic button"><i class="icon edit"></i></button></a>
 					</div>
 				</td>
 				</tr>

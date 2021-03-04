@@ -281,9 +281,21 @@ def GeneratePVEView(request):
     if request.user.type_user not in allowed_users:
         return render(request, '404_syn.html')
 
+    versie = models.ActieveVersie.objects.get(belegger__naam="Syntrus").versie
+
     if request.method == "POST":
         # get user entered form
         form = forms.PVEParameterForm(request.POST)
+        form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(versie=versie).all()
+        form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(versie=versie).all()
+        form.fields["Bouwsoort3"].queryset = models.Bouwsoort.objects.filter(versie=versie).all()
+        form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(versie=versie).all()
+        form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(versie=versie).all()
+        form.fields["TypeObject3"].queryset = models.TypeObject.objects.filter(versie=versie).all()
+        form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(versie=versie).all()
+        form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(versie=versie).all()
+        form.fields["Doelgroep3"].queryset = models.Doelgroep.objects.filter(versie=versie).all()
+
         # check validity
         if form.is_valid():
             # get parameters, find all pveitems with that
@@ -298,7 +310,7 @@ def GeneratePVEView(request):
 
             versie = models.ActieveVersie.objects.get(belegger__naam="Syntrus").versie
             # Entered parameters are in the manytomany parameters of the object
-            basic_PVE = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie=versie, basisregel=True)
+            basic_PVE = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(Q(versie=versie) & Q(basisregel=True))
             basic_PVE = basic_PVE.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie=versie, Bouwsoort__parameter__contains=Bouwsoort1))
 
             if Bouwsoort2:
@@ -374,7 +386,7 @@ def GeneratePVEView(request):
             reacties = {}
             reactiebijlagen = {}
 
-            pdfmaker.makepdf(filename, basic_PVE, opmerkingen, bijlagen, reacties, reactiebijlagen, parameters, [])
+            pdfmaker.makepdf(filename, basic_PVE, versie.id, opmerkingen, bijlagen, reacties, reactiebijlagen, parameters, [])
 
             # get bijlagen
             bijlagen = [item for item in basic_PVE if item.bijlage]
@@ -393,9 +405,20 @@ def GeneratePVEView(request):
         else:
             messages.warning(request, "Vul de verplichte keuzes in.")
 
+    form = forms.PVEParameterForm()
+    form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(versie=versie).all()
+    form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(versie=versie).all()
+    form.fields["Bouwsoort3"].queryset = models.Bouwsoort.objects.filter(versie=versie).all()
+    form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(versie=versie).all()
+    form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(versie=versie).all()
+    form.fields["TypeObject3"].queryset = models.TypeObject.objects.filter(versie=versie).all()
+    form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(versie=versie).all()
+    form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(versie=versie).all()
+    form.fields["Doelgroep3"].queryset = models.Doelgroep.objects.filter(versie=versie).all()
+
     # if get method, just render the empty form
     context = {}
-    context["form"] = forms.PVEParameterForm()
+    context["form"] = form
     return render(request, 'GeneratePVE_syn.html', context)
 
 @login_required
@@ -413,7 +436,8 @@ def download_pve(request, pk):
             raise Http404('404')
 
     project = get_object_or_404(Project, id=pk)
-    
+    versie = project.pve_versie
+
     basic_PVE = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(projects__id__contains=pk).order_by('id')
 
     # make pdf
@@ -480,7 +504,7 @@ def download_pve(request, pk):
         pdfmaker.TopRightPadding = 75
 
     pdfmaker.kostenverschil = kostenverschil
-    pdfmaker.makepdf(filename, basic_PVE, opmerkingen, bijlagen, reacties, reactiebijlagen, parameters, geaccepteerde_regels_ids)
+    pdfmaker.makepdf(filename, basic_PVE, versie.id,  opmerkingen, bijlagen, reacties, reactiebijlagen, parameters, geaccepteerde_regels_ids)
 
     # get bijlagen
     bijlagen = [item for item in basic_PVE if item.bijlage]
@@ -1128,6 +1152,16 @@ def ConnectPVE(request, pk):
 
     if request.method == 'POST':
         form = forms.PVEParameterForm(request.POST)
+        form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(versie=pve_versie).all()
+        form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(versie=pve_versie).all()
+        form.fields["Bouwsoort3"].queryset = models.Bouwsoort.objects.filter(versie=pve_versie).all()
+        form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(versie=pve_versie).all()
+        form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(versie=pve_versie).all()
+        form.fields["TypeObject3"].queryset = models.TypeObject.objects.filter(versie=pve_versie).all()
+        form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(versie=pve_versie).all()
+        form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(versie=pve_versie).all()
+        form.fields["Doelgroep3"].queryset = models.Doelgroep.objects.filter(versie=pve_versie).all()
+
         # check whether it's valid:
         if form.is_valid():
             # get parameters, find all pveitems with that
@@ -1144,7 +1178,7 @@ def ConnectPVE(request, pk):
             versie = models.ActieveVersie.objects.filter(belegger__naam="Syntrus").versie
 
             # Entered parameters are in the manytomany parameters of the object
-            basic_PVE = models.PVEItem.objects.filter(versie=versie, basisregel=True)
+            basic_PVE = models.PVEItem.objects.filter(Q(versie=versie) & Q(basisregel=True))
             basic_PVE = basic_PVE.union(models.PVEItem.objects.filter(versie=versie, Bouwsoort__parameter__contains=Bouwsoort1))
             project.bouwsoort1 = models.Bouwsoort.objects.filter(versie=versie, parameter=Bouwsoort1).first()
 
@@ -1239,6 +1273,15 @@ def ConnectPVE(request, pk):
 
     # form
     form = forms.PVEParameterForm()
+    form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(versie=pve_versie).all()
+    form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(versie=pve_versie).all()
+    form.fields["Bouwsoort3"].queryset = models.Bouwsoort.objects.filter(versie=pve_versie).all()
+    form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(versie=pve_versie).all()
+    form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(versie=pve_versie).all()
+    form.fields["TypeObject3"].queryset = models.TypeObject.objects.filter(versie=pve_versie).all()
+    form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(versie=pve_versie).all()
+    form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(versie=pve_versie).all()
+    form.fields["Doelgroep3"].queryset = models.Doelgroep.objects.filter(versie=pve_versie).all()
 
     context = {}
     context["form"] = form

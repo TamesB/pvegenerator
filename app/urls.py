@@ -24,8 +24,8 @@ urlpatterns = [
     path('parameters/<int:versie_pk>/delete', views.PVEHoofdstukListViewDelete, name='hoofdstukviewdelete'),
     
     path('parameters/<int:versie_pk>/addchapter', views.PVEaddhoofdstukView, name='addchapter'),
-    path('parameters/<int:versie_pk>/editchapter', views.PVEedithoofdstukView, name='editchapter'),
-    path('parameters/<int:versie_pk>/deletechapter', views.PVEdeletehoofdstukView, name='deletechapter'),
+    path('parameters/<int:versie_pk>/editchapter/<int:pk>', views.PVEedithoofdstukView, name='editchapter'),
+    path('parameters/<int:versie_pk>/deletechapter/<int:pk>', views.PVEdeletehoofdstukView, name='deletechapter'),
     
     path('parameters/<int:versie_pk>/<int:pk>', views.paragraaflistView, name='viewParagraaf'),
     path('parameters/<int:versie_pk>/<int:pk>/edit', views.paragraaflistViewEdit, name='viewParagraafEdit'),

@@ -4,17 +4,17 @@ from django.forms import ModelForm
 
 
 class PVEParameterForm(ModelForm):
-    Bouwsoort1 = forms.ModelChoiceField(queryset=Bouwsoort.objects.all(), label='Bouwsoort (Hoofd)')
-    Bouwsoort2 = forms.ModelChoiceField(queryset=Bouwsoort.objects.all(), label='Bouwsoort (Sub)')
-    Bouwsoort3 = forms.ModelChoiceField(queryset=Bouwsoort.objects.all(), label='Bouwsoort (Sub)')
+    Bouwsoort1 = forms.ModelChoiceField(queryset=Bouwsoort.objects.none(), label='Bouwsoort (Hoofd)')
+    Bouwsoort2 = forms.ModelChoiceField(queryset=Bouwsoort.objects.none(), label='Bouwsoort (Sub)')
+    Bouwsoort3 = forms.ModelChoiceField(queryset=Bouwsoort.objects.none(), label='Bouwsoort (Sub)')
 
-    TypeObject1 = forms.ModelChoiceField(queryset=TypeObject.objects.all(), label='Type Object (Hoofd)')
-    TypeObject2 = forms.ModelChoiceField(queryset=TypeObject.objects.all(), label='Type Object (Sub)')
-    TypeObject3 = forms.ModelChoiceField(queryset=TypeObject.objects.all(), label='Type Object (Sub)')
+    TypeObject1 = forms.ModelChoiceField(queryset=TypeObject.objects.none(), label='Type Object (Hoofd)')
+    TypeObject2 = forms.ModelChoiceField(queryset=TypeObject.objects.none(), label='Type Object (Sub)')
+    TypeObject3 = forms.ModelChoiceField(queryset=TypeObject.objects.none(), label='Type Object (Sub)')
 
-    Doelgroep1 = forms.ModelChoiceField(queryset=Doelgroep.objects.all(), label='Doelgroep (Hoofd)')
-    Doelgroep2 = forms.ModelChoiceField(queryset=Doelgroep.objects.all(), label='Doelgroep (Sub)')
-    Doelgroep3 = forms.ModelChoiceField(queryset=Doelgroep.objects.all(), label='Doelgroep (Sub)')
+    Doelgroep1 = forms.ModelChoiceField(queryset=Doelgroep.objects.none(), label='Doelgroep (Hoofd)')
+    Doelgroep2 = forms.ModelChoiceField(queryset=Doelgroep.objects.none(), label='Doelgroep (Sub)')
+    Doelgroep3 = forms.ModelChoiceField(queryset=Doelgroep.objects.none(), label='Doelgroep (Sub)')
 
     widgets = {
         'Bouwsoort1': forms.Select(attrs={'class': 'ui dropdown'}),
@@ -103,8 +103,8 @@ class SpecificPVEParameterForm(ModelForm):
         }
 
 class CompareFormBouwsoort(forms.Form):
-    Bouwsoort1 = forms.ModelChoiceField(queryset=Bouwsoort.objects.all(), label='Bouwsoort')
-    Bouwsoort2 = forms.ModelChoiceField(queryset=Bouwsoort.objects.all(), label='Bouwsoort')
+    Bouwsoort1 = forms.ModelChoiceField(queryset=Bouwsoort.objects.none(), label='Bouwsoort')
+    Bouwsoort2 = forms.ModelChoiceField(queryset=Bouwsoort.objects.none(), label='Bouwsoort')
 
     class Meta:
         model = PVEItem
@@ -125,8 +125,8 @@ class CompareFormBouwsoort(forms.Form):
         ]
 
 class CompareFormTypeObject(forms.Form):
-    TypeObject1 = forms.ModelChoiceField(queryset=TypeObject.objects.all(), label='Type Object')
-    TypeObject2 = forms.ModelChoiceField(queryset=TypeObject.objects.all(), label='Type Object')
+    TypeObject1 = forms.ModelChoiceField(queryset=TypeObject.objects.none(), label='Type Object')
+    TypeObject2 = forms.ModelChoiceField(queryset=TypeObject.objects.none(), label='Type Object')
 
     class Meta:
         model = PVEItem
@@ -146,8 +146,8 @@ class CompareFormTypeObject(forms.Form):
 
         ]
 class CompareFormDoelgroep(forms.Form):
-    Doelgroep1 = forms.ModelChoiceField(queryset=Doelgroep.objects.all(), label='Doelgroep')
-    Doelgroep2 = forms.ModelChoiceField(queryset=Doelgroep.objects.all(), label='Doelgroep')
+    Doelgroep1 = forms.ModelChoiceField(queryset=Doelgroep.objects.none(), label='Doelgroep')
+    Doelgroep2 = forms.ModelChoiceField(queryset=Doelgroep.objects.none(), label='Doelgroep')
 
     class Meta:
         model = PVEItem

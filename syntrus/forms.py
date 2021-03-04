@@ -24,17 +24,17 @@ class LoginForm(forms.Form):
             }
 
 class PVEParameterForm(ModelForm):
-    Bouwsoort1 = forms.ModelChoiceField(queryset=Bouwsoort.objects.all(), label='Bouwsoort')
-    Bouwsoort2 = forms.ModelChoiceField(queryset=Bouwsoort.objects.all(), label='Bouwsoort')
-    Bouwsoort3 = forms.ModelChoiceField(queryset=Bouwsoort.objects.all(), label='Bouwsoort')
+    Bouwsoort1 = forms.ModelChoiceField(queryset=Bouwsoort.objects.none(), label='Bouwsoort')
+    Bouwsoort2 = forms.ModelChoiceField(queryset=Bouwsoort.objects.none(), label='Bouwsoort')
+    Bouwsoort3 = forms.ModelChoiceField(queryset=Bouwsoort.objects.none(), label='Bouwsoort')
 
-    TypeObject1 = forms.ModelChoiceField(queryset=TypeObject.objects.all(), label='Type Object')
-    TypeObject2 = forms.ModelChoiceField(queryset=TypeObject.objects.all(), label='Type Object')
-    TypeObject3 = forms.ModelChoiceField(queryset=TypeObject.objects.all(), label='Type Object')
+    TypeObject1 = forms.ModelChoiceField(queryset=TypeObject.objects.none(), label='Type Object')
+    TypeObject2 = forms.ModelChoiceField(queryset=TypeObject.objects.none(), label='Type Object')
+    TypeObject3 = forms.ModelChoiceField(queryset=TypeObject.objects.none(), label='Type Object')
 
-    Doelgroep1 = forms.ModelChoiceField(queryset=Doelgroep.objects.all(), label='Doelgroep')
-    Doelgroep2 = forms.ModelChoiceField(queryset=Doelgroep.objects.all(), label='Doelgroep')
-    Doelgroep3 = forms.ModelChoiceField(queryset=Doelgroep.objects.all(), label='Doelgroep')
+    Doelgroep1 = forms.ModelChoiceField(queryset=Doelgroep.objects.none(), label='Doelgroep')
+    Doelgroep2 = forms.ModelChoiceField(queryset=Doelgroep.objects.none(), label='Doelgroep')
+    Doelgroep3 = forms.ModelChoiceField(queryset=Doelgroep.objects.none(), label='Doelgroep')
 
     widgets = {
         'Bouwsoort1': forms.Select(attrs={'class': 'ui dropdown'}),

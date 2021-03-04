@@ -193,7 +193,7 @@ class PDFMaker:
 
         canvas.restoreState()
 
-    def makepdf(self, filename, PVEItems, opmerkingen, bijlagen, reacties, reactiebijlagen, parameters, accepted_comment_ids):
+    def makepdf(self, filename, PVEItems, versie_pk, opmerkingen, bijlagen, reacties, reactiebijlagen, parameters, accepted_comment_ids):
         # for switching background styles between added items
         
         item_added = 0
@@ -206,7 +206,7 @@ class PDFMaker:
         style = self.styles["Normal"]
 
         # get pve versie
-        versie = models.ActieveVersie.objects.get(belegger__naam="Syntrus").versie
+        versie = models.PVEVersie.objects.get(id=versie_pk)
 
         hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie)
         hoofdstuknamen = [hoofdstuk.hoofdstuk for hoofdstuk in hoofdstukken]

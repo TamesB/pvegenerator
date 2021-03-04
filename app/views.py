@@ -232,7 +232,6 @@ def PVEHoofdstukListViewEdit(request, versie_pk):
     context = {}
     context["hoofdstukken"] = hoofdstukken
     context["versie_pk"] = versie_pk
-
     return render(request, 'PVEListHfstEdit.html', context)
 
 
@@ -284,7 +283,7 @@ def PVEedithoofdstukView(request, versie_pk, pk):
             PVEhoofdstuk = models.PVEHoofdstuk.objects.filter(id=pk).first()
             PVEhoofdstuk.hoofdstuk = form.cleaned_data["hoofdstuk"]
             PVEhoofdstuk.save()
-            return redirect('sectionview')
+            return redirect('hoofdstukview', versie_pk=versie_pk)
 
     # form, initial chapter in specific onderdeel
     hoofdstuk = models.PVEHoofdstuk.objects.filter(versie=versie, id=pk).first()
@@ -297,6 +296,7 @@ def PVEedithoofdstukView(request, versie_pk, pk):
     context["hoofdstukken"] = hoofdstukken
     context["hoofdstuk"] = hoofdstuk
     context["versie_pk"] = versie_pk
+    context["pk"] = pk
     context["form"] = form
     return render(request, 'changechapterform.html', context)
 
@@ -875,19 +875,19 @@ def addkiesparameterView(request, versie_pk, type_id):
                 item = models.Doelgroep()
 
             item.parameter = form.cleaned_data["parameter"]
-            item.versie = PVEVersie.objects.filter(id=versie_pk)
+            item.versie = models.PVEVersie.objects.get(id=versie_pk)
             item.save()
 
-            return HttpResponseRedirect(reverse('kiesparametersview', versie_pk=versie_pk))
+            return HttpResponseRedirect(reverse('kiesparametersview', args=(versie_pk,)))
 
     form = forms.KiesParameterForm()
 
     context = {}
     context["form"] = form
     context["type_id"] = type_id
-    context["bouwsoorten"] = models.Bouwsoort.objects.all()
-    context["typeObjecten"] = models.TypeObject.objects.all()
-    context["doelgroepen"] = models.Doelgroep.objects.all()
+    context["bouwsoorten"] = models.Bouwsoort.objects.filter(versie__id=versie_pk)
+    context["typeObjecten"] = models.TypeObject.objects.filter(versie__id=versie_pk)
+    context["doelgroepen"] = models.Doelgroep.objects.filter(versie__id=versie_pk)
     context["versie_pk"] = versie_pk
     return render(request, "addkiesparameter.html", context)
 
@@ -926,7 +926,7 @@ def bewerkkiesparameterView(request, versie_pk, type_id, item_id):
             item.parameter = form.cleaned_data["parameter"]
             item.save()
 
-            return HttpResponseRedirect(reverse('kiesparametersview', versie_pk=versie_pk))
+            return HttpResponseRedirect(reverse('kiesparametersviewedit', args=(versie_pk,)))
 
     form = forms.KiesParameterForm(initial={'parameter': item.parameter})
 
@@ -974,7 +974,7 @@ def deletekiesparameterView(request, versie_pk, type_id, item_id):
 
     messages.success(request, f"{parameter} verwijderd.")
 
-    return HttpResponseRedirect(reverse('kiesparametersviewdelete', versie_pk=versie_pk))
+    return HttpResponseRedirect(reverse('kiesparametersviewdelete', args=(versie_pk,)))
 
 @staff_member_required(login_url='/404')
 def projectHeatmap(request):
