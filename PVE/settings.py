@@ -92,7 +92,11 @@ MIDDLEWARE = [
     "simple_history.middleware.HistoryRequestMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     #'csp.middleware.CSPMiddleware',
+    'htmlmin.middleware.HtmlMinifyMiddleware',
+    'htmlmin.middleware.MarkRequestMiddleware',
 ]
+
+HTML_MINIFY = True
 
 ROOT_URLCONF = "PVE.urls"
 

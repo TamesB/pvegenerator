@@ -982,11 +982,13 @@ def deleteAnnotationPve(request, project_id, ann_id):
     if request.user.type_user != "B":
         if not Project.objects.filter(
             id=project_id, permitted__username__contains=request.user.username
-        ):
+        ).exists():
             raise Http404("404")
 
     # check if user placed that annotation
-    if not PVEItemAnnotation.objects.filter(id=ann_id, gebruiker=request.user):
+    if not PVEItemAnnotation.objects.filter(
+        id=ann_id, gebruiker=request.user
+    ).exists():
         raise Http404("404")
 
     comment = PVEItemAnnotation.objects.filter(id=ann_id).first()
@@ -1081,11 +1083,13 @@ def VerwijderAnnotationAttachment(request, projid, annid):
     if request.user.type_user != "B":
         if not Project.objects.filter(
             id=projid, permitted__username__contains=request.user.username
-        ):
+        ).exists():
             raise Http404("404")
 
     # check if user placed that annotation
-    if not PVEItemAnnotation.objects.filter(id=annid, gebruiker=request.user):
+    if not PVEItemAnnotation.objects.filter(
+        id=annid, gebruiker=request.user
+    ).exists():
         raise Http404("404")
 
     comment = PVEItemAnnotation.objects.filter(id=annid).first()
@@ -2590,11 +2594,13 @@ def DeleteReply(request, pk, reply_id):
     if request.user.type_user != "B":
         if not Project.objects.filter(
             id=pk, permitted__username__contains=request.user.username
-        ):
+        ).exists():
             raise Http404("404")
 
     # check if user placed that annotation
-    if not CommentReply.objects.filter(id=reply_id, gebruiker=request.user):
+    if not CommentReply.objects.filter(
+        id=reply_id, gebruiker=request.user
+    ).exists():
         raise Http404("404")
 
     reply = CommentReply.objects.filter(id=reply_id).first()
@@ -2686,11 +2692,13 @@ def DeleteReplyAttachment(request, pk, reply_id):
     if request.user.type_user != "B":
         if not Project.objects.filter(
             id=pk, permitted__username__contains=request.user.username
-        ):
+        ).exists():
             raise Http404("404")
 
     # check if user placed that annotation
-    if not CommentReply.objects.filter(id=reply_id, gebruiker=request.user):
+    if not CommentReply.objects.filter(
+        id=reply_id, gebruiker=request.user
+    ).exists():
         raise Http404("404")
 
     reply = CommentReply.objects.filter(id=reply_id).first()
@@ -2763,7 +2771,7 @@ def DownloadReplyAttachment(request, pk, reply_id):
 
 @login_required
 def SendReplies(request, pk):
-    project = Project.objects.filter(id=pk).first()
+    project = get_object_or_404(Project, pk=pk)
 
     if project.frozenLevel == 0:
         return render(request, "404_syn.html")
@@ -2772,7 +2780,7 @@ def SendReplies(request, pk):
     if request.user.type_user != "B":
         if not Project.objects.filter(
             id=pk, permitted__username__contains=request.user.username
-        ):
+        ).exists():
             raise Http404("404")
 
     if request.method == "POST":
@@ -2800,6 +2808,7 @@ def SendReplies(request, pk):
                 accepted_comment_ids = []
                 todo_comment_ids = []
                 total_comments_ids = []
+
                 comments = (
                     CommentReply.objects.select_related("onComment")
                     .select_related("status")
@@ -2911,7 +2920,7 @@ def FinalFreeze(request, pk):
     if request.user.type_user != "B":
         if not Project.objects.filter(
             id=pk, permitted__username__contains=request.user.username
-        ):
+        ).exists():
             raise Http404("404")
 
     commentphase = (
@@ -2928,6 +2937,7 @@ def FinalFreeze(request, pk):
         if form.is_valid():
             project.fullyFrozen = True
             project.save()
+            
             allprojectusers = project.permitted.all()
             filteredDerden = [
                 user.email for user in allprojectusers if user.type_user == "SD"

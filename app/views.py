@@ -332,7 +332,7 @@ def paragraaflistView(request, versie_pk, pk):
     pk = int(pk)
     versie = models.PVEVersie.objects.get(id=versie_pk)
 
-    if models.PVEHoofdstuk.objects.filter(versie=versie, id=pk):
+    if models.PVEHoofdstuk.objects.filter(versie=versie, id=pk).exists():
         hoofdstuk = models.PVEHoofdstuk.objects.filter(versie=versie, id=pk).first()
     else:
         raise Http404("404")
@@ -361,7 +361,7 @@ def paragraaflistView(request, versie_pk, pk):
 def paragraaflistViewEdit(request, versie_pk, pk):
     pk = int(pk)
 
-    if models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk):
+    if models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk).exists():
         hoofdstuk = models.PVEHoofdstuk.objects.filter(
             versie__id=versie_pk, id=pk
         ).first()
@@ -393,7 +393,7 @@ def paragraaflistViewEdit(request, versie_pk, pk):
 def paragraaflistViewDelete(request, versie_pk, pk):
     pk = int(pk)
 
-    if models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk):
+    if models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk).exists():
         hoofdstuk = models.PVEHoofdstuk.objects.filter(
             versie__id=versie_pk, id=pk
         ).first()
@@ -425,7 +425,7 @@ def paragraaflistViewDelete(request, versie_pk, pk):
 def PVEaddparagraafView(request, versie_pk, pk):
     pk = int(pk)
 
-    if models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk):
+    if models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk).exists():
         hoofdstuk = models.PVEHoofdstuk.objects.filter(
             versie__id=versie_pk, id=pk
         ).first()
@@ -470,7 +470,7 @@ def PVEeditparagraafView(request, versie_pk, pk):
     pk = int(pk)
     versie = models.PVEVersie.objects.get(id=versie_pk)
 
-    if models.PVEParagraaf.objects.filter(versie=versie, id=pk):
+    if models.PVEParagraaf.objects.filter(versie=versie, id=pk).exists():
         paragraaf = models.PVEParagraaf.objects.filter(versie=versie, id=pk).first()
         hoofdstuk = paragraaf.hoofdstuk
     else:
@@ -539,7 +539,7 @@ def itemListView(request, versie_pk, chapter_id, paragraph_id):
     if paragraph_id == 0:
         if models.PVEParagraaf.objects.filter(
             versie__id=versie_pk, hoofdstuk__id=chapter_id
-        ):
+        ).exists():
             raise Http404("404")
 
     # if paragraphs arent connected to this chapter
@@ -591,7 +591,7 @@ def itemListViewEdit(request, versie_pk, chapter_id, paragraph_id):
     if paragraph_id == 0:
         if models.PVEParagraaf.objects.filter(
             versie__id=versie_pk, hoofdstuk__id=chapter_id
-        ):
+        ).exists():
             raise Http404("404")
 
     # if paragraphs arent connected to this chapter
@@ -643,7 +643,7 @@ def itemListViewDelete(request, versie_pk, chapter_id, paragraph_id):
     if paragraph_id == 0:
         if models.PVEParagraaf.objects.filter(
             versie__id=versie_pk, hoofdstuk__id=chapter_id
-        ):
+        ).exists():
             raise Http404("404")
 
     # if paragraphs arent connected to this chapter
@@ -682,7 +682,7 @@ def itemListViewDelete(request, versie_pk, chapter_id, paragraph_id):
 def viewItemView(request, versie_pk, pk):
     pk = int(pk)
 
-    if models.PVEItem.objects.filter(versie__id=versie_pk, id=pk):
+    if models.PVEItem.objects.filter(versie__id=versie_pk, id=pk).exists():
         PVEItem = models.PVEItem.objects.filter(versie__id=versie_pk, id=pk).first()
     else:
         raise Http404("Item does not exist.")
@@ -747,7 +747,7 @@ def downloadBijlageView(request, pk):
 def editItemView(request, versie_pk, pk):
     pk = int(pk)
 
-    if models.PVEItem.objects.filter(versie__id=versie_pk, id=pk):
+    if models.PVEItem.objects.filter(versie__id=versie_pk, id=pk).exists():
         PVEItem = models.PVEItem.objects.filter(versie__id=versie_pk, id=pk).first()
     else:
         raise Http404("Item does not exist.")
@@ -840,7 +840,7 @@ def addItemView(request, versie_pk, chapter_id, paragraph_id):
 def deleteItemView(request, versie_pk, pk):
     pk = int(pk)
 
-    if models.PVEItem.objects.filter(versie__id=versie_pk, id=pk):
+    if models.PVEItem.objects.filter(versie__id=versie_pk, id=pk).exists():
         PVEItem = models.PVEItem.objects.filter(versie__id=versie_pk, id=pk).first()
         hoofdstuk = PVEItem.hoofdstuk
         paragraaf = PVEItem.paragraaf
@@ -871,7 +871,7 @@ def deleteItemView(request, versie_pk, pk):
 def PVEdeletehoofdstukView(request, versie_pk, pk):
     pk = int(pk)
 
-    if models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk):
+    if models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk).exists():
         PVEHoofdstuk = models.PVEHoofdstuk.objects.filter(
             versie__id=versie_pk, id=pk
         ).first()
@@ -890,7 +890,7 @@ def PVEdeletehoofdstukView(request, versie_pk, pk):
 def PVEdeleteparagraafView(request, versie_pk, pk):
     pk = int(pk)
 
-    if models.PVEParagraaf.objects.filter(versie__id=versie_pk, id=pk):
+    if models.PVEParagraaf.objects.filter(versie__id=versie_pk, id=pk).exists():
         PVEParagraaf = models.PVEParagraaf.objects.filter(
             versie__id=versie_pk, id=pk
         ).first()

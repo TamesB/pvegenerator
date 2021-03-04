@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.db.models import Q
 from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from pyproj import CRS, Transformer
 
@@ -26,7 +26,6 @@ from . import forms, models
 
 @staff_member_required
 def StartProjectView(request):
-
     if request.user.type_user != "OG" and request.user.type_user != "B":
         raise Http404("404.")
 
@@ -62,7 +61,7 @@ def ConnectPVEView(request, pk):
     if request.user.type_user != "OG" and request.user.type_user != "B":
         raise Http404("404.")
 
-    project = models.Project.objects.filter(id=pk).first()
+    project = get_object_or_404(models.Project, pk=pk)
 
     if project.pveconnected == True:
         context = {}
@@ -202,7 +201,7 @@ def ConnectPVEView(request, pk):
 def ProjectOverviewView(request):
     if not models.Project.objects.filter(
         permitted__username__contains=request.user.username
-    ):
+    ).exists():
         raise Http404("Je heb geen projecten waar je toegang tot heb.")
 
     context = {}
@@ -230,18 +229,13 @@ def AllProjectsView(request):
 
 @staff_member_required
 def ProjectViewView(request, pk):
-    pk = int(pk)
-
-    if not models.Project.objects.filter(id=pk):
-        raise Http404("404")
-
     if request.user.type_user != "B":
         if not models.Project.objects.filter(
             id=pk, permitted__username__contains=request.user.username
-        ):
+        ).exists():
             raise Http404("404")
 
-    project = models.Project.objects.filter(id=pk).first()
+    project = get_object_or_404(models.Project, pk=pk)
 
     transformer = Transformer.from_crs("EPSG:3857", "EPSG:4326")
     x, y = transformer.transform(project.plaats.x, project.plaats.y)
@@ -258,17 +252,20 @@ def ProjectViewView(request, pk):
 
 @login_required
 def download_pve(request, pk):
-    if not models.Project.objects.filter(id=pk):
-        raise Http404("404")
 
     if request.user.type_user != "B":
         if not models.Project.objects.filter(
             id=pk, permitted__username__contains=request.user.username
-        ):
+        ).exists():
             raise Http404("404")
 
-    project = models.Project.objects.filter(id=pk).first()
-    basic_PVE = PVEItem.objects.filter(projects__id__contains=pk)
+    project = get_object_or_404(models.Project, pk=pk)
+
+    basic_PVE = PVEItem.objects.select_related(
+        "projects"
+    ).filter(
+        projects__id__contains=pk
+        )
 
     # make sure pve is ordered
     basic_PVE = basic_PVE.order_by("id")
@@ -302,8 +299,24 @@ def download_pve(request, pk):
     filename = f"PvE-{fileExt}"
     zipFilename = f"PvE_Compleet-{fileExt}"
 
+    # needed to generate
+    opmerkingen = {}
+    bijlagen = {}
+    reacties = {}
+    reactiebijlagen = {}
+
     pdfmaker = writePdf.PDFMaker()
-    pdfmaker.makepdf(filename, basic_PVE, parameters)
+    pdfmaker.makepdf(
+        filename,
+        basic_PVE,
+        project.pve_versie.id,
+        opmerkingen,
+        bijlagen,
+        reacties,
+        reactiebijlagen,
+        parameters,
+        [],
+    )
 
     # get bijlagen
     bijlagen = [item for item in basic_PVE if item.bijlage]
@@ -324,13 +337,12 @@ def download_pve(request, pk):
 
 @staff_member_required
 def searchProjectPveItem(request, project_id):
-    if not models.Project.objects.filter(id=project_id):
-        raise Http404("404")
+    project = get_object_or_404(models.Project, pk=project_id)
 
     if request.user.type_user != "B":
         if not models.Project.objects.filter(
             id=project_id, permitted__username__contains=request.user.username
-        ):
+        ).exists():
             raise Http404("404")
 
     if request.method == "POST":
@@ -355,13 +367,12 @@ def searchProjectPveItem(request, project_id):
 
 @staff_member_required
 def viewAnnotations(request, project_id):
-    if not models.Project.objects.filter(id=project_id):
-        raise Http404("404")
+    project = get_object_or_404(models.Project, pk=project_id)
 
     if request.user.type_user != "B":
         if not models.Project.objects.filter(
             id=project_id, permitted__username__contains=request.user.username
-        ):
+        ).exists():
             raise Http404("404")
 
     annotations = models.PVEItemAnnotation.objects.filter(
@@ -382,13 +393,12 @@ def viewAnnotations(request, project_id):
 
 @staff_member_required
 def viewItemAnnotations(request, project_id, item_id):
-    if not models.Project.objects.filter(id=project_id):
-        raise Http404("404")
+    project = get_object_or_404(models.Project, pk=project_id)
 
     if request.user.type_user != "B":
         if not models.Project.objects.filter(
             id=project_id, permitted__username__contains=request.user.username
-        ):
+        ).exists():
             raise Http404("404")
 
     if not PVEItem.objects.filter(id=item_id):
@@ -430,13 +440,13 @@ def viewOwnAnnotations(request):
 
 @staff_member_required
 def addAnnotationPve(request, project_id, item_id):
-    if not models.Project.objects.filter(id=project_id):
-        raise Http404("404")
+    project = get_object_or_404(models.Project, pk=project_id)
+
 
     if request.user.type_user != "B":
         if not models.Project.objects.filter(
             id=project_id, permitted__username__contains=request.user.username
-        ):
+        ).exists():
             raise Http404("404")
 
     if not PVEItem.objects.filter(id=item_id):
@@ -471,18 +481,20 @@ def addAnnotationPve(request, project_id, item_id):
 @staff_member_required
 def editAnnotationPve(request, project_id, ann_id):
     # check if project exists
-    if not models.Project.objects.filter(id=project_id):
-        raise Http404("404")
+    project = get_object_or_404(models.Project, pk=project_id)
+
 
     # check if user is authorized to project
     if request.user.type_user != "B":
         if not models.Project.objects.filter(
             id=project_id, permitted__username__contains=request.user.username
-        ):
+        ).exists():
             raise Http404("404")
 
     # check if user placed that annotation
-    if not models.PVEItemAnnotation.objects.filter(id=ann_id, gebruiker=request.user):
+    if not models.PVEItemAnnotation.objects.filter(
+        id=ann_id, gebruiker=request.user
+    ).exists():
         raise Http404("404")
 
     annotation = models.PVEItemAnnotation.objects.filter(
@@ -521,18 +533,19 @@ def editAnnotationPve(request, project_id, ann_id):
 @staff_member_required
 def deleteAnnotationPve(request, project_id, ann_id):
     # check if project exists
-    if not models.Project.objects.filter(id=project_id):
-        raise Http404("404")
+    project = get_object_or_404(models.Project, pk=project_id)
 
     # check if user is authorized to project
     if request.user.type_user != "B":
         if not models.Project.objects.filter(
             id=project_id, permitted__username__contains=request.user.username
-        ):
+        ).exists():
             raise Http404("404")
 
     # check if user placed that annotation
-    if not models.PVEItemAnnotation.objects.filter(id=ann_id, gebruiker=request.user):
+    if not models.PVEItemAnnotation.objects.filter(
+        id=ann_id, gebruiker=request.user
+    ).exists():
         raise Http404("404")
 
     annotations = models.PVEItemAnnotation.objects.filter(gebruiker=request.user)
