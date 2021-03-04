@@ -533,8 +533,8 @@ def editAnnotationPve(request, project_id, ann_id):
 @staff_member_required
 def deleteAnnotationPve(request, project_id, ann_id):
     # check if project exists
-    project = get_object_or_404(models.Project, pk=project_id)
-
+    project = get_object_or_404(models.Project, id=project_id)
+    
     # check if user is authorized to project
     if request.user.type_user != "B":
         if not models.Project.objects.filter(

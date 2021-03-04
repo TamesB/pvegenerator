@@ -23,28 +23,36 @@ def GeneratePVEView(request, versie_pk):
     pve_versie = models.PVEVersie.objects.get(id=versie_pk)
 
     if request.method == "POST":
-        # make form and set keuzematrix to its current version
-        form = forms.PVEParameterForm()
 
-        bouwsoorten = models.Bouwsoort.objects.filter(
+        # get user entered form and set the parameters to its version
+        form = forms.PVEParameterForm(request.POST)
+        form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(
             versie=pve_versie
         ).all()
-        type_objecten = models.TypeObject.objects.filter(
+        form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(
             versie=pve_versie
         ).all()
-        doelgroepen = models.Doelgroep.objects.filter(
+        form.fields["Bouwsoort3"].queryset = models.Bouwsoort.objects.filter(
             versie=pve_versie
         ).all()
-
-        form.fields["Bouwsoort1"].queryset = bouwsoorten
-        form.fields["Bouwsoort2"].queryset = bouwsoorten
-        form.fields["Bouwsoort3"].queryset = bouwsoorten
-        form.fields["TypeObject1"].queryset = type_objecten
-        form.fields["TypeObject2"].queryset = type_objecten
-        form.fields["TypeObject3"].queryset = type_objecten
-        form.fields["Doelgroep1"].queryset = doelgroepen
-        form.fields["Doelgroep2"].queryset = doelgroepen
-        form.fields["Doelgroep3"].queryset = doelgroepen
+        form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(
+            versie=pve_versie
+        ).all()
+        form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(
+            versie=pve_versie
+        ).all()
+        form.fields["TypeObject3"].queryset = models.TypeObject.objects.filter(
+            versie=pve_versie
+        ).all()
+        form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(
+            versie=pve_versie
+        ).all()
+        form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(
+            versie=pve_versie
+        ).all()
+        form.fields["Doelgroep3"].queryset = models.Doelgroep.objects.filter(
+            versie=pve_versie
+        ).all()
 
         # check validity
         if form.is_valid():
@@ -251,28 +259,35 @@ def GeneratePVEView(request, versie_pk):
         else:
             messages.warning(request, "Vul de verplichte keuzes in.")
 
-    # make form and set keuzematrix to its current version
     form = forms.PVEParameterForm()
-
-    bouwsoorten = models.Bouwsoort.objects.filter(
+    
+    form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(
         versie=pve_versie
     ).all()
-    type_objecten = models.TypeObject.objects.filter(
+    form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(
         versie=pve_versie
     ).all()
-    doelgroepen = models.Doelgroep.objects.filter(
+    form.fields["Bouwsoort3"].queryset = models.Bouwsoort.objects.filter(
         versie=pve_versie
     ).all()
-
-    form.fields["Bouwsoort1"].queryset = bouwsoorten
-    form.fields["Bouwsoort2"].queryset = bouwsoorten
-    form.fields["Bouwsoort3"].queryset = bouwsoorten
-    form.fields["TypeObject1"].queryset = type_objecten
-    form.fields["TypeObject2"].queryset = type_objecten
-    form.fields["TypeObject3"].queryset = type_objecten
-    form.fields["Doelgroep1"].queryset = doelgroepen
-    form.fields["Doelgroep2"].queryset = doelgroepen
-    form.fields["Doelgroep3"].queryset = doelgroepen
+    form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(
+        versie=pve_versie
+    ).all()
+    form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(
+        versie=pve_versie
+    ).all()
+    form.fields["TypeObject3"].queryset = models.TypeObject.objects.filter(
+        versie=pve_versie
+    ).all()
+    form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(
+        versie=pve_versie
+    ).all()
+    form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(
+        versie=pve_versie
+    ).all()
+    form.fields["Doelgroep3"].queryset = models.Doelgroep.objects.filter(
+        versie=pve_versie
+    ).all()
 
     # if get method, just render the empty form
     context = {}
