@@ -1531,31 +1531,31 @@ def ConnectPVE(request, pk):
     if request.method == "POST":
         form = forms.PVEParameterForm(request.POST)
         form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(
-            versie=pve_versie
+            versie=versie
         ).all()
         form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(
-            versie=pve_versie
+            versie=versie
         ).all()
         form.fields["Bouwsoort3"].queryset = models.Bouwsoort.objects.filter(
-            versie=pve_versie
+            versie=versie
         ).all()
         form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(
-            versie=pve_versie
+            versie=versie
         ).all()
         form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(
-            versie=pve_versie
+            versie=versie
         ).all()
         form.fields["TypeObject3"].queryset = models.TypeObject.objects.filter(
-            versie=pve_versie
+            versie=versie
         ).all()
         form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(
-            versie=pve_versie
+            versie=versie
         ).all()
         form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(
-            versie=pve_versie
+            versie=versie
         ).all()
         form.fields["Doelgroep3"].queryset = models.Doelgroep.objects.filter(
-            versie=pve_versie
+            versie=versie
         ).all()
 
         # check whether it's valid:
@@ -1741,31 +1741,31 @@ def ConnectPVE(request, pk):
     # form
     form = forms.PVEParameterForm()
     form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(
-        versie=pve_versie
+        versie=versie
     ).all()
     form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(
-        versie=pve_versie
+        versie=versie
     ).all()
     form.fields["Bouwsoort3"].queryset = models.Bouwsoort.objects.filter(
-        versie=pve_versie
+        versie=versie
     ).all()
     form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(
-        versie=pve_versie
+        versie=versie
     ).all()
     form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(
-        versie=pve_versie
+        versie=versie
     ).all()
     form.fields["TypeObject3"].queryset = models.TypeObject.objects.filter(
-        versie=pve_versie
+        versie=versie
     ).all()
     form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(
-        versie=pve_versie
+        versie=versie
     ).all()
     form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(
-        versie=pve_versie
+        versie=versie
     ).all()
     form.fields["Doelgroep3"].queryset = models.Doelgroep.objects.filter(
-        versie=pve_versie
+        versie=versie
     ).all()
 
     context = {}
