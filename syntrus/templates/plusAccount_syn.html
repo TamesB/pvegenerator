@@ -20,14 +20,14 @@
 <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>+ Account</p></div>
 <div class="invite-container">
     <div class="box">
-        <p class="description">Voeg een projectmanager toe aan een project, of nodig een derde uit voor een project.</p>
+        <p class="description">Voeg een projectmanager toe aan de website, of nodig een derde uit.</p>
         <form action="{% url 'plusaccount_syn' %}" method="post">
             {% csrf_token %}
             <label class="formtitle" for="{{ form.rang.id_for_label }}">Rang gebruiker:</label>
             <p class="formbox">{{ form.rang }}</p>
             <label class="formtitle" for="{{ form.project.id_for_label }}">Voor project (optioneel):</label>
             <p class="formbox">{{ form.project }}</p>
-            <label class="formtitle" for="{{ form.organisatie.id_for_label }}">Organisatie (optioneel):</label>
+            <label class="formtitle" for="{{ form.organisatie.id_for_label }}">Derde Partij (optioneel):</label>
             <p class="formbox">{{ form.organisatie }}</p>
             <label class="formtitle" for="{{ form.invitee.id_for_label }}">E-mail voor uitnodiging:</label>
             <p class="formbox">{{ form.invitee }}</p>        

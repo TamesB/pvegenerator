@@ -29,32 +29,27 @@
 <table>
   <tr class="table_head">
     <th><img src="{% static 'syntrus/svg/logo.svg' %}" class="syntr_logo"></a></th>
-    <th><p>Opmerking</p></th>
     <th><p>Status</p></th>
-    <th><p>Kostenverschil</p></th>
+    <th><p>Aanvulling</p></th>
+    <th><p>Kostenverschil (Totaal: {% if totale_kosten %}€{{totale_kosten}}{% else %}€0{% endif %})</p></th>
     <th><p>Acties</p></th>
     <th><p>Bijlage</p></th>
+    <th><p>Datum bewerkt</p></th>
   </tr>
   {% if comments %}
   {% for comment in comments %}
   <tr class="table_content">
     <td class="inhoud_box"><p>{{ comment.item.inhoud }}</p></td>
-    <td class="voldoening"><p>{% if comment.annotation %}{{ comment.annotation }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="voldoening"><p>{% if comment.status %}{{ comment.status }}{% else %}&nbsp;{% endif %}</p></td>
+    <td class="voldoening"><p>{% if comment.annotation %}{{ comment.annotation }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="kosten"><p>{% if comment.kostenConsequenties %}€ {{ comment.kostenConsequenties }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="voldoening"><a href="{% url 'deleteAnnotationPve_syn' project.id comment.id %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></p></td>
     <td class="voldoening">{% if not comment.bijlage %}<p><i>Leeg</i></p>{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" style="float:left;" target="_blank"><button class="ui icon basic button"><i class="icon download"></i></button></a><p><a href="{% url 'verwijderbijlageopmerking_syn' project.id comment.id %}" style="float: right;"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></p>{% endif %}</td>
-
+    <td class="voldoening"><p>{{ comment.datum }}</p></td>
   </tr>
   {% endfor %}
-  <tr>
-    <td class="inhoud_box">&nbsp;</td>
-    <td class="voldoening">&nbsp;</td>
-    <td class="voldoening">&nbsp;</td>
-    <td class="kosten"><p>Totaal: {% if totale_kosten %}€{{totale_kosten}}{% else %}€0{% endif %}</p></td>
-  </tr>
   {% else %}
-  <td class="inhoud_box"><i>Nog geen opmerkingen geplaatst.</i></td>
+  <td class="inhoud_box"><i>Nog geen regels aangewezen.</i></td>
   {% endif %}
 </table>
 </div>

@@ -7,8 +7,8 @@
 {% block main %}
 <div class="invite-container">
     <div class="box">
-        <p class="title">Uitnodiging voor project {{ project.naam }}</p>
-        <p class="description">Registreer een account, en u wordt doorgewezen naar de project pagina waar u opmerkingen kan geven op het PVE en het PVE kan downloaden.</p>
+        <p class="title">Uitnodiging voor de PvE Tool</p>
+        <p class="description">Maak uw wachtwoord aan, en u wordt doorgewezen naar de lijst van projecten waar u aan toegewezen bent. Uw logingegevens worden naar u gemaild.</p>
     <form action="{% url 'acceptinvite_syn' key %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
             <label for="{{ form.password1.id_for_label }}">Wachtwoord:</label>
