@@ -313,35 +313,28 @@ def GeneratePVEView(request):
     versie = models.ActieveVersie.objects.get(belegger__naam="Syntrus").versie
 
     if request.method == "POST":
-        # get user entered form
-        form = forms.PVEParameterForm(request.POST)
-        form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(
+        # make form and set keuzematrix to its current version
+        form = forms.PVEParameterForm()
+
+        bouwsoorten = models.Bouwsoort.objects.filter(
             versie=versie
         ).all()
-        form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(
+        type_objecten = models.TypeObject.objects.filter(
             versie=versie
         ).all()
-        form.fields["Bouwsoort3"].queryset = models.Bouwsoort.objects.filter(
+        doelgroepen = models.Doelgroep.objects.filter(
             versie=versie
         ).all()
-        form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(
-            versie=versie
-        ).all()
-        form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(
-            versie=versie
-        ).all()
-        form.fields["TypeObject3"].queryset = models.TypeObject.objects.filter(
-            versie=versie
-        ).all()
-        form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(
-            versie=versie
-        ).all()
-        form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(
-            versie=versie
-        ).all()
-        form.fields["Doelgroep3"].queryset = models.Doelgroep.objects.filter(
-            versie=versie
-        ).all()
+
+        form.fields["Bouwsoort1"].queryset = bouwsoorten
+        form.fields["Bouwsoort2"].queryset = bouwsoorten
+        form.fields["Bouwsoort3"].queryset = bouwsoorten
+        form.fields["TypeObject1"].queryset = type_objecten
+        form.fields["TypeObject2"].queryset = type_objecten
+        form.fields["TypeObject3"].queryset = type_objecten
+        form.fields["Doelgroep1"].queryset = doelgroepen
+        form.fields["Doelgroep2"].queryset = doelgroepen
+        form.fields["Doelgroep3"].queryset = doelgroepen
 
         # check validity
         if form.is_valid():
@@ -540,34 +533,29 @@ def GeneratePVEView(request):
         else:
             messages.warning(request, "Vul de verplichte keuzes in.")
 
+    # make form and set keuzematrix to its current version
     form = forms.PVEParameterForm()
-    form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(
+
+    bouwsoorten = models.Bouwsoort.objects.filter(
         versie=versie
     ).all()
-    form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(
+    type_objecten = models.TypeObject.objects.filter(
         versie=versie
     ).all()
-    form.fields["Bouwsoort3"].queryset = models.Bouwsoort.objects.filter(
+    doelgroepen = models.Doelgroep.objects.filter(
         versie=versie
     ).all()
-    form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(
-        versie=versie
-    ).all()
-    form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(
-        versie=versie
-    ).all()
-    form.fields["TypeObject3"].queryset = models.TypeObject.objects.filter(
-        versie=versie
-    ).all()
-    form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(
-        versie=versie
-    ).all()
-    form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(
-        versie=versie
-    ).all()
-    form.fields["Doelgroep3"].queryset = models.Doelgroep.objects.filter(
-        versie=versie
-    ).all()
+
+    form.fields["Bouwsoort1"].queryset = bouwsoorten
+    form.fields["Bouwsoort2"].queryset = bouwsoorten
+    form.fields["Bouwsoort3"].queryset = bouwsoorten
+    form.fields["TypeObject1"].queryset = type_objecten
+    form.fields["TypeObject2"].queryset = type_objecten
+    form.fields["TypeObject3"].queryset = type_objecten
+    form.fields["Doelgroep1"].queryset = doelgroepen
+    form.fields["Doelgroep2"].queryset = doelgroepen
+    form.fields["Doelgroep3"].queryset = doelgroepen
+
 
     # if get method, just render the empty form
     context = {}
