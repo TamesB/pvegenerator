@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('syntrus', '0008_frozencomments_open'),
+        ("syntrus", "0008_frozencomments_open"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='frozencomments',
-            name='open',
+            model_name="frozencomments",
+            name="open",
         ),
     ]

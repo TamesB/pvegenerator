@@ -9,14 +9,14 @@ from PVE.views import LandingView
 import debug_toolbar
 
 urlpatterns = [
-    path('__debug__/', include(debug_toolbar.urls)),
-    path('', LandingView, name="landingpage"),
-    path('beheer/', include('app.urls')),
-    path('beheer/project/', include('project.urls')),
-    path('beheer/generator/', include('generator.urls')),
-    path('beheer/users/', include('users.urls')),
-    path('admin/', admin.site.urls),
-    path('syntrus/', include('syntrus.urls')),
+    path("__debug__/", include(debug_toolbar.urls)),
+    path("", LandingView, name="landingpage"),
+    path("beheer/", include("app.urls")),
+    path("beheer/project/", include("project.urls")),
+    path("beheer/generator/", include("generator.urls")),
+    path("beheer/users/", include("users.urls")),
+    path("admin/", admin.site.urls),
+    path("syntrus/", include("syntrus.urls")),
 ]
 
 if settings.DEBUG:

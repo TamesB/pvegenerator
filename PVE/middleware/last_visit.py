@@ -4,8 +4,8 @@ from users.models import CustomUser
 
 # other user model import
 
-def last_visit_middleware(get_response):
 
+def last_visit_middleware(get_response):
     def middleware(request):
         """
         Save the time of last user visit
@@ -19,10 +19,11 @@ def last_visit_middleware(get_response):
             # is_authenticated hits db as it selects user row
             # so we will hit it only if user is not recently seen
             if not recently_seen and request.user.is_authenticated:
-                CustomUser.objects.filter(id=request.user.id) \
-                    .update(last_visit=timezone.now())
+                CustomUser.objects.filter(id=request.user.id).update(
+                    last_visit=timezone.now()
+                )
 
-                visit_time = 60 * 30    # 30 minutes
+                visit_time = 60 * 30  # 30 minutes
                 cache.set(key, 1, visit_time)
 
         return response

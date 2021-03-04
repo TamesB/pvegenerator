@@ -7,13 +7,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('syntrus', '0013_frozencomments_todo_comments'),
+        ("syntrus", "0013_frozencomments_todo_comments"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='commentreply',
-            name='status',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='syntrus.CommentStatus'),
+            model_name="commentreply",
+            name="status",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="syntrus.CommentStatus",
+            ),
         ),
     ]

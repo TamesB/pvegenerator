@@ -6,14 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('project', '0036_auto_20210204_1847'),
-        ('syntrus', '0012_auto_20210205_2057'),
+        ("project", "0036_auto_20210204_1847"),
+        ("syntrus", "0012_auto_20210205_2057"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='frozencomments',
-            name='todo_comments',
-            field=models.ManyToManyField(related_name='todo_comments', to='project.PVEItemAnnotation'),
+            model_name="frozencomments",
+            name="todo_comments",
+            field=models.ManyToManyField(
+                related_name="todo_comments", to="project.PVEItemAnnotation"
+            ),
         ),
     ]

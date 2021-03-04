@@ -8,79 +8,179 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Bouwsoort',
+            name="Bouwsoort",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('parameter', models.CharField(max_length=256)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("parameter", models.CharField(max_length=256)),
             ],
         ),
         migrations.CreateModel(
-            name='Doelgroep',
+            name="Doelgroep",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('parameter', models.CharField(max_length=256)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("parameter", models.CharField(max_length=256)),
             ],
         ),
         migrations.CreateModel(
-            name='PVEHoofdstuk',
+            name="PVEHoofdstuk",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('hoofdstuk', models.CharField(blank=True, max_length=256, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("hoofdstuk", models.CharField(blank=True, max_length=256, null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='PVEOnderdeel',
+            name="PVEOnderdeel",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('naam', models.CharField(max_length=256)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("naam", models.CharField(max_length=256)),
             ],
         ),
         migrations.CreateModel(
-            name='PVEParagraaf',
+            name="PVEParagraaf",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('paragraaf', models.CharField(blank=True, max_length=256, null=True)),
-                ('hoofdstuk', models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='app.PVEHoofdstuk')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("paragraaf", models.CharField(blank=True, max_length=256, null=True)),
+                (
+                    "hoofdstuk",
+                    models.ForeignKey(
+                        default=1,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="app.PVEHoofdstuk",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='TypeObject',
+            name="TypeObject",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('parameter', models.CharField(max_length=256)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("parameter", models.CharField(max_length=256)),
             ],
         ),
         migrations.CreateModel(
-            name='PVESubparagraaf',
+            name="PVESubparagraaf",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('subparagraaf', models.CharField(blank=True, max_length=256, null=True)),
-                ('bijlage', models.FileField(blank=True, null=True, upload_to='')),
-                ('sectie', models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='app.PVEParagraaf')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "subparagraaf",
+                    models.CharField(blank=True, max_length=256, null=True),
+                ),
+                ("bijlage", models.FileField(blank=True, null=True, upload_to="")),
+                (
+                    "sectie",
+                    models.ForeignKey(
+                        default=1,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="app.PVEParagraaf",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='PVEItem',
+            name="PVEItem",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('inhoud', models.TextField(max_length=5000)),
-                ('bijlage', models.FileField(blank=True, null=True, upload_to='attachments/%Y/%m/%d/')),
-                ('basisregel', models.BooleanField(default=False)),
-                ('Smarthome', models.BooleanField(default=False)),
-                ('AED', models.BooleanField(default=False)),
-                ('EntreeUpgrade', models.BooleanField(default=False)),
-                ('Pakketdient', models.BooleanField(default=False)),
-                ('JamesConcept', models.BooleanField(default=False)),
-                ('Bouwsoort', models.ManyToManyField(blank=True, to='app.Bouwsoort')),
-                ('Doelgroep', models.ManyToManyField(blank=True, to='app.Doelgroep')),
-                ('TypeObject', models.ManyToManyField(blank=True, to='app.TypeObject')),
-                ('hoofdstuk', models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='app.PVEHoofdstuk')),
-                ('paragraaf', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='app.PVEParagraaf')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("inhoud", models.TextField(max_length=5000)),
+                (
+                    "bijlage",
+                    models.FileField(
+                        blank=True, null=True, upload_to="attachments/%Y/%m/%d/"
+                    ),
+                ),
+                ("basisregel", models.BooleanField(default=False)),
+                ("Smarthome", models.BooleanField(default=False)),
+                ("AED", models.BooleanField(default=False)),
+                ("EntreeUpgrade", models.BooleanField(default=False)),
+                ("Pakketdient", models.BooleanField(default=False)),
+                ("JamesConcept", models.BooleanField(default=False)),
+                ("Bouwsoort", models.ManyToManyField(blank=True, to="app.Bouwsoort")),
+                ("Doelgroep", models.ManyToManyField(blank=True, to="app.Doelgroep")),
+                ("TypeObject", models.ManyToManyField(blank=True, to="app.TypeObject")),
+                (
+                    "hoofdstuk",
+                    models.ForeignKey(
+                        default=1,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="app.PVEHoofdstuk",
+                    ),
+                ),
+                (
+                    "paragraaf",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="app.PVEParagraaf",
+                    ),
+                ),
             ],
         ),
     ]

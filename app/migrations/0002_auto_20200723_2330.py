@@ -9,19 +9,23 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('project', '0001_initial'),
-        ('app', '0001_initial'),
+        ("project", "0001_initial"),
+        ("app", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='pveitem',
-            name='projects',
-            field=models.ManyToManyField(blank=True, to='project.Project'),
+            model_name="pveitem",
+            name="projects",
+            field=models.ManyToManyField(blank=True, to="project.Project"),
         ),
         migrations.AddField(
-            model_name='pvehoofdstuk',
-            name='onderdeel',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='app.PVEOnderdeel'),
+            model_name="pvehoofdstuk",
+            name="onderdeel",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app.PVEOnderdeel",
+            ),
         ),
     ]

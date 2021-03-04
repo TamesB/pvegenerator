@@ -6,16 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('project', '0021_auto_20201103_1437'),
+        ("project", "0021_auto_20201103_1437"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='pveitemannotation',
-            name='annbijlage',
-            field=models.FileField(blank=True, null=True, upload_to='OpmerkingBijlages/'),
+            model_name="pveitemannotation",
+            name="annbijlage",
+            field=models.FileField(
+                blank=True, null=True, upload_to="OpmerkingBijlages/"
+            ),
         ),
         migrations.DeleteModel(
-            name='BijlageToAnnotation',
+            name="BijlageToAnnotation",
         ),
     ]

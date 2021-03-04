@@ -8,13 +8,21 @@ import utils.upload_rename
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('project', '0012_auto_20200913_1844'),
+        ("project", "0012_auto_20200913_1844"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='pveitemannotation',
-            name='annbijlage',
-            field=models.FileField(blank=True, null=True, upload_to=functools.partial(utils.upload_rename._update_filename, *(), **{'path': 'OpmerkingBijlages'})),
+            model_name="pveitemannotation",
+            name="annbijlage",
+            field=models.FileField(
+                blank=True,
+                null=True,
+                upload_to=functools.partial(
+                    utils.upload_rename._update_filename,
+                    *(),
+                    **{"path": "OpmerkingBijlages"}
+                ),
+            ),
         ),
     ]

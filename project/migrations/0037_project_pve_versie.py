@@ -7,14 +7,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app', '0013_actieveversie'),
-        ('project', '0036_auto_20210204_1847'),
+        ("app", "0013_actieveversie"),
+        ("project", "0036_auto_20210204_1847"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='project',
-            name='pve_versie',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='app.pveversie'),
+            model_name="project",
+            name="pve_versie",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app.pveversie",
+            ),
         ),
     ]

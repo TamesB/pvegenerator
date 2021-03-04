@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('project', '0026_pveitemannotation_bijlage'),
+        ("project", "0026_pveitemannotation_bijlage"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='project',
-            name='frozenLevel',
+            model_name="project",
+            name="frozenLevel",
             field=models.IntegerField(default=0, null=True),
         ),
         migrations.AddField(
-            model_name='project',
-            name='fullyFrozen',
+            model_name="project",
+            name="fullyFrozen",
             field=models.BooleanField(default=False),
         ),
     ]

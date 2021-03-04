@@ -9,23 +9,29 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('project', '0007_auto_20200814_1702'),
+        ("project", "0007_auto_20200814_1702"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='pveitemannotation',
-            name='datum',
+            model_name="pveitemannotation",
+            name="datum",
             field=models.DateTimeField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='pveitemannotation',
-            name='gebruiker',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="pveitemannotation",
+            name="gebruiker",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='pveitemannotation',
-            name='kostenConsequenties',
-            field=models.DecimalField(blank=True, decimal_places=2, default=None, max_digits=10),
+            model_name="pveitemannotation",
+            name="kostenConsequenties",
+            field=models.DecimalField(
+                blank=True, decimal_places=2, default=None, max_digits=10
+            ),
         ),
     ]

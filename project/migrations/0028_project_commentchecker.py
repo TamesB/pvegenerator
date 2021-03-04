@@ -9,13 +9,19 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('project', '0027_auto_20201118_1407'),
+        ("project", "0027_auto_20201118_1407"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='project',
-            name='commentchecker',
-            field=models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='commentchecker', to=settings.AUTH_USER_MODEL),
+            model_name="project",
+            name="commentchecker",
+            field=models.ForeignKey(
+                default=None,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="commentchecker",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.http import JsonResponse
 
+
 def LandingView(request):
     syntrus_type = ["SB", "SOG", "SD"]
 
@@ -9,10 +10,10 @@ def LandingView(request):
     if request.user:
         if request.user.is_authenticated:
             if request.user.type_user in syntrus_type:
-                return redirect('dashboard_syn')
-            elif request.user.type_user == 'B':
-                return redirect('dashboard')
+                return redirect("dashboard_syn")
+            elif request.user.type_user == "B":
+                return redirect("dashboard")
 
     # render the page
     context = {}
-    return render(request, 'LandingPage.html', context)
+    return render(request, "LandingPage.html", context)

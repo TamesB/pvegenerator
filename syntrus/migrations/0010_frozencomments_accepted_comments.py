@@ -6,14 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('project', '0035_pveitemannotation_init_accepted'),
-        ('syntrus', '0009_remove_frozencomments_open'),
+        ("project", "0035_pveitemannotation_init_accepted"),
+        ("syntrus", "0009_remove_frozencomments_open"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='frozencomments',
-            name='accepted_comments',
-            field=models.ManyToManyField(related_name='accepted_comments', to='project.PVEItemAnnotation'),
+            model_name="frozencomments",
+            name="accepted_comments",
+            field=models.ManyToManyField(
+                related_name="accepted_comments", to="project.PVEItemAnnotation"
+            ),
         ),
     ]

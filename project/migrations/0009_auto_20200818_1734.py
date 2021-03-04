@@ -9,13 +9,15 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('project', '0008_auto_20200818_1722'),
+        ("project", "0008_auto_20200818_1722"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='pveitemannotation',
-            name='kostenConsequenties',
-            field=models.DecimalField(blank=True, decimal_places=2, default=None, max_digits=10, null=True),
+            model_name="pveitemannotation",
+            name="kostenConsequenties",
+            field=models.DecimalField(
+                blank=True, decimal_places=2, default=None, max_digits=10, null=True
+            ),
         ),
     ]

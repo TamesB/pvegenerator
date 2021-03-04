@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('syntrus', '0007_commentreply_frozencomments'),
+        ("syntrus", "0007_commentreply_frozencomments"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='frozencomments',
-            name='open',
+            model_name="frozencomments",
+            name="open",
             field=models.BooleanField(null=True),
         ),
     ]

@@ -7,69 +7,96 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app', '0002_auto_20200723_2330'),
-        ('project', '0004_auto_20200724_1541'),
+        ("app", "0002_auto_20200723_2330"),
+        ("project", "0004_auto_20200724_1541"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='project',
-            name='AED',
+            model_name="project",
+            name="AED",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='project',
-            name='EntreeUpgrade',
+            model_name="project",
+            name="EntreeUpgrade",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='project',
-            name='JamesConcept',
+            model_name="project",
+            name="JamesConcept",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='project',
-            name='Pakketdient',
+            model_name="project",
+            name="Pakketdient",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='project',
-            name='Smarthome',
+            model_name="project",
+            name="Smarthome",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='project',
-            name='bouwsoort1',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='app.Bouwsoort'),
+            model_name="project",
+            name="bouwsoort1",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app.Bouwsoort",
+            ),
         ),
         migrations.AddField(
-            model_name='project',
-            name='bouwsoort2',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, related_name='SubBouwsoort', to='app.Bouwsoort'),
+            model_name="project",
+            name="bouwsoort2",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="SubBouwsoort",
+                to="app.Bouwsoort",
+            ),
         ),
         migrations.AddField(
-            model_name='project',
-            name='doelgroep1',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='app.Doelgroep'),
+            model_name="project",
+            name="doelgroep1",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app.Doelgroep",
+            ),
         ),
         migrations.AddField(
-            model_name='project',
-            name='doelgroep2',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, related_name='SubDoelgroep', to='app.Doelgroep'),
+            model_name="project",
+            name="doelgroep2",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="SubDoelgroep",
+                to="app.Doelgroep",
+            ),
         ),
         migrations.AddField(
-            model_name='project',
-            name='pveconnected',
+            model_name="project",
+            name="pveconnected",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name='project',
-            name='typeObject1',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='app.TypeObject'),
+            model_name="project",
+            name="typeObject1",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app.TypeObject",
+            ),
         ),
         migrations.AddField(
-            model_name='project',
-            name='typeObject2',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, related_name='SubTypeObject', to='app.TypeObject'),
+            model_name="project",
+            name="typeObject2",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="SubTypeObject",
+                to="app.TypeObject",
+            ),
         ),
     ]

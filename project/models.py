@@ -4,17 +4,20 @@ from django.contrib.gis.db import models
 from django.contrib.gis import forms
 from utils.upload_rename import upload_to
 
+
 class Beleggers(models.Model):
     naam = models.CharField(max_length=100, blank=True, null=True)
-    
+
     def __str__(self):
         return f"{self.naam}"
 
+
 class ContractStatus(models.Model):
     contrstatus = models.CharField(max_length=100, blank=True)
-    
+
     def __str__(self):
         return f"{self.contrstatus}"
+
 
 # Create your models here.
 class Project(models.Model):
@@ -28,13 +31,29 @@ class Project(models.Model):
     datum_aangemaakt = models.DateTimeField(auto_now=True)
     belegger = models.ForeignKey(Beleggers, on_delete=models.CASCADE, null=True)
 
-    datum_recent_verandering = models.DateTimeField('recente_verandering', auto_now=True)
+    datum_recent_verandering = models.DateTimeField(
+        "recente_verandering", auto_now=True
+    )
 
-    pve_versie = models.ForeignKey('app.PVEVersie', on_delete=models.CASCADE, null=True)
+    pve_versie = models.ForeignKey("app.PVEVersie", on_delete=models.CASCADE, null=True)
 
-    organisaties = models.ManyToManyField('users.Organisatie', default=None, related_name="organisaties", blank=True, null=True)
-    projectmanager = models.ForeignKey('users.CustomUser', default=None, on_delete=models.CASCADE, blank=True, null=True)
-    permitted = models.ManyToManyField('users.CustomUser', default=None, related_name="permitted")
+    organisaties = models.ManyToManyField(
+        "users.Organisatie",
+        default=None,
+        related_name="organisaties",
+        blank=True,
+        null=True,
+    )
+    projectmanager = models.ForeignKey(
+        "users.CustomUser",
+        default=None,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
+    permitted = models.ManyToManyField(
+        "users.CustomUser", default=None, related_name="permitted"
+    )
     pveconnected = models.BooleanField(blank=True, null=True, default=False)
 
     # frozen level 0: all derde kunnen +opmerking doen. Frozen level 1: alleen aangegeven derde door projectmanager kan
@@ -43,17 +62,65 @@ class Project(models.Model):
     # statussen. Opmerkingen moeten wellicht bijgehouden worden. MOET NOG MIGRATEN
     frozenLevel = models.IntegerField(default=0, null=True)
     fullyFrozen = models.BooleanField(default=False)
-    commentchecker = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, blank=True, null=True, related_name="commentchecker")
+    commentchecker = models.ForeignKey(
+        "users.CustomUser",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="commentchecker",
+    )
 
-    bouwsoort1 = models.ForeignKey('app.Bouwsoort', on_delete=models.CASCADE, blank=True, null=True)
-    typeObject1 = models.ForeignKey('app.TypeObject', on_delete=models.CASCADE, blank=True, null=True)
-    doelgroep1 = models.ForeignKey('app.Doelgroep', on_delete=models.CASCADE, blank=True, null=True)
-    bouwsoort2 = models.ForeignKey('app.Bouwsoort', on_delete=models.CASCADE, blank=True, null=True, related_name='SubBouwsoort')
-    typeObject2 = models.ForeignKey('app.TypeObject', on_delete=models.CASCADE, blank=True, null=True, related_name='SubTypeObject')
-    doelgroep2 = models.ForeignKey('app.Doelgroep', on_delete=models.CASCADE, blank=True, null=True, related_name='SubDoelgroep')
-    bouwsoort3 = models.ForeignKey('app.Bouwsoort', on_delete=models.CASCADE, blank=True, null=True, related_name='SubSubBouwsoort')
-    typeObject3 = models.ForeignKey('app.TypeObject', on_delete=models.CASCADE, blank=True, null=True, related_name='SubSubTypeObject')
-    doelgroep3 = models.ForeignKey('app.Doelgroep', on_delete=models.CASCADE, blank=True, null=True, related_name='SubSubDoelgroep')
+    bouwsoort1 = models.ForeignKey(
+        "app.Bouwsoort", on_delete=models.CASCADE, blank=True, null=True
+    )
+    typeObject1 = models.ForeignKey(
+        "app.TypeObject", on_delete=models.CASCADE, blank=True, null=True
+    )
+    doelgroep1 = models.ForeignKey(
+        "app.Doelgroep", on_delete=models.CASCADE, blank=True, null=True
+    )
+    bouwsoort2 = models.ForeignKey(
+        "app.Bouwsoort",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="SubBouwsoort",
+    )
+    typeObject2 = models.ForeignKey(
+        "app.TypeObject",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="SubTypeObject",
+    )
+    doelgroep2 = models.ForeignKey(
+        "app.Doelgroep",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="SubDoelgroep",
+    )
+    bouwsoort3 = models.ForeignKey(
+        "app.Bouwsoort",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="SubSubBouwsoort",
+    )
+    typeObject3 = models.ForeignKey(
+        "app.TypeObject",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="SubSubTypeObject",
+    )
+    doelgroep3 = models.ForeignKey(
+        "app.Doelgroep",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="SubSubDoelgroep",
+    )
 
     Smarthome = models.BooleanField(default=False)
     AED = models.BooleanField(default=False)
@@ -64,20 +131,28 @@ class Project(models.Model):
     def __str__(self):
         return f"{self.naam}"
 
+
 class PVEItemAnnotation(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, default=None)
-    item = models.ForeignKey('app.PVEItem', on_delete=models.CASCADE, default=None)
+    item = models.ForeignKey("app.PVEItem", on_delete=models.CASCADE, default=None)
     annotation = models.TextField(max_length=1000, default=None, null=True)
-    status = models.ForeignKey('syntrus.CommentStatus', on_delete=models.CASCADE, default=None, null=True)
-    gebruiker = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, default=None, null=True)
+    status = models.ForeignKey(
+        "syntrus.CommentStatus", on_delete=models.CASCADE, default=None, null=True
+    )
+    gebruiker = models.ForeignKey(
+        "users.CustomUser", on_delete=models.CASCADE, default=None, null=True
+    )
     datum = models.DateTimeField(auto_now=True)
-    kostenConsequenties = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=None)
+    kostenConsequenties = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True, default=None
+    )
     bijlage = models.BooleanField(default=False, blank=True, null=True)
     init_accepted = models.BooleanField(default=False, blank=True, null=True)
 
     def __str__(self):
         return f"{self.annotation}"
 
+
 class BijlageToAnnotation(models.Model):
     ann = models.ForeignKey(PVEItemAnnotation, on_delete=models.CASCADE, default=None)
-    bijlage = models.FileField(blank=True, null=True, upload_to='OpmerkingBijlages/')
+    bijlage = models.FileField(blank=True, null=True, upload_to="OpmerkingBijlages/")

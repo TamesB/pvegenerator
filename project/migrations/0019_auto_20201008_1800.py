@@ -7,18 +7,22 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('syntrus', '0006_commentstatus'),
-        ('project', '0018_auto_20201005_1922'),
+        ("syntrus", "0006_commentstatus"),
+        ("project", "0018_auto_20201005_1922"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='pveitemannotation',
-            name='voldoet',
+            model_name="pveitemannotation",
+            name="voldoet",
         ),
         migrations.AddField(
-            model_name='pveitemannotation',
-            name='status',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='syntrus.CommentStatus'),
+            model_name="pveitemannotation",
+            name="status",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="syntrus.CommentStatus",
+            ),
         ),
     ]

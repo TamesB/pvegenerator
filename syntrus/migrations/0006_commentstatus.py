@@ -6,15 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('syntrus', '0005_remove_room_slug'),
+        ("syntrus", "0005_remove_room_slug"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CommentStatus',
+            name="CommentStatus",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.CharField(max_length=100)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("status", models.CharField(max_length=100)),
             ],
         ),
     ]

@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('project', '0020_auto_20201030_1612'),
+        ("project", "0020_auto_20201030_1612"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='bijlagetoannotation',
-            name='annbijlage',
-            field=models.FileField(blank=True, null=True, upload_to='OpmerkingBijlages/'),
+            model_name="bijlagetoannotation",
+            name="annbijlage",
+            field=models.FileField(
+                blank=True, null=True, upload_to="OpmerkingBijlages/"
+            ),
         ),
     ]

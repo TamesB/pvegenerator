@@ -6,15 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('project', '0009_auto_20200818_1734'),
+        ("project", "0009_auto_20200818_1734"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Beleggers',
+            name="Beleggers",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('naam', models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("naam", models.CharField(blank=True, max_length=100, null=True)),
             ],
         ),
     ]

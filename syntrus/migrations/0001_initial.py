@@ -7,16 +7,23 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='FAQ',
+            name="FAQ",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('vraag', models.CharField(max_length=500)),
-                ('antwoord', models.TextField(max_length=5000)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("vraag", models.CharField(max_length=500)),
+                ("antwoord", models.TextField(max_length=5000)),
             ],
         ),
     ]

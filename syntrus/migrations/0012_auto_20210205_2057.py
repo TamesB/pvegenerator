@@ -9,31 +9,56 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('syntrus', '0011_commentreply_accept'),
+        ("syntrus", "0011_commentreply_accept"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='commentreply',
-            name='bijlage',
+            model_name="commentreply",
+            name="bijlage",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name='commentreply',
-            name='datum',
+            model_name="commentreply",
+            name="datum",
             field=models.DateTimeField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='commentreply',
-            name='gebruiker',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="commentreply",
+            name="gebruiker",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.CreateModel(
-            name='BijlageToReply',
+            name="BijlageToReply",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('bijlage', models.FileField(blank=True, null=True, upload_to='OpmerkingBijlages/')),
-                ('reply', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='syntrus.CommentReply')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "bijlage",
+                    models.FileField(
+                        blank=True, null=True, upload_to="OpmerkingBijlages/"
+                    ),
+                ),
+                (
+                    "reply",
+                    models.ForeignKey(
+                        default=None,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="syntrus.CommentReply",
+                    ),
+                ),
             ],
         ),
     ]

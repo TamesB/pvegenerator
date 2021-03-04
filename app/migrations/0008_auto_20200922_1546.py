@@ -8,13 +8,21 @@ import utils.upload_rename
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app', '0007_delete_invites'),
+        ("app", "0007_delete_invites"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='pveitem',
-            name='bijlage',
-            field=models.FileField(blank=True, null=True, upload_to=functools.partial(utils.upload_rename._update_filename, *(), **{'path': 'BasisBijlages'})),
+            model_name="pveitem",
+            name="bijlage",
+            field=models.FileField(
+                blank=True,
+                null=True,
+                upload_to=functools.partial(
+                    utils.upload_rename._update_filename,
+                    *(),
+                    **{"path": "BasisBijlages"}
+                ),
+            ),
         ),
     ]

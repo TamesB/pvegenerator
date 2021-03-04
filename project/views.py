@@ -21,13 +21,14 @@ from pyproj import CRS, Transformer
 from utils import writePdf, writeDiffPdf, createBijlageZip
 import zipfile
 
+
 @staff_member_required
 def StartProjectView(request):
 
-    if request.user.type_user != 'OG' and request.user.type_user != 'B':
+    if request.user.type_user != "OG" and request.user.type_user != "B":
         raise Http404("404.")
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = forms.StartProjectForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
@@ -38,22 +39,25 @@ def StartProjectView(request):
             project.plaats = form.cleaned_data["plaats"]
             project.vhe = form.cleaned_data["vhe"]
             project.pensioenfonds = form.cleaned_data["pensioenfonds"]
-            project.statuscontract = models.ContractStatus.objects.filter(contrstatus="LOI").first()
+            project.statuscontract = models.ContractStatus.objects.filter(
+                contrstatus="LOI"
+            ).first()
             project.save()
             project.permitted.add(request.user)
 
-            return HttpResponseRedirect(reverse('connectpve', args=(project.id,)))
+            return HttpResponseRedirect(reverse("connectpve", args=(project.id,)))
 
     # form
     form = forms.StartProjectForm()
 
     context = {}
     context["form"] = form
-    return render(request, 'startproject.html', context)
+    return render(request, "startproject.html", context)
+
 
 @staff_member_required
 def ConnectPVEView(request, pk):
-    if request.user.type_user != 'OG' and request.user.type_user != 'B':
+    if request.user.type_user != "OG" and request.user.type_user != "B":
         raise Http404("404.")
 
     project = models.Project.objects.filter(id=pk).first()
@@ -61,89 +65,114 @@ def ConnectPVEView(request, pk):
     if project.pveconnected == True:
         context = {}
         context["project"] = project
-        return render(request, 'viewproject.html', context)
+        return render(request, "viewproject.html", context)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = PVEParameterForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             # get parameters, find all pveitems with that
-            (Bouwsoort1, TypeObject1, Doelgroep1, Bouwsoort2, TypeObject2, Doelgroep2, Smarthome,
-             AED, EntreeUpgrade, Pakketdient, JamesConcept) = (
-                form.cleaned_data["Bouwsoort1"], form.cleaned_data["TypeObject1"],
-                form.cleaned_data["Doelgroep1"], form.cleaned_data["Bouwsoort2"], form.cleaned_data["TypeObject2"],
-                form.cleaned_data["Doelgroep2"], form.cleaned_data["Smarthome"],
-                form.cleaned_data["AED"], form.cleaned_data["EntreeUpgrade"],
-                form.cleaned_data["Pakketdient"], form.cleaned_data["JamesConcept"] )
+            (
+                Bouwsoort1,
+                TypeObject1,
+                Doelgroep1,
+                Bouwsoort2,
+                TypeObject2,
+                Doelgroep2,
+                Smarthome,
+                AED,
+                EntreeUpgrade,
+                Pakketdient,
+                JamesConcept,
+            ) = (
+                form.cleaned_data["Bouwsoort1"],
+                form.cleaned_data["TypeObject1"],
+                form.cleaned_data["Doelgroep1"],
+                form.cleaned_data["Bouwsoort2"],
+                form.cleaned_data["TypeObject2"],
+                form.cleaned_data["Doelgroep2"],
+                form.cleaned_data["Smarthome"],
+                form.cleaned_data["AED"],
+                form.cleaned_data["EntreeUpgrade"],
+                form.cleaned_data["Pakketdient"],
+                form.cleaned_data["JamesConcept"],
+            )
 
             # add bouwsoort to the project
             project.bouwsoort1 = Bouwsoort.objects.filter(parameter=Bouwsoort1).first()
 
             # Entered parameters are in the manytomany parameters of the object
-            basic_PVE = PVEItem.objects.filter(
-                basisregel=True)
+            basic_PVE = PVEItem.objects.filter(basisregel=True)
             basic_PVE = basic_PVE.union(
-                PVEItem.objects.filter(
-                    Bouwsoort__parameter__contains=Bouwsoort1))
+                PVEItem.objects.filter(Bouwsoort__parameter__contains=Bouwsoort1)
+            )
 
             if Bouwsoort2:
                 basic_PVE = basic_PVE.union(
-                    PVEItem.objects.filter(
-                        Bouwsoort__parameter__contains=Bouwsoort2))
-                project.bouwsoort2 = Bouwsoort.objects.filter(parameter=Bouwsoort2).first()
+                    PVEItem.objects.filter(Bouwsoort__parameter__contains=Bouwsoort2)
+                )
+                project.bouwsoort2 = Bouwsoort.objects.filter(
+                    parameter=Bouwsoort2
+                ).first()
 
             if TypeObject1:
                 basic_PVE = basic_PVE.union(
-                    PVEItem.objects.filter(
-                        TypeObject__parameter__contains=TypeObject1))
-                project.typeObject1 = TypeObject.objects.filter(parameter=TypeObject1).first()
+                    PVEItem.objects.filter(TypeObject__parameter__contains=TypeObject1)
+                )
+                project.typeObject1 = TypeObject.objects.filter(
+                    parameter=TypeObject1
+                ).first()
 
             if TypeObject2:
                 basic_PVE = basic_PVE.union(
-                    PVEItem.objects.filter(
-                        TypeObject__parameter__contains=TypeObject2))
-                project.typeObject2 = TypeObject.objects.filter(parameter=TypeObject2).first()
+                    PVEItem.objects.filter(TypeObject__parameter__contains=TypeObject2)
+                )
+                project.typeObject2 = TypeObject.objects.filter(
+                    parameter=TypeObject2
+                ).first()
 
             if Doelgroep1:
                 basic_PVE = basic_PVE.union(
-                    PVEItem.objects.filter(
-                        Doelgroep__parameter__contains=Doelgroep1))
-                project.doelgroep1 = Doelgroep.objects.filter(parameter=Doelgroep1).first()
+                    PVEItem.objects.filter(Doelgroep__parameter__contains=Doelgroep1)
+                )
+                project.doelgroep1 = Doelgroep.objects.filter(
+                    parameter=Doelgroep1
+                ).first()
 
             if Doelgroep2:
                 basic_PVE = basic_PVE.union(
-                    PVEItem.objects.filter(
-                        Doelgroep__parameter__contains=Doelgroep2))
-                project.doelgroep2 = Doelgroep.objects.filter(parameter=Doelgroep2).first()
-
+                    PVEItem.objects.filter(Doelgroep__parameter__contains=Doelgroep2)
+                )
+                project.doelgroep2 = Doelgroep.objects.filter(
+                    parameter=Doelgroep2
+                ).first()
 
             # If line is extra (AED, Smarthome, Entree Upgrade); Always include
             # if box checked
             if AED:
-                basic_PVE = basic_PVE.union(
-                    PVEItem.objects.filter(Q(AED=True)))
-                
+                basic_PVE = basic_PVE.union(PVEItem.objects.filter(Q(AED=True)))
+
                 project.AED = True
 
             if Smarthome:
-                basic_PVE = basic_PVE.union(
-                    PVEItem.objects.filter(Q(Smarthome=True)))
+                basic_PVE = basic_PVE.union(PVEItem.objects.filter(Q(Smarthome=True)))
                 # add the parameter to the project
                 project.Smarthome = True
 
             if EntreeUpgrade:
                 basic_PVE = basic_PVE.union(
-                    PVEItem.objects.filter(Q(EntreeUpgrade=True)))
+                    PVEItem.objects.filter(Q(EntreeUpgrade=True))
+                )
                 project.EntreeUpgrade = True
 
             if Pakketdient:
-                basic_PVE = basic_PVE.union(
-                    PVEItem.objects.filter(Q(Pakketdient=True)))
+                basic_PVE = basic_PVE.union(PVEItem.objects.filter(Q(Pakketdient=True)))
                 project.Pakketdient = True
 
             if JamesConcept:
                 basic_PVE = basic_PVE.union(
-                    PVEItem.objects.filter(Q(JamesConcept=True)))
+                    PVEItem.objects.filter(Q(JamesConcept=True))
+                )
                 project.JamesConcept = True
 
             # add the project to all the pve items
@@ -156,7 +185,7 @@ def ConnectPVEView(request, pk):
 
             context = {}
             context["project"] = project
-            return render(request, 'viewproject.html', context)
+            return render(request, "viewproject.html", context)
 
     # form
     form = PVEParameterForm()
@@ -164,45 +193,56 @@ def ConnectPVEView(request, pk):
     context = {}
     context["form"] = form
     context["project"] = project
-    return render(request, 'connectpve.html', context)
+    return render(request, "connectpve.html", context)
+
 
 @staff_member_required
 def ProjectOverviewView(request):
-    if not models.Project.objects.filter(permitted__username__contains=request.user.username):
+    if not models.Project.objects.filter(
+        permitted__username__contains=request.user.username
+    ):
         raise Http404("Je heb geen projecten waar je toegang tot heb.")
-    
+
     context = {}
-    context["projects"] = models.Project.objects.filter(permitted__username__contains=request.user.username)
-    return render(request, 'projectoverview.html', context)
+    context["projects"] = models.Project.objects.filter(
+        permitted__username__contains=request.user.username
+    )
+    return render(request, "projectoverview.html", context)
+
 
 @staff_member_required
 def AllProjectsView(request):
-    if request.user.type_user != 'B':
+    if request.user.type_user != "B":
         raise Http404("404.")
-    
+
     projects = models.Project.objects.all()
-    locations = [[project.naam, project.plaats.x, project.plaats.y] for project in projects]
+    locations = [
+        [project.naam, project.plaats.x, project.plaats.y] for project in projects
+    ]
 
     context = {}
     context["projects"] = models.Project.objects.all()
     context["locations"] = locations
-    return render(request, 'allprojectoverview.html', context)
+    return render(request, "allprojectoverview.html", context)
+
 
 @staff_member_required
 def ProjectViewView(request, pk):
     pk = int(pk)
 
     if not models.Project.objects.filter(id=pk):
-        raise Http404('404')
+        raise Http404("404")
 
-    if request.user.type_user != 'B':
-        if not models.Project.objects.filter(id=pk, permitted__username__contains=request.user.username):
-            raise Http404('404')
+    if request.user.type_user != "B":
+        if not models.Project.objects.filter(
+            id=pk, permitted__username__contains=request.user.username
+        ):
+            raise Http404("404")
 
     project = models.Project.objects.filter(id=pk).first()
-    
+
     transformer = Transformer.from_crs("EPSG:3857", "EPSG:4326")
-    x,y = transformer.transform(project.plaats.x, project.plaats.y)
+    x, y = transformer.transform(project.plaats.x, project.plaats.y)
 
     location = {}
     location["type"] = "Point"
@@ -211,37 +251,40 @@ def ProjectViewView(request, pk):
     context = {}
     context["project"] = project
     context["location"] = location
-    return render(request, 'viewproject.html', context)
+    return render(request, "viewproject.html", context)
+
 
 @login_required
 def download_pve(request, pk):
     if not models.Project.objects.filter(id=pk):
-        raise Http404('404')
-    
-    if request.user.type_user != 'B':
-        if not models.Project.objects.filter(id=pk, permitted__username__contains=request.user.username):
-            raise Http404('404')
+        raise Http404("404")
+
+    if request.user.type_user != "B":
+        if not models.Project.objects.filter(
+            id=pk, permitted__username__contains=request.user.username
+        ):
+            raise Http404("404")
 
     project = models.Project.objects.filter(id=pk).first()
     basic_PVE = PVEItem.objects.filter(projects__id__contains=pk)
 
     # make sure pve is ordered
-    basic_PVE = basic_PVE.order_by('id')
+    basic_PVE = basic_PVE.order_by("id")
     # make pdf
     parameters = []
 
     if project.bouwsoort1:
-        parameters += f"{project.bouwsoort1.parameter} (Hoofd)",
+        parameters += (f"{project.bouwsoort1.parameter} (Hoofd)",)
     if project.bouwsoort2:
-        parameters += f"{project.bouwsoort2.parameter} (Sub)",
+        parameters += (f"{project.bouwsoort2.parameter} (Sub)",)
     if project.typeObject1:
-        parameters += f"{project.typeObject1.parameter} (Hoofd)",
+        parameters += (f"{project.typeObject1.parameter} (Hoofd)",)
     if project.typeObject2:
-        parameters += f"{project.typeObject2.parameter} (Sub)",
+        parameters += (f"{project.typeObject2.parameter} (Sub)",)
     if project.doelgroep1:
-        parameters += f"{project.doelgroep1.parameter} (Hoofd)",
+        parameters += (f"{project.doelgroep1.parameter} (Hoofd)",)
     if project.doelgroep2:
-        parameters += f"{project.doelgroep2.parameter} (Sub)",
+        parameters += (f"{project.doelgroep2.parameter} (Sub)",)
 
     date = datetime.datetime.now()
 
@@ -251,7 +294,7 @@ def download_pve(request, pk):
         date.strftime("%S"),
         date.strftime("%d"),
         date.strftime("%m"),
-        date.strftime("%Y")
+        date.strftime("%Y"),
     )
 
     filename = f"PvE-{fileExt}"
@@ -274,18 +317,21 @@ def download_pve(request, pk):
     context["itemsPVE"] = basic_PVE
     context["filename"] = filename
     context["zipFilename"] = zipFilename
-    return render(request, 'PVEResult.html', context)
+    return render(request, "PVEResult.html", context)
+
 
 @staff_member_required
 def searchProjectPveItem(request, project_id):
     if not models.Project.objects.filter(id=project_id):
         raise Http404("404")
 
-    if request.user.type_user != 'B':
-        if not models.Project.objects.filter(id=project_id, permitted__username__contains=request.user.username):
-            raise Http404('404')
+    if request.user.type_user != "B":
+        if not models.Project.objects.filter(
+            id=project_id, permitted__username__contains=request.user.username
+        ):
+            raise Http404("404")
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = forms.SearchPVEItemForm(request.POST)
         if form.is_valid():
             inhoud = form.cleaned_data["inhoud"]
@@ -302,7 +348,7 @@ def searchProjectPveItem(request, project_id):
     context = {}
     context["project_id"] = project_id
     context["form"] = form
-    return render(request, 'projectItemSearch.html', context)
+    return render(request, "projectItemSearch.html", context)
 
 
 @staff_member_required
@@ -310,74 +356,91 @@ def viewAnnotations(request, project_id):
     if not models.Project.objects.filter(id=project_id):
         raise Http404("404")
 
-    if request.user.type_user != 'B':
-        if not models.Project.objects.filter(id=project_id, permitted__username__contains=request.user.username):
-            raise Http404('404')
-    
-    annotations = models.PVEItemAnnotation.objects.filter(project__id=project_id).order_by('-datum')
+    if request.user.type_user != "B":
+        if not models.Project.objects.filter(
+            id=project_id, permitted__username__contains=request.user.username
+        ):
+            raise Http404("404")
+
+    annotations = models.PVEItemAnnotation.objects.filter(
+        project__id=project_id
+    ).order_by("-datum")
 
     totale_kosten = 0
     for annotation in annotations:
         if annotation.kostenConsequenties:
             totale_kosten += annotation.kostenConsequenties
-    
+
     context = {}
     context["annotations"] = annotations
     context["project_id"] = project_id
     context["totale_kosten"] = totale_kosten
-    return render(request, 'viewAnnotations.html', context)
+    return render(request, "viewAnnotations.html", context)
+
 
 @staff_member_required
 def viewItemAnnotations(request, project_id, item_id):
     if not models.Project.objects.filter(id=project_id):
         raise Http404("404")
 
-    if request.user.type_user != 'B':
-        if not models.Project.objects.filter(id=project_id, permitted__username__contains=request.user.username):
-            raise Http404('404')
-    
+    if request.user.type_user != "B":
+        if not models.Project.objects.filter(
+            id=project_id, permitted__username__contains=request.user.username
+        ):
+            raise Http404("404")
+
     if not PVEItem.objects.filter(id=item_id):
         raise Http404("404")
 
     item = PVEItem.objects.filter(id=item_id).first()
-    annotations = models.PVEItemAnnotation.objects.filter(project__id=project_id).order_by('-datum')
-    annotationsitem = models.PVEItemAnnotation.objects.filter(project__id=project_id, item__id=item_id)
-    annotationsitem = annotationsitem.order_by('datum')
+    annotations = models.PVEItemAnnotation.objects.filter(
+        project__id=project_id
+    ).order_by("-datum")
+    annotationsitem = models.PVEItemAnnotation.objects.filter(
+        project__id=project_id, item__id=item_id
+    )
+    annotationsitem = annotationsitem.order_by("datum")
 
     totale_kosten = 0
     for annotation in annotations:
         if annotation.kostenConsequenties:
             totale_kosten += annotation.kostenConsequenties
-    
+
     context = {}
     context["PVEItem"] = item
     context["annotations"] = annotations
     context["annotationsitem"] = annotationsitem
     context["project_id"] = project_id
     context["totale_kosten"] = totale_kosten
-    return render(request, 'annotationItemView.html', context)
+    return render(request, "annotationItemView.html", context)
+
 
 @staff_member_required
 def viewOwnAnnotations(request):
-    annotations = models.PVEItemAnnotation.objects.filter(gebruiker=request.user).order_by('-datum')
+    annotations = models.PVEItemAnnotation.objects.filter(
+        gebruiker=request.user
+    ).order_by("-datum")
 
     context = {}
     context["annotations"] = annotations
-    return render(request, 'viewOwnAnnotations.html', context)
+    return render(request, "viewOwnAnnotations.html", context)
+
 
 @staff_member_required
 def addAnnotationPve(request, project_id, item_id):
     if not models.Project.objects.filter(id=project_id):
         raise Http404("404")
 
-    if request.user.type_user != 'B':
-        if not models.Project.objects.filter(id=project_id, permitted__username__contains=request.user.username):
-            raise Http404('404')
+    if request.user.type_user != "B":
+        if not models.Project.objects.filter(
+            id=project_id, permitted__username__contains=request.user.username
+        ):
+            raise Http404("404")
 
     if not PVEItem.objects.filter(id=item_id):
-        raise Http404("404") 
+        raise Http404("404")
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = forms.PVEItemAnnotationForm(request.POST)
         if form.is_valid():
             annotation = models.PVEItemAnnotation()
@@ -386,11 +449,13 @@ def addAnnotationPve(request, project_id, item_id):
             annotation.annotation = form.cleaned_data["annotation"]
             annotation.item = PVEItem.objects.filter(id=item_id).first()
             if form.cleaned_data["kostenConsequenties"]:
-                annotation.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+                annotation.kostenConsequenties = form.cleaned_data[
+                    "kostenConsequenties"
+                ]
             annotation.save()
 
-            messages.warning(request, 'Opmerking toegevoegd.')
-            return HttpResponseRedirect(reverse('searchpveitem', args=(project_id,)))
+            messages.warning(request, "Opmerking toegevoegd.")
+            return HttpResponseRedirect(reverse("searchpveitem", args=(project_id,)))
     else:
         form = forms.PVEItemAnnotationForm()
 
@@ -398,48 +463,57 @@ def addAnnotationPve(request, project_id, item_id):
     context["form"] = form
     context["project_id"] = project_id
     context["item_id"] = item_id
-    return render(request, 'addAnnotation.html', context)
+    return render(request, "addAnnotation.html", context)
+
 
 @staff_member_required
 def editAnnotationPve(request, project_id, ann_id):
     # check if project exists
     if not models.Project.objects.filter(id=project_id):
         raise Http404("404")
-    
+
     # check if user is authorized to project
-    if request.user.type_user != 'B':
-        if not models.Project.objects.filter(id=project_id, permitted__username__contains=request.user.username):
-            raise Http404('404')
-    
+    if request.user.type_user != "B":
+        if not models.Project.objects.filter(
+            id=project_id, permitted__username__contains=request.user.username
+        ):
+            raise Http404("404")
+
     # check if user placed that annotation
     if not models.PVEItemAnnotation.objects.filter(id=ann_id, gebruiker=request.user):
         raise Http404("404")
-    
-    annotation = models.PVEItemAnnotation.objects.filter(id=ann_id, gebruiker=request.user).first()
+
+    annotation = models.PVEItemAnnotation.objects.filter(
+        id=ann_id, gebruiker=request.user
+    ).first()
     annotations = models.PVEItemAnnotation.objects.filter(gebruiker=request.user)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = forms.PVEItemAnnotationForm(request.POST)
         if form.is_valid():
             annotation.annotation = form.cleaned_data["annotation"]
             annotation.datum = datetime.datetime.now()
             if form.cleaned_data["kostenConsequenties"]:
-                annotation.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+                annotation.kostenConsequenties = form.cleaned_data[
+                    "kostenConsequenties"
+                ]
             annotation.save()
 
-            messages.warning(request, 'Opmerking bewerkt.')
-            return HttpResponseRedirect(reverse('myannotations'))
+            messages.warning(request, "Opmerking bewerkt.")
+            return HttpResponseRedirect(reverse("myannotations"))
     else:
-        form = forms.PVEItemAnnotationForm(initial={
-            'annotation': f'{annotation.annotation}',
-            'kostenConsequenties': f'{annotation.kostenConsequenties}',
-            })
+        form = forms.PVEItemAnnotationForm(
+            initial={
+                "annotation": f"{annotation.annotation}",
+                "kostenConsequenties": f"{annotation.kostenConsequenties}",
+            }
+        )
 
     context = {}
     context["annotation"] = annotation
     context["form"] = form
     context["annotations"] = annotations
-    return render(request, 'editAnnotationModal.html', context)
+    return render(request, "editAnnotationModal.html", context)
 
 
 @staff_member_required
@@ -447,12 +521,14 @@ def deleteAnnotationPve(request, project_id, ann_id):
     # check if project exists
     if not models.Project.objects.filter(id=project_id):
         raise Http404("404")
-    
+
     # check if user is authorized to project
-    if request.user.type_user != 'B':
-        if not models.Project.objects.filter(id=project_id, permitted__username__contains=request.user.username):
-            raise Http404('404')
-    
+    if request.user.type_user != "B":
+        if not models.Project.objects.filter(
+            id=project_id, permitted__username__contains=request.user.username
+        ):
+            raise Http404("404")
+
     # check if user placed that annotation
     if not models.PVEItemAnnotation.objects.filter(id=ann_id, gebruiker=request.user):
         raise Http404("404")
@@ -461,11 +537,11 @@ def deleteAnnotationPve(request, project_id, ann_id):
     annotation = models.PVEItemAnnotation.objects.filter(id=ann_id).first()
 
     if request.method == "POST":
-        messages.warning(request, f'Opmerking van {annotation.project} verwijderd.')
+        messages.warning(request, f"Opmerking van {annotation.project} verwijderd.")
         annotation.delete()
-        return HttpResponseRedirect(reverse('myannotations'))
+        return HttpResponseRedirect(reverse("myannotations"))
 
     context = {}
     context["annotation"] = annotation
     context["annotations"] = annotations
-    return render(request, 'deleteAnnotationModal.html', context)
+    return render(request, "deleteAnnotationModal.html", context)

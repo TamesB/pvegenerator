@@ -7,50 +7,88 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('project', '0036_auto_20210204_1847'),
-        ('app', '0010_auto_20201116_1701'),
+        ("project", "0036_auto_20210204_1847"),
+        ("app", "0010_auto_20201116_1701"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PVEVersie',
+            name="PVEVersie",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('versie', models.CharField(blank=True, max_length=50, null=True)),
-                ('belegger', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='project.beleggers')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("versie", models.CharField(blank=True, max_length=50, null=True)),
+                (
+                    "belegger",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="project.beleggers",
+                    ),
+                ),
             ],
         ),
         migrations.DeleteModel(
-            name='PVESubparagraaf',
+            name="PVESubparagraaf",
         ),
         migrations.AddField(
-            model_name='bouwsoort',
-            name='versie',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='app.pveversie'),
+            model_name="bouwsoort",
+            name="versie",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app.pveversie",
+            ),
         ),
         migrations.AddField(
-            model_name='doelgroep',
-            name='versie',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='app.pveversie'),
+            model_name="doelgroep",
+            name="versie",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app.pveversie",
+            ),
         ),
         migrations.AddField(
-            model_name='pvehoofdstuk',
-            name='versie',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='app.pveversie'),
+            model_name="pvehoofdstuk",
+            name="versie",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app.pveversie",
+            ),
         ),
         migrations.AddField(
-            model_name='pveitem',
-            name='versie',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='app.pveversie'),
+            model_name="pveitem",
+            name="versie",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app.pveversie",
+            ),
         ),
         migrations.AddField(
-            model_name='pveparagraaf',
-            name='versie',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='app.pveversie'),
+            model_name="pveparagraaf",
+            name="versie",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app.pveversie",
+            ),
         ),
         migrations.AddField(
-            model_name='typeobject',
-            name='versie',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='app.pveversie'),
+            model_name="typeobject",
+            name="versie",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app.pveversie",
+            ),
         ),
     ]

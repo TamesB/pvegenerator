@@ -11,18 +11,24 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('project', '0001_initial'),
+        ("project", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='project',
-            name='permitted',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="project",
+            name="permitted",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='project',
-            name='statuscontract',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='project.ContractStatus'),
+            model_name="project",
+            name="statuscontract",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="project.ContractStatus"
+            ),
         ),
     ]

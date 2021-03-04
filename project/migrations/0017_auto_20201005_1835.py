@@ -9,18 +9,23 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('project', '0016_pveitemannotation_voldoet'),
+        ("project", "0016_pveitemannotation_voldoet"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='pveitemannotation',
-            name='annotation',
+            model_name="pveitemannotation",
+            name="annotation",
             field=models.TextField(default=None, max_length=1000, null=True),
         ),
         migrations.AlterField(
-            model_name='pveitemannotation',
-            name='gebruiker',
-            field=models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="pveitemannotation",
+            name="gebruiker",
+            field=models.ForeignKey(
+                default=None,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]
