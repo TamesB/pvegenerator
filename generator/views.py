@@ -14,7 +14,7 @@ from django.shortcuts import render
 from app import models
 from utils import createBijlageZip, writeDiffPdf, writePdf
 
-from . import forms, models
+from . import forms
 
 
 # Create your views here.
