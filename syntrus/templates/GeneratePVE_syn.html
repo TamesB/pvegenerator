@@ -15,7 +15,7 @@
   <div class="active section">Genereer PvE</div>
 </div>
 
-<div class="general_title"><img src="{% static 'syntrus/img/genereer.png'%}" class="title_img"></img><p>Genereer PVE</p></div>
+<div class="general_title"><img src="{% static 'syntrus/img/genereer.png'%}" class="title_img"></img><p>Genereer PVE (Actieve Versie: {{ versie.versie }})</p></div>
 <div class="generator_form">
     <form action="{% url 'generate_syn' %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}

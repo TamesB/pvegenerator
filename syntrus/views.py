@@ -419,6 +419,7 @@ def GeneratePVEView(request):
     # if get method, just render the empty form
     context = {}
     context["form"] = form
+    context["versie"] = versie
     return render(request, 'GeneratePVE_syn.html', context)
 
 @login_required
@@ -1147,6 +1148,9 @@ def ConnectPVE(request, pk):
 
     project = get_object_or_404(Project, pk=pk)
 
+    # we get the active version of the pve based on what is active right now
+    versie = models.ActieveVersie.objects.filter(belegger__naam="Syntrus").versie
+
     if project.pveconnected:
         return render(request, '404_syn.html')
 
@@ -1173,9 +1177,6 @@ def ConnectPVE(request, pk):
                 form.cleaned_data["Doelgroep3"], form.cleaned_data["Smarthome"],
                 form.cleaned_data["AED"], form.cleaned_data["EntreeUpgrade"],
                 form.cleaned_data["Pakketdient"], form.cleaned_data["JamesConcept"] )
-
-            # we get the active version of the pve based on what is active right now
-            versie = models.ActieveVersie.objects.filter(belegger__naam="Syntrus").versie
 
             # Entered parameters are in the manytomany parameters of the object
             basic_PVE = models.PVEItem.objects.filter(Q(versie=versie) & Q(basisregel=True))
@@ -1286,6 +1287,7 @@ def ConnectPVE(request, pk):
     context = {}
     context["form"] = form
     context["project"] = project
+    context["versie"] = versie
     return render(request, 'ConnectPVE_syn.html', context)
 
 
