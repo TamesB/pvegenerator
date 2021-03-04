@@ -1,13 +1,14 @@
 # Author: Tames Boon
 
 import os
-import environ
+import platform
+
+import dj_database_url
 import django_heroku
+import environ
+from django.utils.log import DEFAULT_LOGGING
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-import platform
-import dj_database_url
-from django.utils.log import DEFAULT_LOGGING
 
 root = environ.Path(__file__)
 env = environ.Env()

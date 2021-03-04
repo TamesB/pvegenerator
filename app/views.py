@@ -1,27 +1,28 @@
 # Author: Tames Boon
 
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.urls import reverse
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Q
-from utils import writePdf
-from utils import writeExcel
 import datetime
-import os
-from django.conf import settings
 import mimetypes
-from . import models
-from users.models import CustomUser
-from project.models import Project, Beleggers
-from . import forms
-import magic
-from django.core.mail import send_mail
+import os
+
 import boto3
 import botocore
+import magic
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.db.models import Q
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect, render
+from django.urls import reverse
+
+from project.models import Beleggers, Project
+from users.models import CustomUser
+from utils import writeExcel, writePdf
+
+from . import forms, models
 
 
 def LoginPageView(request):

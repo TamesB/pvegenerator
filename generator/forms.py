@@ -1,6 +1,7 @@
 from django import forms
-from app.models import PVEItem, Bouwsoort, TypeObject, Doelgroep
 from django.forms import ModelForm
+
+from app.models import Bouwsoort, Doelgroep, PVEItem, TypeObject
 
 
 class PVEParameterForm(ModelForm):

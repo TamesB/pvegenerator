@@ -1,5 +1,7 @@
-from django.contrib.auth.models import BaseUserManager
 import datetime
+
+from django.contrib.auth.models import BaseUserManager
+
 
 class CustomUserManager(BaseUserManager):
 

@@ -1,18 +1,21 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Q
-from utils import writePdf, writeDiffPdf, createBijlageZip
-from django.contrib import messages
 import datetime
-import os
-from django.conf import settings
 import mimetypes
-from . import models
-from app import models
-from . import forms
+import os
 import zipfile
+
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+
+from app import models
+from utils import createBijlageZip, writeDiffPdf, writePdf
+
+from . import forms, models
+
 
 # Create your views here.
 @staff_member_required

@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
 from django.conf import settings
 from django.http import JsonResponse
+from django.shortcuts import redirect, render
 
 
 def LandingView(request):

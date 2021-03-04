@@ -1,9 +1,10 @@
 # Author: Tames Boon
 
-from django.db import models
 from django.contrib.auth.models import AbstractUser
-from utils.upload_rename import upload_to
+from django.db import models
+
 from project.models import Beleggers
+from utils.upload_rename import upload_to
 
 
 class PVEVersie(models.Model):

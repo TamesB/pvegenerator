@@ -1,25 +1,27 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.urls import reverse
-from django.db import IntegrityError
+import datetime
+import mimetypes
+import os
+import zipfile
+
+from django.conf import settings
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
+from django.db import IntegrityError
 from django.db.models import Q
-import datetime
-import os
-from django.conf import settings
-import mimetypes
-from . import models
-from app.models import PVEItem, Bouwsoort, TypeObject, Doelgroep
-from generator.forms import PVEParameterForm
-from . import forms
-from users.forms import KoppelDerdeUser, AcceptInvitationForm
-from users.models import CustomUser
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from pyproj import CRS, Transformer
-from utils import writePdf, writeDiffPdf, createBijlageZip
-import zipfile
+
+from app.models import Bouwsoort, Doelgroep, PVEItem, TypeObject
+from generator.forms import PVEParameterForm
+from users.forms import AcceptInvitationForm, KoppelDerdeUser
+from users.models import CustomUser
+from utils import createBijlageZip, writeDiffPdf, writePdf
+
+from . import forms, models
 
 
 @staff_member_required

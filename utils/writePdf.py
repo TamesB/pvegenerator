@@ -1,18 +1,19 @@
 # Author: Tames Boon
 
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.rl_config import defaultPageSize
+import datetime
+import os.path
+
+from django.conf import settings
 from reportlab.lib import colors
-from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.lib.units import inch
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-import datetime
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
+from reportlab.rl_config import defaultPageSize
 
 from app import models
-from django.conf import settings
-import os.path
 
 
 class PDFMaker:

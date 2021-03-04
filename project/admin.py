@@ -1,12 +1,9 @@
 from django.contrib import admin
 from django.contrib.gis.admin import GeoModelAdmin
-from .models import (
-    Project,
-    ContractStatus,
-    Beleggers,
-    PVEItemAnnotation,
-    BijlageToAnnotation,
-)
+
+from .models import (Beleggers, BijlageToAnnotation, ContractStatus, Project,
+                     PVEItemAnnotation)
+
 
 # Register your models here.
 class CustomGeoAdmin(GeoModelAdmin):

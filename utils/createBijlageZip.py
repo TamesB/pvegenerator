@@ -1,13 +1,15 @@
-from app import models
-from django.conf import settings
+import logging
 import os
+import urllib
 import zipfile
 from os.path import basename
-import urllib
+
+import boto3
 import botocore
 from botocore.exceptions import ClientError
-import logging
-import boto3
+from django.conf import settings
+
+from app import models
 
 
 class ZipMaker:

@@ -1,6 +1,7 @@
 # Author: Tames Boon
 
 from django.urls import path
+
 from . import views
 
 # Urls for the specific app

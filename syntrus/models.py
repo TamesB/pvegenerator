@@ -1,7 +1,9 @@
-from django.db import models
-from users.models import CustomUser
-from project.models import Project, PVEItemAnnotation
 import datetime
+
+from django.db import models
+
+from project.models import Project, PVEItemAnnotation
+from users.models import CustomUser
 
 
 class Room(models.Model):

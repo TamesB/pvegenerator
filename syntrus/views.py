@@ -1,50 +1,43 @@
-from django.db import connection
-from django.db.models import Q, Sum
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
-from django.urls import reverse
-from django.utils import timezone
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
-from django.forms import formset_factory, modelformset_factory
-from django.core.files import storage
-from django.core.mail import send_mail
-from django.conf import settings
-from syntrus import forms
-from project.models import Project, PVEItemAnnotation, Beleggers, BijlageToAnnotation
-from users.models import Invitation, CustomUser, Organisatie
-from users.forms import AcceptInvitationForm
-from syntrus.models import (
-    FAQ,
-    Room,
-    CommentStatus,
-    FrozenComments,
-    CommentReply,
-    BijlageToReply,
-)
-from syntrus.forms import (
-    AddOrganisatieForm,
-    KoppelDerdeUserForm,
-    StartProjectForm,
-    BijlageToAnnotationForm,
-    FirstFreezeForm,
-    BijlageToReplyForm,
-)
-from app import models
-from utils import writePdf, createBijlageZip
-from utils.writePdf import PDFMaker
-from utils.createBijlageZip import ZipMaker
-import secrets
-import pytz
-import mimetypes
-import boto3
 import datetime
+import mimetypes
+import secrets
+
+import boto3
 import botocore
+import pytz
 from botocore.client import Config
 from botocore.exceptions import ClientError
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.core.files import storage
+from django.core.mail import send_mail
+from django.db import connection
+from django.db.models import Q, Sum
+from django.forms import formset_factory, modelformset_factory
+from django.http import (Http404, HttpResponse, HttpResponseRedirect,
+                         JsonResponse)
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils import timezone
 from geopy.geocoders import Nominatim
+
+from app import models
+from project.models import (Beleggers, BijlageToAnnotation, Project,
+                            PVEItemAnnotation)
+from syntrus import forms
+from syntrus.forms import (AddOrganisatieForm, BijlageToAnnotationForm,
+                           BijlageToReplyForm, FirstFreezeForm,
+                           KoppelDerdeUserForm, StartProjectForm)
+from syntrus.models import (FAQ, BijlageToReply, CommentReply, CommentStatus,
+                            FrozenComments, Room)
+from users.forms import AcceptInvitationForm
+from users.models import CustomUser, Invitation, Organisatie
+from utils import createBijlageZip, writePdf
+from utils.createBijlageZip import ZipMaker
+from utils.writePdf import PDFMaker
 
 utc = pytz.UTC
 

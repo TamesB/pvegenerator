@@ -1,15 +1,16 @@
 # Author: Tames Boon
 
+from cached_modelforms import CachedModelChoiceField
 from django import forms
-from django.forms import ModelForm
-from app.models import Bouwsoort, TypeObject, Doelgroep, PVEItem
-from project.models import Project, PVEItemAnnotation, BijlageToAnnotation
-from users.models import Invitation, CustomUser, Organisatie
-from syntrus.models import CommentStatus, BijlageToReply
 from django.contrib.gis import forms
 from django.core.cache import cache
+from django.forms import ModelForm
 from django.views.decorators.cache import cache_page
-from cached_modelforms import CachedModelChoiceField
+
+from app.models import Bouwsoort, Doelgroep, PVEItem, TypeObject
+from project.models import BijlageToAnnotation, Project, PVEItemAnnotation
+from syntrus.models import BijlageToReply, CommentStatus
+from users.models import CustomUser, Invitation, Organisatie
 
 
 class LoginForm(forms.Form):

@@ -1,17 +1,20 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.urls import reverse
+import secrets
+
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Q
-from . import models
-from project.models import Project
-from . import forms
-from django.utils import timezone
-import secrets
 from django.core.mail import send_mail
+from django.db.models import Q
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.utils import timezone
+
+from project.models import Project
+
+from . import forms, models
+
 
 # Create your views here.
 @staff_member_required
