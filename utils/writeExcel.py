@@ -4,8 +4,8 @@ from django.conf import settings
 import os.path
 import datetime
 
-class ExcelMaker:
 
+class ExcelMaker:
     def linewriter(self, versie_pk):
         PVEItems = models.PVEItem.objects.filter(versie__id=versie_pk)
 
@@ -16,7 +16,7 @@ class ExcelMaker:
             date.strftime("%S"),
             date.strftime("%d"),
             date.strftime("%m"),
-            date.strftime("%Y")
+            date.strftime("%Y"),
         )
 
         BASE = os.path.dirname(os.path.abspath(__file__))
@@ -27,14 +27,21 @@ class ExcelMaker:
         worksheet = workbook.add_worksheet()
 
         # Add a bold format to use to highlight cells.
-        bold = workbook.add_format({'bold': True})
+        bold = workbook.add_format({"bold": True})
 
         row = 0
         column = 0
 
-        Bouwsoorten = [bouwsrt for bouwsrt in models.Bouwsoort.objects.filter(versie__id=versie_pk)]
-        TypeObjecten = [typeobj for typeobj in models.TypeObject.objects.filter(versie__id=versie_pk)]
-        Doelgroepen = [doelgrp for doelgrp in models.Doelgroep.objects.filter(versie__id=versie_pk)]
+        Bouwsoorten = [
+            bouwsrt for bouwsrt in models.Bouwsoort.objects.filter(versie__id=versie_pk)
+        ]
+        TypeObjecten = [
+            typeobj
+            for typeobj in models.TypeObject.objects.filter(versie__id=versie_pk)
+        ]
+        Doelgroepen = [
+            doelgrp for doelgrp in models.Doelgroep.objects.filter(versie__id=versie_pk)
+        ]
 
         # Titel row
         column = 1
@@ -43,16 +50,16 @@ class ExcelMaker:
 
         for bouwsrt in Bouwsoorten:
             worksheet.write(row, column, bouwsrt.parameter, bold)
-            column += 1   
+            column += 1
 
         for typeobj in TypeObjecten:
             worksheet.write(row, column, typeobj.parameter, bold)
-            column += 1    
+            column += 1
 
         for doelgrp in Doelgroepen:
             worksheet.write(row, column, doelgrp.parameter, bold)
             column += 1
-        
+
         row += 1
         column = 0
 
@@ -67,19 +74,28 @@ class ExcelMaker:
             if models.PVEItem.objects.filter(versie__id=versie_pk, hoofdstuk=hoofdstuk):
                 worksheet.write(row, column, hoofdstuk.hoofdstuk, bold)
                 row += 1
-                
-                paragraven = models.PVEParagraaf.objects.filter(versie__id=versie_pk, hoofdstuk=hoofdstuk)
-                
+
+                paragraven = models.PVEParagraaf.objects.filter(
+                    versie__id=versie_pk, hoofdstuk=hoofdstuk
+                )
+
                 if paragraven.exists():
                     for paragraaf in paragraven:
-                        if models.PVEItem.objects.filter(versie__id=versie_pk, paragraaf=paragraaf):
-                            items = [item for item in PVEItems if item.hoofdstuk == hoofdstuk and item.paragraaf == paragraaf]
+                        if models.PVEItem.objects.filter(
+                            versie__id=versie_pk, paragraaf=paragraaf
+                        ):
+                            items = [
+                                item
+                                for item in PVEItems
+                                if item.hoofdstuk == hoofdstuk
+                                and item.paragraaf == paragraaf
+                            ]
 
                             worksheet.write(row, column, paragraaf.paragraaf, bold)
                             row += 1
 
                             for item in items:
-                                inhoud = ("%s" % item.inhoud)
+                                inhoud = "%s" % item.inhoud
                                 worksheet.write(row, column, inhoud, cell_format)
                                 column += 1
 
@@ -102,7 +118,7 @@ class ExcelMaker:
                                         column += 1
                                     else:
                                         column += 1
-                                
+
                                 for doelgrp in Doelgroepen:
                                     if doelgrp in item.Doelgroep.all():
                                         worksheet.write(row, column, "x")
@@ -116,7 +132,7 @@ class ExcelMaker:
                     items = [item for item in PVEItems if item.hoofdstuk == hoofdstuk]
 
                     for item in items:
-                        inhoud = ("%s" % item.inhoud)
+                        inhoud = "%s" % item.inhoud
                         worksheet.write(row, column, inhoud, cell_format)
                         column += 1
 
@@ -139,7 +155,7 @@ class ExcelMaker:
                                 column += 1
                             else:
                                 column += 1
-                        
+
                         for doelgrp in Doelgroepen:
                             if doelgrp in item.Doelgroep.all():
                                 worksheet.write(row, column, "x")

@@ -8,16 +8,18 @@ import botocore
 from botocore.exceptions import ClientError
 import logging
 import boto3
+
+
 class ZipMaker:
     def makeZip(self, zipFilename, filename, items):
         BASE = os.path.dirname(os.path.abspath(__file__))
         path = BASE + settings.EXPORTS_URL + zipFilename
-        pdfPath = BASE + settings.EXPORTS_URL + filename + '.pdf'
+        pdfPath = BASE + settings.EXPORTS_URL + filename + ".pdf"
 
         if not items:
             return False
 
-        zipf = zipfile.ZipFile(f"{path}.zip", 'w', zipfile.ZIP_DEFLATED)
+        zipf = zipfile.ZipFile(f"{path}.zip", "w", zipfile.ZIP_DEFLATED)
 
         for item in items:
             # open attachment in AWS S3 server
@@ -27,12 +29,19 @@ class ZipMaker:
             region = settings.AWS_S3_REGION_NAME
             signature = settings.AWS_S3_SIGNATURE_VERSION
             expiration = 10000
-            s3_client = boto3.client('s3', aws_access_key_id=access_key, aws_secret_access_key=secret_key, region_name=region, config=botocore.client.Config(signature_version=signature))
+            s3_client = boto3.client(
+                "s3",
+                aws_access_key_id=access_key,
+                aws_secret_access_key=secret_key,
+                region_name=region,
+                config=botocore.client.Config(signature_version=signature),
+            )
             try:
-                response = s3_client.generate_presigned_url('get_object',
-                                                            Params={'Bucket': bucket_name,
-                                                                    'Key': str(item.bijlage)},
-                                                            ExpiresIn=expiration)
+                response = s3_client.generate_presigned_url(
+                    "get_object",
+                    Params={"Bucket": bucket_name, "Key": str(item.bijlage)},
+                    ExpiresIn=expiration,
+                )
             except ClientError as e:
                 logging.error(e)
                 return None
