@@ -245,3 +245,4 @@ SERVER_EMAIL = os.getenv("EMAIL_HOST_USER")
 
 # Heroku settings
 django_heroku.settings(locals(), staticfiles=False)
+DATABASES['default']['CONN_MAX_AGE'] = 0

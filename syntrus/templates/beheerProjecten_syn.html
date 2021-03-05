@@ -46,13 +46,20 @@
       <td><p><a href="#"><button class="ui icon basic button"><i class="icon edit"></i></button></a></p></td>
     </tr>
     {% endfor %}
-    {% else %}
-    <tr>
-      <td>
-      <i>Nog geen projecten toegevoegd.</i>
-      </td>
-    </tr>
-    {% endif %}
+        {% else %}
+        <tr class="table_content">
+          <td><p>
+          <i>Nog geen projecten toegevoegd.</i>
+          </p></td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        {% endif %}
 </tbody>
 </table>
 </div>

@@ -9,34 +9,51 @@
 {% endblock %}
 
 {% block main %}
-<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Mijn Opmerkingen, project {{ project.naam }}</p></div>
-<table class="opmerkingtable_wrapper">
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewprojectoverview_syn' %}">Mijn Projecten</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewproject_syn' project.id %}">Project: {{ project.naam }}</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'plusopmerking_syn' project.id %}">Eerste statusaanwijzing</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Laatste check</div>
+</div>
+
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Laatste Check
+<input type="button" class="submit_button" onClick="javascript:location.href='{% url 'firstfreeze_syn' project.id %}';" value="Stuur door >"></input>
+<a href="{% url 'mijnopmerkingendelete_syn' project.id %}"><button class="ui basic red button"><i class="icon trash"></i></button></a></p></div>
+
+<div class="opmerkingtable_wrapper">
+<table>
   <tr class="table_head">
     <th><img src="{% static 'syntrus/svg/logo.svg' %}" class="syntr_logo"></a></th>
-    <th><p>Opmerking</p></th>
     <th><p>Status</p></th>
-    <th><p>Kostenverschil</p></th>
-    <th><p>Bewerk</p></th>
+    <th><p>Aanvulling</p></th>
+    <th><p>Kostenverschil (Totaal: {% if totale_kosten %}€{{totale_kosten}}{% else %}€0{% endif %})</p></th>
+    <th><p>Acties</p></th>
     <th><p>Bijlage</p></th>
+    <th><p>Datum bewerkt</p></th>
   </tr>
+  {% if comments %}
   {% for comment in comments %}
   <tr class="table_content">
     <td class="inhoud_box"><p>{{ comment.item.inhoud }}</p></td>
-    <td class="voldoening"><p>{% if comment.annotation %}{{ comment.annotation }}{% else %}<i>Geen</i>{% endif %}</p></td>
     <td class="voldoening"><p>{% if comment.status %}{{ comment.status }}{% else %}&nbsp;{% endif %}</p></td>
-    <td class="kosten"><p>{% if comment.kostenConsequenties %}€ {{ comment.kostenConsequenties }}{% else %} € 0 {% endif %}</p></td>
-    <td class="voldoening"><p onClick="document.getElementById('{{ comment.item.id }}').style.display='block'" class="bewerk_button"><button class="ui basic button"><i class="icon edit"></i>Bewerk</button></p></td>
-    <td class="voldoening"><p>{% if not comment.bijlage %}<a href="{% url 'bijlageaanopmerking_syn' project.id comment.id %}"><button class="ui basic button"><i class="icon plus"></i>Bijlage</button></a>{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>Download</button></a>{% endif %}</p></td>
-
+    <td class="voldoening"><p>{% if comment.annotation %}{{ comment.annotation }}{% else %}&nbsp;{% endif %}</p></td>
+    <td class="kosten"><p>{% if comment.kostenConsequenties %}€ {{ comment.kostenConsequenties }}{% else %}&nbsp;{% endif %}</p></td>
+    <td class="voldoening"><p style="float: left;" onClick="document.getElementById('{{ comment.item.id }}').style.display='block'"><button class="ui icon basic button"><i class="icon edit"></i></button></p></td>
+    <td class="voldoening">{% if not comment.bijlage %}<p><a href="{% url 'bijlageaanopmerking_syn' project.id comment.id %}"><button class="ui icon basic button"><i class="icon plus"></i></button></a></p>{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" style="float:left;" target="_blank"><button class="ui icon basic button"><i class="icon download"></i></button></a>{% endif %}</td>
+    <td class="voldoening"><p>{{ comment.datum }}</p></td>
   </tr>
   {% endfor %}
-  <tr>
-    <td class="inhoud_box">&nbsp;</td>
-    <td class="voldoening">&nbsp;</td>
-    <td class="voldoening">&nbsp;</td>
-    <td class="kosten"><p>Totaal: {% if totale_kosten %}€{{totale_kosten}}{% else %}€0{% endif %}</p></td>
-  </tr>
+
+  {% else %}
+  <td class="inhoud_box"><p>Nog geen regels aangewezen.</p></td>
+  {% endif %}
 </table>
+</div>
 
 <form class="opmerking_form" action="{% url 'bijlageaanopmerking_syn' project.id annotation.id %}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
@@ -46,6 +63,7 @@
                 <div class="w3-modal-content">
                     <div class="w3-container">
                         <a href="{% url 'mijnopmerkingen_syn' project.id %}" class="sluit_x_button"><p>Sluit</p></a>
+                        <p class="formbox" hidden>{{ form.ann }}</p>
                         <label for="{{ form.bijlage.id_for_label }}">Bijlage:</label>
                         <p class="formbox">{{ form.bijlage }}</p>
                         <span class="form_buttons">

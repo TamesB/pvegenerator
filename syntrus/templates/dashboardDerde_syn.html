@@ -53,6 +53,7 @@
           <th><p>Checklist</p></th>
           <th><p>Download</p></th>
         </tr>
+        {% if projects %}
         {% for project in projects %}
         <tr class="table_content">
           <td><p>{{ project.nummer }}</p></td>
@@ -65,6 +66,18 @@
           <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' project.id %}"><img src="{% static 'syntrus/img/download.png' %}"></img></a>{% else %}Nog geen PvE{% endif %}</p></td>
         </tr>
         {% endfor %}
+      {% else %}
+      <tr class="table_content">
+      <td><p>Nog geen projecten van u.</p></td>
+      <td><p>&nbsp;</p></td>
+      <td><p>&nbsp;</p></td>
+      <td><p>&nbsp;</p></td>
+      <td><p>&nbsp;</p></td>
+      <td><p>&nbsp;</p></td>
+      <td><p>&nbsp;</p></td>
+      <td><p>&nbsp;</p></td>
+      </tr>
+      {% endif %}
       </tbody>
   </table>
 </div>
@@ -79,12 +92,19 @@
           </tr>
         </thead>
         <tbody>
+        {% if projects %}
         {% for project in projects %}
           <tr>
             <td><p>{{ project.naam }}</p></td>
             <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' project.id %}"><img class="dimg" style="align-self: right; max-height: 2vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% else %}Niet beschikbaar{% endif %}</p></td>
           </tr>
         {% endfor %}
+        {% else %}
+        <tr>
+          <td><p>Nog geen projecten van u.</p></td>
+          <td><p>&nbsp;</p></td>
+        </tr>
+        {% endif %}
         </tbody>
       </table>
 </div>
@@ -113,10 +133,9 @@
         {% endfor %}
         
         {% else %}
-        <tr>
-          <td><p>
-          <i>Nog geen projecten van u.</i>
-          </p></td>
+        <tr class="table_content">
+          <td><p>Nog geen projecten van u.</p></td>
+          <td><p>&nbsp;</p></td>
         </tr>
         {% endif %}
       </tbody>

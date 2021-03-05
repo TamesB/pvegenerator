@@ -80,7 +80,6 @@ class CommentReply(models.Model):
     )
     datum = models.DateTimeField(auto_now=True)
 
-
 class BijlageToReply(models.Model):
     reply = models.ForeignKey(CommentReply, on_delete=models.CASCADE, default=None)
     bijlage = models.FileField(blank=True, null=True, upload_to="OpmerkingBijlages/")

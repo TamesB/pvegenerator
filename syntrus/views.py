@@ -1251,17 +1251,22 @@ def AddComment(request, pk):
             # true comment if either status or voldoet
             if form.cleaned_data["status"]:
                 if PVEItemAnnotation.objects.filter(
-                    item=models.PVEItem.objects.filter(
+                    Q(item=models.PVEItem.objects.filter(
                         id=form.cleaned_data["item_id"]
-                    ).first()
-                ):
+                    ).first())
+                    & Q(project=project) 
+                    & Q(gebruiker=request.user)
+                ).exists():
                     ann = PVEItemAnnotation.objects.filter(
-                        item=models.PVEItem.objects.filter(
+                        Q(item=models.PVEItem.objects.filter(
                             id=form.cleaned_data["item_id"]
-                        ).first()
+                        ).first())
+                        & Q(project=project) 
+                        & Q(gebruiker=request.user)
                     ).first()
                 else:
                     ann = PVEItemAnnotation()
+
                 ann.project = project
                 ann.gebruiker = request.user
                 ann.item = models.PVEItem.objects.filter(
@@ -1594,11 +1599,11 @@ def ConnectPVE(request, pk):
             )
 
             # Entered parameters are in the manytomany parameters of the object
-            basic_PVE = models.PVEItem.objects.filter(
+            basic_PVE = models.PVEItem.objects.prefetch_related("projects").filter(
                 Q(versie=versie) & Q(basisregel=True)
             )
             basic_PVE = basic_PVE.union(
-                models.PVEItem.objects.filter(
+                models.PVEItem.objects.prefetch_related("projects").filter(
                     versie=versie, Bouwsoort__parameter__contains=Bouwsoort1
                 )
             )
@@ -1608,7 +1613,7 @@ def ConnectPVE(request, pk):
 
             if Bouwsoort2:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.prefetch_related("projects").filter(
                         versie=versie, Bouwsoort__parameter__contains=Bouwsoort2
                     )
                 )
@@ -1618,7 +1623,7 @@ def ConnectPVE(request, pk):
 
             if Bouwsoort3:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.prefetch_related("projects").filter(
                         versie=versie, Bouwsoort__parameter__contains=Bouwsoort3
                     )
                 )
@@ -1628,7 +1633,7 @@ def ConnectPVE(request, pk):
 
             if TypeObject1:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.prefetch_related("projects").filter(
                         versie=versie, TypeObject__parameter__contains=TypeObject1
                     )
                 )
@@ -1638,7 +1643,7 @@ def ConnectPVE(request, pk):
 
             if TypeObject2:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.prefetch_related("projects").filter(
                         versie=versie, TypeObject__parameter__contains=TypeObject2
                     )
                 )
@@ -1648,7 +1653,7 @@ def ConnectPVE(request, pk):
 
             if TypeObject3:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.prefetch_related("projects").filter(
                         versie=versie, TypeObject__parameter__contains=TypeObject3
                     )
                 )
@@ -1658,7 +1663,7 @@ def ConnectPVE(request, pk):
 
             if Doelgroep1:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.prefetch_related("projects").filter(
                         versie=versie, Doelgroep__parameter__contains=Doelgroep1
                     )
                 )
@@ -1668,7 +1673,7 @@ def ConnectPVE(request, pk):
 
             if Doelgroep2:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.prefetch_related("projects").filter(
                         versie=versie, Doelgroep__parameter__contains=Doelgroep2
                     )
                 )
@@ -1678,7 +1683,7 @@ def ConnectPVE(request, pk):
 
             if Doelgroep3:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.prefetch_related("projects").filter(
                         versie=versie, Doelgroep__parameter__contains=Doelgroep3
                     )
                 )
@@ -1689,20 +1694,22 @@ def ConnectPVE(request, pk):
             # if box checked
             if AED:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(Q(versie=versie) & Q(AED=True))
+                    models.PVEItem.objects.prefetch_related("projects")
+                    .filter(Q(versie=versie) & Q(AED=True))
                 )
                 project.AED = True
 
             if Smarthome:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(Q(versie=versie) & Q(Smarthome=True))
+                    models.PVEItem.objects.prefetch_related("projects")
+                    .filter(Q(versie=versie) & Q(Smarthome=True))
                 )
                 # add the parameter to the project
                 project.Smarthome = True
 
             if EntreeUpgrade:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.prefetch_related("projects").filter(
                         Q(versie=versie) & Q(EntreeUpgrade=True)
                     )
                 )
@@ -1710,7 +1717,7 @@ def ConnectPVE(request, pk):
 
             if Pakketdient:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.prefetch_related("projects").filter(
                         Q(versie=versie) & Q(Pakketdient=True)
                     )
                 )
@@ -1718,7 +1725,7 @@ def ConnectPVE(request, pk):
 
             if JamesConcept:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.prefetch_related("projects").filter(
                         Q(versie=versie) & Q(JamesConcept=True)
                     )
                 )
@@ -2247,10 +2254,13 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
     # loop for reply ordering for the pagedesign
     hoofdstuk_ordered_items_non_accept = {}
     made_on_comments = {}
+
+    
+    # fix this with only showing it for one project, make commentreply model set to a project
     commentreplies = (
         CommentReply.objects.select_related("onComment")
-        .filter(onComment__project__id=proj_id)
-        .all()
+        .filter(onComment__in=comments_entry)
+        .all() 
     )
 
     for reply in commentreplies:
@@ -2269,7 +2279,7 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
         string = ""
 
         if comment.status:
-            string = f"Status: {comment.status}"
+            string = f"{comment.status}"
 
         # add all replies to this comment
         if comment in made_on_comments.keys():
