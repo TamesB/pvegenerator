@@ -310,7 +310,7 @@ def GeneratePVEView(request):
     if request.user.type_user not in allowed_users:
         return render(request, "404_syn.html")
 
-    versie = models.ActieveVersie.objects.get(belegger__naam="Syntrus").first().versie
+    versie = models.ActieveVersie.objects.get(belegger__naam="Syntrus").versie
 
     if request.method == "POST":
         # get user entered form
@@ -378,7 +378,7 @@ def GeneratePVEView(request):
                 form.cleaned_data["JamesConcept"],
             )
 
-            versie = models.ActieveVersie.objects.get(belegger__naam="Syntrus").first().versie
+            versie = models.ActieveVersie.objects.get(belegger__naam="Syntrus").versie
             # Entered parameters are in the manytomany parameters of the object
             basic_PVE = (
                 models.PVEItem.objects.select_related("hoofdstuk")
@@ -1523,7 +1523,7 @@ def ConnectPVE(request, pk):
     project = get_object_or_404(Project, pk=pk)
 
     # we get the active version of the pve based on what is active right now
-    versie = models.ActieveVersie.objects.filter(belegger__naam="Syntrus").first().versie
+    versie = models.ActieveVersie.objects.get(belegger__naam="Syntrus").versie
 
     if project.pveconnected:
         return render(request, "404_syn.html")
