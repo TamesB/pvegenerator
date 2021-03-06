@@ -467,5 +467,4 @@ def compareFormView(request, versie_pk, pk):
         ).all()
 
     context["form"] = form
-
     return render(request, "compareForm.html", context)
