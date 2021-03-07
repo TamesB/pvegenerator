@@ -2,8 +2,16 @@
 
 from django.contrib import admin
 
-from .models import (ActieveVersie, Bouwsoort, Doelgroep, PVEHoofdstuk,
-                     PVEItem, PVEParagraaf, PVEVersie, TypeObject)
+from .models import (
+    ActieveVersie,
+    Bouwsoort,
+    Doelgroep,
+    PVEHoofdstuk,
+    PVEItem,
+    PVEParagraaf,
+    PVEVersie,
+    TypeObject
+)
 
 # Register your models here.
 admin.site.register(PVEVersie)

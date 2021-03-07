@@ -5,9 +5,17 @@ from django.forms import ModelForm
 
 from project.models import Beleggers
 
-from .models import (ActieveVersie, Bouwsoort, Doelgroep, PVEHoofdstuk,
-                     PVEItem, PVEOnderdeel, PVEParagraaf, PVEVersie,
-                     TypeObject)
+from .models import (
+    ActieveVersie,
+    Bouwsoort,
+    Doelgroep,
+    PVEHoofdstuk,
+    PVEItem,
+    PVEOnderdeel,
+    PVEParagraaf,
+    PVEVersie,
+    TypeObject
+)
 
 
 class LoginForm(forms.Form):

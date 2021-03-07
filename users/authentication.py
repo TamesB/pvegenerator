@@ -1,7 +1,7 @@
 from .models import CustomUser
 
 
-class EmailAuthBackend():
+class EmailAuthBackend:
     def authenticate(self, username=None, password=None):
         try:
             user = CustomUser.objects.get(email=username)

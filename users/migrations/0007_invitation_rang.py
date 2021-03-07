@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0006_auto_20200916_2318'),
+        ("users", "0006_auto_20200916_2318"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='invitation',
-            name='rang',
+            model_name="invitation",
+            name="rang",
             field=models.CharField(default=None, max_length=100, null=True),
         ),
     ]

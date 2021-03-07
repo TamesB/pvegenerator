@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.gis import forms
 from django.forms import ModelForm
 
-from project.models import ContractStatus, Project, PVEItemAnnotation
+from project.models import Project
 
 
 class StartProjectForm(ModelForm):

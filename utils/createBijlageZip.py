@@ -2,14 +2,11 @@ import logging
 import os
 import urllib
 import zipfile
-from os.path import basename
 
 import boto3
 import botocore
 from botocore.exceptions import ClientError
 from django.conf import settings
-
-from app import models
 
 
 class ZipMaker:

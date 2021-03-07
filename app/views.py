@@ -1,26 +1,22 @@
 # Author: Tames Boon
 
 import datetime
-import mimetypes
-import os
+import logging
 
 import boto3
 import botocore
-import magic
+from botocore.exceptions import ClientError
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
-from django.db.models import Q
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
 from project.models import Beleggers, Project
-from users.models import CustomUser
-from utils import writeExcel, writePdf
+from utils import writeExcel
 
 from . import forms, models
 

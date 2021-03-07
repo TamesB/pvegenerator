@@ -1,8 +1,13 @@
 from django.contrib import admin
 from django.contrib.gis.admin import GeoModelAdmin
 
-from .models import (Beleggers, BijlageToAnnotation, ContractStatus, Project,
-                     PVEItemAnnotation)
+from .models import (
+    Beleggers,
+    BijlageToAnnotation,
+    ContractStatus,
+    Project,
+    PVEItemAnnotation
+)
 
 
 # Register your models here.

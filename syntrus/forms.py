@@ -3,12 +3,10 @@
 from cached_modelforms import CachedModelChoiceField
 from django import forms
 from django.contrib.gis import forms
-from django.core.cache import cache
 from django.forms import ModelForm
-from django.views.decorators.cache import cache_page
 
 from app.models import Bouwsoort, Doelgroep, PVEItem, TypeObject
-from project.models import BijlageToAnnotation, Project, PVEItemAnnotation
+from project.models import BijlageToAnnotation, Project
 from syntrus.models import BijlageToReply, CommentStatus
 from users.models import CustomUser, Invitation, Organisatie
 

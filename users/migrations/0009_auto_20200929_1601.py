@@ -6,17 +6,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0008_auto_20200929_1555'),
+        ("users", "0008_auto_20200929_1555"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='gebruikersrang',
-            name='rang',
+            model_name="gebruikersrang",
+            name="rang",
         ),
         migrations.AddField(
-            model_name='gebruikersrang',
-            name='type_user',
-            field=models.CharField(choices=[('B', 'Beheerder'), ('SB', 'Syntrus Beheerder'), ('SOG', 'Syntrus Projectmanager'), ('SD', 'Syntrus Derden')], default='SD', max_length=3),
+            model_name="gebruikersrang",
+            name="type_user",
+            field=models.CharField(
+                choices=[
+                    ("B", "Beheerder"),
+                    ("SB", "Syntrus Beheerder"),
+                    ("SOG", "Syntrus Projectmanager"),
+                    ("SD", "Syntrus Derden"),
+                ],
+                default="SD",
+                max_length=3,
+            ),
         ),
     ]

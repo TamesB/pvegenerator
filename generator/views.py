@@ -1,14 +1,11 @@
 import datetime
-import mimetypes
-import os
-import zipfile
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponse
 from django.shortcuts import render
 
 from app import models
@@ -260,7 +257,7 @@ def GeneratePVEView(request, versie_pk):
             messages.warning(request, "Vul de verplichte keuzes in.")
 
     form = forms.PVEParameterForm()
-    
+
     form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(
         versie=pve_versie
     ).all()

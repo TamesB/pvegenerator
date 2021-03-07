@@ -1,25 +1,17 @@
 import datetime
-import mimetypes
-import os
-import zipfile
 
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.db import IntegrityError
 from django.db.models import Q
-from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render
+from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from pyproj import CRS, Transformer
+from pyproj import Transformer
 
 from app.models import Bouwsoort, Doelgroep, PVEItem, TypeObject
 from generator.forms import PVEParameterForm
-from users.forms import AcceptInvitationForm, KoppelDerdeUser
-from users.models import CustomUser
-from utils import createBijlageZip, writeDiffPdf, writePdf
+from utils import createBijlageZip, writePdf
 
 from . import forms, models
 

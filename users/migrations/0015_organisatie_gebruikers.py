@@ -7,13 +7,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0014_auto_20210121_1657'),
+        ("users", "0014_auto_20210121_1657"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='organisatie',
-            name='gebruikers',
-            field=models.ManyToManyField(default=None, related_name='gebruikers', to=settings.AUTH_USER_MODEL),
+            model_name="organisatie",
+            name="gebruikers",
+            field=models.ManyToManyField(
+                default=None, related_name="gebruikers", to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

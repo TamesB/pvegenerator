@@ -6,16 +6,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0009_auto_20200929_1601'),
+        ("users", "0009_auto_20200929_1601"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='invitation',
-            name='rang',
-            field=models.CharField(choices=[('SOG', 'Syntrus Projectmanager'), ('SD', 'Derde')], default='SD', max_length=3),
+            model_name="invitation",
+            name="rang",
+            field=models.CharField(
+                choices=[("SOG", "Syntrus Projectmanager"), ("SD", "Derde")],
+                default="SD",
+                max_length=3,
+            ),
         ),
         migrations.DeleteModel(
-            name='GebruikersRang',
+            name="GebruikersRang",
         ),
     ]

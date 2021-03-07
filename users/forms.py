@@ -17,16 +17,17 @@ class CustomUserCreationForm(UserCreationForm):
         model = CustomUser
         fields = ("type_user", "organisatie", "username", "password1")
 
+
 class KoppelDerdeUser(forms.Form):
     email = forms.EmailField()
+
 
 class AcceptInvitationForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ("password1", "password2")
-        labels = {
-            'password1':'Wachtwoord:', 'password2':'Herhaal wachtwoord:'
-        }
+        labels = {"password1": "Wachtwoord:", "password2": "Herhaal wachtwoord:"}
+
 
 class CustomUserChangeForm(UserChangeForm):
     """A form for updating users. Includes all the fields on
@@ -45,10 +46,9 @@ class CustomUserChangeForm(UserChangeForm):
 class ForgotPassForm(forms.Form):
     email = forms.CharField(max_length=100, label="Gebruikersnaam of e-mail:")
 
+
 class ResetPassForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ("password1", "password2")
-        labels = {
-            'password1':'Nieuw Wachtwoord:', 'password2':'Herhaal wachtwoord:'
-        }
+        labels = {"password1": "Nieuw Wachtwoord:", "password2": "Herhaal wachtwoord:"}

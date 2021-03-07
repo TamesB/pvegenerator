@@ -4,8 +4,12 @@ from django.utils.translation import ugettext_lazy as _
 
 from users.forms import CustomUserChangeForm, CustomUserCreationForm
 from users.models import (
-    CommentCheckInvitation, CustomUser, ForgotPassInvite, Invitation,
-    Organisatie)
+    CommentCheckInvitation,
+    CustomUser,
+    ForgotPassInvite,
+    Invitation,
+    Organisatie,
+)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -15,22 +19,23 @@ class CustomUserAdmin(UserAdmin):
     # These override the definitions on the base UserAdmin
     # that reference the removed 'username' field
     fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name')}),
-        (_('Permissions'), {'fields': ('type_user', 'is_staff', 'is_superuser')}),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        (None, {"fields": ("username", "password")}),
+        (_("Personal info"), {"fields": ("first_name", "last_name")}),
+        (_("Permissions"), {"fields": ("type_user", "is_staff", "is_superuser")}),
+        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2')}
+        (
+            None,
+            {"classes": ("wide",), "fields": ("username", "password1", "password2")},
         ),
     )
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
-    list_display = ('username', 'first_name', 'last_name', 'is_staff')
-    search_fields = ('username', 'first_name', 'last_name')
-    ordering = ('username',)
+    list_display = ("username", "first_name", "last_name", "is_staff")
+    search_fields = ("username", "first_name", "last_name")
+    ordering = ("username",)
+
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(CommentCheckInvitation)

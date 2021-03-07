@@ -3,7 +3,6 @@
 import os
 import platform
 
-import dj_database_url
 import django_heroku
 import environ
 from django.utils.log import DEFAULT_LOGGING
@@ -92,8 +91,8 @@ MIDDLEWARE = [
     "simple_history.middleware.HistoryRequestMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     #'csp.middleware.CSPMiddleware',
-    'htmlmin.middleware.HtmlMinifyMiddleware',
-    'htmlmin.middleware.MarkRequestMiddleware',
+    "htmlmin.middleware.HtmlMinifyMiddleware",
+    "htmlmin.middleware.MarkRequestMiddleware",
 ]
 
 HTML_MINIFY = True
@@ -245,4 +244,4 @@ SERVER_EMAIL = os.getenv("EMAIL_HOST_USER")
 
 # Heroku settings
 django_heroku.settings(locals(), staticfiles=False)
-DATABASES['default']['CONN_MAX_AGE'] = 0
+DATABASES["default"]["CONN_MAX_AGE"] = 0
