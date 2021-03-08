@@ -65,7 +65,7 @@ class ExcelMaker:
         row += 1
         column = 0
 
-        hoofdstukken = models.PVEHoofdstuk.objects.filter(versie__id=versie_pk)
+        hoofdstukken = models.PVEHoofdstuk.objects.filter(versie__id=versie_pk).order_by("id")
         hoofdstuknamen = [hoofdstuk.hoofdstuk for hoofdstuk in hoofdstukken]
 
         # Run door de items heen
@@ -83,7 +83,7 @@ class ExcelMaker:
 
                 if paragraven.exists():
                     for paragraaf in paragraven:
-                        if models.PVEItem.objects.filter(
+                        if models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
                             versie__id=versie_pk, paragraaf=paragraaf
                         ):
                             items = [

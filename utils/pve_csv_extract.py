@@ -123,7 +123,7 @@ class ExtractPVE:
             pve_item.versie = self.versie
 
             if item.hoofdstuk:
-                if not models.PVEHoofdstuk.objects.filter(versie=self.versie, hoofdstuk=item.hoofdstuk.naam):
+                if not models.PVEHoofdstuk.objects.filter(versie=self.versie, hoofdstuk=item.hoofdstuk.naam).exists():
                     hoofdstuk = models.PVEHoofdstuk()
                     hoofdstuk.hoofdstuk = item.hoofdstuk.naam
                     hoofdstuk.versie = self.versie
@@ -134,14 +134,14 @@ class ExtractPVE:
                 pve_item.hoofdstuk = hoofdstuk
 
             if item.paragraaf:
-                if not models.PVEParagraaf.objects.filter(versie=self.versie, paragraaf=item.paragraaf.naam):
+                if not models.PVEParagraaf.objects.filter(versie=self.versie, hoofdstuk=hoofdstuk, paragraaf=item.paragraaf.naam).exists():
                     paragraaf = models.PVEParagraaf()
                     paragraaf.paragraaf = item.paragraaf.naam
-                    paragraaf.hoofdstuk = models.PVEHoofdstuk.objects.filter(versie=self.versie, hoofdstuk=item.hoofdstuk.naam).first()
+                    paragraaf.hoofdstuk = hoofdstuk
                     paragraaf.versie = self.versie
                     paragraaf.save()
                 else:
-                    paragraaf = models.PVEParagraaf.objects.filter(versie=self.versie, paragraaf=item.paragraaf.naam).first()
+                    paragraaf = models.PVEParagraaf.objects.filter(versie=self.versie, hoofdstuk=hoofdstuk, paragraaf=item.paragraaf.naam).first()
                 
                 pve_item.paragraaf = paragraaf
 
@@ -157,7 +157,7 @@ class ExtractPVE:
             for set_index in range(len(bouwsoort_set)):
                 if bouwsoort_set[set_index]:
                     if set_index == 0:
-                        if not models.Bouwsoort.objects.filter(versie=self.versie, parameter="Nieuwbouw"):
+                        if not models.Bouwsoort.objects.filter(versie=self.versie, parameter="Nieuwbouw").exists():
                             model = models.Bouwsoort()
                             model.versie = self.versie
                             model.parameter = "Nieuwbouw"
@@ -165,7 +165,7 @@ class ExtractPVE:
 
                         parameter_model = models.Bouwsoort.objects.filter(versie=self.versie, parameter="Nieuwbouw").first()
                     if set_index == 1:
-                        if not models.Bouwsoort.objects.filter(versie=self.versie, parameter="Transformatie"):
+                        if not models.Bouwsoort.objects.filter(versie=self.versie, parameter="Transformatie").exists():
                             model = models.Bouwsoort()
                             model.versie = self.versie
                             model.parameter = "Transformatie"
@@ -173,7 +173,7 @@ class ExtractPVE:
 
                         parameter_model = models.Bouwsoort.objects.filter(versie=self.versie, parameter="Transformatie").first()
                     if set_index == 2:
-                        if not models.Bouwsoort.objects.filter(versie=self.versie, parameter="Commercieel"):
+                        if not models.Bouwsoort.objects.filter(versie=self.versie, parameter="Commercieel").exists():
                             model = models.Bouwsoort()
                             model.versie = self.versie
                             model.parameter = "Commercieel"
@@ -181,7 +181,7 @@ class ExtractPVE:
 
                         parameter_model = models.Bouwsoort.objects.filter(versie=self.versie, parameter="Commercieel").first()
                     if set_index == 3:
-                        if not models.Bouwsoort.objects.filter(versie=self.versie, parameter="Levensloop Bestendig"):
+                        if not models.Bouwsoort.objects.filter(versie=self.versie, parameter="Levensloop Bestendig").exists():
                             model = models.Bouwsoort()
                             model.versie = self.versie
                             model.parameter = "Levensloop Bestendig"
@@ -198,7 +198,7 @@ class ExtractPVE:
             for set_index in range(len(typeobject_set)):
                 if typeobject_set[set_index]:
                     if set_index == 0:
-                        if not models.TypeObject.objects.filter(versie=self.versie, parameter="Grondgebonden woning"):
+                        if not models.TypeObject.objects.filter(versie=self.versie, parameter="Grondgebonden woning").exists():
                             model = models.TypeObject()
                             model.versie = self.versie
                             model.parameter = "Grondgebonden woning"
@@ -206,7 +206,7 @@ class ExtractPVE:
 
                         parameter_model = models.TypeObject.objects.filter(versie=self.versie, parameter="Grondgebonden woning").first()
                     if set_index == 1:
-                        if not models.TypeObject.objects.filter(versie=self.versie, parameter="Appartement 0-50 m2"):
+                        if not models.TypeObject.objects.filter(versie=self.versie, parameter="Appartement 0-50 m2").exists():
                             model = models.TypeObject()
                             model.versie = self.versie
                             model.parameter = "Appartement 0-50 m2"
@@ -214,7 +214,7 @@ class ExtractPVE:
 
                         parameter_model = models.TypeObject.objects.filter(versie=self.versie, parameter="Appartement 0-50 m2").first()
                     if set_index == 2:
-                        if not models.TypeObject.objects.filter(versie=self.versie, parameter="Appartement 50-70 m2"):
+                        if not models.TypeObject.objects.filter(versie=self.versie, parameter="Appartement 50-70 m2").exists():
                             model = models.TypeObject()
                             model.versie = self.versie
                             model.parameter = "Appartement 50-70 m2"
@@ -222,7 +222,7 @@ class ExtractPVE:
 
                         parameter_model = models.TypeObject.objects.filter(versie=self.versie, parameter="Appartement 50-70 m2").first()
                     if set_index == 3:
-                        if not models.TypeObject.objects.filter(versie=self.versie, parameter="Appartement 70-100 m2"):
+                        if not models.TypeObject.objects.filter(versie=self.versie, parameter="Appartement 70-100 m2").exists():
                             model = models.TypeObject()
                             model.versie = self.versie
                             model.parameter = "Appartement 70-100 m2"
@@ -230,7 +230,7 @@ class ExtractPVE:
 
                         parameter_model = models.TypeObject.objects.filter(versie=self.versie, parameter="Appartement 70-100 m2").first()
                     if set_index == 4:
-                        if not models.TypeObject.objects.filter(versie=self.versie, parameter="Appartement >100 m2"):
+                        if not models.TypeObject.objects.filter(versie=self.versie, parameter="Appartement >100 m2").exists():
                             model = models.TypeObject()
                             model.versie = self.versie
                             model.parameter = "Appartement >100 m2"
@@ -244,7 +244,7 @@ class ExtractPVE:
             for set_index in range(len(doelgroep_set)):
                 if doelgroep_set[set_index]:
                     if set_index == 0:
-                        if not models.Doelgroep.objects.filter(versie=self.versie, parameter="Sociaal / Studenten"):
+                        if not models.Doelgroep.objects.filter(versie=self.versie, parameter="Sociaal / Studenten").exists():
                             model = models.Doelgroep()
                             model.versie = self.versie
                             model.parameter = "Sociaal / Studenten"
@@ -252,7 +252,7 @@ class ExtractPVE:
 
                         parameter_model = models.Doelgroep.objects.filter(versie=self.versie, parameter="Sociaal / Studenten").first()
                     if set_index == 1:
-                        if not models.Doelgroep.objects.filter(versie=self.versie, parameter="Light (Starters / Young proffessionals)"):
+                        if not models.Doelgroep.objects.filter(versie=self.versie, parameter="Light (Starters / Young proffessionals)").exists():
                             model = models.Doelgroep()
                             model.versie = self.versie
                             model.parameter = "Light (Starters / Young proffessionals)"
@@ -260,7 +260,7 @@ class ExtractPVE:
 
                         parameter_model = models.Doelgroep.objects.filter(versie=self.versie, parameter="Light (Starters / Young proffessionals)").first()
                     if set_index == 2:
-                        if not models.Doelgroep.objects.filter(versie=self.versie, parameter="Basis (modaal gezin)"):
+                        if not models.Doelgroep.objects.filter(versie=self.versie, parameter="Basis (modaal gezin)").exists():
                             model = models.Doelgroep()
                             model.versie = self.versie
                             model.parameter = "Basis (modaal gezin)"
@@ -268,7 +268,7 @@ class ExtractPVE:
 
                         parameter_model = models.Doelgroep.objects.filter(versie=self.versie, parameter="Basis (modaal gezin)").first()
                     if set_index == 3:
-                        if not models.Doelgroep.objects.filter(versie=self.versie, parameter="Luxe (high end)"):
+                        if not models.Doelgroep.objects.filter(versie=self.versie, parameter="Luxe (high end)").exists():
                             model = models.Doelgroep()
                             model.versie = self.versie
                             model.parameter = "Luxe (high end)"

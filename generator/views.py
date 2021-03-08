@@ -429,7 +429,7 @@ def compareFormView(request, versie_pk, pk):
                     date.strftime("%Y"),
                 )
                 
-                versie_naam = versie.versie
+                versie_naam = models.PVEVersie.objects.filter(id=versie_pk).first().versie
                 pdfmaker = writeDiffPdf.PDFMaker(versie_naam)
                 pdfmaker.makepdf(filename, afwijkingen, versie_pk, parameters)
                 context["filename"] = filename
