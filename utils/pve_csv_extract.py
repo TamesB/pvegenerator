@@ -79,7 +79,7 @@ class ExtractPVE:
         for index in range(len(self.pve_book)):
             if index > 0:
                 # check if line is paragraaf or hoofdstuk
-                if (self.pve_book[index][0] is ""
+                if (self.pve_book[index][0] == ""
                     and ((self.pve_book[index - 1][0] != self.pve_book[index + 1][0])) and (self.pve_book[index - 1][0] != "")):
                     self.hoofdstuk_namen.append(self.pve_book[index][1])
                     hoofdstuk = Hoofdstuk()
@@ -87,7 +87,7 @@ class ExtractPVE:
                     self.hoofdstuk_objects.append(hoofdstuk)
                     paragraaf_was_last = False
 
-                if (self.pve_book[index - 1][0] is "" and self.pve_book[0] is "") or (self.pve_book[index][0] is "" and (self.pve_book[index - 1][0] == self.pve_book[index + 1][0])):
+                if (self.pve_book[index - 1][0] == "" and self.pve_book[index][0] == "") or (self.pve_book[index][0] == "" and (self.pve_book[index - 1][0] == self.pve_book[index + 1][0])):
                     self.paragraaf_namen.append(self.pve_book[index][1])
                     paragraaf = Paragraaf()
                     paragraaf.set_name(self.paragraaf_namen[-1])
