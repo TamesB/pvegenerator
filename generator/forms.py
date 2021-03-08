@@ -180,6 +180,7 @@ class CompareFormBouwsoort(forms.Form):
 
         layout = [
             ("Text", '<h2 class="ui dividing header">Vergelijk twee bouwsoorten</h2>'),
+            ("Text", '<i>Let op het verschil tussen de volgorde van de parameters. Appartement 0-50 m2 t.o.v. Grondgebonden Woning geeft een ander resultaat dan Grondgebonden Woning t.o.v. Appartement 0-50 m2. Namelijk, welke wel in de eerste parameter voorkomt maar niet in de tweede.</i>'),
             (
                 "Two Fields",
                 ("Field", "Bouwsoort1"),
