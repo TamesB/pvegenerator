@@ -453,7 +453,8 @@ def download_pve(request, pk):
             accepted_id.id for accepted_id in commentphase.accepted_comments.all()
         ]
 
-    pdfmaker = writePdf.PDFMaker()
+    versie = models.ActieveVersie.objects.filter(belegger__naam="Syntrus").first()
+    pdfmaker = writePdf.PDFMaker(versie.versie)
 
     # verander CONCEPT naar DEFINITIEF als het project volbevroren is.
     if project.fullyFrozen:

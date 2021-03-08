@@ -60,7 +60,7 @@ def LogoutView(request):
 @login_required
 def DashboardView(request):
     context = {}
-    
+
     if Project.objects.filter(
         permitted__username__contains=request.user.username, belegger__naam="Syntrus"
     ).exists():
@@ -304,7 +304,7 @@ def GeneratePVEView(request):
             )
             filename = f"PvE-{fileExt}"
             zipFilename = f"PvE_Compleet-{fileExt}"
-            pdfmaker = writePdf.PDFMaker()
+            pdfmaker = writePdf.PDFMaker(versie.versie)
             opmerkingen = {}
             bijlagen = {}
             reacties = {}

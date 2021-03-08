@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from pyproj import Transformer
 
-from app.models import Bouwsoort, Doelgroep, PVEItem, TypeObject
+from app.models import Bouwsoort, Doelgroep, PVEItem, TypeObject, ActieveVersie
 from generator.forms import PVEParameterForm
 from utils import createBijlageZip, writePdf
 
@@ -297,7 +297,8 @@ def download_pve(request, pk):
     reacties = {}
     reactiebijlagen = {}
 
-    pdfmaker = writePdf.PDFMaker()
+    versie = models.ActieveVersie.objects.filter(belegger__naam="Syntrus").first()
+    pdfmaker = writePdf.PDFMaker(versie.versie)
     pdfmaker.makepdf(
         filename,
         basic_PVE,

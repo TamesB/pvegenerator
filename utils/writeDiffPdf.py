@@ -13,7 +13,7 @@ from app import models
 
 
 class PDFMaker:
-    def __init__(self):
+    def __init__(self, versienaam):
         self.date = datetime.datetime.now()
 
         self.bedrijfsnaam = "Syntrus"
@@ -23,14 +23,14 @@ class PDFMaker:
         self.PAGE_WIDTH = self.defaultPageSize[0]
         self.styles = getSampleStyleSheet()
 
-        self.year = self.date.strftime("%Y")
-        self.Topleft = f"PVE SAREF {self.year}"
+        self.version = versienaam
+        self.Topleft = f"PVE SAREF {self.version}"
         self.Topright = "CONCEPT"
         self.Centered = "PARAMETERS"
         self.Bottomleft = "%s-%s-%s" % (
             self.date.strftime("%d"),
             self.date.strftime("%m"),
-            self.year,
+            self.date.strftime("%Y"),
         )
 
         self.LeftPadding = 22

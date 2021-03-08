@@ -13,7 +13,7 @@ from app import models
 
 
 class PDFMaker:
-    def __init__(self):
+    def __init__(self, versie):
         self.date = datetime.datetime.now()
 
         self.bedrijfsnaam = "Syntrus"
@@ -23,8 +23,8 @@ class PDFMaker:
         self.PAGE_WIDTH = self.defaultPageSize[0]
         self.styles = getSampleStyleSheet()
 
-        self.year = self.date.strftime("%Y")
-        self.Topleft = f"PVE SAREF {self.year}"
+        self.version = versie
+        self.Topleft = f"PVE SAREF {self.version}"
         self.BijlageDisclaimer = f"Bijlages van regels zijn in het mapje BasisBijlages, bijlagen van opmerkingen in het mapje OpmerkingBijlages."
         self.GeaccepteerdDisclaimer = f"Geaccepteerde statussen zijn in het groen."
         self.NietGeaccepteerdDisclaimer = (
@@ -35,7 +35,7 @@ class PDFMaker:
         self.Bottomleft = "%s-%s-%s" % (
             self.date.strftime("%d"),
             self.date.strftime("%m"),
-            self.year,
+            self.date.strftime("%Y"),
         )
 
         self.LeftPadding = 22
@@ -180,7 +180,7 @@ class PDFMaker:
         canvas.drawString(
             self.LeftPadding + 1,
             self.OpmerkingBoxPadding + self.OpmerkingBoxHeight + 2,
-            f"PROGRAMMA VAN EISEN {self.year}",
+            f"PROGRAMMA VAN EISEN {self.version}",
         )
         #   rode kleur voor disclaimer
         canvas.drawString(
