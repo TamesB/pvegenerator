@@ -63,6 +63,7 @@ def FourOhFourView(request):
 @staff_member_required
 def DashboardView(request):
     hour = datetime.datetime.utcnow().hour + 2  # UTC + 2 = CEST
+
     greeting = ""
     if hour > 3 and hour < 12:
         greeting = "Goedemorgen"
@@ -216,7 +217,7 @@ def PVEBewerkOverview(request, versie_pk):
 @staff_member_required(login_url="/404")
 def PVEHoofdstukListView(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
-    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie)
+    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie).order_by("id")
     context = {}
     context["hoofdstukken"] = hoofdstukken
     context["versie_pk"] = versie_pk
@@ -249,7 +250,7 @@ def DownloadWorksheet(request, versie_pk):
 @staff_member_required(login_url="/404")
 def PVEHoofdstukListViewEdit(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
-    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie)
+    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie).order_by("id")
     context = {}
     context["hoofdstukken"] = hoofdstukken
     context["versie_pk"] = versie_pk
@@ -259,7 +260,7 @@ def PVEHoofdstukListViewEdit(request, versie_pk):
 @staff_member_required(login_url="/404")
 def PVEHoofdstukListViewDelete(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
-    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie)
+    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie).order_by("id")
     context = {}
     context["hoofdstukken"] = hoofdstukken
     context["versie_pk"] = versie_pk
@@ -280,7 +281,7 @@ def PVEaddhoofdstukView(request, versie_pk):
             PVEHoofdstuk.save()
             return redirect("hoofdstukview", versie_pk=versie_pk)
 
-    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie)
+    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie).order_by("id")
 
     # form, initial chapter in specific onderdeel
     form = forms.ChapterForm()
@@ -311,7 +312,7 @@ def PVEedithoofdstukView(request, versie_pk, pk):
     hoofdstuk = models.PVEHoofdstuk.objects.filter(versie=versie, id=pk).first()
     form = forms.ChapterForm(instance=hoofdstuk)
 
-    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie)
+    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie).order_by("id")
 
     # form, initial chapter in specific onderdeel
     context = {}
@@ -338,7 +339,9 @@ def paragraaflistView(request, versie_pk, pk):
     # if an item is already in the chapter and doesnt have a paragraph ->
     # redirect to items
     if items:
-        if items.first().paragraaf is None:
+        if items.first().paragraaf is None and not models.PVEParagraaf.objects.filter(
+                hoofdstuk=hoofdstuk, versie=versie
+            ).exists():
             return redirect(
                 "itemlistview", versie_pk=versie_pk, chapter_id=pk, paragraph_id=0
             )

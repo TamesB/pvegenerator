@@ -298,7 +298,7 @@ class PDFMaker:
         # get pve versie
         versie = models.PVEVersie.objects.get(id=versie_pk)
 
-        hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie)
+        hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie).order_by("id")
         hoofdstuknamen = [hoofdstuk.hoofdstuk for hoofdstuk in hoofdstukken]
 
         # Excel tabel simulasie
@@ -309,7 +309,7 @@ class PDFMaker:
                 p = Paragraph("%s" % hoofdstuk, self.hoofdstukStyle)
                 Story.append(p)
 
-                paragraven = models.PVEParagraaf.objects.filter(hoofdstuk=hoofdstuk)
+                paragraven = models.PVEParagraaf.objects.filter(hoofdstuk=hoofdstuk).order_by("id")
 
                 if paragraven.exists():
                     for paragraaf in paragraven:
