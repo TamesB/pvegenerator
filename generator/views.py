@@ -225,7 +225,8 @@ def GeneratePVEView(request, versie_pk):
             reacties = {}
             reactiebijlagen = {}
 
-            pdfmaker = writePdf.PDFMaker()
+            versie_naam = versie.versie
+            pdfmaker = writePdf.PDFMaker(versie_naam)
             pdfmaker.makepdf(
                 filename,
                 basic_PVE,
@@ -427,8 +428,9 @@ def compareFormView(request, versie_pk, pk):
                     date.strftime("%m"),
                     date.strftime("%Y"),
                 )
-
-                pdfmaker = writeDiffPdf.PDFMaker()
+                
+                versie_naam = versie.versie
+                pdfmaker = writeDiffPdf.PDFMaker(versie_naam)
                 pdfmaker.makepdf(filename, afwijkingen, versie_pk, parameters)
                 context["filename"] = filename
 
