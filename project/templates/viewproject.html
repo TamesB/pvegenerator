@@ -17,10 +17,16 @@
     {% if project.bouwsoort2 %}
     <p><b>Bouwsoort (Sub): </b><i>{{ project.bouwsoort2 }}</i></p>
     {% endif %}
+    {% if project.bouwsoort3 %}
+    <p><b>Bouwsoort (Sub): </b><i>{{ project.bouwsoort2 }}</i></p>
+    {% endif %}
     {% if project.typeObject1 %}
     <p><b>Type Object: </b><i>{{ project.typeObject1 }}</i></p>
     {% endif %}
     {% if project.typeObject2 %}
+    <p><b>Type Object (Sub): </b><i>{{ project.typeObject2 }}</i></p>
+    {% endif %}
+    {% if project.typeObject3 %}
     <p><b>Type Object (Sub): </b><i>{{ project.typeObject2 }}</i></p>
     {% endif %}
     {% if project.doelgroep1 %}
@@ -28,6 +34,9 @@
     {% endif %}
     {% if project.doelgroep2 %}
     <p><b>Doelgroep (Sub): </b><i>{{ project.doelgroep2 }}</i></p>
+    {% endif %}    
+    {% if project.doelgroep3 %}
+    <p><b>Doelgroep (Sub): </b><i>{{ project.doelgroep3 }}</i></p>
     {% endif %}
 {% endif %}
 <p><b>Aantal verhuureenheden: </b><i>{{ project.vhe }}</i></p>
@@ -39,18 +48,11 @@
 <div>
 <h3 class="ui header">Basis handelingen</h1>
 {% if project.pveconnected %}
-<p><span><a href="{% url 'downloadpve' project.id %}"><button class="ui basic button"><i class="icon download"></i>Download huidige staat PvE</button></a></span></p>
-<p><span><a href="{% url 'viewannotations' project.id %}"><button class="ui basic button"><i class="icon edit"></i>PvE Opmerkingen / Kostenverschil</button></a></span></p>
-<p><span><a href="{% url 'searchpveitem' project.id %}"><button class="ui basic button"><i class="icon plus"></i>Voeg opmerking toe aan PvE item</button></a></span></p>
+<p><span><a href="{% url 'download_pve_syn' project.id %}"><button class="ui basic button"><i class="icon download"></i>Download huidige staat PvE</button></a></span></p>
 {% else %}
 <p>
-    {% if request.user.type_user == 'OG' or request.user.type_user == 'B' %}
-    <a href="{% url 'connectpve' project.id %}"><input type="button" class="ui primary button d-inline" value="Koppel PvE" /></a>
-    {% endif %}
+Nog geen PvE gekoppeld.
 </p>
-{% endif %}
-{% if request.user.type_user == 'OG' or request.user.type_user == 'B' %}
-<p><span><a href="#"><button class="ui basic button"><i class="icon plus"></i>Voeg derde toe</button></a></span></p>
 {% endif %}
 </div>
 

@@ -68,7 +68,7 @@ class ExtractPVE:
         self.item_objects = []
 
     def read_pve(self):
-        with open('pve.csv', newline='', encoding="utf8") as File:  
+        with open('pve_new.csv', newline='', encoding="utf8") as File:  
             reader = csv.reader(File, delimiter=";")
             for row in reader:
                 self.pve_book.append(row)

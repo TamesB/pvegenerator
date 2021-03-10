@@ -9,7 +9,7 @@ urlpatterns = [
     path("", views.LoginPageView, name="login"),
     path("dashboard", views.DashboardView, name="dashboard"),
     path("logout", views.LogoutView, name="logout"),
-    path("404", views.FourOhFourView, name="404"),
+
     path(
         "beleggersversie",
         views.PVEBeleggerVersieOverview,
