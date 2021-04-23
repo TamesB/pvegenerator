@@ -225,7 +225,7 @@ def GeneratePVEView(request, versie_pk):
             reacties = {}
             reactiebijlagen = {}
 
-            versie_naam = versie.versie
+            versie_naam = pve_versie.versie
             pdfmaker = writePdf.PDFMaker(versie_naam)
             pdfmaker.makepdf(
                 filename,
