@@ -200,6 +200,10 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
         # set the PVEItem from the comment
         item = comment.item
 
+        bijlage = None
+        if models.ItemBijlages.objects.get(items__id__contains=item.id).exists():
+            bijlage = models.ItemBijlages.objects.get(items__id__contains=item.id)
+            
         temp_bijlage_list = []
         temp_commentbulk_list_non_accept = []
         string = ""
@@ -255,7 +259,7 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
                         last_accept,
                         temp_bijlage_list,
                         comment.kostenConsequenties,
-                        item.bijlage,
+                        bijlage,
                     ]
                 )
             else:
@@ -269,7 +273,7 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
                         last_accept,
                         temp_bijlage_list,
                         comment.kostenConsequenties,
-                        item.bijlage,
+                        bijlage,
                     ]
                 ]
         else:
@@ -284,7 +288,7 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
                         last_accept,
                         temp_bijlage_list,
                         comment.kostenConsequenties,
-                        item.bijlage,
+                        bijlage,
                     ]
                 )
             else:
@@ -298,7 +302,7 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
                         last_accept,
                         temp_bijlage_list,
                         comment.kostenConsequenties,
-                        item.bijlage,
+                        bijlage,
                     ]
                 ]
 

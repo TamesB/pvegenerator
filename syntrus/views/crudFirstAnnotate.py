@@ -484,6 +484,11 @@ def AddComment(request, pk):
 
     for item in items:
         opmerking = None
+        
+        bijlage = None
+
+        if models.ItemBijlages.objects.filter(items__id__contains=item.id).exists():
+            bijlage = models.ItemBijlages.objects.get(items__id__contains=item.id)
 
         # create forms
         if item not in annotations.keys():
@@ -505,43 +510,43 @@ def AddComment(request, pk):
         if item.paragraaf:
             if item.hoofdstuk not in hoofdstuk_ordered_items.keys():
                 hoofdstuk_ordered_items[item.hoofdstuk] = {}
-                
+
             if item.paragraaf in hoofdstuk_ordered_items[item.hoofdstuk].keys():
                 if opmerking:
                     hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append(
-                        [item, item.id, opmerking.status, item.bijlage]
+                        [item, item.id, opmerking.status, bijlage]
                     )
                 else:
                     hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append(
-                        [item, item.id, None, item.bijlage]
+                        [item, item.id, None, bijlage]
                     )
             else:
                 if opmerking:
                     hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [
-                        [item, item.id, opmerking.status, item.bijlage]
+                        [item, item.id, opmerking.status, bijlage]
                     ]
                 else:
                     hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [
-                        [item, item.id, None, item.bijlage]
+                        [item, item.id, None, bijlage]
                     ]
         else:
             if item.hoofdstuk in hoofdstuk_ordered_items.keys():
                 if opmerking:
                     hoofdstuk_ordered_items[item.hoofdstuk].append(
-                        [item, item.id, opmerking.status, item.bijlage]
+                        [item, item.id, opmerking.status, bijlage]
                     )
                 else:
                     hoofdstuk_ordered_items[item.hoofdstuk].append(
-                        [item, item.id, None, item.bijlage]
+                        [item, item.id, None, bijlage]
                     )
             else:
                 if opmerking:
                     hoofdstuk_ordered_items[item.hoofdstuk] = [
-                        [item, item.id, opmerking.status, item.bijlage]
+                        [item, item.id, opmerking.status, bijlage]
                     ]
                 else:
                     hoofdstuk_ordered_items[item.hoofdstuk] = [
-                        [item, item.id, None, item.bijlage]
+                        [item, item.id, None, bijlage]
                     ]
 
     # easy entrance to item ids
