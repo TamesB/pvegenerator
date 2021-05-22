@@ -14,10 +14,8 @@
     <p style="word-wrap: break-word;">{{ PVEItem.inhoud|linebreaks }}</p>
     <div class="ui divider"></div>
     <h3 class="ui header">Bijlage</h3>
-    {% if PVEItem.bijlage %}
-    <span><a href="{% url 'downloadbijlage' PVEItem.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>{{ PVEItem.bijlage|filename }}</button></a></span>
-    {% elif PVEItem.bijlage == false %}
-    <p>Geen bijlage bij deze regel.<p>
+    {% if bijlage %}
+    <span><a href="{% url 'downloadbijlage' PVEItem.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>{{ bijlage.bijlage|filename }}</button></a></span>
     {% else %}
     <p>Geen bijlage bij deze regel.<p>
     {% endif %}

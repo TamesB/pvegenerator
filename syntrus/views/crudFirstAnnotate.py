@@ -505,8 +505,8 @@ def AddComment(request, pk):
         if item.paragraaf:
             if item.hoofdstuk not in hoofdstuk_ordered_items.keys():
                 hoofdstuk_ordered_items[item.hoofdstuk] = {}
-
-            if item.paragraaf in hoofdstuk_ordered_items[item.hoofdstuk]:
+                
+            if item.paragraaf in hoofdstuk_ordered_items[item.hoofdstuk].keys():
                 if opmerking:
                     hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append(
                         [item, item.id, opmerking.status, item.bijlage]
@@ -525,7 +525,7 @@ def AddComment(request, pk):
                         [item, item.id, None, item.bijlage]
                     ]
         else:
-            if item.hoofdstuk in hoofdstuk_ordered_items:
+            if item.hoofdstuk in hoofdstuk_ordered_items.keys():
                 if opmerking:
                     hoofdstuk_ordered_items[item.hoofdstuk].append(
                         [item, item.id, opmerking.status, item.bijlage]

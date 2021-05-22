@@ -475,12 +475,20 @@ def download_pve(request, pk):
         geaccepteerde_regels_ids,
     )
 
-    # get bijlagen
-    bijlagen = [item for item in basic_PVE if item.bijlage]
+    # get bijlagen        
+    bijlagen_models = models.ItemBijlages.objects.all()
+    bijlagen = []
+
+    for bijlage_model in bijlagen_models:
+        for item in bijlage_model.items.all():
+            if item in basic_PVE:
+                bijlagen.append(bijlage_model)
+
+    bijlagen = list(set(bijlagen))
 
     if BijlageToAnnotation.objects.filter(ann__project=project).exists():
-        bijlagen = BijlageToAnnotation.objects.filter(ann__project=project)
-        for item in bijlagen:
+        bijlagen_ann = BijlageToAnnotation.objects.filter(ann__project=project)
+        for item in bijlagen_ann:
             bijlagen.append(item)
 
     if BijlageToReply.objects.filter(reply__onComment__project=project).exists():

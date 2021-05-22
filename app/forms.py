@@ -14,7 +14,8 @@ from .models import (
     PVEOnderdeel,
     PVEParagraaf,
     PVEVersie,
-    TypeObject
+    TypeObject,
+    ItemBijlages
 )
 
 
@@ -92,6 +93,9 @@ class ParagraafForm(ModelForm):
 
 class PVEItemEditForm(ModelForm):
     bijlage = forms.FileField(required=False)
+    BestaandeBijlage = forms.ModelChoiceField(
+        queryset=ItemBijlages.objects.all(), label="BestaandeBijlage", required=False
+    )
     Bouwsoort = forms.ModelMultipleChoiceField(
         queryset=Bouwsoort.objects.all(), label="Bouwsoort", required=False
     )
@@ -106,6 +110,9 @@ class PVEItemEditForm(ModelForm):
         "Bouwsoort": forms.SelectMultiple(
             attrs={"class": "ui dropdown", "multiple": ""}
         ),
+        "BestaandeBijlage": forms.SelectMultiple(
+            attrs={"class": "ui dropdown", "multiple": ""}
+        ),
         "TypeObject": forms.SelectMultiple(
             attrs={"class": "ui dropdown", "multiple": ""}
         ),
@@ -118,7 +125,6 @@ class PVEItemEditForm(ModelForm):
         model = PVEItem
         fields = (
             "inhoud",
-            "bijlage",
             "basisregel",
             "Bouwsoort",
             "TypeObject",
@@ -150,7 +156,12 @@ class PVEItemEditForm(ModelForm):
                 "<i>De inhoud van de regel is wat te zien is in het uiteindelijke Programma van Eisen. Bijlages worden met referentie toegevoegd in het eindproduct.</i><br>",
             ),
             ("Field", "inhoud"),
+            (
+                "Text",
+                "<i>Upload een nieuwe bijlage, of kies een bestaande bijlage.</i><br>",
+            ),
             ("Field", "bijlage"),
+            ("Field", "BestaandeBijlage"),
             ("Text", '<h2 class="ui dividing header">Parameters</h2>'),
             (
                 "Text",

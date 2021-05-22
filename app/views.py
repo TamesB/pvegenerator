@@ -57,6 +57,7 @@ def LogoutView(request):
 
 @staff_member_required
 def DashboardView(request):
+        
     hour = datetime.datetime.utcnow().hour + 2  # UTC + 2 = CEST
 
     greeting = ""
@@ -682,6 +683,11 @@ def viewItemView(request, versie_pk, pk):
         raise Http404("Item does not exist.")
 
     context = {}
+
+    if models.ItemBijlages.objects.filter(items__id__contains=PVEItem.id).exists():
+        bijlage = models.ItemBijlages.objects.filter(items__id__contains=PVEItem.id).first()
+        context["bijlage"] = bijlage
+
     context["PVEItem"] = PVEItem
     context["Bouwsoort"] = PVEItem.Bouwsoort.all()
     context["TypeObject"] = PVEItem.TypeObject.all()
@@ -713,6 +719,9 @@ def downloadBijlageView(request, pk):
     bucket_name = settings.AWS_STORAGE_BUCKET_NAME
     region = settings.AWS_S3_REGION_NAME
     item = models.PVEItem.objects.filter(id=pk).first()
+    if models.ItemBijlages.objects.filter(items__id__contains=item.id).exists():
+        bijlage = models.ItemBijlages.objects.filter(items__id__contains=item.id).first().bijlage
+
     expiration = 10000
     s3_client = boto3.client(
         "s3",
@@ -726,7 +735,7 @@ def downloadBijlageView(request, pk):
     try:
         response = s3_client.generate_presigned_url(
             "get_object",
-            Params={"Bucket": bucket_name, "Key": str(item.bijlage)},
+            Params={"Bucket": bucket_name, "Key": str(bijlage)},
             ExpiresIn=expiration,
         )
     except ClientError as e:
@@ -754,7 +763,6 @@ def editItemView(request, versie_pk, pk):
         if form.is_valid():
             # get parameters and save new item
             PVEItem.inhoud = form.cleaned_data["inhoud"]
-            PVEItem.bijlage = form.cleaned_data["bijlage"]
             PVEItem.save()
 
             PVEItem.Bouwsoort.set(form.cleaned_data["Bouwsoort"])
@@ -768,6 +776,17 @@ def editItemView(request, versie_pk, pk):
             PVEItem.basisregel = form.cleaned_data["basisregel"]
 
             PVEItem.save()
+
+            if form.cleaned_data["bijlage"]:
+                bijlage_item = models.ItemBijlages()
+                bijlage_item.bijlage = form.cleaned_data["bijlage"]
+                bijlage_item.save()
+                bijlage_item.items.add(PVEItem)
+                bijlage_item.save()
+
+            if form.cleaned_data["BestaandeBijlage"]:
+                bestaande_bijlage = form.cleaned_data["BestaandeBijlage"]
+                bestaande_bijlage.items.add(PVEItem)
 
             # and reverse
             return HttpResponseRedirect(reverse("viewitem", args=(versie_pk, pk)))
@@ -802,7 +821,6 @@ def addItemView(request, versie_pk, chapter_id, paragraph_id):
                 versie__id=versie_pk, id=chapter_id
             ).first()
             PVEItem.inhoud = form.cleaned_data["inhoud"]
-            PVEItem.bijlage = form.cleaned_data["bijlage"]
             PVEItem.save()
 
             PVEItem.Bouwsoort.set(form.cleaned_data["Bouwsoort"])
@@ -816,6 +834,17 @@ def addItemView(request, versie_pk, chapter_id, paragraph_id):
             PVEItem.basisregel = form.cleaned_data["basisregel"]
 
             PVEItem.save()
+
+            if form.cleaned_data["bijlage"]:
+                bijlage_item = models.ItemBijlages()
+                bijlage_item.bijlage = form.cleaned_data["bijlage"]
+                bijlage_item.save()
+                bijlage_item.items.add(PVEItem)
+                bijlage_item.save()
+                
+            if form.cleaned_data["BestaandeBijlage"]:
+                bestaande_bijlage = form.cleaned_data["BestaandeBijlage"]
+                bestaande_bijlage.items.add(PVEItem)
 
             pk = PVEItem.id
 

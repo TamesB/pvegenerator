@@ -10,7 +10,8 @@ from .models import (
     PVEItem,
     PVEParagraaf,
     PVEVersie,
-    TypeObject
+    TypeObject,
+    ItemBijlages
 )
 
 # Register your models here.
@@ -22,3 +23,4 @@ admin.site.register(Doelgroep)
 admin.site.register(PVEHoofdstuk)
 admin.site.register(PVEParagraaf)
 admin.site.register(PVEItem)
+admin.site.register(ItemBijlages)

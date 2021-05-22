@@ -9,7 +9,7 @@ from app import models
 
 class ExcelMaker:
     def linewriter(self, versie_pk):
-        PVEItems = models.PVEItem.objects.filter(versie__id=versie_pk)
+        PVEItems = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk)
 
         date = datetime.datetime.now()
         filename = "PVEWORKSHEET-%s%s%s%s%s%s" % (
@@ -73,7 +73,7 @@ class ExcelMaker:
         cell_format.set_text_wrap()
 
         for hoofdstuk in hoofdstukken:
-            if models.PVEItem.objects.filter(versie__id=versie_pk, hoofdstuk=hoofdstuk):
+            if models.PVEItem.objects.filter(versie__id=versie_pk, hoofdstuk=hoofdstuk).exists():
                 worksheet.write(row, column, hoofdstuk.hoofdstuk, bold)
                 row += 1
 

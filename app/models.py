@@ -86,7 +86,6 @@ class PVEItem(models.Model):
         PVEParagraaf, on_delete=models.CASCADE, blank=True, null=True
     )
     inhoud = models.TextField(max_length=5000)
-    bijlage = models.FileField(blank=True, null=True, upload_to="BasisBijlages")
 
     basisregel = models.BooleanField(default=False)
     Bouwsoort = models.ManyToManyField(Bouwsoort, blank=True)
@@ -103,3 +102,17 @@ class PVEItem(models.Model):
 
     def __str__(self):
         return f"{self.inhoud}"
+
+class ItemBijlage(models.Model):
+    item = models.ForeignKey(PVEItem, on_delete=models.CASCADE)
+    bijlage = models.FileField(blank=True, null=True, upload_to="BasisBijlages")
+
+    def __str__(self):
+        return f"Bijlage: [{self.bijlage}] on PVEItem: [{self.item.inhoud}]"
+
+class ItemBijlages(models.Model):
+    items = models.ManyToManyField(PVEItem)
+    bijlage = models.FileField(blank=True, null=True, upload_to="BasisBijlages")
+
+    def __str__(self):
+        return f"{self.bijlage}"

@@ -240,7 +240,15 @@ def GeneratePVEView(request, versie_pk):
             )
 
             # get bijlagen
-            bijlagen = [item for item in basic_PVE if item.bijlage]
+            bijlagen_models = models.ItemBijlages.objects.all()
+            bijlagen = []
+
+            for bijlage_model in bijlagen_models:
+                for item in bijlage_model.items.all():
+                    if item in basic_PVE:
+                        bijlagen.append(bijlage_model)
+
+            bijlagen = list(set(bijlagen))
 
             if bijlagen:
                 zipmaker = createBijlageZip.ZipMaker()
