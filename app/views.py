@@ -142,14 +142,69 @@ def AddPvEVersie(request, belegger_pk):
         form = forms.PVEVersieForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
+            kopie_versie = form.cleaned_data["kopie_versie"]
+            new_versie = form.cleaned_data["versie"]
             form.save()
-
+            
             # if first version. set as active version of the belegger
             if models.PVEVersie.objects.filter(belegger=belegger).count() == 1:
                 actieve_versie = models.ActieveVersie()
                 actieve_versie.belegger = belegger
                 actieve_versie.versie = models.PVEVersie.objects.all().first()
                 actieve_versie.save()
+
+            # maak kopie van andere versie, voeg nieuw toe.
+            if kopie_versie:
+                # items
+                items = models.PVEItem.objects.filter(versie=kopie_versie)
+
+                # keuzematrix
+                bwsrt = models.Bouwsoort.objects.filter(versie=kopie_versie)
+                tpobj = models.TypeObject.objects.filter(versie=kopie_versie)
+                dlgrp = models.Doelgroep.objects.filter(versie=kopie_versie)
+
+                # hoofdstukken
+                hfstukken = models.PVEHoofdstuk.objects.filter(versie=kopie_versie)
+
+                # bijlages
+                bijlagen_models = models.ItemBijlages.objects.all()
+                bijlagen = []
+
+                for bijlage_model in bijlagen_models:
+                    for item in bijlage_model.items.all():
+                        if item in items:
+                            bijlagen.append(bijlage_model)
+
+                bijlagen = list(set(bijlagen))
+
+                # make copy of all
+                new_versie_obj = models.PVEVersie.objects.filter(versie=new_versie).first()
+
+                #keuzematrices#################
+                new_bwsrt = []
+                new_tpobj = []
+                new_dlgrp = []
+
+                for i in bwsrt:
+                    i.pk = None
+                    i.versie = new_versie_obj
+                    new_bwsrt.append(i)
+
+                for i in tpobj:
+                    i.pk = None
+                    i.versie = new_versie_obj
+                    new_tpobj.append(i)
+
+                for i in dlgrp:
+                    i.pk = None
+                    i.versie = new_versie_obj
+                    new_dlgrp.append(i)
+
+                models.Bouwsoort.objects.bulk_create(new_bwsrt)
+                models.TypeObject.objects.bulk_create(new_tpobj)
+                models.Doelgroep.objects.bulk_create(new_dlgrp)
+
+                # hoofdstukken paragravem #################
 
             return redirect("beleggerversieoverview")
 

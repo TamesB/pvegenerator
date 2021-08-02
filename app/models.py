@@ -103,14 +103,8 @@ class PVEItem(models.Model):
     def __str__(self):
         return f"{self.inhoud}"
 
-class ItemBijlage(models.Model):
-    item = models.ForeignKey(PVEItem, on_delete=models.CASCADE)
-    bijlage = models.FileField(blank=True, null=True, upload_to="BasisBijlages")
-
-    def __str__(self):
-        return f"Bijlage: [{self.bijlage}] on PVEItem: [{self.item.inhoud}]"
-
 class ItemBijlages(models.Model):
+    #versie toevoegen
     items = models.ManyToManyField(PVEItem)
     bijlage = models.FileField(blank=True, null=True, upload_to="BasisBijlages")
 

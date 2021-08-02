@@ -88,64 +88,64 @@ def GeneratePVEView(request, versie_pk):
             )
 
             # Entered parameters are in the manytomany parameters of the object
-            basic_PVE = models.PVEItem.objects.filter(
+            basic_PVE = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
                 Q(versie__id=versie_pk) & Q(basisregel=True)
             )
 
             basic_PVE = basic_PVE.union(
-                models.PVEItem.objects.filter(
+                models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
                     versie__id=versie_pk, Bouwsoort__parameter__contains=Bouwsoort1
                 )
             )
 
             if Bouwsoort2:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
                         versie__id=versie_pk, Bouwsoort__parameter__contains=Bouwsoort2
                     )
                 )
             if Bouwsoort3:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
                         versie__id=versie_pk, Bouwsoort__parameter__contains=Bouwsoort3
                     )
                 )
             if TypeObject1:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
                         versie__id=versie_pk,
                         TypeObject__parameter__contains=TypeObject1,
                     )
                 )
             if TypeObject2:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
                         versie__id=versie_pk,
                         TypeObject__parameter__contains=TypeObject2,
                     )
                 )
             if TypeObject3:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
                         versie__id=versie_pk,
                         TypeObject__parameter__contains=TypeObject3,
                     )
                 )
             if Doelgroep1:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
                         versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep1
                     )
                 )
             if Doelgroep2:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
                         versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep2
                     )
                 )
             if Doelgroep3:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
                         versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep3
                     )
                 )
@@ -154,29 +154,29 @@ def GeneratePVEView(request, versie_pk):
             # if box checked
             if AED:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(Q(AED=True) & Q(versie__id=versie_pk))
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(Q(AED=True) & Q(versie__id=versie_pk))
                 )
             if Smarthome:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
                         Q(Smarthome=True) & Q(versie__id=versie_pk)
                     )
                 )
             if EntreeUpgrade:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
                         Q(EntreeUpgrade=True) & Q(versie__id=versie_pk)
                     )
                 )
             if Pakketdient:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
                         Q(Pakketdient=True) & Q(versie__id=versie_pk)
                     )
                 )
             if JamesConcept:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
                         Q(JamesConcept=True) & Q(versie__id=versie_pk)
                     )
                 )

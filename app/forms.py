@@ -46,11 +46,16 @@ class BeleggerForm(ModelForm):
 
 
 class PVEVersieForm(ModelForm):
+    kopie_versie = forms.ModelChoiceField(
+        queryset=PVEVersie.objects.all(), label="Kopie (optioneel):", required=False
+    )
+
     class Meta:
         model = PVEVersie
         fields = ("versie", "belegger")
         labels = {
-            "versie": "Versie:",
+            "versie": "Versie Naam:",
+            "kopie_versie": "Kopie (optioneel):"
         }
         widgets = {"belegger": forms.HiddenInput()}
 
@@ -94,7 +99,7 @@ class ParagraafForm(ModelForm):
 class PVEItemEditForm(ModelForm):
     bijlage = forms.FileField(required=False)
     BestaandeBijlage = forms.ModelChoiceField(
-        queryset=ItemBijlages.objects.all(), label="BestaandeBijlage", required=False
+        queryset=ItemBijlages.objects.all(), label="Bestaande Bijlage(s)", required=False
     )
     Bouwsoort = forms.ModelMultipleChoiceField(
         queryset=Bouwsoort.objects.all(), label="Bouwsoort", required=False

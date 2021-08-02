@@ -9,7 +9,7 @@ from app import models
 
 class ExcelMaker:
     def linewriter(self, versie_pk):
-        PVEItems = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk)
+        PVEItems = [i for i in models.PVEItem.objects.prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk)]
 
         date = datetime.datetime.now()
         filename = "PVEWORKSHEET-%s%s%s%s%s%s" % (
@@ -71,69 +71,36 @@ class ExcelMaker:
         # Run door de items heen
         cell_format = workbook.add_format()
         cell_format.set_text_wrap()
+        print("start")
+
+        bouwsoorten_item = {item.id:[i for i in item.Bouwsoort.all()] for item in PVEItems}
+        typeobjecten_item = {item.id:[i for i in item.TypeObject.all()] for item in PVEItems}
+        doelgroepen_item = {item.id:[i for i in item.Doelgroep.all()] for item in PVEItems}
+
+        paragraven_hfst = {hoofdstuk.id:[i for i in models.PVEParagraaf.objects.filter(
+                versie__id=versie_pk, hoofdstuk=hoofdstuk
+            )] for hoofdstuk in hoofdstukken}
 
         for hoofdstuk in hoofdstukken:
-            if models.PVEItem.objects.filter(versie__id=versie_pk, hoofdstuk=hoofdstuk).exists():
-                worksheet.write(row, column, hoofdstuk.hoofdstuk, bold)
-                row += 1
+            print(f"hoofdstuk: {hoofdstuk}")
+            items = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, hoofdstuk=hoofdstuk)
+            worksheet.write(row, column, hoofdstuk.hoofdstuk, bold)
+            row += 1
 
-                paragraven = models.PVEParagraaf.objects.filter(
-                    versie__id=versie_pk, hoofdstuk=hoofdstuk
-                )
+            paragraven = paragraven_hfst[hoofdstuk.id]
 
-                if paragraven.exists():
-                    for paragraaf in paragraven:
-                        if models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
-                            versie__id=versie_pk, paragraaf=paragraaf
-                        ):
-                            items = [
-                                item
-                                for item in PVEItems
-                                if item.hoofdstuk == hoofdstuk
-                                and item.paragraaf == paragraaf
-                            ]
+            if len(paragraven) > 0:
+                for paragraaf in paragraven:
+                    items_spec = [
+                        item
+                        for item in items
+                        if item.paragraaf == paragraaf
+                    ]
+                    
+                    worksheet.write(row, column, paragraaf.paragraaf, bold)
+                    row += 1
 
-                            worksheet.write(row, column, paragraaf.paragraaf, bold)
-                            row += 1
-
-                            for item in items:
-                                inhoud = "%s" % item.inhoud
-                                worksheet.write(row, column, inhoud, cell_format)
-                                column += 1
-
-                                if item.basisregel:
-                                    worksheet.write(row, column, "x")
-                                    column += 1
-                                else:
-                                    column += 1
-
-                                for bouwsrt in Bouwsoorten:
-                                    if bouwsrt in item.Bouwsoort.all():
-                                        worksheet.write(row, column, "x")
-                                        column += 1
-                                    else:
-                                        column += 1
-
-                                for typeobj in TypeObjecten:
-                                    if typeobj in item.TypeObject.all():
-                                        worksheet.write(row, column, "x")
-                                        column += 1
-                                    else:
-                                        column += 1
-
-                                for doelgrp in Doelgroepen:
-                                    if doelgrp in item.Doelgroep.all():
-                                        worksheet.write(row, column, "x")
-                                        column += 1
-                                    else:
-                                        column += 1
-
-                                row += 1
-                                column = 0
-                else:
-                    items = [item for item in PVEItems if item.hoofdstuk == hoofdstuk]
-
-                    for item in items:
+                    for item in items_spec:
                         inhoud = "%s" % item.inhoud
                         worksheet.write(row, column, inhoud, cell_format)
                         column += 1
@@ -145,21 +112,21 @@ class ExcelMaker:
                             column += 1
 
                         for bouwsrt in Bouwsoorten:
-                            if bouwsrt in item.Bouwsoort.all():
+                            if bouwsrt in bouwsoorten_item[item.id]:
                                 worksheet.write(row, column, "x")
                                 column += 1
                             else:
                                 column += 1
 
                         for typeobj in TypeObjecten:
-                            if typeobj in item.TypeObject.all():
+                            if typeobj in typeobjecten_item[item.id]:
                                 worksheet.write(row, column, "x")
                                 column += 1
                             else:
                                 column += 1
 
                         for doelgrp in Doelgroepen:
-                            if doelgrp in item.Doelgroep.all():
+                            if doelgrp in doelgroepen_item[item.id]:
                                 worksheet.write(row, column, "x")
                                 column += 1
                             else:
@@ -167,5 +134,40 @@ class ExcelMaker:
 
                         row += 1
                         column = 0
+            else:
+                for item in items:
+                    inhoud = "%s" % item.inhoud
+                    worksheet.write(row, column, inhoud, cell_format)
+                    column += 1
+
+                    if item.basisregel:
+                        worksheet.write(row, column, "x")
+                        column += 1
+                    else:
+                        column += 1
+
+                    for bouwsrt in Bouwsoorten:
+                        if bouwsrt in bouwsoorten_item[item.id]:
+                            worksheet.write(row, column, "x")
+                            column += 1
+                        else:
+                            column += 1
+
+                    for typeobj in TypeObjecten:
+                        if typeobj in typeobjecten_item[item.id]:
+                            worksheet.write(row, column, "x")
+                            column += 1
+                        else:
+                            column += 1
+
+                    for doelgrp in Doelgroepen:
+                        if doelgrp in doelgroepen_item[item.id]:
+                            worksheet.write(row, column, "x")
+                            column += 1
+                        else:
+                            column += 1
+
+                    row += 1
+                    column = 0
         workbook.close()
         return filename
