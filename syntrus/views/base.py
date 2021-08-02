@@ -323,7 +323,7 @@ def GeneratePVEView(request):
             )
 
             # get bijlagen
-            bijlagen = [item for item in basic_PVE if item.bijlage]
+            bijlagen = [item for item in basic_PVE if item.bijlage.exists()]
             if bijlagen:
                 zipmaker = createBijlageZip.ZipMaker()
                 zipmaker.makeZip(zipFilename, filename, bijlagen)
