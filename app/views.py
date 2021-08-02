@@ -167,7 +167,7 @@ def AddPvEVersie(request, belegger_pk):
                 hfstukken = models.PVEHoofdstuk.objects.filter(versie=kopie_versie)
 
                 # bijlages
-                bijlagen_models = models.ItemBijlages.objects.all()
+                bijlagen_models = models.ItemBijlages.objects.filter(versie=kopie_versie)
                 bijlagen = []
 
                 for bijlage_model in bijlagen_models:
@@ -739,8 +739,8 @@ def viewItemView(request, versie_pk, pk):
 
     context = {}
 
-    if models.ItemBijlages.objects.filter(items__id__contains=PVEItem.id).exists():
-        bijlage = models.ItemBijlages.objects.filter(items__id__contains=PVEItem.id).first()
+    if models.ItemBijlages.objects.filter(versie__id=versie_pk, items__id__contains=PVEItem.id).exists():
+        bijlage = models.ItemBijlages.objects.filter(versie__id=versie_pk, items__id__contains=PVEItem.id).first()
         context["bijlage"] = bijlage
 
     context["PVEItem"] = PVEItem
@@ -835,6 +835,7 @@ def editItemView(request, versie_pk, pk):
             if form.cleaned_data["bijlage"]:
                 bijlage_item = models.ItemBijlages()
                 bijlage_item.bijlage = form.cleaned_data["bijlage"]
+                bijlage_item.versie = models.PVEVersie.objects.filter(id=versie_pk).first()
                 bijlage_item.save()
                 bijlage_item.items.add(PVEItem)
                 bijlage_item.save()
@@ -893,6 +894,7 @@ def addItemView(request, versie_pk, chapter_id, paragraph_id):
             if form.cleaned_data["bijlage"]:
                 bijlage_item = models.ItemBijlages()
                 bijlage_item.bijlage = form.cleaned_data["bijlage"]
+                bijlage_item.versie = models.PVEVersie.objects.filter(id=versie_pk).first()
                 bijlage_item.save()
                 bijlage_item.items.add(PVEItem)
                 bijlage_item.save()
