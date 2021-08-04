@@ -23,7 +23,6 @@ class ZipMaker:
 
         for item in items:
             bijlage = models.ItemBijlages.objects.filter(id=item.id).first()
-
             # open attachment in AWS S3 server
             access_key = settings.AWS_ACCESS_KEY_ID
             secret_key = settings.AWS_SECRET_ACCESS_KEY
@@ -50,8 +49,11 @@ class ZipMaker:
 
             page = urllib.request.urlopen(response)  # Change to website
             # put in this map of the zip with this name
-            attachname = f"{bijlage.bijlage}"
-            zipf.writestr(attachname, page.read())
+            filename_split = str(bijlage.bijlage).split("/")
+            map_name = filename_split[0]
+            extension = filename_split[1].split(".")[1]
+            full_attach_url = f"{map_name}/{bijlage.naam}.{extension}"
+            zipf.writestr(full_attach_url, page.read())
 
         # write the pdf in the root of zip
 

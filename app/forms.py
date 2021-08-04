@@ -99,16 +99,16 @@ class ParagraafForm(ModelForm):
 class PVEItemEditForm(ModelForm):
     bijlage = forms.FileField(required=False)
     BestaandeBijlage = forms.ModelChoiceField(
-        queryset=ItemBijlages.objects.all(), label="Bestaande Bijlage(s)", required=False
+        queryset=ItemBijlages.objects.none(), label="Bestaande Bijlage(s)", required=False
     )
     Bouwsoort = forms.ModelMultipleChoiceField(
-        queryset=Bouwsoort.objects.all(), label="Bouwsoort", required=False
+        queryset=Bouwsoort.objects.none(), label="Bouwsoort", required=False
     )
     TypeObject = forms.ModelMultipleChoiceField(
-        queryset=TypeObject.objects.all(), label="Type Object", required=False
+        queryset=TypeObject.objects.none(), label="Type Object", required=False
     )
     Doelgroep = forms.ModelMultipleChoiceField(
-        queryset=Doelgroep.objects.all(), label="Doelgroep", required=False
+        queryset=Doelgroep.objects.none(), label="Doelgroep", required=False
     )
 
     widgets = {

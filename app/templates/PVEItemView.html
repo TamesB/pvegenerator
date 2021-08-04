@@ -15,7 +15,7 @@
     <div class="ui divider"></div>
     <h3 class="ui header">Bijlage</h3>
     {% if bijlage %}
-    <span><a href="{% url 'downloadbijlage' PVEItem.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>{{ bijlage.bijlage|filename }}</button></a></span>
+    <span><a href="{% url 'downloadbijlage' PVEItem.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>{{ bijlagenaam }}</button></a></span>
     {% else %}
     <p>Geen bijlage bij deze regel.<p>
     {% endif %}

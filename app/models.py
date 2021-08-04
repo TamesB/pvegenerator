@@ -107,6 +107,7 @@ class ItemBijlages(models.Model):
     versie = models.ForeignKey(PVEVersie, on_delete=models.CASCADE, null=True)
     items = models.ManyToManyField(PVEItem)
     bijlage = models.FileField(blank=True, null=True, upload_to="BasisBijlages")
+    naam = models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.items}: {self.bijlage}"
+        return f"{self.naam}"

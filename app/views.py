@@ -152,19 +152,27 @@ def AddPvEVersie(request, belegger_pk):
                 actieve_versie.belegger = belegger
                 actieve_versie.versie = models.PVEVersie.objects.all().first()
                 actieve_versie.save()
-
+            
+            
             # maak kopie van andere versie, voeg nieuw toe.
             if kopie_versie:
                 # items
-                items = models.PVEItem.objects.filter(versie=kopie_versie)
+                items = [i for i in models.PVEItem.objects.filter(versie=kopie_versie)]
+                old_items = [i.id for i in items]
 
                 # keuzematrix
-                bwsrt = models.Bouwsoort.objects.filter(versie=kopie_versie)
-                tpobj = models.TypeObject.objects.filter(versie=kopie_versie)
-                dlgrp = models.Doelgroep.objects.filter(versie=kopie_versie)
+                bwsrt = [i for i in models.Bouwsoort.objects.filter(versie=kopie_versie)]
+                tpobj = [i for i in models.TypeObject.objects.filter(versie=kopie_versie)]
+                dlgrp = [i for i in models.Doelgroep.objects.filter(versie=kopie_versie)]
+                old_bwsrt = [i.id for i in bwsrt]
+                old_tpobj = [i.id for i in tpobj]
+                old_dlgrp = [i.id for i in dlgrp]
 
-                # hoofdstukken
-                hfstukken = models.PVEHoofdstuk.objects.filter(versie=kopie_versie)
+                # hoofdstukken en paragraven
+                hfstukken = [i for i in models.PVEHoofdstuk.objects.filter(versie=kopie_versie)]
+                prgrfs = [i for i in models.PVEParagraaf.objects.filter(versie=kopie_versie)]
+                old_hfstukken = [i.id for i in hfstukken]
+                old_prgrfs = [i.id for i in prgrfs]
 
                 # bijlages
                 bijlagen_models = models.ItemBijlages.objects.filter(versie=kopie_versie)
@@ -176,6 +184,7 @@ def AddPvEVersie(request, belegger_pk):
                             bijlagen.append(bijlage_model)
 
                 bijlagen = list(set(bijlagen))
+                old_bijlagen = [i.id for i in bijlagen]
 
                 # make copy of all
                 new_versie_obj = models.PVEVersie.objects.filter(versie=new_versie).first()
@@ -200,11 +209,121 @@ def AddPvEVersie(request, belegger_pk):
                     i.versie = new_versie_obj
                     new_dlgrp.append(i)
 
+                # create the new models
                 models.Bouwsoort.objects.bulk_create(new_bwsrt)
                 models.TypeObject.objects.bulk_create(new_tpobj)
                 models.Doelgroep.objects.bulk_create(new_dlgrp)
 
+                # map the old to new model ids for new foreignkey references
+                new_bwsrt = [i for i in models.Bouwsoort.objects.filter(versie=new_versie_obj)]
+                new_tpobj = [i for i in models.TypeObject.objects.filter(versie=new_versie_obj)]
+                new_dlgrp = [i for i in models.Doelgroep.objects.filter(versie=new_versie_obj)]
+
+                bwsrt_map = {}
+                for old, new in zip(old_bwsrt, new_bwsrt):
+                    bwsrt_map[old] = new
+
+                tpobj_map = {}
+                for old, new in zip(old_tpobj, new_tpobj):
+                    tpobj_map[old] = new
+
+                dlgrp_map = {}
+                for old, new in zip(old_dlgrp, new_dlgrp):
+                    dlgrp_map[old] = new
+          
                 # hoofdstukken paragravem #################
+                new_hfst = []
+
+                for i in hfstukken:
+                    i.pk = None
+                    i.versie = new_versie_obj
+                    new_hfst.append(i)
+
+                models.PVEHoofdstuk.objects.bulk_create(new_hfst)
+
+                new_hfst = [i for i in models.PVEHoofdstuk.objects.filter(versie=new_versie_obj)]
+
+                hfst_map = {}
+                for old, new in zip(old_hfstukken, new_hfst):
+                    hfst_map[old] = new
+                
+                # paragraven
+                new_prgrf = []
+
+                for i in prgrfs:
+                    i.pk = None
+                    i.versie = new_versie_obj
+                    i.hoofdstuk = hfst_map[i.hoofdstuk.id]
+                    new_prgrf.append(i)
+
+                models.PVEParagraaf.objects.bulk_create(new_prgrf)
+
+                new_prgrf = [i for i in models.PVEParagraaf.objects.filter(versie=new_versie_obj)]
+
+                prgrf_map = {}
+                for old, new in zip(old_prgrfs, new_prgrf):
+                    prgrf_map[old] = new
+
+                # finally, make new items with the new reference keys
+                new_items = []
+                cur_Bouwsoort_obj = []
+                cur_TypeObject_obj = []
+                cur_Doelgroep_obj = []
+
+                for i in items:
+                    # save reference keys for later appending
+                    cur_Bouwsoort_obj.append([bwsrt_map[j.id] for j in i.Bouwsoort.all()])
+                    cur_TypeObject_obj.append([tpobj_map[j.id] for j in i.TypeObject.all()])
+                    cur_Doelgroep_obj.append([dlgrp_map[j.id] for j in i.Doelgroep.all()])
+
+                    i.pk = None
+                    i.versie = new_versie_obj
+
+                    i.hoofdstuk = hfst_map[i.hoofdstuk.id]
+
+                    if i.paragraaf:
+                        i.paragraaf = prgrf_map[i.paragraaf.id]
+
+                    new_items.append(i)
+
+                models.PVEItem.objects.bulk_create(new_items)
+                new_items = [i for i in models.PVEItem.objects.filter(versie=new_versie_obj)]
+
+                # map foreignkeys to new objects
+                for i in range(len(new_items)):
+                    new_items[i].Bouwsoort.clear()
+                    new_items[i].Bouwsoort.add(*cur_Bouwsoort_obj[i])
+
+                    new_items[i].TypeObject.clear()
+                    new_items[i].TypeObject.add(*cur_TypeObject_obj[i])
+
+                    new_items[i].Doelgroep.clear()
+                    new_items[i].Doelgroep.add(*cur_Doelgroep_obj[i])
+
+                    new_items[i].projects.clear()
+
+                items_map = {}
+                for old, new in zip(old_items, new_items):
+                    items_map[old] = new
+
+                # connect the bijlagen to it
+                new_bijlagen = []
+                cur_items_obj = []
+
+                for i in bijlagen:
+                    cur_items_obj.append([items_map[j.id] for j in i.items.all()])
+
+                    i.pk = None
+                    i.versie = new_versie_obj
+                    new_bijlagen.append(i)
+
+                models.ItemBijlages.objects.bulk_create(new_bijlagen)
+                new_bijlagen = [i for i in models.ItemBijlages.objects.filter(versie=new_versie_obj)]
+
+                # foreignkeys change after bulk_create
+                for i, j in zip(new_bijlagen, cur_items_obj):
+                    i.items.clear()
+                    i.items.add(*j)
 
             return redirect("beleggerversieoverview")
 
@@ -742,6 +861,7 @@ def viewItemView(request, versie_pk, pk):
     if models.ItemBijlages.objects.filter(versie__id=versie_pk, items__id__contains=PVEItem.id).exists():
         bijlage = models.ItemBijlages.objects.filter(versie__id=versie_pk, items__id__contains=PVEItem.id).first()
         context["bijlage"] = bijlage
+        context["bijlagenaam"] = bijlage.naam
 
     context["PVEItem"] = PVEItem
     context["Bouwsoort"] = PVEItem.Bouwsoort.all()
@@ -838,6 +958,7 @@ def editItemView(request, versie_pk, pk):
                 bijlage_item.versie = models.PVEVersie.objects.filter(id=versie_pk).first()
                 bijlage_item.save()
                 bijlage_item.items.add(PVEItem)
+                bijlage_item.naam = f"Bijlage {bijlage_item.pk}"
                 bijlage_item.save()
 
             if form.cleaned_data["BestaandeBijlage"]:
@@ -847,9 +968,23 @@ def editItemView(request, versie_pk, pk):
             # and reverse
             return HttpResponseRedirect(reverse("viewitem", args=(versie_pk, pk)))
 
+    form = forms.PVEItemEditForm(instance=PVEItem)
+    form.fields["BestaandeBijlage"].queryset = models.ItemBijlages.objects.filter(
+        versie__id=versie_pk
+    ).all()
+    form.fields["Bouwsoort"].queryset = models.Bouwsoort.objects.filter(
+        versie__id=versie_pk
+    ).all()    
+    form.fields["TypeObject"].queryset = models.TypeObject.objects.filter(
+        versie__id=versie_pk
+    ).all()    
+    form.fields["Doelgroep"].queryset = models.Doelgroep.objects.filter(
+        versie__id=versie_pk
+    ).all()
+
     # if get method, just render the empty form
     context = {}
-    context["form"] = forms.PVEItemEditForm(instance=PVEItem)
+    context["form"] = form
     context["id"] = pk
     context["versie_pk"] = versie_pk
     return render(request, "PVEItemEdit.html", context)
@@ -897,6 +1032,7 @@ def addItemView(request, versie_pk, chapter_id, paragraph_id):
                 bijlage_item.versie = models.PVEVersie.objects.filter(id=versie_pk).first()
                 bijlage_item.save()
                 bijlage_item.items.add(PVEItem)
+                bijlage_item.naam = f"Bijlage {bijlage_item.pk}"
                 bijlage_item.save()
                 
             if form.cleaned_data["BestaandeBijlage"]:
