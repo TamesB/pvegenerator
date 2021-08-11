@@ -893,9 +893,13 @@ def downloadBijlageView(request, pk):
     secret_key = settings.AWS_SECRET_ACCESS_KEY
     bucket_name = settings.AWS_STORAGE_BUCKET_NAME
     region = settings.AWS_S3_REGION_NAME
-    item = models.PVEItem.objects.filter(id=pk).first()
-    if models.ItemBijlages.objects.filter(items__id__contains=item.id).exists():
-        bijlage = models.ItemBijlages.objects.filter(items__id__contains=item.id).first().bijlage
+    if models.PVEItem.objects.filter(id=pk).exists():
+        item = models.PVEItem.objects.filter(id=pk).first()        
+        if models.ItemBijlages.objects.filter(items__id__contains=item.id).exists():
+            bijlage = models.ItemBijlages.objects.filter(items__id__contains=item.id).first().bijlage
+    else:           
+        bijlage = models.ItemBijlages.objects.filter(id=pk).first().bijlage
+
 
     expiration = 10000
     s3_client = boto3.client(
@@ -967,6 +971,7 @@ def editItemView(request, versie_pk, pk):
 
             # and reverse
             return HttpResponseRedirect(reverse("viewitem", args=(versie_pk, pk)))
+
 
     form = forms.PVEItemEditForm(instance=PVEItem)
     form.fields["BestaandeBijlage"].queryset = models.ItemBijlages.objects.filter(
@@ -1288,6 +1293,114 @@ def deletekiesparameterView(request, versie_pk, type_id, item_id):
 
     return HttpResponseRedirect(reverse("kiesparametersviewdelete", args=(versie_pk,)))
 
+
+#bijlagesView
+#bijlageDetail
+#bijlageEdit
+#bijlageAdd
+#bijlageDelete
+#ItemBijlage: versie items bijlage naam
+@staff_member_required(login_url="/404")
+def bijlagenView(request, versie_pk):
+    context = {}
+    context["bijlagen"] = models.ItemBijlages.objects.filter(versie__id=versie_pk)
+    context["versie_pk"] = versie_pk
+    return render(request, "bijlagenView.html", context)
+
+
+@staff_member_required(login_url="/404")
+def bijlageDetail(request, versie_pk, pk):
+    bijlage = models.ItemBijlages.objects.filter(versie__id=versie_pk, id=pk).first()
+    items = bijlage.items.all()
+
+    context = {}
+    context["bijlage"] = bijlage
+    context["bijlagen"] = models.ItemBijlages.objects.filter(versie__id=versie_pk)
+    context["items"] = items
+    context["versie_pk"] = versie_pk
+    return render(request, "bijlageDetail.html", context)
+
+
+@staff_member_required(login_url="/404")
+def bijlageAdd(request, versie_pk):
+    if request.method == "POST":
+        # get user entered form
+        form = forms.bijlageEditForm(request.POST, request.FILES)
+
+        # check validity
+        if form.is_valid():
+            nieuw_bijlage = models.ItemBijlages()
+            nieuw_bijlage.bijlage = form.cleaned_data["bijlage"]
+            nieuw_bijlage.versie = models.PVEVersie.objects.get(id=versie_pk)
+            if form.cleaned_data["naam"]:
+                nieuw_bijlage.naam = form.cleaned_data["naam"]
+            nieuw_bijlage.save()
+            nieuw_bijlage.items.set(form.cleaned_data["items"])
+            nieuw_bijlage.save()
+
+            return HttpResponseRedirect(
+                reverse("bijlageview", args=(versie_pk,))
+            )
+        else:
+            print(form.errors())
+
+    form = forms.bijlageEditForm()
+    form.fields["items"].queryset = models.PVEItem.objects.filter(
+        versie__id=versie_pk
+    ).all()
+
+    context = {}
+    context["versie_pk"] = versie_pk
+    context["form"] = form
+    return render(request, "bijlageAdd.html", context)
+
+
+@staff_member_required(login_url="/404")
+def bijlageEdit(request, versie_pk, pk):
+    bijlage = models.ItemBijlages.objects.filter(versie__id=versie_pk, id=pk).first()
+
+    if request.method == "POST":
+        # get user entered form
+        form = forms.bijlageEditForm(request.POST, request.FILES)
+
+        # check validity
+        if form.is_valid():
+            nieuw_bijlage = bijlage
+            if form.cleaned_data["bijlage"]:
+                nieuw_bijlage.bijlage = form.cleaned_data["bijlage"]
+            nieuw_bijlage.versie = models.PVEVersie.objects.get(id=versie_pk)
+            if form.cleaned_data["naam"]:
+                nieuw_bijlage.naam = form.cleaned_data["naam"]
+            nieuw_bijlage.save()
+            nieuw_bijlage.items.set(form.cleaned_data["items"])
+            nieuw_bijlage.save()
+
+            return HttpResponseRedirect(
+                reverse("bijlageview", args=(versie_pk,))
+            )
+        else:
+            print(form.errors)
+
+
+    form = forms.bijlageEditForm(initial={'naam':bijlage.naam, 'bijlage':bijlage.bijlage, 'items':bijlage.items.all()})
+    form.fields["items"].queryset = models.PVEItem.objects.filter(
+        versie__id=versie_pk
+    ).all()
+
+    context = {}
+    context["versie_pk"] = versie_pk
+    context["form"] = form
+    context["bijlage"] = bijlage
+    return render(request, "bijlageEdit.html", context)
+
+
+@staff_member_required(login_url="/404")
+def bijlageDelete(request, versie_pk, pk):
+    bijlage = models.ItemBijlages.objects.filter(versie__id=versie_pk, id=pk)
+    bijlage.delete()
+    return HttpResponseRedirect(
+        reverse("bijlageview", args=(versie_pk,))
+    )
 
 @staff_member_required(login_url="/404")
 def projectHeatmap(request):

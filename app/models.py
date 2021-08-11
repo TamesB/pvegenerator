@@ -105,7 +105,7 @@ class PVEItem(models.Model):
 
 class ItemBijlages(models.Model):
     versie = models.ForeignKey(PVEVersie, on_delete=models.CASCADE, null=True)
-    items = models.ManyToManyField(PVEItem)
+    items = models.ManyToManyField(PVEItem, blank=True)
     bijlage = models.FileField(blank=True, null=True, upload_to="BasisBijlages")
     naam = models.CharField(max_length=500, blank=True, null=True)
 

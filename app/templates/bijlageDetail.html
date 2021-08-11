@@ -1,0 +1,36 @@
+{% extends "bijlagenView.html" %}
+
+{% load semanticui %}
+
+{% load filename %}
+
+{% block modal %}
+<div class="ui long modal">
+  <div class="header">
+    Bijlage {{ bijlage.id }} <span class="float right" style="float: right;"><a href="{% url 'editbijlage' versie_pk bijlage.id %}"><button class="ui basic button"><i class="icon edit"></i>Bewerk</button></a></span>
+  </div>
+  <div class="very padded description" style="margin-left: 3em; margin-right: 3em; margin-top: 1em; margin-bottom: 1em; "> 
+    <h3 class="ui header">Bijlage</h3>
+    {% if bijlage %}
+    <span><a href="{% url 'downloadbijlage' bijlage.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>{{ bijlage.bijlage }}</button></a></span>
+    {% else %}
+    <p>Geen bijlage bij deze regel.<p>
+    {% endif %}
+    <div class="ui divider"></div>
+    <h3 class="ui header">Bijnaam</h3>
+    <p style="word-wrap: break-word;">{{ bijlage.naam|linebreaks }}</p>
+    <div class="ui divider"></div>
+    <h3 class="ui header">Behoort tot regels:</h3>
+    {% if items %}
+    {% for item in items %}<p style="word-wrap: break-word;">{{ item.hoofdstuk }}:{% if item.paragraaf %} {{ item.paragraaf }}:{% endif %} {{ item.inhoud }}</p>{% endfor %}
+    {% else %}
+      <p><b>Deze bijlage behoort nog niet tot een regel.</b></p>
+    {% endif %}
+  </div>
+  <div class="actions" style="margin-bottom: 1em;">
+    <span><a href="{% url 'deletebijlage' versie_pk bijlage.id %}"><button class="ui basic red button"><i class="icon trash alternate outline"></i>Verwijder</button></a></span>
+    <span class="float right"><a href="{% url 'bijlageview' versie_pk %}"><button class="ui green button"><i class="icon check"></i>Gereed</button></a></span>
+  </div>
+</div>
+</div>
+{% endblock %}

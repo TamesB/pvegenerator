@@ -60,6 +60,41 @@ class PVEVersieForm(ModelForm):
         widgets = {"belegger": forms.HiddenInput()}
 
 
+class bijlageEditForm(forms.Form):
+    bijlage = forms.FileField(required=False, label="Bijlage")
+    items = forms.ModelMultipleChoiceField(
+        queryset=PVEItem.objects.all(), label="Behoort tot regel(s)", required=False
+    )
+    naam = forms.CharField(label="", required=False, max_length=100)
+
+    widgets = {
+        "items": forms.SelectMultiple(
+            attrs={"class": "ui search dropdown", "multiple": ""}
+        ),
+    }
+
+    class Meta:
+        layout = [
+            (
+                "Text",
+                "<i>Upload het bestand hier.</i><br>",
+            ),
+            ("Field", "bijlage"),
+            ("Text", '<h2 class="ui dividing header">Items</h2>'),
+            (
+                "Text",
+                "<i>Voeg hier een of meerdere regels toe waar de bijlage tot behoort</i>",
+            ),
+            ("Field", "items"),
+            ("Text", '<h2 class="ui dividing header">Bijnaam (optioneel)</h2>'),
+            (
+                "Text",
+                "<i>Voeg hier de bijnaam toe van de bijlage. Deze naam wordt gebruikt in het PvE en als bestandsnaam bij het downloaden van het PvE.</i><br>",
+            ),
+            ("Field", "naam"),
+        ]
+
+
 class SectionForm(ModelForm):
     class Meta:
         model = PVEOnderdeel

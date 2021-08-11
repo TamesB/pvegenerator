@@ -34,6 +34,21 @@ urlpatterns = [
         name="worksheetdownload",
     ),
     path(
+        "parameters/<int:versie_pk>/bijlagen", views.bijlagenView, name="bijlageview"
+    ),
+    path(
+        "parameters/<int:versie_pk>/bijlagen/<int:pk>", views.bijlageDetail, name="bijlagedetail"
+    ),
+    path(
+        "parameters/<int:versie_pk>/bijlagen/add", views.bijlageAdd, name="addbijlage"
+    ),
+    path(
+        "parameters/<int:versie_pk>/bijlagen/<int:pk>/edit", views.bijlageEdit, name="editbijlage"
+    ),
+    path(
+        "parameters/<int:versie_pk>/bijlagen/<int:pk>/delete", views.bijlageDelete, name="deletebijlage"
+    ),
+    path(
         "parameters/<int:versie_pk>", views.PVEHoofdstukListView, name="hoofdstukview"
     ),
     path(
