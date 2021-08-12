@@ -62,13 +62,17 @@ def ForgotPassword(request):
 
             # filter either username or email from the input
             if "@" in form.cleaned_data["email"]:
+                email = form.cleaned_data["email"]
+                email = email.split("@")
+                username = email[0]
                 if not models.CustomUser.objects.filter(
-                    email=form.cleaned_data["email"]
+                    username=username
+
                 ):
                     return redirect("login_syn")
                 else:
                     user = models.CustomUser.objects.get(
-                        email=form.cleaned_data["email"]
+                        username=username
                     )
             else:
                 if not models.CustomUser.objects.filter(

@@ -35,6 +35,11 @@ def LoginPageView(request):
                 form.cleaned_data["username"],
                 form.cleaned_data["password"],
             )
+            
+            if "@" in username:
+                email = username.split("@")
+                username = email[0]
+
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
