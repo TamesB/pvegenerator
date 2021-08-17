@@ -167,6 +167,17 @@ class PlusAccountForm(ModelForm):
             "organisatie": "Organisatie (Optioneel):",
         }
 
+class PlusDerdeToProjectForm(ModelForm):
+    class Meta:
+        model = Invitation
+        fields = {
+            "project",
+            "organisatie",
+        }
+        labels = {
+            "invitee": "E-Mail:",
+            "organisatie": "Organisatie (Optioneel):",
+        }
 
 class CheckboxInput(forms.CheckboxInput):
     def __init__(self, default=False, *args, **kwargs):
@@ -265,6 +276,7 @@ class StartProjectForm(ModelForm):
             "pensioenfonds",
             "statuscontract",
             "plaats",
+            "first_annotate",
         )
         geom = forms.PointField()
         labels = {
@@ -274,6 +286,7 @@ class StartProjectForm(ModelForm):
             "vhe": "Aantal verhuureenheden:",
             "pensioenfonds": "Pensioenfonds:",
             "statuscontract": "Contractstatus:",
+            "first_annotate": "Eerste statusaanwijzing naar:",
         }
 
         widgets = {
@@ -305,6 +318,19 @@ class InviteProjectStartForm(ModelForm):
             ),
         }
 
+class SOGAddDerdenForm(ModelForm):
+    class Meta:
+        model = Project
+        fields = ("permitted",)
+        labels = {
+            "permitted": "Handmatig Derden Toevoegen:",
+        }
+        widgets = {
+            "permitted": forms.SelectMultiple(
+                choices=CustomUser.objects.none(),
+                attrs={"class": "ui dropdown"},
+            ),
+        }
 
 class FirstFreezeForm(forms.Form):
     confirm = forms.BooleanField()

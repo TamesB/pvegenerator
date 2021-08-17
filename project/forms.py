@@ -24,6 +24,7 @@ class StartProjectForm(ModelForm):
             "nummer",
             "vhe",
             "pensioenfonds",
+            "first_annotate",
             "plaats",
         )
         geom = forms.PointField()
@@ -35,6 +36,7 @@ class StartProjectForm(ModelForm):
             "plaats": "Plaats:",
             "vhe": "Aantal verhuureenheden:",
             "pensioenfonds": "Pensioenfonds:",
+            "first_annotate": "Eerste statusaanwijzing naar:"
         }
         widgets = {
             "point": forms.OSMWidget(

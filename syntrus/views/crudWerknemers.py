@@ -89,6 +89,11 @@ def AddAccount(request):
                     f"Syntrus Projecten - Uitnodiging voor de PvE tool",
                     f"""{ request.user } nodigt u uit voor het commentaar leveren en het checken van het Programma van Eisen voor een of meerdere projecten van Syntrus.
                     
+                    Uw stappenplan:
+                    1. Volg de link hieronder en maak een wachtwoord aan. Uw gebruikersnaam wordt naar u gemaild.
+                    2. Check uw projecten op de dashboard of bij "Mijn Projecten" in het uitschuifmenu links.
+                    3. Check de projectpagina's en volg de To Do stappen om commentaar te leveren op de regels.
+
                     Klik op de uitnodigingslink om rechtstreeks de tool in te gaan.
                     Link: https://pvegenerator.net/syntrus/invite/{invitation.key}
                     
@@ -102,7 +107,7 @@ def AddAccount(request):
                 request,
                 f"Uitnodiging verstuurd naar { form.cleaned_data['invitee'] }. De uitnodiging zal verlopen in { expiry_length } dagen.)",
             )
-            return redirect("managewerknemers_syn")
+            return redirect("dashboard_syn")
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
@@ -200,6 +205,7 @@ def AcceptInvite(request, key):
 @login_required(login_url="login_syn")
 def InviteUsersToProject(request, pk):
     allowed_users = ["B", "SB"]
+
     if request.user.type_user not in allowed_users:
         return render(request, "404_syn.html")
 
@@ -283,3 +289,4 @@ def InviteUsersToProject(request, pk):
     context["form"] = form
     context["project"] = project
     return render(request, "InviteUsersToProject_syn.html", context)
+

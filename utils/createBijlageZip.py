@@ -22,7 +22,6 @@ class ZipMaker:
         zipf = zipfile.ZipFile(f"{path}.zip", "w", zipfile.ZIP_DEFLATED)
 
         for item in items:
-            bijlage = models.ItemBijlages.objects.filter(id=item.id).first()
             # open attachment in AWS S3 server
             access_key = settings.AWS_ACCESS_KEY_ID
             secret_key = settings.AWS_SECRET_ACCESS_KEY
@@ -40,7 +39,7 @@ class ZipMaker:
             try:
                 response = s3_client.generate_presigned_url(
                     "get_object",
-                    Params={"Bucket": bucket_name, "Key": str(bijlage.bijlage)},
+                    Params={"Bucket": bucket_name, "Key": str(item.bijlage)},
                     ExpiresIn=expiration,
                 )
             except ClientError as e:
@@ -49,10 +48,15 @@ class ZipMaker:
 
             page = urllib.request.urlopen(response)  # Change to website
             # put in this map of the zip with this name
-            filename_split = str(bijlage.bijlage).split("/")
+            filename_split = str(item.bijlage).split("/")
             map_name = filename_split[0]
             extension = filename_split[1].split(".")[1]
-            full_attach_url = f"{map_name}/{bijlage.naam}.{extension}"
+            if item.naam:
+                naam = item.naam
+            else:
+                naam = filename_split[1].split(".")[0]
+                
+            full_attach_url = f"{map_name}/{naam}.{extension}"
             zipf.writestr(full_attach_url, page.read())
 
         # write the pdf in the root of zip

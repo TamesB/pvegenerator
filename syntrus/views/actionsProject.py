@@ -16,27 +16,45 @@ from utils import createBijlageZip, writePdf
 @login_required(login_url="login_syn")
 def ViewProjectOverview(request):
     projects = Project.objects.filter(
-        belegger__naam="Syntrus", permitted__username__contains=request.user.username
+        Q(belegger__naam="Syntrus") &
+        Q(permitted__username__contains=request.user.username)
     ).distinct()
 
+    medewerkers = [proj.permitted.all() for proj in projects]
+
+    derden_toegevoegd = []
+    for medewerker_list in medewerkers:
+        derdes = False
+        for medewerker in medewerker_list:
+            if medewerker.type_user == "SD":
+                derdes = True
+        derden_toegevoegd.append(derdes)
+
+        
     context = {}
     context["projects"] = projects
+    context["derden_toegevoegd"] = derden_toegevoegd
+    context["first_annotate"] = [project.first_annotate for project in projects]
     return render(request, "MyProjecten_syn.html", context)
 
 
 @login_required(login_url="login_syn")
 def ViewProject(request, pk):
     if not Project.objects.filter(
-        id=pk,
-        belegger__naam="Syntrus",
-        permitted__username__contains=request.user.username,
+        Q(id=pk) &
+        Q(belegger__naam="Syntrus") &
+        Q(permitted__username__contains=request.user.username)
     ).exists():
         return render(request, "404_syn.html")
 
     project = get_object_or_404(Project, id=pk)
 
-    medewerkers = [medewerker.username for medewerker in project.permitted.all()]
+    if request.user not in project.permitted.all():
+        return render(request, "404_syn.html")
 
+    medewerkers = [medewerker.username for medewerker in project.permitted.all()]
+    derden = [medewerker.username for medewerker in project.permitted.all() if medewerker.type_user == "SD"]
+    
     context = {}
 
     if project.frozenLevel == 0:
@@ -50,6 +68,8 @@ def ViewProject(request, pk):
             context["done_percentage"] = int(100 * (comment_count) / pve_item_count)
         else:
             context["done_percentage"] = 0
+        
+        context["first_annotate"] = project.first_annotate
 
     if project.frozenLevel >= 1:
         frozencomments_accepted = (
@@ -87,6 +107,7 @@ def ViewProject(request, pk):
 
     context["project"] = project
     context["medewerkers"] = medewerkers
+    context["derden"] = derden
     return render(request, "ProjectPagina_syn.html", context)
 
 

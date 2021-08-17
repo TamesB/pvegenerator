@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block main %}
-<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Derden uitnodigen</p></div>
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Derden uitnodigen via mail</p></div>
 <div class="invite-container">
     <div class="box">
         <p class="description">Voeg een derde toe aan een van uw projecten, waar ze dan opmerkingen aan het PVE kunnen toevoegen. Een e-mail zal verstuurd worden voor het aanmelden voor uw project. De uitnodiging is 10 dagen geldig.</p>
@@ -17,7 +17,7 @@
             {% csrf_token %}
             <label class="formtitle" for="{{ form.invitee.id_for_label }}">Voor project (optioneel):</label>
             <p class="formbox">{{ form.project }}</p>
-            <label class="formtitle" for="{{ form.organisatie.id_for_label }}">Derde Partij (optioneel):</label>
+            <label class="formtitle" for="{{ form.organisatie.id_for_label }}">Behoort tot Derde Partij (optioneel):</label>
             <p class="formbox">{{ form.organisatie }}</p>
             <label class="formtitle" for="{{ form.invitee.id_for_label }}">E-mail derde:</label>
             <p class="formbox">{{ form.invitee }}</p>        

@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from geopy.geocoders import Nominatim
 
 from project.models import Beleggers, Project
+from users.models import CustomUser
 from syntrus import forms
 from syntrus.forms import StartProjectForm
 
@@ -36,7 +37,8 @@ def AddProject(request):
             project = Project.objects.all().order_by("-id")[0]
             project.permitted.add(request.user)
             project.belegger = Beleggers.objects.filter(naam="Syntrus").first()
-
+            project.first_annotate = form.cleaned_data["first_annotate"]
+            
             geolocator = Nominatim(user_agent="tamesbpvegenerator")
             if (
                 "city"
@@ -149,3 +151,56 @@ def AddOrganisatieToProject(request, pk):
     context["project"] = project
     context["form"] = forms.AddOrganisatieToProjectForm()
     return render(request, "beheerAddOrganisatieToProject.html", context)
+
+@login_required(login_url="login_syn")
+def SOGAddDerdenToProj(request, pk):
+    allowed_users = ["SOG"]
+
+    if request.user.type_user not in allowed_users:
+        return render(request, "404_syn.html")
+
+    project = Project.objects.filter(id=pk).first()
+
+    if request.user not in project.permitted.all():
+        return render(request, "404_syn.html")
+
+    if request.method == "POST":
+        form = forms.SOGAddDerdenForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            permitted = form.cleaned_data["permitted"]
+
+            for permit in permitted:
+                project.permitted.add(permit)
+
+            project.save()
+
+            if permitted:
+                gebruikers = [user for user in permitted]
+
+                for gebruiker in gebruikers:
+                    send_mail(
+                        f"Syntrus Projecten - Uitnodiging voor project {project}",
+                        f"""{ request.user } heeft u uitgenodigd om mee te werken aan het project { project } van Syntrus.
+                        
+                        U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
+                        Link: https://pvegenerator.net/syntrus/project/{project.id}""",
+                        "admin@pvegenerator.net",
+                        [f"{gebruiker.email}"],
+                        fail_silently=False,
+                    )
+
+            return redirect("dashboard_syn")
+        else:
+            messages.warning(request, "Vul de verplichte velden in.")
+
+    # form
+    form = forms.SOGAddDerdenForm()
+    form.fields["permitted"].queryset = CustomUser.objects.filter(
+        type_user="SD"
+    ).all()
+
+    context = {}
+    context["form"] = form
+    context["project"] = project
+    return render(request, "SOGAddDerde.html", context)

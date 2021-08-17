@@ -32,6 +32,19 @@ class Project(models.Model):
         "recente_verandering", auto_now=True
     )
 
+    PROJMANAGER = "SOG"
+    DERDEN = "SD"
+
+    FIRST_ANNOTATE_CHOICES = [
+        (PROJMANAGER, 'Projectmanager'),
+        (DERDEN, 'Derde'),
+    ]
+    first_annotate = models.CharField(
+        max_length=3,
+        choices=FIRST_ANNOTATE_CHOICES,
+        default=PROJMANAGER,
+    )
+
     pve_versie = models.ForeignKey("app.PVEVersie", on_delete=models.CASCADE, null=True)
 
     organisaties = models.ManyToManyField(
@@ -153,3 +166,4 @@ class PVEItemAnnotation(models.Model):
 class BijlageToAnnotation(models.Model):
     ann = models.ForeignKey(PVEItemAnnotation, on_delete=models.CASCADE, default=None)
     bijlage = models.FileField(blank=True, null=True, upload_to="OpmerkingBijlages/")
+    naam = models.CharField(max_length=100, blank=True, null=True)

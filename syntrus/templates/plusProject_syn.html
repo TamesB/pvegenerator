@@ -33,7 +33,9 @@
             <p class="formbox">{{ form.pensioenfonds }}</p>
             <label class="formtitle" for="{{ form.statuscontract.id_for_label }}">Contractstatus:</label>
             <p class="formbox">{{ form.statuscontract }}</p>
-            <label class="formtitle" for="{{ form.plaats.id_for_label }}">Locatie:</label>
+            <label class="formtitle" for="{{ form.first_annotate.id_for_label }}">Eerste statusaanwijzing naar:</label>
+            <p class="formbox">{{ form.first_annotate }}</p>
+            <label class="formtitle" for="{{ form.plaats.id_for_label }}">Locatie (klik de plaats aan op de kaart):</label>
             <p class="location-box">{{ form.plaats }}</p>
             <input type="submit" class="button" value="Maak project aan">
         </form>    

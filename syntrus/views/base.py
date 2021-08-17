@@ -65,8 +65,9 @@ def DashboardView(request):
         permitted__username__contains=request.user.username, belegger__naam="Syntrus"
     ).exists():
         projects = (
-            Project.objects.filter(belegger__naam="Syntrus")
-            .filter(permitted__username__contains=request.user.username)
+            Project.objects.filter(        
+                Q(belegger__naam="Syntrus") &
+                Q(permitted__username__contains=request.user.username))
             .distinct()
         )
         context["projects"] = projects
@@ -77,6 +78,18 @@ def DashboardView(request):
         )
         context["opmerkingen"] = opmerkingen
 
+    medewerkers = [proj.permitted.all() for proj in projects]
+
+    derden_toegevoegd = []
+    for medewerker_list in medewerkers:
+        derdes = False
+        for medewerker in medewerker_list:
+            if medewerker.type_user == "SD":
+                derdes = True
+        derden_toegevoegd.append(derdes)
+    context["derden_toegevoegd"] = derden_toegevoegd
+    context["first_annotate"] = [project.first_annotate for project in projects]
+    
     if request.user.type_user == "B":
         return render(request, "dashboardBeheerder_syn.html", context)
     if request.user.type_user == "SB":

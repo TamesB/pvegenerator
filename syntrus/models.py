@@ -82,3 +82,4 @@ class CommentReply(models.Model):
 class BijlageToReply(models.Model):
     reply = models.ForeignKey(CommentReply, on_delete=models.CASCADE, default=None)
     bijlage = models.FileField(blank=True, null=True, upload_to="OpmerkingBijlages/")
+    naam = models.CharField(max_length=100, blank=True, null=True)

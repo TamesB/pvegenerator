@@ -15,7 +15,7 @@ from syntrus.models import CommentReply, FrozenComments
 def FirstFreeze(request, pk):
     project = get_object_or_404(Project, pk=pk)
 
-    if request.user != project.projectmanager:
+    if request.user.type_user != project.first_annotate:
         return render(request, "404_syn.html")
 
     if request.method == "POST":
@@ -60,27 +60,46 @@ def FirstFreeze(request, pk):
                 frozencomments.project = project
                 frozencomments.level = 1
                 frozencomments.save()
+                if project.first_annotate == "SOG":
+                    allprojectusers = project.permitted.all()
+                    filteredDerden = [
+                        user.email for user in allprojectusers if user.type_user == "SD"
+                    ]
+                    send_mail(
+                        f"Syntrus Projecten - Uitnodiging opmerkingscheck voor project {project}",
+                        f"""{ request.user } heeft de initiele statussen van de PvE-regels ingevuld en nodigt u uit deze te checken voor het project { project } van Syntrus.
+                        
+                        Klik op de link om rechtstreeks de statussen langs te gaan.
+                        Link: https://pvegenerator.net/syntrus/project/{project.id}/check
+                        """,
+                        "admin@pvegenerator.net",
+                        filteredDerden,
+                        fail_silently=False,
+                    )
 
-                allprojectusers = project.permitted.all()
-                filteredDerden = [
-                    user.email for user in allprojectusers if user.type_user == "SD"
-                ]
-                send_mail(
-                    f"Syntrus Projecten - Uitnodiging opmerkingscheck voor project {project}",
-                    f"""{ request.user } heeft de initiele statussen van de PvE-regels ingevuld en nodigt u uit deze te checken voor het project { project } van Syntrus.
-                    
-                    Klik op de link om rechtstreeks de statussen langs te gaan.
-                    Link: https://pvegenerator.net/syntrus/project/{project.id}/check
-                    """,
-                    "admin@pvegenerator.net",
-                    filteredDerden,
-                    fail_silently=False,
-                )
+                    messages.warning(
+                        request,
+                        "Uitnodiging voor opmerkingen checken verstuurd naar de derden via email.",
+                    )
+                else:
+                    projectmanager = project.projectmanager
+                    send_mail(
+                        f"Syntrus Projecten - Uitnodiging opmerkingscheck voor project {project}",
+                        f"""{ request.user } heeft de initiele statussen van de PvE-regels ingevuld en nodigt u uit deze te checken voor het project { project } van Syntrus.
+                        
+                        Klik op de link om rechtstreeks de statussen langs te gaan.
+                        Link: https://pvegenerator.net/syntrus/project/{project.id}/check
+                        """,
+                        "admin@pvegenerator.net",
+                        [f"{projectmanager.email}"],
+                        fail_silently=False,
+                    )
 
-                messages.warning(
-                    request,
-                    "Uitnodiging voor opmerkingen checken verstuurd naar de derden via email.",
-                )
+                    messages.warning(
+                        request,
+                        "Uitnodiging voor opmerkingen checken verstuurd naar de derden via email.",
+                    )
+
                 return redirect("viewproject_syn", pk=project.id)
         else:
             messages.warning(request, "Vul de verplichte velden in.")

@@ -50,6 +50,7 @@ urlpatterns = [
         crudProjects.AddOrganisatieToProject,
         name="projectenaddorganisatie_syn",
     ),
+    path("project/addsd/<int:pk>", crudProjects.SOGAddDerdenToProj, name="sogaddderden"),
 
     # werknemers beheer "CRUD"
     path("werknemers", crudWerknemers.ManageWerknemers, name="managewerknemers_syn"),

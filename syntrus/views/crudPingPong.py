@@ -35,11 +35,11 @@ def CheckComments(request, proj_id):
     # uneven level = turn of SD, even level = turn of SOG
     if (frozencomments.level % 2) != 0:
         # level uneven: make page only visible for SD
-        if request.user.type_user != "SD":
+        if request.user.type_user == project.first_annotate:
             return render(request, "404_syn.html")
     else:
         # level even: make page only visible for SOG
-        if request.user.type_user != "SOG":
+        if request.user.type_user != project.first_annotate:
             return render(request, "404_syn.html")
 
     # the POST method
@@ -374,6 +374,9 @@ def MyReplies(request, pk):
         FrozenComments.objects.filter(project__id=pk).order_by("-level").first()
     )
 
+    if request.user not in project.permitted.all():
+        return render(request, "404_syn.html")
+
     # multiple forms
     if request.method == "POST":
         ann_forms = [
@@ -529,6 +532,9 @@ def DeleteReply(request, pk, reply_id):
     if project.frozenLevel == 0:
         return render(request, "404_syn.html")
 
+    if request.user not in project.permitted.all():
+        return render(request, "404_syn.html")
+
     # check if user is authorized to project
     if request.user.type_user != "B":
         if not Project.objects.filter(
@@ -623,6 +629,9 @@ def DeleteReplyAttachment(request, pk, reply_id):
     project = get_object_or_404(Project, pk=pk)
 
     if project.frozenLevel == 0:
+        return render(request, "404_syn.html")
+
+    if request.user not in project.permitted.all():
         return render(request, "404_syn.html")
 
     # check if user is authorized to project

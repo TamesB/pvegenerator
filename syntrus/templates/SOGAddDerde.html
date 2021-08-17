@@ -1,0 +1,23 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+{% block menu %}
+{% include 'MenuTypes.html' %}
+{% endblock %}
+
+{% block main %}
+<div class="general_title"><img src="{% static 'syntrus/img/plusproject.png'%}" class="title_img"></img><p>Voeg derden toe aan project {{ project.naam }}</p></div>
+<div class="invite-container">
+    <div class="box">
+        <p class="description">Voeg de derden toe die bemachtigt worden het PvE te checken. Er wordt een e-mail naar iedereen gestuurd behorend tot het project. Als de gewenste derde nog niet bestaat kan u ze uitnodigen via <a href="{% url 'plusaccount_syn' %}"><button class="ui icon green button"><i class="icon plus"></i>Nodig derde uit</button></a></p>
+        <form action="{% url 'sogaddderden' project.id %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p class="formbox">{{ form.permitted }}</p>        
+            <input type="submit" class="button" value="Nodig uit">
+        </form>    
+    </div>
+</div>
+{% endblock %}

@@ -31,9 +31,11 @@ def MyComments(request, pk):
     if project.frozenLevel > 0:
         return render(request, "404_syn.html")
 
-    if request.user != project.projectmanager:
+    if request.user.type_user != project.first_annotate:
         return render(request, "404_syn.html")
 
+    if request.user not in project.permitted.all():
+        return render(request, "404_syn.html")
         # multiple forms
     if request.method == "POST":
         ann_forms = [
@@ -188,6 +190,9 @@ def deleteAnnotationPve(request, project_id, ann_id):
     if project.frozenLevel > 0:
         return render(request, "404_syn.html")
 
+    if request.user not in project.permitted.all():
+        return render(request, "404_syn.html")
+
     # check if user is authorized to project
     if request.user.type_user != "B":
         if not Project.objects.filter(
@@ -283,6 +288,9 @@ def AddAnnotationAttachment(request, projid, annid):
 def VerwijderAnnotationAttachment(request, projid, annid):
     # check if project exists
     project = get_object_or_404(Project, pk=projid)
+    
+    if request.user not in project.permitted.all():
+        return render(request, "404_syn.html")
 
     if project.frozenLevel > 0:
         return render(request, "404_syn.html")
@@ -384,13 +392,16 @@ def AddComment(request, pk):
 
     project = get_object_or_404(Project, pk=pk)
 
-    if request.user != project.projectmanager:
+    if request.user.type_user != project.first_annotate:
         return render(request, "404_syn.html")
 
     if project.frozenLevel > 0:
         return render(request, "404_syn.html")
 
     if not models.PVEItem.objects.filter(projects__id__contains=pk).exists():
+        return render(request, "404_syn.html")
+
+    if request.user not in project.permitted.all():
         return render(request, "404_syn.html")
 
     # multiple forms
