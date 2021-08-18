@@ -55,6 +55,7 @@ def AddProject(request):
                 ).raw["address"]["town"]
 
             project.save()
+            messages.warning(request, f"Project {project.naam} aangemaakt. Kies de parameters die het PvE heeft. Alleen de hoofdbouwsoort is verplicht in te vullen. U kunt ook deze stap overslaan en dit later doen.")
             return redirect("connectpve_syn", pk=project.id)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
@@ -91,6 +92,7 @@ def AddProjectManager(request, pk):
                 [f'{form.cleaned_data["projectmanager"].email}'],
                 fail_silently=False,
             )
+            messages.warning(request, f"""De projectmanager van Project: {project.naam} is nu {form.cleaned_data["projectmanager"]}. Voeg uw derden toe via partij toevoegen.""")
             return redirect("manageprojecten_syn")
         else:
             messages.warning(request, "Vul de verplichte velden in.")

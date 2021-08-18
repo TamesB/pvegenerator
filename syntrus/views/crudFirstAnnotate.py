@@ -62,6 +62,8 @@ def MyComments(request, pk):
         ann_forms = [
             ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()
         ]
+
+        changed = False
         for form in ann_forms:
             # true comment if either comment or voldoet
             if form.cleaned_data["status"] or form.cleaned_data["init_accepted"]:
@@ -83,6 +85,16 @@ def MyComments(request, pk):
                 if form.cleaned_data["kostenConsequenties"]:
                     ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
                 ann.save()
+                changed = True
+
+        if changed:
+            bericht = "Statussen toegevoegd aan een of meerdere regels. U kunt altijd terug naar de status aanwijzing pagina om het aan te passen voordat u de lijst opstuurt naar de andere partij."
+        else:
+            bericht = "Geen nieuwe statussen toegevoegd / regels geaccepteerd. U kunt altijd terug naar de status aanwijzing pagina om statussen aan te wijzen aan regels."
+
+        messages.warning(
+            request, bericht
+        )
 
         return redirect("mijnopmerkingen_syn", pk=project.id)
 
@@ -207,8 +219,10 @@ def deleteAnnotationPve(request, project_id, ann_id):
     comment = PVEItemAnnotation.objects.filter(id=ann_id).first()
 
     if request.method == "POST":
-        messages.warning(request, f"Opmerking van {comment.project} verwijderd.")
         comment.delete()
+        messages.warning(
+            request, f"Opmerking verwijderd."
+        )
         return HttpResponseRedirect(
             reverse("mijnopmerkingendelete_syn", args=(project.id,))
         )
@@ -271,6 +285,9 @@ def AddAnnotationAttachment(request, projid, annid):
                 form.save()
                 annotation.bijlage = True
                 annotation.save()
+                messages.warning(
+                    request, f"Bijlage toegevoegd."
+                )
                 return redirect("mijnopmerkingen_syn", pk=project.id)
         else:
             messages.warning(request, "Vul de verplichte velden in.")

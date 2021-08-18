@@ -111,7 +111,7 @@ def CheckComments(request, proj_id):
 
         messages.warning(
             request,
-            "Opmerkingen opgeslagen. U kunt later altijd terug naar deze pagina of naar de opmerkingpagina om uw opmerkingen te bewerken voordat u ze opstuurt.",
+            "Opmerkingen opgeslagen. U kunt later altijd terug naar deze pagina of naar de opmerkingpagina om uw opmerkingen te bewerken voordat u ze opstuurt naar de andere partij.",
         )
         # redirect to project after posting replies for now
         return redirect("myreplies_syn", pk=project.id)
@@ -433,6 +433,7 @@ def MyReplies(request, pk):
 
                 reply.save()
 
+        messages.warning(request, f"Opmerking succesvol bewerkt.")
         return redirect("myreplies_syn", pk=project.id)
 
     bijlages = []
@@ -557,7 +558,7 @@ def DeleteReply(request, pk, reply_id):
         )
         reply.delete()
         return HttpResponseRedirect(
-            reverse("replydeleteoverview_syn", args=(project.id,))
+            reverse("myreplies_syn", args=(project.id,))
         )
 
     bijlages = []
@@ -610,6 +611,9 @@ def AddReplyAttachment(request, pk, reply_id):
                 form.save()
                 reply.bijlage = True
                 reply.save()
+                messages.warning(
+                    request, f"Bijlage toegevoegd."
+                )
                 return redirect("myreplies_syn", pk=project.id)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
@@ -652,12 +656,14 @@ def DeleteReplyAttachment(request, pk, reply_id):
     )
 
     if request.method == "POST":
-        messages.warning(request, "Bijlage verwijderd.")
         reply.bijlage = False
         reply.save()
         attachment.delete()
+        messages.warning(
+            request, f"Bijlage verwijderd."
+        )
         return HttpResponseRedirect(
-            reverse("replydeleteoverview_syn", args=(project.id,))
+            reverse("myreplies_syn", args=(project.id,))
         )
 
     bijlages = []

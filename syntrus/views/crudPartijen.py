@@ -34,6 +34,9 @@ def AddOrganisatie(request):
             new_organisatie = Organisatie()
             new_organisatie.naam = form.cleaned_data["naam"]
             new_organisatie.save()
+            messages.warning(
+                request, f"Organisatie {form.cleaned_data['naam']} aangemaakt."
+            )
             return redirect("manageorganisaties_syn")
         else:
             messages.warning(request, "Vul de verplichte velden in.")
@@ -54,7 +57,11 @@ def DeleteOrganisatie(request, pk):
     organisatie = get_object_or_404(Organisatie, id=pk)
 
     if request.method == "POST":
+        naam = organisatie.naam
         organisatie.delete()
+        messages.warning(
+            request, f"Organisatie {naam} verwijderd."
+        )
         return redirect("manageorganisaties_syn")
 
     context = {}
@@ -103,6 +110,9 @@ def AddUserOrganisatie(request, pk):
                 "admin@pvegenerator.net",
                 [f"{werknemer.email}"],
                 fail_silently=False,
+            )
+            messages.warning(
+                request, f"{werknemer.username} toegevoegd aan organisatie {organisatie.naam}. Een notificatie is gemaild naar deze persoon."
             )
             return redirect("manageorganisaties_syn")
         else:

@@ -191,6 +191,7 @@ def AcceptInvite(request, key):
             )
             if user is not None:
                 login(request, user)
+                messages.warning(request, f"Account aangemaakt met gebruikersnaam: {user.username}. Uw logingegevens zijn naar u gemaild.")
                 return redirect("viewprojectoverview_syn")
         else:
             messages.warning(request, "Vul de verplichte velden in.")
@@ -277,7 +278,7 @@ def InviteUsersToProject(request, pk):
                         [f"{gebruiker.email}"],
                         fail_silently=False,
                     )
-
+            messages.warning(request, f"Personen zijn uitgenodigd en de uitnodigings E-Mails zijn succesvol verstuurd.")
             return redirect("connectpve_syn", pk=project.id)
         else:
             messages.warning(request, "Vul de verplichte velden in.")

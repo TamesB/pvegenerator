@@ -79,7 +79,7 @@ def FirstFreeze(request, pk):
 
                     messages.warning(
                         request,
-                        "Uitnodiging voor opmerkingen checken verstuurd naar de derden via email.",
+                        f"Uitnodiging voor opmerkingen checken verstuurd naar de derden {filteredDerden.join(', ')} via email.",
                     )
                 else:
                     projectmanager = project.projectmanager
@@ -97,7 +97,7 @@ def FirstFreeze(request, pk):
 
                     messages.warning(
                         request,
-                        "Uitnodiging voor opmerkingen checken verstuurd naar de derden via email.",
+                        f"Uitnodiging voor opmerkingen checken verstuurd naar de projectmanager {projectmanager.naam} via email.",
                     )
 
                 return redirect("viewproject_syn", pk=project.id)
@@ -220,6 +220,10 @@ def SendReplies(request, pk):
                         filteredDerden,
                         fail_silently=False,
                     )
+                    messages.warning(
+                        request,
+                        f"Opmerkingen doorgestuurd naar de derden. De ontvangers {filteredDerden.join(', ')}, hebben een e-mail ontvangen om uw opmerkingen te checken.",
+                    )
                 elif request.user.type_user == "SD":
                     projectmanager = project.projectmanager
 
@@ -235,10 +239,10 @@ def SendReplies(request, pk):
                         fail_silently=False,
                     )
 
-                messages.warning(
-                    request,
-                    "Opmerkingen doorgestuurd. De ontvanger heeft een e-mail ontvangen om uw opmerkingen te checken.",
-                )
+                    messages.warning(
+                        request,
+                        f"Opmerkingen doorgestuurd naar de projectmanager {projectmanager.username}. De ontvanger heeft een e-mail ontvangen om uw opmerkingen te checken.",
+                    )
                 return redirect("viewproject_syn", pk=project.id)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
@@ -307,6 +311,11 @@ def FinalFreeze(request, pk):
                 "admin@pvegenerator.net",
                 [f"{projectmanager.email}"],
                 fail_silently=False,
+            )
+
+            messages.warning(
+                request,
+                f"Het project {project.naam} is succesvol bevroren. Er kunnen geen opmerkingen worden geplaatst en het uiteindelijke PvE is te downloaden via de projectpagina. Alle medewerkers van dit project hebben een E-Mail ontvangen van de downloadlink van het PvE.",
             )
         else:
             messages.warning(request, "Vul de verplichte velden in.")

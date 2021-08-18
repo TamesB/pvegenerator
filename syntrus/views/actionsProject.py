@@ -336,6 +336,9 @@ def ConnectPVE(request, pk):
             # set current pve version to project
             project.pve_versie = versie
             project.save()
+            messages.warning(
+                request, f"Parameters van het Programma van Eisen van project {project.naam} zijn toegevoegd. U kunt het PvE downloaden vanaf de projecthomepagina."
+            )
             return redirect("projectenaddprojmanager_syn", pk=project.id)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
