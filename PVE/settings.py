@@ -30,8 +30,8 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "pvegenerator.herokuapp.com",
-    "pvegenerator.net",
+    os.environ["HOST1"],
+    os.environ["HOST2"],
 ]
 
 SECRET_KEY = env.str("SECRET_KEY")
