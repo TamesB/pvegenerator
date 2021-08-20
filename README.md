@@ -27,7 +27,7 @@ This application is also readymade for continuous integration/delivery on Heroku
 ### Instructions
 - Activate the heroku settings at the bottom of `PVE/settings.py`, choose the default database as the environment variable in the `DATABASES` section of the settings.
 - Fork this project, use that git for deployment in your Heroku app.
-- Requires `pgbouncer` and `heroku geo` buildpacks for limiting database connections and using a spatial database used for the project locations, `https://buildpack-registry.s3.amazonaws.com/buildpacks/heroku/pgbouncer.tgz` and `https://github.com/heroku/heroku-geo-buildpack.git` respectively. Of course requires the `heroku/python` buildpack.
+- Requires `pgbouncer` and `Geo Packages (GDAL/GEOS/PROJ)` buildpacks for limiting database connections and using a spatial database used for the project locations, `https://buildpack-registry.s3.amazonaws.com/buildpacks/heroku/pgbouncer.tgz` and `https://github.com/heroku/heroku-geo-buildpack.git` respectively. Of course requires the `heroku/python` buildpack.
 - Add the environment variables `DATABASE_URL`, `DEBUG` and `SECRET_KEY` in the Config Vars in app Settings in your Heroku App.
 - Set `PRODUCTION` to `1` or `0` in the Config Vars.
 - Add `DISABLE_COLLECTSTATIC` and `DEBUG_COLLECTSTATIC` to your Config Vars if needed, set both to `1`.
