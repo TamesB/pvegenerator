@@ -1,3 +1,10 @@
+import os
+import environ
+
+root = environ.Path(__file__)
+env = environ.Env()
+environ.Env.read_env()
+
 ## that requests over HTTP are redirected to HTTPS. aslo can config in webserver
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = True
@@ -20,4 +27,4 @@ SESSION_COOKIE_SAMESITE = "Strict"
 # CSP_FONT_SRC = ("'self'", 'ajax.googleapis.com', 'fonts.gstatic.com', 'fonts.googleapis.com')
 # CSP_IMG_SRC = ("'self'",)
 
-ALLOWED_HOSTS = ["pvegenerator.herokuapp.com"]
+ALLOWED_HOSTS = [os.environ["HOST1"]]
