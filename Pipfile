@@ -1,3 +1,4 @@
+
 [[source]]
 url = "https://pypi.org/simple"
 verify_ssl = true
@@ -12,7 +13,7 @@ certifi = "==2020.12.5"
 dj-database-url = "==0.5.0"
 django-cached-modelforms = "==0.2.3"
 django-csp = "==3.6"
-django-debug-toolbar = "==3.2"
+django-debug-toolbar = "==3.2.1"
 django-environ = "==0.4.5"
 django-heroku = "==0.3.1"
 django-htmlmin = "==0.11.0"
@@ -40,15 +41,15 @@ s3transfer = "==0.3.4"
 six = "==1.15.0"
 soupsieve = "==2.2"
 sqlparse = "==0.4.1"
-urllib3 = "==1.26.3"
+urllib3 = "==1.26.5"
 webencodings = "==0.5.1"
 whitenoise = "==5.2.0"
 Django = "==3.1.12"
-Pillow = "==8.1.2"
+Pillow = "==8.2.0"
 PyPDF2 = "==1.26.0"
 XlsxWriter = "==1.2.9"
 
 [dev-packages]
 
 [requires]
-python_version = "3.8"
+python_version = "3.8.3rc1"
