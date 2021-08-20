@@ -4,10 +4,10 @@ A PvE in this context is a set of rules that govern the requirements for constru
 
 # Installation
 ## Installing on Windows
-This application was written in `Django 3.0.5` with `Python 3.8.3rc1`.\
 Requires `pip` installed.
 
 ### Instructions
+- Set up your venv
 - Run `pip install -r requirements.txt` to install all of the required packages.
 - Add your Database URI by setting the `DATABASE_URL` environment variable in `PVE/.env`. The database can also be chosen to be local in the `db.sqlite3` file generated on the `manage.py` level. See `PVE/settings.py` for the options, both choices are in the `DATABASES` variable, choose your default.
 - Set environment variables `DEBUG=True` or `DEBUG=False` for debugging mode and `SECRET_KEY = random_long_char_string` for CSRF token encryption / form data encryption / XSS protection, in the `PVE/.env` file.
@@ -25,11 +25,3 @@ This application is also readymade for continuous integration/delivery on Heroku
 - Add the environment variables `DATABASE_URL`, `DEBUG` and `SECRET_KEY` in the Config Vars in app Settings in your Heroku App.
 - Deploy.
 - When pushing new code to your git repo, it will automatically deploy.
-
-# Usage
-## Starting off
-- Add rules in the Keuzematrix (the items in the dropdown menu at the exporting page)
-- Add rules in the Programma van Eisen bewerker, allocating them to items in the Keuzematrix.
-- Generate your PvE PDF
-
-When a Keuzematrix-rule in the exporter is chosen, all rules of the PvE allocated to that Keuzematrix-rule are exported.
