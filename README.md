@@ -15,6 +15,7 @@ Requires PostGIS + GDAL + OSGeo4W installed. (https://docs.djangoproject.com/en/
 - Set environment variables `DEBUG=True` or `DEBUG=False` for debugging mode and `SECRET_KEY = random_long_char_string` for CSRF token encryption / form data encryption / XSS protection, in the `PVE/.env` file.
 - In the same file, set up an email server (this app heavily depends on sending push notifications via email to employees), using the variables `EMAIL_HOST`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_PORT`, and optionally set `EMAIL_USE_SSL` to `True`.
 - Employees can upload attachments to their comments / rules in the PvE, these attachments are uploaded to an Amazon S3 Bucket, set the variables `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_STORAGE_BUCKET_NAME` in your `.env` file.
+- Edit extra `ALLOWED_HOSTS` with environment variables `HOST1` and `HOST2`, or edit them in `settings.py`.
 - Finally, set `PRODUCTION` to `False` when developing.
 - Generate the database by running `python manage.py makemigrations` and `python manage.py migrate`.
 - Create a superuser to access all of the features by running `python manage.py createsuperuser`, this account can be used to log in to the main application.
