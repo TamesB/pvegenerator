@@ -34,5 +34,6 @@ This application is also readymade for continuous integration/delivery on Heroku
 - Add `DISABLE_COLLECTSTATIC` and `DEBUG_COLLECTSTATIC` to your Config Vars if needed, set both to `1`.
 - Attachments to rulesets or comments on them are uploaded to an AWS S3 bucket. Add `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_STORAGE_BUCKET_NAME` in your Config Vars.
 - The application heavily relies on sending update emails to clients, add an email server by adding these to the Config Vars: `EMAIL_HOST`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_PORT`, and set `EMAIL_USE_SSL` to `True` if wanted.
+- Edit extra `ALLOWED_HOSTS` with environment variables `HOST1` and `HOST2`, or edit them in `settings.py`. `HOST1` can be used for your herokuapp.com subwebsite. 
 - Deploy.
 - When pushing new code to your git repo, you can automatically deploy the new version on Heroku.
