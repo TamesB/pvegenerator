@@ -2,6 +2,23 @@
 A Django web-application for generating, sharing and editing PvE's.\
 A PvE in this context is a set of rules that govern the requirements for construction of buildings in the Netherlands. This application was built for the VBR Groep, ultimately for SAREF, with the intention of creating a central platform to help clients to create projects, edit and discuss PvE requirements with each other, and generate the ending PvE PDF file with all its attachments in a quick and easy way, without the hassle of e-mailing Excel worksheets around.
 
+# Features
+## PvE Ruleset
+The ruleset is composed of many individual rules. Each rule is connected to parameters; an object type (type of house, appartment, etc..), construction type (new construction, transformation, commercial, etc..) and target audience (starters, new families, etc...). A rule can be in multiple parameters. A rule can also be a BASIC rule, which is always in the ruleset regardless the parameter choices. When downloading a ruleset, one can choose the parameters (example; 0-50m2 appartments for starters, new construction), and a PDF rolls out with all the construction rules for this specific type of construction. This is the basic idea for the app.
+
+## Project management
+In a closed off subwebsite, a company can start a project, where the ruleset parameters are chosen at the start. A project page is created and the ruleset can be downloaded with one click. We add the projectmanager, and we can add third-parties to view the project, which is done by email invitation.
+Now, the projectmanager and third parties can perform something called the 'ping-pong process'. Its a process of setting a status on each rule in the ruleset (accepted, not accepted, to be discussed, etc...) and place comments on each rule (or add attachments). These comments are then saved and sent to the other party, who then accepts the status, or comments on it further and sends it back, as if it's a game of ping-pong. This is done in intuitive sections (Section of 'rules yet to be commented on', 'rules commented on last time', 'rules accepted last time'. On the dashboard it shows a list of each project that is to-do for each user, with a simple button that leads them to the commenting). Eventually there is an agreement for every rule, then the project is frozen, no one can comment on it anymore. The ruleset with their statuses and comments per rule can then be downloaded as a single PDF, and the attachments with them are inside a .zip file.
+-This way, construction companies and third parties can easily and safely discuss the ruleset, and keep it in one page, instead of multiple excel sheets running around through email, which has the chance of people accidentally (or intentionally) removing earlier comments.
+-Each time a set of comments is sent through to the opposing party / someone is invited to a project / a project is finished, an email is sent to the person notifying they have to respond with a link to it. 
+
+## Administrative Site
+-Editing a ruleset, editing the parameters, creating new rulesets, setting the active ruleset version for the sub-website. They can edit each rule easily (breadcrumb structure with chapters and paragraphs), adding attachments to a rule and setting the parameters.
+-Overview of all accounts, creating all types of users manually
+-Heatmap of all project locations
+-Generate test-rulesets (as PDF)
+-Generate the rule difference between two parameters (as PDF)
+
 # Installation
 ## Installing on Windows
 Requires `pip` installed.
