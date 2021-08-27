@@ -17,7 +17,7 @@ from utils import createBijlageZip, writePdf
 def ViewProjectOverview(request):
     projects = Project.objects.filter(
         Q(belegger__naam="Syntrus") &
-        Q(permitted__username__contains=request.user.username)
+        Q(permitted__username__iregex=r"\y{0}\y".format(request.user.username))
     ).distinct()
 
     medewerkers = [proj.permitted.all() for proj in projects]
@@ -43,7 +43,7 @@ def ViewProject(request, pk):
     if not Project.objects.filter(
         Q(id=pk) &
         Q(belegger__naam="Syntrus") &
-        Q(permitted__username__contains=request.user.username)
+        Q(permitted__username__iregex=r"\y{0}\y".format(request.user.username))
     ).exists():
         return render(request, "404_syn.html")
 
@@ -383,7 +383,7 @@ def ConnectPVE(request, pk):
 @login_required
 def download_pve_overview(request):
     projects = Project.objects.filter(
-        permitted__username__contains=request.user.username
+        Q(permitted__username__iregex=r"\y{0}\y".format(request.user.username))
     ).distinct()
 
     context = {}
@@ -395,7 +395,8 @@ def download_pve_overview(request):
 def download_pve(request, pk):
     if request.user.type_user != "B":
         if not Project.objects.filter(
-            id=pk, permitted__username__contains=request.user.username
+            id=pk, 
+            permitted__username__iregex=r"\y{0}\y".format(request.user.username)
         ).exists():
             raise Http404("404")
 

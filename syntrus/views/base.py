@@ -62,12 +62,13 @@ def DashboardView(request):
     context = {}
 
     if Project.objects.filter(
-        permitted__username__contains=request.user.username, belegger__naam="Syntrus"
+        permitted__username__iregex=r"\y{0}\y".format(request.user.username), belegger__naam="Syntrus"
     ).exists():
         projects = (
             Project.objects.filter(        
                 Q(belegger__naam="Syntrus") &
-                Q(permitted__username__contains=request.user.username))
+                Q(permitted__username__iregex=r"\y{0}\y".format(request.user.username))
+            )
             .distinct()
         )
         context["projects"] = projects
@@ -87,6 +88,7 @@ def DashboardView(request):
             if medewerker.type_user == "SD":
                 derdes = True
         derden_toegevoegd.append(derdes)
+        
     context["derden_toegevoegd"] = derden_toegevoegd
     context["first_annotate"] = [project.first_annotate for project in projects]
     

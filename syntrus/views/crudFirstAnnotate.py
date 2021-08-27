@@ -510,12 +510,15 @@ def AddComment(request, pk):
     ann_forms = []
     hoofdstuk_ordered_items = {}
 
+    itembijlages = [_ for _ in models.ItemBijlages.objects.prefetch_related("items").filter(versie=project.pve_versie)]
+    items_has_bijlages = [item.items.all() for item in itembijlages]
+
     for item in items:
         opmerking = None
         
         bijlage = None
 
-        if models.ItemBijlages.objects.filter(items__id__contains=item.id).exists():
+        if item in items_has_bijlages:
             bijlage = models.ItemBijlages.objects.get(items__id__contains=item.id)
 
         # create forms

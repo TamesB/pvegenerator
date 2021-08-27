@@ -121,7 +121,7 @@ def SendReplies(request, pk):
     # check if user is authorized to project
     if request.user.type_user != "B":
         if not Project.objects.filter(
-            id=pk, permitted__username__contains=request.user.username
+            id=pk, permitted__username__iregex=r"\y{0}\y".format(request.user.username)
         ).exists():
             raise Http404("404")
 
@@ -265,7 +265,7 @@ def FinalFreeze(request, pk):
     # check if user is authorized to project
     if request.user.type_user != "B":
         if not Project.objects.filter(
-            id=pk, permitted__username__contains=request.user.username
+            id=pk, permitted__username__iregex=r"\y{0}\y".format(request.user.username)
         ).exists():
             raise Http404("404")
 

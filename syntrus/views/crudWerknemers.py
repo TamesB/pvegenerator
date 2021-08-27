@@ -112,7 +112,7 @@ def AddAccount(request):
             messages.warning(request, "Vul de verplichte velden in.")
 
     projecten = Project.objects.filter(
-        permitted__username__contains=request.user.username
+        permitted__username__iregex=r"\y{0}\y".format(request.user.username)
     )
 
     if request.user.type_user in staff_users:
