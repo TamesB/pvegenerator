@@ -35,8 +35,10 @@ The ruleset is composed of many individual rules. Each rule is connected to para
   ![First status appendage](/examples/EersteStatus.png)
 - After first status got sent over, rules get divided in the three tabs, opposing party responds to these
   ![Checklist further](/examples/CheckList.png)
-- Download the ruleset as PDF or as zip with all attachments
+- Download the ruleset as PDF or as zip with all attachments, at any stage of the project.
   ![Download PvE](/examples/PvEDownload.png)
+- Boom! PDF with all their comments.
+  ![PvE](/examples/PvEPDF.png)
 
 # Installation
 
