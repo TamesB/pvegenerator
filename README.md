@@ -25,13 +25,18 @@ The ruleset is composed of many individual rules. Each rule is connected to para
 - Generate test-rulesets (as PDF)
 - Generate the rule difference between two parameters (as PDF)
 
-### Visual Examples
+## Visual Examples: Project management site
 
-![Dashboard of projectmanager](/examples/DashBoardProjmanager.png)
-![My projects](/examples/MijnProjecten.png)
-![First status appendage](/examples/EersteStatus.png)
-![Checklist further](/examples/CheckList.png)
-![Download PvE](/examples/PvEDownload.png)
+- The Dashboard
+  ![Dashboard of projectmanager](/examples/DashBoardProjmanager.png)
+- List of projects connected to person, with activated button when its their turn to comment
+  ![My projects](/examples/MijnProjecten.png)
+- First status appending to each rule
+  ![First status appendage](/examples/EersteStatus.png)
+- After first status got sent over, opposing party responds to these
+  ![Checklist further](/examples/CheckList.png)
+- Download the ruleset as PDF or as zip with all attachments
+  ![Download PvE](/examples/PvEDownload.png)
 
 # Installation
 
