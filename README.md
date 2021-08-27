@@ -31,6 +31,8 @@ The ruleset is composed of many individual rules. Each rule is connected to para
   ![Dashboard of projectmanager](/examples/DashBoardProjmanager.png)
 - List of projects connected to person, with activated button when its their turn to comment
   ![My projects](/examples/MijnProjecten.png)
+- The main page for each project. If its a persons turn it gets shown in to-do's
+  ![Projectpage](/examples/projectpage.png)
 - First status appending to each rule
   ![First status appendage](/examples/EersteStatus.png)
 - After first status got sent over, rules get divided in the three tabs, opposing party responds to these
