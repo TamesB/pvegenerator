@@ -47,11 +47,11 @@ The ruleset is composed of many individual rules. Each rule is connected to para
 ## Installing on Windows
 
 Requires `pip` installed.
-Requires PostGIS + GDAL + OSGeo4W installed. (https://docs.djangoproject.com/en/3.1/ref/contrib/gis/install/#windows)
+Requires PostgreSQL + PostGIS + OSGeo4W (+ GDAL) installed. (Follow the windows installation guide for all: https://docs.djangoproject.com/en/3.1/ref/contrib/gis/install/#windows)
 
 ### Instructions
 
-- Set up your virtual environment
+- `pipenv shell` into your virtual environment
 - Download this project into your venv
 - Run `pipenv install -r requirements.txt` to install all of the required packages. Manually install the packages with `pip install` if the packages can't be installed with `pipenv`.
 - Add your Database URI by setting the `DATABASE_URL` environment variable in `PVE/.env`. The database can also be chosen to be local in the `db.sqlite3` file generated on the `manage.py` level. See `PVE/settings.py` for the options, both choices are in the `DATABASES` variable, choose your default.
