@@ -3,21 +3,26 @@
 import os
 import platform
 
+import django
 import django_heroku
 import environ
 from django.utils.log import DEFAULT_LOGGING
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
+
 root = environ.Path(__file__)
 env = environ.Env()
 environ.Env.read_env()
+
+SECRET_KEY = env.str("SECRET_KEY")
 
 # OSGEO stuff
 if os.name == "nt":
     OSGEO4W = r"C:\OSGeo4W"
     if "64" in platform.architecture()[0]:
-        OSGEO4W += "64"
+        #OSGEO4W += "64"
+        pass
     assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
     os.environ["OSGEO4W_ROOT"] = OSGEO4W
     os.environ["GDAL_DATA"] = OSGEO4W + r"\share\gdal"
@@ -241,6 +246,8 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER")
 SERVER_EMAIL = os.getenv("EMAIL_HOST_USER")
+
+django.setup()
 
 # Heroku settings
 django_heroku.settings(locals(), staticfiles=False)

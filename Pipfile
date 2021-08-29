@@ -30,7 +30,7 @@ python-dateutil = "==2.8.1"
 python-dotenv = "==0.15.0"
 python-magic = "==0.4.22"
 pytz = "==2021.1"
-reportlab = "==3.5.42"
+reportlab = ">=3.5.42"
 s3transfer = "==0.3.4"
 six = "==1.15.0"
 soupsieve = "==2.2"
@@ -44,3 +44,8 @@ PyPDF2 = "==1.26.0"
 XlsxWriter = "==1.2.9"
 
 [dev-packages]
+
+[[source]]
+url = "https://pypi.org/simple/"
+verify_ssl = false
+name = "pypi-849"

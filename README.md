@@ -53,17 +53,19 @@ Requires PostGIS + GDAL + OSGeo4W installed. (https://docs.djangoproject.com/en/
 
 - Set up your virtual environment
 - Download this project into your venv
-- Run `pipenv install -r requirements.txt` to install all of the required packages.
+- Run `pipenv install -r requirements.txt` to install all of the required packages. Manually install the packages with `pip install` if the packages can't be installed with `pipenv`.
 - Add your Database URI by setting the `DATABASE_URL` environment variable in `PVE/.env`. The database can also be chosen to be local in the `db.sqlite3` file generated on the `manage.py` level. See `PVE/settings.py` for the options, both choices are in the `DATABASES` variable, choose your default.
 - Set environment variables `DEBUG=True` or `DEBUG=False` for debugging mode and `SECRET_KEY = random_long_char_string` for CSRF token encryption / form data encryption / XSS protection, in the `PVE/.env` file.
 - In the same file, set up an email server (this app heavily depends on sending push notifications via email to employees), using the variables `EMAIL_HOST`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_PORT`, and optionally set `EMAIL_USE_SSL` to `True`.
 - Employees can upload attachments to their comments / rules in the PvE, these attachments are uploaded to an Amazon S3 Bucket, set the variables `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_STORAGE_BUCKET_NAME` in your `.env` file.
 - Edit extra `ALLOWED_HOSTS` with environment variables `HOST1` and `HOST2`, or edit them in `settings.py`.
 - Finally, set `PRODUCTION` to `False` when developing.
+- There may be a version mismatch between OSGeo4W and which version Django is able to look up, look up which gdalXXX.dll version you have in your `C:/OSGeo4W/bin` and set this path in your `.env` file as `GDAL_LIBRARY_PATH=C:\OSGeo4W\bin\gdalXXX`. Replace `XXX` with your version. You might have `OSGeo4W64` as the folder, if so, uncomment the `OSGEO4W += "64"` at the top of `settings.py` and of course take this in your library path of GDAL.
 - Generate the database by running `python manage.py makemigrations` and `python manage.py migrate`.
 - Create a superuser to access all of the features by running `python manage.py createsuperuser`, this account can be used to log in to the main application.
 - Static files are served by the `whitenoise` package. Collect the staticfiles by running `python manage.py collectstatic`.
 - Run `python manage.py runserver` to run the server locally.
+- The base URL is an empty page, check `urls.py` in `PVE` folder.
 
 ## Heroku CI/CD
 
