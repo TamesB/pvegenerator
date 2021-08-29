@@ -46,8 +46,9 @@ The ruleset is composed of many individual rules. Each rule is connected to para
 
 ## Installing on Windows
 
-Requires `pip` installed.
-Requires PostgreSQL + PostGIS + OSGeo4W (+ GDAL) installed. (Follow the windows installation guide for all: https://docs.djangoproject.com/en/3.1/ref/contrib/gis/install/#windows)
+- Requires `pip` and `pipenv` installed.
+- Requires PostgreSQL + PostGIS + OSGeo4W (+ GDAL) installed. (Follow the windows installation guide for all: https://docs.djangoproject.com/en/3.1/ref/contrib/gis/install/#windows)
+- After installing OSGeo4W, the path is hardcoded to `C:/OSGeo4W` in `PVE/settings.py`, check this for your system. You might have `OSGeo4W64` as the folder, if so, uncomment the `OSGEO4W += "64"` at the top of `settings.py`.
 
 ### Instructions
 
@@ -60,7 +61,7 @@ Requires PostgreSQL + PostGIS + OSGeo4W (+ GDAL) installed. (Follow the windows 
 - Employees can upload attachments to their comments / rules in the PvE, these attachments are uploaded to an Amazon S3 Bucket, set the variables `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_STORAGE_BUCKET_NAME` in your `.env` file.
 - Edit extra `ALLOWED_HOSTS` with environment variables `HOST1` and `HOST2`, or edit them in `settings.py`.
 - Finally, set `PRODUCTION` to `False` when developing.
-- There may be a version mismatch between OSGeo4W and which version Django is able to look up, look up which gdalXXX.dll version you have in your `C:/OSGeo4W/bin` and set this path in your `.env` file as `GDAL_LIBRARY_PATH=C:\OSGeo4W\bin\gdalXXX`. Replace `XXX` with your version. You might have `OSGeo4W64` as the folder, if so, uncomment the `OSGEO4W += "64"` at the top of `settings.py` and of course take this in your library path of GDAL.
+- There may be a version mismatch between OSGeo4W and which version Django is able to look up, look up which gdalXXX.dll version you have in your `C:/OSGeo4W(64)/bin` and set this path in your `.env` file as `GDAL_LIBRARY_PATH=C:\OSGeo4W(64)\bin\gdalXXX`. Replace `XXX` with your version. Unparenthesize or remove the `(64)`.
 - Generate the database by running `python manage.py makemigrations` and `python manage.py migrate`.
 - Create a superuser to access all of the features by running `python manage.py createsuperuser`, this account can be used to log in to the main application.
 - Static files are served by the `whitenoise` package. Collect the staticfiles by running `python manage.py collectstatic`.
