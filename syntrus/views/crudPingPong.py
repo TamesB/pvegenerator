@@ -69,45 +69,55 @@ def CheckComments(request, proj_id):
             ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()
         ]
 
+        
         for form in ann_forms:
             if (
-                form.cleaned_data["status"]
-                or form.cleaned_data["accept"] == "True"
-                or form.cleaned_data["annotation"]
+                form.cleaned_data["accept"] == "True"
+                or form.cleaned_data["status"]
+                or form.cleaned_data["annotation"] != ""
                 or form.cleaned_data["kostenConsequenties"]
             ):
-                # get the original comment it was on
-                originalComment = PVEItemAnnotation.objects.filter(
-                    id=form.cleaned_data["comment_id"]
-                ).first()
-
+                # if the reply already exists, edit all fields that aren't the same as in the model.
                 if CommentReply.objects.filter(
                     onComment__id=form.cleaned_data["comment_id"],
                     commentphase=frozencomments,
                     gebruiker=request.user,
                 ).exists():
-                    ann = CommentReply.objects.filter(
+                    ann = CommentReply.objects.get(
                         onComment__id=form.cleaned_data["comment_id"],
                         commentphase=frozencomments,
                         gebruiker=request.user,
-                    ).first()
+                    )
+
+                    if form.cleaned_data["status"] != ann.status:
+                        ann.status = form.cleaned_data["status"]
+                    if form.cleaned_data["annotation"] != ann.comment:
+                        ann.comment = form.cleaned_data["annotation"]
+                    if form.cleaned_data["kostenConsequenties"] != ann.kostenConsequenties:
+                        ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+                    
+                    if form.cleaned_data["accept"] != ann.accept:
+                        ann.accept = form.cleaned_data["accept"]
+                    
+                    ann.save()
                 else:
                     ann = CommentReply()
                     ann.commentphase = frozencomments
                     ann.gebruiker = request.user
-                    ann.onComment = originalComment
+                    ann.onComment = PVEItemAnnotation.objects.get(
+                                        id=form.cleaned_data["comment_id"]
+                                    )
 
-                if form.cleaned_data["status"]:
-                    ann.status = form.cleaned_data["status"]
-                if form.cleaned_data["annotation"]:
-                    ann.comment = form.cleaned_data["annotation"]
-                if form.cleaned_data["kostenConsequenties"]:
-                    ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
-                if form.cleaned_data["accept"] == "True":
-                    ann.accept = True
-                else:
-                    ann.accept = False
-                ann.save()
+                    if form.cleaned_data["status"]:
+                        ann.status = form.cleaned_data["status"]
+                    if form.cleaned_data["annotation"]:
+                        ann.comment = form.cleaned_data["annotation"]
+                    if form.cleaned_data["kostenConsequenties"]:
+                        ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+                    if form.cleaned_data["accept"]:
+                        ann.accept = form.cleaned_data["accept"]
+
+                    ann.save()
 
         messages.warning(
             request,
@@ -149,13 +159,13 @@ def CheckComments(request, proj_id):
 
     # order items for the template
     hoofdstuk_ordered_items_non_accept = order_comments_for_commentcheck(
-        non_accepted_comments, proj_id
+        non_accepted_comments, ann_forms_non_accept, proj_id
     )
     hoofdstuk_ordered_items_accept = order_comments_for_commentcheck(
-        accepted_comments, proj_id
+        accepted_comments, ann_forms_accept, proj_id
     )
     hoofdstuk_ordered_items_todo = order_comments_for_commentcheck(
-        todo_comments, proj_id
+        todo_comments, ann_forms_todo, proj_id
     )
 
     context["items"] = models.PVEItem.objects.filter(
@@ -177,7 +187,7 @@ def CheckComments(request, proj_id):
     return render(request, "CheckComments_syn.html", context)
 
 
-def order_comments_for_commentcheck(comments_entry, proj_id):
+def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
     # loop for reply ordering for the pagedesign
     hoofdstuk_ordered_items_non_accept = {}
     made_on_comments = {}
@@ -186,21 +196,26 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
     commentreplies = (
         CommentReply.objects.select_related("onComment")
         .filter(onComment__in=comments_entry)
+        .order_by("-datum")
         .all()
     )
 
+    # order oncomment to all replies
     for reply in commentreplies:
         if reply.onComment in made_on_comments.keys():
-            made_on_comments[reply.onComment].append([reply])
+            made_on_comments[reply.onComment].append(reply)
         else:
             made_on_comments[reply.onComment] = [reply]
 
-    for comment in comments_entry:
+    for i in range(len(comments_entry)):
+        comment = comments_entry[i]
+        form = ann_forms[i]
         last_accept = False
         # set the PVEItem from the comment
         item = comment.item
 
         bijlage = None
+        # Fix bijlages later
         #if models.ItemBijlages.objects.get(items__id__contains=item.id).exists():
         #    bijlage = models.ItemBijlages.objects.get(items__id__contains=item.id)
             
@@ -213,8 +228,7 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
 
         # add all replies to this comment
         if comment in made_on_comments.keys():
-            commentreplys = CommentReply.objects.filter(Q(onComment=comment)).all()
-            last_reply = commentreplys.order_by("-datum").first()
+            last_reply = made_on_comments[comment][0]
 
             if last_reply.status is not None:
                 string = f"Nieuwe Status: {last_reply.status}"
@@ -222,7 +236,7 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
             if last_reply.accept:
                 last_accept = True
 
-            for reply in commentreplys:
+            for reply in made_on_comments[comment]:
                 temp_commentbulk_list_non_accept.append(reply.comment)
 
                 if reply.bijlage:
@@ -260,6 +274,7 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
                         temp_bijlage_list,
                         comment.kostenConsequenties,
                         bijlage,
+                        form,
                     ]
                 )
             else:
@@ -274,6 +289,7 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
                         temp_bijlage_list,
                         comment.kostenConsequenties,
                         bijlage,
+                        form,
                     ]
                 ]
         else:
@@ -289,6 +305,7 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
                         temp_bijlage_list,
                         comment.kostenConsequenties,
                         bijlage,
+                        form,
                     ]
                 )
             else:
@@ -303,6 +320,7 @@ def order_comments_for_commentcheck(comments_entry, proj_id):
                         temp_bijlage_list,
                         comment.kostenConsequenties,
                         bijlage,
+                        form,
                     ]
                 ]
 
@@ -449,7 +467,7 @@ def MyReplies(request, pk):
     ann_forms = []
     form_item_ids = []
 
-    replies = CommentReply.objects.filter(
+    replies = CommentReply.objects.select_related("onComment").select_related("onComment__item").filter(
         commentphase=commentphase, gebruiker=request.user
     ).order_by("-datum")
     for reply in replies:

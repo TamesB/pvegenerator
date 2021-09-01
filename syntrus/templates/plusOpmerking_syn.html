@@ -3,12 +3,14 @@
 {% load semanticui %}
 {% load static %}
 {% load custom_tags %}
-
+{% load cache %}
 {% block menu %}
 {% include 'MenuTypes.html' %}
 {% endblock %}
+{% cache 500 sidebar %}
 
 {% block main %}
+
 <div class="ui breadcrumb" style="margin-bottom:3vh;">
 <a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
   <i class="right chevron icon divider"></i>
@@ -42,6 +44,32 @@
                     <div class="status_not_added" id="status-{{ item|index:1 }}">
                     <p>+ Status of Aanvulling</p></div>{% endif %}
                     </div>
+
+                    {% with form=item|index:4 %}     
+
+                    <div class="opmerking_form_modal">
+                      <div id="{{ item|index:1 }}" class="w3-modal">
+                        <div class="w3-modal-content">
+                            <div class="w3-container">
+                                <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}">
+                                <label class="item_label">Item:</label>
+                                <p class="inhoud">{{ item|index:0 }}</p>
+                                <label for="{{ form.status.id_for_label }}">Status:</label>
+                                <p class="formbox">{{ form.status }}</p>
+                                <label for="{{ form.annotation.id_for_label }}">Aanvulling (optioneel):</label>
+                                <p class="formbox">{{ form.annotation }}</p>
+                                <label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil (optioneel):</label>
+                                <p class="formbox">{{ form.kostenConsequenties }}</p>                    
+                                <span class="form_buttons">
+                                  <div onclick="document.getElementById('{{ form_item_ids|previous_one:forloop.counter0 }}').style.display='block'; document.getElementById('status-{{ form_item_ids|previous_one:forloop.counter0 }}').style.color='#E6BF00'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
+                                  <div onclick="document.getElementById('{{ item|index:1 }}').style.display='none'" class="done_button center"><p>Gereed</p></div>
+                                  <div onclick="document.getElementById('{{ form_item_ids|next_one:forloop.counter0 }}').style.display='block'; document.getElementById('status-{{ form_item_ids|next_one:forloop.counter0 }}').style.color='#E6BF00'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    {% endwith %}
                 {% endfor %}
             </div>
         {% endfor %}
@@ -54,36 +82,38 @@
             <div class="status_not_added" id="status-{{ item|index:1 }}">
             <p>+ Status of Aanvulling</p></div>{% endif %}
         </div>
+
+        {% with form=item|index:4 %}     
+
+                <div class="opmerking_form_modal">
+                <div id="{{ item|index:1 }}" class="w3-modal">
+                  <div class="w3-modal-content">
+                      <div class="w3-container">
+                          <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}">
+                          <label class="item_label">Item:</label>
+                          <p class="inhoud">{{ item|index:0 }}</p>
+                          <label for="{{ form.status.id_for_label }}">Status:</label>
+                          <p class="formbox">{{ form.status }}</p>
+                          <label for="{{ form.annotation.id_for_label }}">Aanvulling (optioneel):</label>
+                          <p class="formbox">{{ form.annotation }}</p>
+                          <label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil (optioneel):</label>
+                          <p class="formbox">{{ form.kostenConsequenties }}</p>                    
+                          <span class="form_buttons">
+                            <div onclick="document.getElementById('{{ form_item_ids|previous_one:forloop.counter0 }}').style.display='block'; document.getElementById('status-{{ form_item_ids|previous_one:forloop.counter0 }}').style.color='#E6BF00'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
+                            <div onclick="document.getElementById('{{ item|index:1 }}').style.display='none'" class="done_button center"><p>Gereed</p></div>
+                            <div onclick="document.getElementById('{{ form_item_ids|next_one:forloop.counter0 }}').style.display='block'; document.getElementById('status-{{ form_item_ids|next_one:forloop.counter0 }}').style.color='#E6BF00'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
+                          </span>
+                      </div>
+                  </div>
+              </div>
+              </div>
+        {% endwith %}
         {% endfor %}  
     {% endif %}
     </div>
 {% endfor %}
 </div>
-<div class="opmerking_form_modal">
-        {% for form in forms %}
-            <div id="{{ form.item_id.value }}" class="w3-modal">
-                <div class="w3-modal-content">
-                    <div class="w3-container">
-                        <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}">
-                        <label class="item_label">Item:</label>
-                        <p class="inhoud">{{ items|index:forloop.counter0|slice:":100" }}</p>
-                        <label for="{{ form.status.id_for_label }}">Status:</label>
-                        <p class="formbox">{{ form.status }}</p>
-                        <label for="{{ form.annotation.id_for_label }}">Aanvulling (optioneel):</label>
-                        <p class="formbox">{{ form.annotation }}</p>
-                        <label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil (optioneel):</label>
-                        <p class="formbox">{{ form.kostenConsequenties }}</p>                    
-                        <span class="form_buttons">
-                          <div onclick="document.getElementById('{{ form_item_ids|previous_one:forloop.counter0 }}').style.display='block'; document.getElementById('status-{{ form_item_ids|previous_one:forloop.counter0 }}').style.color='#E6BF00'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
-                          <div onclick="document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button center"><p>Gereed</p></div>
-                          <div onclick="document.getElementById('{{ form_item_ids|next_one:forloop.counter0 }}').style.display='block'; document.getElementById('status-{{ form_item_ids|next_one:forloop.counter0 }}').style.color='#E6BF00'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
 
-</div>
 {% else %}
 <p>Nog geen PVE gekoppeld aan dit project.</p>
 {% endif %}
@@ -129,3 +159,4 @@ $('.leavecomment').click(function(e){
 
 </script>
 {% endblock %}
+{% endcache %}

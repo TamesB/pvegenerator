@@ -9,7 +9,7 @@ from app import models
 from project.models import BijlageToAnnotation, Project, PVEItemAnnotation
 from syntrus import forms
 from syntrus.forms import BijlageToAnnotationForm
-
+from syntrus.models import CommentStatus
 
 @login_required(login_url="login_syn")
 def AddCommentOverview(request):
@@ -122,18 +122,19 @@ def MyComments(request, pk):
     comments = PVEItemAnnotation.objects.filter(
         project=project, gebruiker=request.user
     ).order_by("-datum")
+
     for comment in comments:
-        ann_forms.append(
-            forms.PVEItemAnnotationForm(
-                initial={
-                    "item_id": comment.item.id,
-                    "annotation": comment.annotation,
-                    "status": comment.status,
-                    "init_accepted": comment.init_accepted,
-                    "kostenConsequenties": comment.kostenConsequenties,
-                }
-            )
+        form = forms.PVEItemAnnotationForm(
+            initial={
+                "item_id": comment.item.id,
+                "annotation": comment.annotation,
+                "status": comment.status,
+                "init_accepted": comment.init_accepted,
+                "kostenConsequenties": comment.kostenConsequenties,
+            }
         )
+
+        ann_forms.append(form)
 
         form_item_ids.append(comment.item.id)
 
@@ -523,11 +524,10 @@ def AddComment(request, pk):
 
         # create forms
         if item not in annotations.keys():
-            ann_forms.append(forms.PVEItemAnnotationForm(initial={"item_id": item.id}))
+            form = forms.PVEItemAnnotationForm(initial={"item_id": item.id})
         else:
             opmerking = annotations[item]
-            ann_forms.append(
-                forms.PVEItemAnnotationForm(
+            form = forms.PVEItemAnnotationForm(
                     initial={
                         "item_id": opmerking.item.id,
                         "annotation": opmerking.annotation,
@@ -535,8 +535,7 @@ def AddComment(request, pk):
                         "kostenConsequenties": opmerking.kostenConsequenties,
                     }
                 )
-            )
-
+        
         # create ordered items
         if item.paragraaf:
             if item.hoofdstuk not in hoofdstuk_ordered_items.keys():
@@ -545,39 +544,39 @@ def AddComment(request, pk):
             if item.paragraaf in hoofdstuk_ordered_items[item.hoofdstuk].keys():
                 if opmerking:
                     hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append(
-                        [item, item.id, opmerking.status, bijlage]
+                        [item, item.id, opmerking.status, bijlage, form]
                     )
                 else:
                     hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append(
-                        [item, item.id, None, bijlage]
+                        [item, item.id, None, bijlage, form]
                     )
             else:
                 if opmerking:
                     hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [
-                        [item, item.id, opmerking.status, bijlage]
+                        [item, item.id, opmerking.status, bijlage, form]
                     ]
                 else:
                     hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [
-                        [item, item.id, None, bijlage]
+                        [item, item.id, None, bijlage, form]
                     ]
         else:
             if item.hoofdstuk in hoofdstuk_ordered_items.keys():
                 if opmerking:
                     hoofdstuk_ordered_items[item.hoofdstuk].append(
-                        [item, item.id, opmerking.status, bijlage]
+                        [item, item.id, opmerking.status, bijlage, form]
                     )
                 else:
                     hoofdstuk_ordered_items[item.hoofdstuk].append(
-                        [item, item.id, None, bijlage]
+                        [item, item.id, None, bijlage, form]
                     )
             else:
                 if opmerking:
                     hoofdstuk_ordered_items[item.hoofdstuk] = [
-                        [item, item.id, opmerking.status, bijlage]
+                        [item, item.id, opmerking.status, bijlage, form]
                     ]
                 else:
                     hoofdstuk_ordered_items[item.hoofdstuk] = [
-                        [item, item.id, None, bijlage]
+                        [item, item.id, None, bijlage, form]
                     ]
 
     # easy entrance to item ids

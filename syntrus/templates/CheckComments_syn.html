@@ -3,10 +3,12 @@
 {% load semanticui %}
 {% load static %}
 {% load custom_tags %}
+{% load cache %}
 
 {% block menu %}
 {% include 'MenuTypes.html' %}
 {% endblock %}
+{% cache 500 sidebar %}
 
 {% block main %}
 <div class="ui breadcrumb" style="margin-bottom:3vh;">
@@ -62,6 +64,32 @@
                     <div class="status_not_added" id="status-{{ item|index:1 }}">
                     <p>+ Status</p></div>{% endif %}
                     </div>
+                    
+                    {% with form=item|index:9 %}
+                    <div class="opmerking_form_modal">
+                      <div id="{{ form.comment_id.value }}" class="w3-modal">
+                        <div class="w3-modal-content">
+                            <div class="w3-container">
+                                <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}" hidden>
+                                <p class="formbox"><select name="accept" id="id_accept" hidden>
+                                  <option value="True">Ja</option>
+                                  <option value="False" selected>Nee</option></select></p>                        
+                                <label for="{{ form.status.id_for_label }}">Status:</label>
+                                <p class="formbox">{{ form.status }}</p>
+                                <label for="{{ form.annotation.id_for_label }}">(Optioneel) Reactie:</label>
+                                <p class="formbox">{{ form.annotation }}</p>
+                                <label for="{{ form.kostenConsequenties.id_for_label }}">(Optioneel) Nieuw Kostenverschil:</label>
+                                <p class="formbox">{{ form.kostenConsequenties }}</p>
+                                <span class="form_buttons">
+                                  <div onclick="document.getElementById('{{ form.comment_id.value|add:"-1" }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
+                                  <div onclick="document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button center"><p>Gereed</p></div>
+                                  <div onclick="document.getElementById('{{ form.comment_id.value|add:1 }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  {% endwith %}
                 {% endfor %}
             </div>
         {% endfor %}
@@ -86,36 +114,37 @@
           <div class="status_not_added" id="status-{{ item|index:1 }}">
           <p>+ Status</p></div>{% endif %}
           </div>
+
+          {% with form=item|index:9 %}
+          <div class="opmerking_form_modal">
+            <div id="{{ form.comment_id.value }}" class="w3-modal">
+              <div class="w3-modal-content">
+                  <div class="w3-container">
+                      <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}" hidden>
+                      <p class="formbox"><select name="accept" id="id_accept" hidden>
+                        <option value="True">Ja</option>
+                        <option value="False" selected>Nee</option></select></p>                        
+                      <label for="{{ form.status.id_for_label }}">Status:</label>
+                      <p class="formbox">{{ form.status }}</p>
+                      <label for="{{ form.annotation.id_for_label }}">(Optioneel) Reactie:</label>
+                      <p class="formbox">{{ form.annotation }}</p>
+                      <label for="{{ form.kostenConsequenties.id_for_label }}">(Optioneel) Nieuw Kostenverschil:</label>
+                      <p class="formbox">{{ form.kostenConsequenties }}</p>
+                      <span class="form_buttons">
+                        <div onclick="document.getElementById('{{ form.comment_id.value|add:"-1" }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
+                        <div onclick="document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button center"><p>Gereed</p></div>
+                        <div onclick="document.getElementById('{{ form.comment_id.value|add:1 }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
+                      </span>
+                  </div>
+              </div>
+          </div>
+        </div>
+        {% endwith %}
+
         {% endfor %}  
     {% endif %}
     </div>
 {% endfor %}
-</div>
-
-<div class="opmerking_form_modal">
-        {% for form in forms_todo %}
-            <div id="{{ form.comment_id.value }}" class="w3-modal">
-                <div class="w3-modal-content">
-                    <div class="w3-container">
-                        <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}" hidden>
-                        <p class="formbox"><select name="accept" id="id_accept" hidden>
-                          <option value="True">Ja</option>
-                          <option value="False" selected>Nee</option></select></p>                        
-                        <label for="{{ form.status.id_for_label }}">Status:</label>
-                        <p class="formbox">{{ form.status }}</p>
-                        <label for="{{ form.annotation.id_for_label }}">(Optioneel) Reactie:</label>
-                        <p class="formbox">{{ form.annotation }}</p>
-                        <label for="{{ form.kostenConsequenties.id_for_label }}">(Optioneel) Nieuw Kostenverschil:</label>
-                        <p class="formbox">{{ form.kostenConsequenties }}</p>
-                        <span class="form_buttons">
-                          <div onclick="document.getElementById('{{ form.comment_id.value|add:"-1" }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
-                          <div onclick="document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button center"><p>Gereed</p></div>
-                          <div onclick="document.getElementById('{{ form.comment_id.value|add:1 }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
 </div>
 {% else %}
 <i>Alle PvE regels hebben al een status.</i>
@@ -134,12 +163,13 @@
             <button type="button" class="paragraaf"><p>{{ paragraaf.paragraaf}} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></p></button>
             <div class="paragraaf_content">
                 {% for item in items %}
+                {% with form=item|index:9 %}
                     {% if item|index:5 %}
-                    <div class="item_content" style="background-color: #bcf5bc;" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
+                    <div class="item_content" style="background-color: #bcf5bc;">
                     {% else %}
-                    <div class="item_content" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
+                    <div class="item_content">
                     {% endif %}
-                    <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}{% if item|index:8 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
+                    <div class="text_left" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';"><p style="display:inline;float:left;">{{ item|index:0 }}{% if item|index:8 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
                     {% if item|index:3 %}<div class="status_added" id="status-{{ item|index:1 }}">
                     <p>{{ item|index:3 }}
                     {% if item|index:6 %}
@@ -151,20 +181,49 @@
                     </p></div>                      
                     {% else %}
                     <div class="status_not_added" id="status-{{ item|index:1 }}">
-                    <p>+ Opmerking of Akkoord</p></div>{% endif %}
+                    <p>+ Opmerking</p></div>{% endif %}
+                      <div>
+                        <label for="{{ form.accept.id_for_label }}"></label>Accepteer </label>
+                        {{ form.accept }}
+                      </div>
                     </div>
+                      
+                    <div class="opmerking_form_modal">
+                      <div id="{{ form.comment_id.value }}" class="w3-modal">
+                          <div class="w3-modal-content">
+                              <div class="w3-container">
+                                  <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}" hidden>
+                                  <label for="{{ form.status.id_for_label }}">(Optioneel) Nieuwe Status:</label>
+                                  <p class="formbox">{{ form.status }}</p>
+                                  <label for="{{ form.annotation.id_for_label }}">(Optioneel) Reactie:</label>
+                                  <p class="formbox">{{ form.annotation }}</p>
+                                  <label for="{{ form.kostenConsequenties.id_for_label }}">(Optioneel) Nieuw Kostenverschil:</label>
+                                  <p class="formbox">{{ form.kostenConsequenties }}</p>
+                                  <span class="form_buttons">
+                                    <div onclick="document.getElementById('{{ form.comment_id.value|add:"-1" }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
+                                    <div onclick="document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button center"><p>Gereed</p></div>
+                                    <div onclick="document.getElementById('{{ form.comment_id.value|add:1 }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
+                                  </span>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                    {% endwith %}
                 {% endfor %}
             </div>
         {% endfor %}
     {% else %}
         {% for item in one_deep %}
+        {% with form=item|index:9 %}
+
           {% if item|index:5 %}
-          <div class="item_content" style="background-color: #bcf5bc;" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
+          <div class="item_content" style="background-color: #bcf5bc;">
           {% else %}
-          <div class="item_content" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
+          <div class="item_content">
           {% endif %}
-          <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}{% if item|index:8 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
-          {% if item|index:3 %}<div class="status_added" id="status-{{ item|index:1 }}">
+          <div class="text_left" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';"><p style="display:inline;float:left;">{{ item|index:0 }}{% if item|index:8 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
+          {% if item|index:3 %}
+          <div class="status_added" id="status-{{ item|index:1 }}">
           <p>{{ item|index:3 }}
           {% if item|index:6 %}
           <br>Bijlages: {% for bijlage in item|index:6 %}<a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endfor %}
@@ -175,22 +234,18 @@
           </p></div>  
           {% else %}
           <div class="status_not_added" id="status-{{ item|index:1 }}">
-          <p>+ Opmerking of Akkoord</p></div>{% endif %}
+          <p>+ Opmerking</p></div>{% endif %}
+            <div>
+              <label for="{{ form.accept.id_for_label }}"></label>Accepteer </label>
+              {{ form.accept }}
+            </div>
           </div>
-        {% endfor %}  
-    {% endif %}
-    </div>
-{% endfor %}
-</div>
 
-<div class="opmerking_form_modal">
-        {% for form in forms_non_accept %}
+          <div class="opmerking_form_modal">
             <div id="{{ form.comment_id.value }}" class="w3-modal">
                 <div class="w3-modal-content">
                     <div class="w3-container">
                         <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}" hidden>
-                        <label for="{{ form.accept.id_for_label }}">Akkoord:</label>
-                        <p class="formbox">{{ form.accept }}</p>
                         <label for="{{ form.status.id_for_label }}">(Optioneel) Nieuwe Status:</label>
                         <p class="formbox">{{ form.status }}</p>
                         <label for="{{ form.annotation.id_for_label }}">(Optioneel) Reactie:</label>
@@ -205,7 +260,13 @@
                     </div>
                 </div>
             </div>
-        {% endfor %}
+          </div>
+          {% endwith %}
+
+        {% endfor %}  
+    {% endif %}
+    </div>
+{% endfor %}
 </div>
 {% else %}
 <i>Alle regels zijn akkoord mee gegaan.</i>
@@ -225,11 +286,11 @@
             <div class="paragraaf_content">
                 {% for item in items %}
                     {% if item|index:5 %}
-                    <div class="item_content" style="background-color: #bcf5bc;" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
+                    <div class="item_content" style="background-color: #bcf5bc;">
                     {% else %}
-                    <div class="item_content" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
+                    <div class="item_content">
                     {% endif %}
-                    <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}{% if item|index:8 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
+                    <div class="text_left" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';"><p style="display:inline;float:left;">{{ item|index:0 }}{% if item|index:8 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
                     {% if item|index:3 %}<div class="status_added" id="status-{{ item|index:1 }}">
                     <p>{{ item|index:3 }}
                     {% if item|index:6 %}
@@ -242,18 +303,46 @@
                     {% else %}
                     <div class="status_not_added" id="status-{{ item|index:1 }}">
                     <p>+ Opmerking of Akkoord</p></div>{% endif %}
+
+                    {% with form=item|index:9 %}
+                      <div>
+                        <label for="{{ form.accept.id_for_label }}"></label>Accepteer </label>
+                        {{ form.accept }}
+                      </div>
                     </div>
+                    <div class="opmerking_form_modal">
+                      <div id="{{ form.comment_id.value }}" class="w3-modal">
+                          <div class="w3-modal-content">
+                              <div class="w3-container">
+                                  <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}" hidden>
+                                  <label for="{{ form.status.id_for_label }}">(Optioneel) Nieuwe Status:</label>
+                                  <p class="formbox">{{ form.status }}</p>
+                                  <label for="{{ form.annotation.id_for_label }}">(Optioneel) Reactie:</label>
+                                  <p class="formbox">{{ form.annotation }}</p>
+                                  <label for="{{ form.kostenConsequenties.id_for_label }}">(Optioneel) Nieuw Kostenverschil:</label>
+                                  <p class="formbox">{{ form.kostenConsequenties }}</p>
+                                  <span class="form_buttons">
+                                    <div onclick="document.getElementById('{{ form.comment_id.value|add:"-1" }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
+                                    <div onclick="document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button center"><p>Gereed</p></div>
+                                    <div onclick="document.getElementById('{{ form.comment_id.value|add:1 }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
+                                  </span>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                    {% endwith %}
+          
                 {% endfor %}
             </div>
         {% endfor %}
     {% else %}
         {% for item in one_deep %}
           {% if item|index:5 %}
-          <div class="item_content" style="background-color: #bcf5bc;" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
+          <div class="item_content" style="background-color: #bcf5bc;">
           {% else %}
-          <div class="item_content" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
+          <div class="item_content">
           {% endif %}
-          <div class="text_left"><p style="display:inline;float:left;">{{ item|index:0 }}{% if item|index:8 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
+          <div class="text_left" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';"><p style="display:inline;float:left;">{{ item|index:0 }}{% if item|index:8 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p>{% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}</div>
           {% if item|index:3 %}<div class="status_added" id="status-{{ item|index:1 }}">
           <p>{{ item|index:3 }}
           {% if item|index:6 %}
@@ -266,21 +355,19 @@
           {% else %}
           <div class="status_not_added" id="status-{{ item|index:1 }}">
           <p>+ Opmerking of Akkoord</p></div>{% endif %}
-          </div>
-        {% endfor %}  
-    {% endif %}
-    </div>
-{% endfor %}
-</div>
 
-<div class="opmerking_form_modal">
-        {% for form in forms_accept %}
+          {% with form=item|index:9 %}
+            <div>
+              <label for="{{ form.accept.id_for_label }}"></label>Accepteer </label>
+              {{ form.accept }}
+            </div>
+          </div>
+
+          <div class="opmerking_form_modal">
             <div id="{{ form.comment_id.value }}" class="w3-modal">
                 <div class="w3-modal-content">
                     <div class="w3-container">
                         <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}" hidden>
-                        <label for="{{ form.accept.id_for_label }}">Akkoord:</label>
-                        <p class="formbox">{{ form.accept }}</p>
                         <label for="{{ form.status.id_for_label }}">(Optioneel) Nieuwe Status:</label>
                         <p class="formbox">{{ form.status }}</p>
                         <label for="{{ form.annotation.id_for_label }}">(Optioneel) Reactie:</label>
@@ -295,15 +382,18 @@
                     </div>
                 </div>
             </div>
-        {% endfor %}
+          </div>
+          {% endwith %}
 
+        {% endfor %}  
+    {% endif %}
+    </div>
+{% endfor %}
 </div>
 {% else %}
 <i>Nog geen PvE regels zijn akkoord mee gegaan.</i>
 {% endif %}
 </div>
-
-
 </form>
 {% endblock %}
 
@@ -350,3 +440,4 @@ $('.menu .item')
 
 </script>
 {% endblock %}
+{% endcache %}

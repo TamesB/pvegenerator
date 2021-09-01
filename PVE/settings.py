@@ -77,9 +77,12 @@ INSTALLED_APPS = [
     "storages",
     "simple_history",
     "debug_toolbar",
+    #"template_profiler_panel",
     "cached_modelforms",
     "jsignature",
 ]
+
+#
 
 SITE_ID = 1
 
