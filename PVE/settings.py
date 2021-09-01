@@ -21,7 +21,7 @@ SECRET_KEY = env.str("SECRET_KEY")
 if os.name == "nt":
     OSGEO4W = r"C:\OSGeo4W"
     if "64" in platform.architecture()[0]:
-        #OSGEO4W += "64"
+        OSGEO4W += "64"
         pass
     assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
     os.environ["OSGEO4W_ROOT"] = OSGEO4W

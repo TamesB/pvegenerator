@@ -37,76 +37,68 @@
             <button type="button" class="paragraaf"><p>{{ paragraaf.paragraaf }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></p></button>
             <div class="paragraaf_content">
                 {% for item in items %}
-                    <div class="item_content" onClick="document.getElementById('{{ item|index:1 }}').style.display='block'; document.getElementById('status-{{ item|index:1 }}').style.color='#E6BF00'"><div class="text_left"><p>{{ item|index:0 }}{% if item|index:3 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p></div>
-                    {% if item|index:2 %}<div class="status_added" id="status-{{ item|index:1 }}">
-                    <p>Status: {{ item|index:2 }}</p></div>
+                  {% with form=item|index:4 %}
+                    <div class="item_content">
+                      <div class="text_left">
+                        <p style="font-style:italic;">
+                          {{ item|index:0 }}{% if item|index:3 %} 
+                          Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank">
+                          <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img>
+                          </a>
+                          {% endif %}
+                        </p>
+                        <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}" hidden>
+                        <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold">Aanvulling (optioneel):</label>
+                        <p class="formbox">{{ form.annotation }}</p>
+                      </div>
+                    {% if item|index:2 %}
+                      <div class="status_added" id="status-{{ item|index:1 }}">
+                      <p>Status: {{ item|index:2 }}</p>
+                      <div><label for="{{ form.status.id_for_label }}">Bewerk:</label>
+                      {{ form.status }}</div>
                     {% else %}
-                    <div class="status_not_added" id="status-{{ item|index:1 }}">
-                    <p>+ Status of Aanvulling</p></div>{% endif %}
+                      <div class="status_not_added" id="status-{{ item|index:1 }}">
+                      <div><label for="{{ form.status.id_for_label }}">Status:</label>
+                      {{ form.status }}</div>
+                    {% endif %}
+                      <div><label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil (optioneel):</label>
+                      {{ form.kostenConsequenties }}</div>               
                     </div>
-
-                    {% with form=item|index:4 %}     
-
-                    <div class="opmerking_form_modal">
-                      <div id="{{ item|index:1 }}" class="w3-modal">
-                        <div class="w3-modal-content">
-                            <div class="w3-container">
-                                <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}">
-                                <label class="item_label">Item:</label>
-                                <p class="inhoud">{{ item|index:0 }}</p>
-                                <label for="{{ form.status.id_for_label }}">Status:</label>
-                                <p class="formbox">{{ form.status }}</p>
-                                <label for="{{ form.annotation.id_for_label }}">Aanvulling (optioneel):</label>
-                                <p class="formbox">{{ form.annotation }}</p>
-                                <label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil (optioneel):</label>
-                                <p class="formbox">{{ form.kostenConsequenties }}</p>                    
-                                <span class="form_buttons">
-                                  <div onclick="document.getElementById('{{ form_item_ids|previous_one:forloop.counter0 }}').style.display='block'; document.getElementById('status-{{ form_item_ids|previous_one:forloop.counter0 }}').style.color='#E6BF00'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
-                                  <div onclick="document.getElementById('{{ item|index:1 }}').style.display='none'" class="done_button center"><p>Gereed</p></div>
-                                  <div onclick="document.getElementById('{{ form_item_ids|next_one:forloop.counter0 }}').style.display='block'; document.getElementById('status-{{ form_item_ids|next_one:forloop.counter0 }}').style.color='#E6BF00'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                    {% endwith %}
+                  </div>
+                  {% endwith %}
                 {% endfor %}
             </div>
         {% endfor %}
     {% else %}
         {% for item in one_deep %}
-          <div class="item_content" onClick="document.getElementById('{{ item|index:1 }}').style.display='block'; document.getElementById('status-{{ item|index:1 }}').style.color='#E6BF00'"><div class="text_left"><p>{{ item|index:0 }}{% if item|index:3 %} Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% endif %}</p></div>
-          {% if item|index:2 %}<div class="status_added" id="status-{{ item|index:1 }}">
-            <p>Status: {{ item|index:2 }}</p></div>
-            {% else %}
+        {% with form=item|index:4 %}
+          <div class="item_content">
+            <div class="text_left">
+              <p style="font-style:italic;">
+                {{ item|index:0 }}{% if item|index:3 %} 
+                Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank">
+                <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img>
+                </a>
+                {% endif %}
+              </p>
+              <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}" hidden>
+              <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold">Aanvulling (optioneel):</label>
+              <p class="formbox">{{ form.annotation }}</p>
+            </div>
+          {% if item|index:2 %}
+            <div class="status_added" id="status-{{ item|index:1 }}">
+            <p>Status: {{ item|index:2 }}</p>
+            <div><label for="{{ form.status.id_for_label }}">Bewerk:</label>
+            {{ form.status }}</div>
+          {% else %}
             <div class="status_not_added" id="status-{{ item|index:1 }}">
-            <p>+ Status of Aanvulling</p></div>{% endif %}
+            <div><label for="{{ form.status.id_for_label }}">Status:</label>
+            {{ form.status }}</div>
+          {% endif %}
+            <div><label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil (optioneel):</label>
+            {{ form.kostenConsequenties }}</div>               
+          </div>
         </div>
-
-        {% with form=item|index:4 %}     
-
-                <div class="opmerking_form_modal">
-                <div id="{{ item|index:1 }}" class="w3-modal">
-                  <div class="w3-modal-content">
-                      <div class="w3-container">
-                          <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}">
-                          <label class="item_label">Item:</label>
-                          <p class="inhoud">{{ item|index:0 }}</p>
-                          <label for="{{ form.status.id_for_label }}">Status:</label>
-                          <p class="formbox">{{ form.status }}</p>
-                          <label for="{{ form.annotation.id_for_label }}">Aanvulling (optioneel):</label>
-                          <p class="formbox">{{ form.annotation }}</p>
-                          <label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil (optioneel):</label>
-                          <p class="formbox">{{ form.kostenConsequenties }}</p>                    
-                          <span class="form_buttons">
-                            <div onclick="document.getElementById('{{ form_item_ids|previous_one:forloop.counter0 }}').style.display='block'; document.getElementById('status-{{ form_item_ids|previous_one:forloop.counter0 }}').style.color='#E6BF00'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
-                            <div onclick="document.getElementById('{{ item|index:1 }}').style.display='none'" class="done_button center"><p>Gereed</p></div>
-                            <div onclick="document.getElementById('{{ form_item_ids|next_one:forloop.counter0 }}').style.display='block'; document.getElementById('status-{{ form_item_ids|next_one:forloop.counter0 }}').style.color='#E6BF00'; document.getElementById('{{ form.item_id.value }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
-                          </span>
-                      </div>
-                  </div>
-              </div>
-              </div>
         {% endwith %}
         {% endfor %}  
     {% endif %}

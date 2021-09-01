@@ -36,8 +36,8 @@
     <th><p>Bijlage</p></th>
     <th><p>Datum bewerkt</p></th>
   </tr>
-  {% if replies %}
-  {% for reply in replies %}
+  {% if page_obj %}
+  {% for reply in page_obj %}
   <tr class="table_content">
     <td class="inhoud_box"><p>{{ reply.onComment.item.inhoud }}</p></td>
     <td class="voldoening"><p>{% if reply.accept %}Ja{% else %}&nbsp;{% endif %}</p></td>
@@ -53,6 +53,25 @@
   {% endif %}
 </table>
 </div>
+
+    <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
 {% endblock %}
 {% block modal %}
 {% endblock %}

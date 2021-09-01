@@ -11,6 +11,8 @@ from syntrus import forms
 from syntrus.forms import BijlageToAnnotationForm
 from syntrus.models import CommentStatus
 
+from django.core.paginator import Paginator
+
 @login_required(login_url="login_syn")
 def AddCommentOverview(request):
     context = {}
@@ -36,6 +38,7 @@ def MyComments(request, pk):
 
     if request.user not in project.permitted.all():
         return render(request, "404_syn.html")
+
         # multiple forms
     if request.method == "POST":
         ann_forms = [
@@ -96,7 +99,7 @@ def MyComments(request, pk):
             request, bericht
         )
 
-        return redirect("mijnopmerkingen_syn", pk=project.id)
+        return redirect("mijnopmerkingen_syn", pk=project.id, kwargs={"page": request.GET.get("page")})
 
     totale_kosten = 0
     totale_kosten_lijst = [
@@ -123,7 +126,11 @@ def MyComments(request, pk):
         project=project, gebruiker=request.user
     ).order_by("-datum")
 
-    for comment in comments:
+    paginator = Paginator(comments, 25) # Show 25 replies per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    for comment in page_obj:
         form = forms.PVEItemAnnotationForm(
             initial={
                 "item_id": comment.item.id,
@@ -138,6 +145,7 @@ def MyComments(request, pk):
 
         form_item_ids.append(comment.item.id)
 
+    context["page_obj"] = page_obj
     context["ann_forms"] = ann_forms
     context["form_item_ids"] = form_item_ids
     context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
@@ -183,7 +191,15 @@ def MyCommentsDelete(request, pk):
         project=project, gebruiker=request.user
     ).count()
 
+    comments = PVEItemAnnotation.objects.filter(
+    project=project, gebruiker=request.user)
+
+    paginator = Paginator(comments, 25) # Show 25 replies per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {}
+    context["page_obj"] = page_obj
     context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
     context["comments"] = PVEItemAnnotation.objects.filter(
         project=project, gebruiker=request.user
@@ -225,7 +241,7 @@ def deleteAnnotationPve(request, project_id, ann_id):
             request, f"Opmerking verwijderd."
         )
         return HttpResponseRedirect(
-            reverse("mijnopmerkingendelete_syn", args=(project.id,))
+            reverse("mijnopmerkingendelete_syn", args=(project.id,), kwargs={"page": request.GET.get("page")})
         )
 
     totale_kosten = 0
@@ -247,7 +263,14 @@ def deleteAnnotationPve(request, project_id, ann_id):
         else:
             bijlages.append(None)
 
+    comments = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user).order_by("id")
+    
+    paginator = Paginator(comments, 25) # Show 25 replies per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {}
+    context["page_obj"] = page_obj
     context["comment"] = comment
     context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
     context["comments"] = PVEItemAnnotation.objects.filter(
@@ -275,6 +298,10 @@ def AddAnnotationAttachment(request, projid, annid):
         project=project, gebruiker=request.user
     ).order_by("id")
 
+    paginator = Paginator(comments, 25) # Show 25 replies per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     if annotation.gebruiker != request.user:
         return render(request, "404_syn.html")
 
@@ -289,7 +316,7 @@ def AddAnnotationAttachment(request, projid, annid):
                 messages.warning(
                     request, f"Bijlage toegevoegd."
                 )
-                return redirect("mijnopmerkingen_syn", pk=project.id)
+                return redirect("mijnopmerkingen_syn", pk=project.id, kwargs={"page": request.GET.get("page")})
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
@@ -299,6 +326,7 @@ def AddAnnotationAttachment(request, projid, annid):
     context["form"] = form
     context["project"] = project
     context["comments"] = comments
+    context["page_obj"] = page_obj
     return render(request, "addBijlagetoAnnotation_syn.html", context)
 
 
@@ -333,7 +361,7 @@ def VerwijderAnnotationAttachment(request, projid, annid):
         comment.save()
         attachment.delete()
         return HttpResponseRedirect(
-            reverse("mijnopmerkingendelete_syn", args=(project.id,))
+            reverse("mijnopmerkingendelete_syn", args=(project.id,), kwargs={"page": request.GET.get("page")})
         )
 
     totale_kosten = 0
@@ -355,16 +383,21 @@ def VerwijderAnnotationAttachment(request, projid, annid):
         else:
             bijlages.append(None)
 
+    comments = PVEItemAnnotation.objects.filter(
+        project=project, gebruiker=request.user
+    ).order_by("id")
+
+    paginator = Paginator(comments, 25) # Show 25 replies per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {}
     context["comment"] = comment
     context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
-    context["comments"] = PVEItemAnnotation.objects.filter(
-        project=project, gebruiker=request.user
-    ).order_by("id")
     context["project"] = project
     context["bijlages"] = bijlages
     context["totale_kosten"] = totale_kosten
-
+    context["page_obj"] = page_obj
     return render(request, "deleteAttachmentAnnotation_syn.html", context)
 
 

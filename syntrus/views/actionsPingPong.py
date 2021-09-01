@@ -10,7 +10,6 @@ from project.models import Project, PVEItemAnnotation
 from syntrus.forms import FirstFreezeForm
 from syntrus.models import CommentReply, FrozenComments
 
-
 @login_required(login_url="login_syn")
 def FirstFreeze(request, pk):
     project = get_object_or_404(Project, pk=pk)
@@ -179,9 +178,11 @@ def SendReplies(request, pk):
 
                     total_comments_ids.append(comment.onComment.id)
 
-                non_reacted_comments = PVEItemAnnotation.objects.filter(
+                # for the rest of the items without reply, if no status it is todo, if it has a status its automatically accepted
+                non_reacted_comments = PVEItemAnnotation.objects.select_related("status").filter(
                     project__id=pk
                 ).exclude(id__in=total_comments_ids)
+
                 for comment in non_reacted_comments:
                     if not comment.status:
                         todo_comment_ids.append(comment.id)
@@ -189,20 +190,9 @@ def SendReplies(request, pk):
                         accepted_comment_ids.append(comment.id)
 
                 # add all the comments and divide up into accepted or non accepted or todo
-                for comment in non_accepted_comments_ids:
-                    new_phase.comments.add(comment)
-
-                new_phase.save()
-
-                for comment in accepted_comment_ids:
-                    new_phase.accepted_comments.add(comment)
-
-                new_phase.save()
-
-                for comment in todo_comment_ids:
-                    new_phase.todo_comments.add(comment)
-
-                new_phase.save()
+                new_phase.comments.add(*non_accepted_comments_ids)
+                new_phase.accepted_comments.add(*accepted_comment_ids)
+                new_phase.todo_comments.add(*todo_comment_ids)
 
                 if request.user.type_user == "SOG":
                     allprojectusers = project.permitted.all()

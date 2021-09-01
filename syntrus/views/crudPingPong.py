@@ -11,6 +11,7 @@ from syntrus import forms
 from syntrus.forms import BijlageToReplyForm
 from syntrus.models import BijlageToReply, CommentReply, FrozenComments
 
+from django.core.paginator import Paginator
 
 @login_required(login_url="login_syn")
 def CheckComments(request, proj_id):
@@ -395,6 +396,8 @@ def MyReplies(request, pk):
     if request.user not in project.permitted.all():
         return render(request, "404_syn.html")
 
+    page_number = request.GET.get('page')
+
     # multiple forms
     if request.method == "POST":
         ann_forms = [
@@ -424,7 +427,7 @@ def MyReplies(request, pk):
             if (
                 form.cleaned_data["accept"] == "True"
                 or form.cleaned_data["status"]
-                or form.cleaned_data["annotation"]
+                or form.cleaned_data["annotation"] != ""
                 or form.cleaned_data["kostenConsequenties"]
             ):
                 # true comment if either comment or voldoet
@@ -452,7 +455,7 @@ def MyReplies(request, pk):
                 reply.save()
 
         messages.warning(request, f"Opmerking succesvol bewerkt.")
-        return redirect("myreplies_syn", pk=project.id)
+        return redirect("myreplies_syn", pk=project.id, kwargs={"page": page_number})
 
     bijlages = []
 
@@ -470,7 +473,12 @@ def MyReplies(request, pk):
     replies = CommentReply.objects.select_related("onComment").select_related("onComment__item").filter(
         commentphase=commentphase, gebruiker=request.user
     ).order_by("-datum")
-    for reply in replies:
+
+    paginator = Paginator(replies, 25) # Show 25 replies per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    for reply in page_obj:
         if reply.accept:
             ann_forms.append(
                 forms.CommentReplyForm(
@@ -504,6 +512,7 @@ def MyReplies(request, pk):
     context["project"] = project
     context["bijlages"] = bijlages
     context["aantal_opmerkingen_gedaan"] = replies.count()
+    context["page_obj"] = page_obj
     return render(request, "MyReplies.html", context)
 
 
@@ -516,13 +525,17 @@ def MyRepliesDelete(request, pk):
 
     if project.frozenLevel == 0:
         return render(request, "404_syn.html")
-
+    
     commentphase = (
         FrozenComments.objects.filter(project__id=pk).order_by("-level").first()
     )
     replies = CommentReply.objects.filter(
         commentphase=commentphase, gebruiker=request.user
     ).order_by("-datum")
+
+    paginator = Paginator(replies, 25) # Show 25 replies per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     bijlages = []
 
@@ -535,6 +548,7 @@ def MyRepliesDelete(request, pk):
             bijlages.append(None)
 
     context = {}
+    context["page_obj"] = page_obj
     context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
     context["replies"] = replies
     context["project"] = project
@@ -569,6 +583,10 @@ def DeleteReply(request, pk, reply_id):
     commentphase = (
         FrozenComments.objects.filter(project__id=pk).order_by("-level").first()
     )
+    
+    paginator = Paginator(replies, 25) # Show 25 replies per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     if request.method == "POST":
         messages.warning(
@@ -576,7 +594,7 @@ def DeleteReply(request, pk, reply_id):
         )
         reply.delete()
         return HttpResponseRedirect(
-            reverse("myreplies_syn", args=(project.id,))
+            reverse("myreplies_syn", args=(project.id,), kwargs={'page':request.GET.get('page')})
         )
 
     bijlages = []
@@ -590,6 +608,7 @@ def DeleteReply(request, pk, reply_id):
             bijlages.append(None)
 
     context = {}
+    context["page_obj"] = page_obj
     context["reply"] = reply
     context["items"] = models.PVEItem.objects.filter(projects__id__contains=pk)
     context["replies"] = CommentReply.objects.filter(
@@ -618,6 +637,10 @@ def AddReplyAttachment(request, pk, reply_id):
         commentphase=commentphase, gebruiker=request.user
     ).order_by("-datum")
 
+    paginator = Paginator(replies, 25) # Show 25 replies per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     if reply.gebruiker != request.user:
         return render(request, "404_syn.html")
 
@@ -632,7 +655,7 @@ def AddReplyAttachment(request, pk, reply_id):
                 messages.warning(
                     request, f"Bijlage toegevoegd."
                 )
-                return redirect("myreplies_syn", pk=project.id)
+                return redirect("myreplies_syn", pk=project.id, kwargs={"page": page_number})
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
@@ -642,6 +665,7 @@ def AddReplyAttachment(request, pk, reply_id):
     context["form"] = form
     context["project"] = project
     context["replies"] = replies
+    context["page_obj"] = page_obj
     return render(request, "MyRepliesAddAttachment.html", context)
 
 
@@ -673,6 +697,8 @@ def DeleteReplyAttachment(request, pk, reply_id):
         FrozenComments.objects.filter(project__id=pk).order_by("-level").first()
     )
 
+    page_number = request.GET.get('page')
+
     if request.method == "POST":
         reply.bijlage = False
         reply.save()
@@ -681,7 +707,7 @@ def DeleteReplyAttachment(request, pk, reply_id):
             request, f"Bijlage verwijderd."
         )
         return HttpResponseRedirect(
-            reverse("myreplies_syn", args=(project.id,))
+            reverse("myreplies_syn", args=(project.id,), kwargs={"page": page_number})
         )
 
     bijlages = []

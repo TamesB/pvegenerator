@@ -1,10 +1,11 @@
 @font-face {
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   src: url(https://fonts.googleapis.com/css?family=Montserrat);
 }
 
-body, html {
-  font-family: 'Montserrat';
+body,
+html {
+  font-family: "Montserrat";
   margin: 0;
   font-size: 0px;
   line-height: 0em;
@@ -22,8 +23,8 @@ body, html {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  background-image: -webkit-gradient(linear, left top, right bottom, from(#FFFFFF), to(#D1D1D1));
-  background-image: linear-gradient(top left, #FFFFFF, #D1D1D1);
+  background-image: -webkit-gradient(linear, left top, right bottom, from(#ffffff), to(#d1d1d1));
+  background-image: linear-gradient(top left, #ffffff, #d1d1d1);
 }
 
 .centered_div .centered_box {
@@ -38,7 +39,7 @@ body, html {
 
 .centered_div .centered_box p {
   margin-top: 3em;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-weight: bold;
   color: black;
   font-size: 2em;
@@ -57,13 +58,13 @@ body, html {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  background-image: -webkit-gradient(linear, left top, right bottom, from(#FFFFFF), to(#D1D1D1));
-  background-image: linear-gradient(top left, #FFFFFF, #D1D1D1);
+  background-image: -webkit-gradient(linear, left top, right bottom, from(#ffffff), to(#d1d1d1));
+  background-image: linear-gradient(top left, #ffffff, #d1d1d1);
 }
 
 .centered_login .login_box {
   background: white;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-weight: bold;
   font-size: 3vh;
   text-align: center;
@@ -82,7 +83,7 @@ body, html {
 }
 
 .centered_login .login_box .login-button {
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-weight: bold;
   font-size: 2vh;
   color: white;
@@ -169,7 +170,7 @@ body, html {
 #main .layerOneInner .header .menu_right {
   padding: 1vw;
   padding-top: 2.5vh;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
 }
 
 #main .layerOneInner .header .menu_right ul {
@@ -207,12 +208,12 @@ body, html {
 #main .layerOneInner .menu_left {
   left: 0;
   text-align: center;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-weight: bold;
   font-size: 1.5em;
   width: 3vw;
-  background-image: -webkit-gradient(linear, right bottom, left top, from(#026189), to(#00ACA9));
-  background-image: linear-gradient(bottom right, #026189, #00ACA9);
+  background-image: -webkit-gradient(linear, right bottom, left top, from(#026189), to(#00aca9));
+  background-image: linear-gradient(bottom right, #026189, #00aca9);
   top: 10vh;
   height: 100%;
   max-height: 90vh;
@@ -318,13 +319,13 @@ body, html {
 }
 
 #main .layerOneInner .article {
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   height: 100%;
   width: 100%;
   float: center;
   text-align: center;
-  background-image: -webkit-gradient(linear, left top, right bottom, from(#FFFFFF), to(#D1D1D1));
-  background-image: linear-gradient(top left, #FFFFFF, #D1D1D1);
+  background-image: -webkit-gradient(linear, left top, right bottom, from(#ffffff), to(#d1d1d1));
+  background-image: linear-gradient(top left, #ffffff, #d1d1d1);
   position: absolute;
   top: 10vh;
   max-height: 90vh;
@@ -359,14 +360,14 @@ body, html {
   margin-left: 3vw;
   margin-right: 3vw;
   background: #b2dbdd;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(20%, #00A4A5), color-stop(20%, #f7f7f8));
-  background: linear-gradient(0deg, #00A4A5 20%, #f7f7f8 20%);
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(20%, #00a4a5), color-stop(20%, #f7f7f8));
+  background: linear-gradient(0deg, #00a4a5 20%, #f7f7f8 20%);
   border-radius: 1.6vh;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   cursor: pointer;
-  -webkit-transition-duration: .5s;
-          transition-duration: .5s;
+  -webkit-transition-duration: 0.5s;
+          transition-duration: 0.5s;
   max-width: 300px;
 }
 
@@ -391,8 +392,8 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .flex-item:active {
-  -webkit-transition-duration: .1s;
-          transition-duration: .1s;
+  -webkit-transition-duration: 0.1s;
+          transition-duration: 0.1s;
   -webkit-transform: translateY(4px);
           transform: translateY(4px);
 }
@@ -461,7 +462,7 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .base_info_table table {
-  background-color: #00A4A5;
+  background-color: #00a4a5;
   display: table;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
@@ -502,7 +503,7 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .base_info_table table .table_title {
-  background-color: #00A4A5;
+  background-color: #00a4a5;
   letter-spacing: 0.1em;
   font-weight: 900;
   width: 100%;
@@ -554,7 +555,7 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .profile_box {
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-size: 2vh;
   background: #f7f7f8;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
@@ -612,7 +613,7 @@ body, html {
   font-weight: bold;
   color: white;
   letter-spacing: 0.2vw;
-  background-color: #00A4A5;
+  background-color: #00a4a5;
 }
 
 @media screen and (max-width: 540px) {
@@ -637,7 +638,8 @@ body, html {
   margin-bottom: 1vh;
 }
 
-#main .layerOneInner .article .article_content .general_title p, #main .layerOneInner .article .article_content .general_title label {
+#main .layerOneInner .article .article_content .general_title p,
+#main .layerOneInner .article .article_content .general_title label {
   font-weight: bold;
   text-align: left;
   padding-top: 2vh;
@@ -668,7 +670,7 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .general_title .submit_button {
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   padding: 0;
   font-size: 1.5vh;
   height: 100%;
@@ -717,7 +719,8 @@ body, html {
   min-width: 40px;
 }
 
-#main .layerOneInner .article .article_content .margin_title p, #main .layerOneInner .article .article_content .margin_title label {
+#main .layerOneInner .article .article_content .margin_title p,
+#main .layerOneInner .article .article_content .margin_title label {
   font-weight: bold;
   text-align: left;
   padding-top: 2vh;
@@ -727,6 +730,26 @@ body, html {
   width: 100%;
   padding-right: 2vw;
   color: #2b786e;
+}
+
+#main .layerOneInner .article .article_content .formbox {
+  float: left;
+  width: 100%;
+}
+
+#main .layerOneInner .article .article_content .formbox label {
+  margin-bottom: 1vh;
+}
+
+#main .layerOneInner .article .article_content .formbox select {
+  width: 100%;
+  height: 4vh;
+}
+
+#main .layerOneInner .article .article_content .formbox textarea {
+  margin-top: 1vh;
+  width: 40vw;
+  height: 5vh;
 }
 
 #main .layerOneInner .article .article_content .generator_form form .parameter_container {
@@ -754,8 +777,8 @@ body, html {
   width: 20vw;
   min-width: 225px;
   background: #b2dbdd;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(15%, #00A4A5), color-stop(15%, #f7f7f8));
-  background: linear-gradient(0deg, #00A4A5 15%, #f7f7f8 15%);
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(15%, #00a4a5), color-stop(15%, #f7f7f8));
+  background: linear-gradient(0deg, #00a4a5 15%, #f7f7f8 15%);
   border-radius: 1.6vh;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
@@ -782,6 +805,12 @@ body, html {
   width: 100%;
   height: 4vh;
   margin-bottom: 3vh;
+}
+
+#main .layerOneInner .article .article_content .generator_form form .parameter_container .parameter_item .formbox textarea {
+  margin: 0;
+  width: 40vw;
+  height: 5vh;
 }
 
 #main .layerOneInner .article .article_content .generator_form form .parameter_container .parameter_item .under_text {
@@ -888,7 +917,7 @@ body, html {
   font-size: 2em;
   color: white;
   font-style: bold;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   margin-left: 10vw;
   text-align: center;
   margin-right: 7vw;
@@ -902,8 +931,8 @@ body, html {
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   cursor: pointer;
-  -webkit-transition-duration: .5s;
-          transition-duration: .5s;
+  -webkit-transition-duration: 0.5s;
+          transition-duration: 0.5s;
 }
 
 #main .layerOneInner .article .article_content .generator_form form .genereer_button:hover {
@@ -911,8 +940,8 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .generator_form form .genereer_button:active {
-  -webkit-transition-duration: .1s;
-          transition-duration: .1s;
+  -webkit-transition-duration: 0.1s;
+          transition-duration: 0.1s;
   -webkit-transform: translateY(4px);
           transform: translateY(4px);
 }
@@ -932,7 +961,7 @@ body, html {
 #main .layerOneInner .article .article_content .generate_result_box .box {
   padding: 3em;
   background: white;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-weight: bold;
   font-size: 2em;
   margin-top: 6em;
@@ -956,7 +985,7 @@ body, html {
   text-overflow: none;
   color: white;
   font-style: bold;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-size: 0.5em;
   background-color: #026189;
   min-width: 243px;
@@ -988,13 +1017,13 @@ body, html {
   padding-top: 3vh;
   padding-left: 3vw;
   padding-right: 3vw;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   border-radius: 1.6em;
   background: #b2dbdd;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(10%, #00A4A5), color-stop(10%, #f7f7f8));
-  background: linear-gradient(0deg, #00A4A5 10%, #f7f7f8 10%);
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(10%, #00a4a5), color-stop(10%, #f7f7f8));
+  background: linear-gradient(0deg, #00a4a5 10%, #f7f7f8 10%);
 }
 
 #main .layerOneInner .article .article_content .invite-container .box .title {
@@ -1079,7 +1108,7 @@ body, html {
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   outline: none;
   letter-spacing: 0.1vw;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   color: white;
   font-weight: 800;
 }
@@ -1108,7 +1137,7 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .general_title .submit_button {
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   padding: 0;
   font-size: 1.5vh;
   height: 100%;
@@ -1249,7 +1278,6 @@ body, html {
   display: -ms-flexbox;
   display: flex;
   font-size: 1.5vh;
-  cursor: pointer;
   padding-top: 0.5vh;
   padding-bottom: 0.5vh;
 }
@@ -1312,7 +1340,7 @@ body, html {
       -ms-flex-pack: center;
           justify-content: center;
   margin: 0;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   padding: 0;
   padding-top: 3vh;
   padding-bottom: 3vh;
@@ -1325,7 +1353,7 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container label {
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   margin-top: 1.5vh;
   font-size: 1.5vh;
   font-weight: bold;
@@ -1390,7 +1418,7 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .done_button p {
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-size: 1.5vh;
   margin-top: 0.5vh;
   text-align: center;
@@ -1409,7 +1437,7 @@ body, html {
   float: right;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-size: 1vh;
   margin-top: 0.5vh;
   text-align: center;
@@ -1444,7 +1472,7 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .popup_wrapper {
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   overflow-y: auto;
 }
 
@@ -1483,7 +1511,7 @@ body, html {
   width: 100%;
   padding-top: 0.3vh;
   padding-bottom: 0.3vh;
-  background-color: #00A4A5;
+  background-color: #00a4a5;
   border-top-left-radius: 1.6vh;
   border-top-right-radius: 1.6vh;
 }
@@ -1557,8 +1585,8 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .project_acties .acties .actie_item:active {
-  -webkit-transition-duration: .1s;
-          transition-duration: .1s;
+  -webkit-transition-duration: 0.1s;
+          transition-duration: 0.1s;
   -webkit-transform: translateY(4px);
           transform: translateY(4px);
 }
@@ -1629,16 +1657,16 @@ body, html {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-size: 1.5vh;
   border: #f7f7f7;
   background: #f7f7f7;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(15%, #00A4A5), color-stop(15%, #f7f7f8));
-  background: linear-gradient(180deg, #00A4A5 15%, #f7f7f8 15%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(15%, #00a4a5), color-stop(15%, #f7f7f8));
+  background: linear-gradient(180deg, #00a4a5 15%, #f7f7f8 15%);
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .messages_box .chat-title {
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   margin-top: 2vh;
   font-size: 2vh;
   padding-bottom: 3vh;
@@ -1778,7 +1806,7 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .extra_proj_info .title {
-  background: #00A4A5;
+  background: #00a4a5;
   min-width: 100%;
   width: 100%;
   font-size: 2.5vh;
@@ -1836,7 +1864,7 @@ body, html {
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .project_locatie .title {
-  background: #00A4A5;
+  background: #00a4a5;
   min-width: 100%;
   width: 100%;
   font-size: 2.5vh;
@@ -1932,7 +1960,7 @@ body, html {
   text-align: left;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  background: linear-gradient(180deg, #00A4A5 95px, #f7f7f8 95px);
+  background: linear-gradient(180deg, #00a4a5 95px, #f7f7f8 95px);
   overflow-y: auto;
 }
 
@@ -2018,7 +2046,7 @@ body, html {
   text-align: left;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  background: linear-gradient(180deg, #00A4A5 95px, #f7f7f8 95px);
+  background: linear-gradient(180deg, #00a4a5 95px, #f7f7f8 95px);
   overflow-y: auto;
 }
 
@@ -2123,7 +2151,7 @@ body, html {
 .loader {
   border: 16px solid #f3f3f3;
   border-radius: 50%;
-  border-top: 16px solid #00A4A5;
+  border-top: 16px solid #00a4a5;
   width: 5em;
   height: 5em;
   margin-top: 20%;

@@ -23,7 +23,7 @@
 
 <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Mijn Opmerkingen, project {{ project.naam }}
 <input type="button" class="submit_button" onClick="javascript:location.href='{% url 'firstfreeze_syn' project.id %}';" value="Stuur door >"></input>
-<a href="{% url 'mijnopmerkingen_syn' project.id %}"><button class="ui blue button"><i class="icon check"></i>Gereed</button></a></p></div>
+<a href="{% url 'mijnopmerkingen_syn' project.id %}?page={{ page_obj.number }}"><button class="ui blue button"><i class="icon check"></i>Gereed</button></a></p></div>
 
 <div class="opmerkingtable_wrapper">
 <table>
@@ -36,15 +36,15 @@
     <th><p>Bijlage</p></th>
     <th><p>Datum bewerkt</p></th>
   </tr>
-  {% if comments %}
-  {% for comment in comments %}
+  {% if page_obj %}
+  {% for comment in page_obj %}
   <tr class="table_content">
     <td class="inhoud_box"><p>{{ comment.item.inhoud }}</p></td>
     <td class="voldoening"><p>{% if comment.status %}{{ comment.status }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="voldoening"><p>{% if comment.annotation %}{{ comment.annotation }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="kosten"><p>{% if comment.kostenConsequenties %}€ {{ comment.kostenConsequenties }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="voldoening"><a href="{% url 'deleteAnnotationPve_syn' project.id comment.id %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></p></td>
-    <td class="voldoening">{% if not comment.bijlage %}<p><i>Leeg</i></p>{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" style="float:left;" target="_blank"><button class="ui icon basic button"><i class="icon download"></i></button></a><p><a href="{% url 'verwijderbijlageopmerking_syn' project.id comment.id %}" style="float: right;"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></p>{% endif %}</td>
+    <td class="voldoening">{% if not comment.bijlage %}<p><i>Leeg</i></p>{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}?page={{ page_obj.number }}" style="float:left;" target="_blank"><button class="ui icon basic button"><i class="icon download"></i></button></a><p><a href="{% url 'verwijderbijlageopmerking_syn' project.id comment.id %}?page={{ page_obj.number }}" style="float: right;"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></p>{% endif %}</td>
     <td class="voldoening"><p>{{ comment.datum }}</p></td>
   </tr>
   {% endfor %}

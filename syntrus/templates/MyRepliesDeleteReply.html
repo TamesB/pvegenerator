@@ -1,14 +1,7 @@
-{% extends "MyReplies.html" %}
-
-{% load semanticui %}
-
-{% load filename %}
-
-{% block modal %}
+{% extends "MyReplies.html" %} {% load semanticui %} {% load filename %} {%
+block modal %}
 <script>
-$('.mini.modal')
-  .modal('show')
-;
+  $(".mini.modal").modal("show");
 </script>
 
 <div class="ui mini modal">
@@ -16,12 +9,28 @@ $('.mini.modal')
     <p>Weet u het zeker?</p>
   </div>
   <div class="content">
-    <form action="{% url 'deletereply_syn' project.id reply.id %}" class="ui form" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="submit" style="float: right;" class="ui basic red button" value="Verwijder">
-    </form>  
+    <form
+      action="{% url 'deletereply_syn' project.id reply.id %}?page={{ page_obj.number }}"
+      class="ui form"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      {% csrf_token %}
+      <input
+        type="submit"
+        style="float: right"
+        class="ui basic red button"
+        value="Verwijder"
+      />
+    </form>
 
-    <p><a href="{% url 'myreplies_syn' project.id %}" class="bewerk_button"><button style="float: left;" class="ui green button">Behoud</button></a></p> 
+    <p>
+      <a
+        href="{% url 'myreplies_syn' project.id %}?page={{ page_obj.number }}"
+        class="bewerk_button"
+        ><button style="float: left" class="ui green button">Behoud</button></a
+      >
+    </p>
   </div>
 </div>
 
