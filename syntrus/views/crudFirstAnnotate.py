@@ -99,7 +99,7 @@ def MyComments(request, pk):
             request, bericht
         )
 
-        return redirect("mijnopmerkingen_syn", pk=project.id, kwargs={"page": request.GET.get("page")})
+        return redirect("mijnopmerkingen_syn", pk=project.id)
 
     totale_kosten = 0
     totale_kosten_lijst = [
@@ -241,7 +241,7 @@ def deleteAnnotationPve(request, project_id, ann_id):
             request, f"Opmerking verwijderd."
         )
         return HttpResponseRedirect(
-            reverse("mijnopmerkingendelete_syn", args=(project.id,), kwargs={"page": request.GET.get("page")})
+            reverse("mijnopmerkingendelete_syn", args=(project.id,))
         )
 
     totale_kosten = 0
@@ -316,7 +316,7 @@ def AddAnnotationAttachment(request, projid, annid):
                 messages.warning(
                     request, f"Bijlage toegevoegd."
                 )
-                return redirect("mijnopmerkingen_syn", pk=project.id, kwargs={"page": request.GET.get("page")})
+                return redirect("mijnopmerkingen_syn", pk=project.id)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
@@ -361,7 +361,7 @@ def VerwijderAnnotationAttachment(request, projid, annid):
         comment.save()
         attachment.delete()
         return HttpResponseRedirect(
-            reverse("mijnopmerkingendelete_syn", args=(project.id,), kwargs={"page": request.GET.get("page")})
+            reverse("mijnopmerkingendelete_syn", args=(project.id,))
         )
 
     totale_kosten = 0

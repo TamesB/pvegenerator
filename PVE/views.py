@@ -15,3 +15,7 @@ def LandingView(request):
     # render the page
     context = {}
     return render(request, "LandingPage.html", context)
+
+def validate(request):
+    if request.method == GET:
+        return render(request, "validate.txt")

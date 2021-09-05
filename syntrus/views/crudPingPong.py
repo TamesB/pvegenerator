@@ -73,11 +73,12 @@ def CheckComments(request, proj_id):
         
         for form in ann_forms:
             if (
-                form.cleaned_data["accept"] == "True"
+                (form.cleaned_data["accept"] == "True")
                 or form.cleaned_data["status"]
-                or form.cleaned_data["annotation"] != ""
+                or (form.cleaned_data["annotation"] != "")
                 or form.cleaned_data["kostenConsequenties"]
             ):
+                print(form)
                 # if the reply already exists, edit all fields that aren't the same as in the model.
                 if CommentReply.objects.filter(
                     onComment__id=form.cleaned_data["comment_id"],
@@ -255,7 +256,8 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
                 string = string[:-15]
             else:
                 string = string[:-2]
-
+        
+        
         # sort
         if item.paragraaf:
             if item.hoofdstuk not in hoofdstuk_ordered_items_non_accept.keys():
@@ -381,7 +383,7 @@ def make_ann_forms(comments, frozencomments):
 
 
 @login_required
-def MyReplies(request, pk):
+def MyReplies(request, pk, **kwargs):
     context = {}
 
     project = get_object_or_404(Project, pk=pk)
@@ -425,9 +427,9 @@ def MyReplies(request, pk):
         ]
         for form in ann_forms:
             if (
-                form.cleaned_data["accept"] == "True"
+                (form.cleaned_data["accept"] == "True")
                 or form.cleaned_data["status"]
-                or form.cleaned_data["annotation"] != ""
+                or (form.cleaned_data["annotation"] != "")
                 or form.cleaned_data["kostenConsequenties"]
             ):
                 # true comment if either comment or voldoet
@@ -455,7 +457,7 @@ def MyReplies(request, pk):
                 reply.save()
 
         messages.warning(request, f"Opmerking succesvol bewerkt.")
-        return redirect("myreplies_syn", pk=project.id, kwargs={"page": page_number})
+        return redirect("myreplies_syn", pk=project.id)
 
     bijlages = []
 
@@ -584,9 +586,7 @@ def DeleteReply(request, pk, reply_id):
         FrozenComments.objects.filter(project__id=pk).order_by("-level").first()
     )
     
-    paginator = Paginator(replies, 25) # Show 25 replies per page.
     page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
 
     if request.method == "POST":
         messages.warning(
@@ -594,7 +594,7 @@ def DeleteReply(request, pk, reply_id):
         )
         reply.delete()
         return HttpResponseRedirect(
-            reverse("myreplies_syn", args=(project.id,), kwargs={'page':request.GET.get('page')})
+            reverse("myreplies_syn", args=(project.id,))
         )
 
     bijlages = []
@@ -608,7 +608,6 @@ def DeleteReply(request, pk, reply_id):
             bijlages.append(None)
 
     context = {}
-    context["page_obj"] = page_obj
     context["reply"] = reply
     context["items"] = models.PVEItem.objects.filter(projects__id__contains=pk)
     context["replies"] = CommentReply.objects.filter(
@@ -655,7 +654,7 @@ def AddReplyAttachment(request, pk, reply_id):
                 messages.warning(
                     request, f"Bijlage toegevoegd."
                 )
-                return redirect("myreplies_syn", pk=project.id, kwargs={"page": page_number})
+                return redirect("myreplies_syn", pk=project.id)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
@@ -707,7 +706,7 @@ def DeleteReplyAttachment(request, pk, reply_id):
             request, f"Bijlage verwijderd."
         )
         return HttpResponseRedirect(
-            reverse("myreplies_syn", args=(project.id,), kwargs={"page": page_number})
+            reverse("myreplies_syn", args=(project.id,))
         )
 
     bijlages = []

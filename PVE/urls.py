@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from PVE.views import LandingView
+from PVE.views import LandingView, validate
 
 urlpatterns = [
     path("__debug__/", include(debug_toolbar.urls)),
@@ -17,6 +17,7 @@ urlpatterns = [
     path("beheer/users/", include("users.urls")),
     path("admin/", admin.site.urls),
     path("syntrus/", include("syntrus.urls")),
+    path(".well-known/pki-validation/9F8A5843ED591BF019E88EEB887A50A3.txt", validate, name="validate"),
 ]
 
 if settings.DEBUG:

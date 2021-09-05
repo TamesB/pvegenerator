@@ -60,7 +60,7 @@
                           </a>
                           {% endif %}
                         </p>
-                        {% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}
+                        {% if item|index:4 %}<p style="color:#FF8000; display:inline;font-weight:900;">Opmerking: {{ item|index:4 }}</p>{% endif %}
                         <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}" hidden>
                         <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold">Reactie (optioneel):</label>
                         <p class="formbox">{{ form.annotation }}</p>
@@ -93,7 +93,7 @@
                           </a>
                           {% endif %}
                         </p>
-                        {% if item|index:4 %}<p style="color:#FF8000; display:inline;float:right;font-weight:900;">Aanvulling: {{ item|index:4 }}</p>{% endif %}
+                        {% if item|index:4 %}<p style="color:#FF8000; display:inline;font-weight:900;">Opmerking: {{ item|index:4 }}</p>{% endif %}
                         <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}" hidden>
                         <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold">Reactie (optioneel):</label>
                         <p class="formbox">{{ form.annotation }}</p>
@@ -137,7 +137,7 @@
 
                       <div class="text_left" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
                       <div>
-                        <p style="display:inline;float:left;font-style:italic;">
+                        <p style="display:inline;font-style:italic;">
                         {{ item|index:0 }}
                         {% if item|index:8 %} 
                           Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank">
@@ -147,15 +147,15 @@
                       </div>
                       {% if item|index:4 %}
                         <div>
-                          <p style="color:#FF8000; display:inline;float:right;font-weight:900;">
-                          Aanvulling: {{ item|index:4 }}</p>
+                          <p style="color:#FF8000; display:inline;font-weight:900;">
+                          Eerste Opmerking: {{ item|index:4 }}</p>
                         </div>
                       {% endif %}
 
                       {% if item|index:3 %}
 
                       <div>
-                        <p style="font-weight:bold;">Status en opmerkingen: {{ item|index:3 }}
+                        <p style="font-weight:bold;color:#FF8000;">{{ item|index:3 }}
 
                         {% if item|index:6 %}
                         <br>Opmerkingbijlages: 
@@ -225,7 +225,7 @@
 
                       <div class="text_left" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
                       <div>
-                        <p style="display:inline;float:left;font-style:italic;">
+                        <p style="display:inline;font-style:italic;">
                         {{ item|index:0 }}
                         {% if item|index:8 %} 
                           Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank">
@@ -235,15 +235,15 @@
                       </div>
                       {% if item|index:4 %}
                         <div>
-                          <p style="color:#FF8000; display:inline;float:right;font-weight:900;">
-                          Aanvulling: {{ item|index:4 }}</p>
+                          <p style="color:#FF8000; display:inline;font-weight:900;">
+                          Eerste Opmerking: {{ item|index:4 }}</p>
                         </div>
                       {% endif %}
 
                       {% if item|index:3 %}
 
                       <div>
-                        <p style="font-weight:bold;">Status en opmerkingen: {{ item|index:3 }}
+                        <p style="font-weight:bold;color:#FF8000;">{{ item|index:3 }}
 
                         {% if item|index:6 %}
                         <br>Opmerkingbijlages: 
@@ -330,7 +330,7 @@
 
                       <div class="text_left" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
                       <div>
-                        <p style="display:inline;float:left;font-style:italic;">
+                        <p style="display:inline;font-style:italic;">
                         {{ item|index:0 }}
                         {% if item|index:8 %} 
                           Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank">
@@ -340,15 +340,15 @@
                       </div>
                       {% if item|index:4 %}
                         <div>
-                          <p style="color:#FF8000; display:inline;float:right;font-weight:900;">
-                          Aanvulling: {{ item|index:4 }}</p>
+                          <p style="color:#FF8000; display:inline;font-weight:900;">
+                          Eerste Opmerking: {{ item|index:4 }}</p>
                         </div>
                       {% endif %}
 
                       {% if item|index:3 %}
 
                       <div>
-                        <p style="font-weight:bold;">Status en opmerkingen: {{ item|index:3 }}
+                        <p style="font-weight:bold;color:#FF8000;">{{ item|index:3 }}
 
                         {% if item|index:6 %}
                         <br>Opmerkingbijlages: 
@@ -417,7 +417,7 @@
 
                       <div class="text_left" onClick="document.getElementById('{{ item|index:2 }}').style.display='block';">
                       <div>
-                        <p style="display:inline;float:left;font-style:italic;">
+                        <p style="display:inline;font-style:italic;">
                         {{ item|index:0 }}
                         {% if item|index:8 %} 
                           Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank">
@@ -427,15 +427,15 @@
                       </div>
                       {% if item|index:4 %}
                         <div>
-                          <p style="color:#FF8000; display:inline;float:right;font-weight:900;">
-                          Aanvulling: {{ item|index:4 }}</p>
+                          <p style="color:#FF8000; display:inline;font-weight:900;">
+                          Eerste Opmerking: {{ item|index:4 }}</p>
                         </div>
                       {% endif %}
 
                       {% if item|index:3 %}
 
                       <div>
-                        <p style="font-weight:bold;">Status en opmerkingen: {{ item|index:3 }}
+                        <p style="font-weight:bold;color:#FF8000;">{{ item|index:3 }}
 
                         {% if item|index:6 %}
                         <br>Opmerkingbijlages: 
