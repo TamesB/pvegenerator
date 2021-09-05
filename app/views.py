@@ -100,9 +100,7 @@ def PVEBeleggerVersieOverview(request):
     BeleggerVersieQuerySet = {}
 
     for belegger in beleggers:
-        BeleggerVersieQuerySet[belegger] = models.PVEVersie.objects.filter(
-            belegger=belegger
-        )
+        BeleggerVersieQuerySet[belegger] = belegger.versie.all()
 
     context = {}
     context["BeleggerVersieQuerySet"] = BeleggerVersieQuerySet
@@ -128,9 +126,7 @@ def AddBelegger(request):
     BeleggerVersieQuerySet = {}
 
     for belegger in beleggers:
-        BeleggerVersieQuerySet[belegger] = models.PVEVersie.objects.filter(
-            belegger=belegger
-        )
+        BeleggerVersieQuerySet[belegger] = belegger.versie.all()
 
     context = {}
     context["BeleggerVersieQuerySet"] = BeleggerVersieQuerySet
@@ -162,25 +158,25 @@ def AddPvEVersie(request, belegger_pk):
             # maak kopie van andere versie, voeg nieuw toe.
             if kopie_versie:
                 # items
-                items = [i for i in models.PVEItem.objects.filter(versie=kopie_versie)]
+                items = [i for i in kopie_versie.item.all()]
                 old_items = [i.id for i in items]
 
                 # keuzematrix
-                bwsrt = [i for i in models.Bouwsoort.objects.filter(versie=kopie_versie)]
-                tpobj = [i for i in models.TypeObject.objects.filter(versie=kopie_versie)]
-                dlgrp = [i for i in models.Doelgroep.objects.filter(versie=kopie_versie)]
+                bwsrt = [i for i in kopie_versie.bouwsoort.all()]
+                tpobj = [i for i in kopie_versie.type_object.all()]
+                dlgrp = [i for i in kopie_versie.doelgroep.all()]
                 old_bwsrt = [i.id for i in bwsrt]
                 old_tpobj = [i.id for i in tpobj]
                 old_dlgrp = [i.id for i in dlgrp]
 
                 # hoofdstukken en paragraven
-                hfstukken = [i for i in models.PVEHoofdstuk.objects.filter(versie=kopie_versie)]
-                prgrfs = [i for i in models.PVEParagraaf.objects.filter(versie=kopie_versie)]
+                hfstukken = [i for i in kopie_versie.hoofdstuk.all()]
+                prgrfs = [i for i in kopie_versie.paragraaf.all()]
                 old_hfstukken = [i.id for i in hfstukken]
                 old_prgrfs = [i.id for i in prgrfs]
 
                 # bijlages
-                bijlagen_models = models.ItemBijlages.objects.filter(versie=kopie_versie)
+                bijlagen_models = kopie_versie.itembijlage.all()
                 bijlagen = []
 
                 for bijlage_model in bijlagen_models:
@@ -220,9 +216,9 @@ def AddPvEVersie(request, belegger_pk):
                 models.Doelgroep.objects.bulk_create(new_dlgrp)
 
                 # map the old to new model ids for new foreignkey references
-                new_bwsrt = [i for i in models.Bouwsoort.objects.filter(versie=new_versie_obj)]
-                new_tpobj = [i for i in models.TypeObject.objects.filter(versie=new_versie_obj)]
-                new_dlgrp = [i for i in models.Doelgroep.objects.filter(versie=new_versie_obj)]
+                new_bwsrt = [i for i in new_versie_obj.bouwsoort.all()]
+                new_tpobj = [i for i in new_versie_obj.type_object.all()]
+                new_dlgrp = [i for i in new_versie_obj.doelgroep.all()]
 
                 bwsrt_map = {}
                 for old, new in zip(old_bwsrt, new_bwsrt):
@@ -246,7 +242,7 @@ def AddPvEVersie(request, belegger_pk):
 
                 models.PVEHoofdstuk.objects.bulk_create(new_hfst)
 
-                new_hfst = [i for i in models.PVEHoofdstuk.objects.filter(versie=new_versie_obj)]
+                new_hfst = [i for i in new_versie_obj.hoofdstuk.all()]
 
                 hfst_map = {}
                 for old, new in zip(old_hfstukken, new_hfst):
@@ -263,7 +259,7 @@ def AddPvEVersie(request, belegger_pk):
 
                 models.PVEParagraaf.objects.bulk_create(new_prgrf)
 
-                new_prgrf = [i for i in models.PVEParagraaf.objects.filter(versie=new_versie_obj)]
+                new_prgrf = [i for i in new_versie_obj.paragraaf.all()]
 
                 prgrf_map = {}
                 for old, new in zip(old_prgrfs, new_prgrf):
@@ -292,7 +288,7 @@ def AddPvEVersie(request, belegger_pk):
                     new_items.append(i)
 
                 models.PVEItem.objects.bulk_create(new_items)
-                new_items = [i for i in models.PVEItem.objects.filter(versie=new_versie_obj)]
+                new_items = [i for i in new_versie_obj.item.all()]
 
                 # map foreignkeys to new objects
                 for i in range(len(new_items)):
@@ -323,7 +319,7 @@ def AddPvEVersie(request, belegger_pk):
                     new_bijlagen.append(i)
 
                 models.ItemBijlages.objects.bulk_create(new_bijlagen)
-                new_bijlagen = [i for i in models.ItemBijlages.objects.filter(versie=new_versie_obj)]
+                new_bijlagen = [i for i in new_versie_obj.itembijlage.all()]
 
                 # foreignkeys change after bulk_create
                 for i, j in zip(new_bijlagen, cur_items_obj):
@@ -341,9 +337,7 @@ def AddPvEVersie(request, belegger_pk):
     BeleggerVersieQuerySet = {}
 
     for belegger in beleggers:
-        BeleggerVersieQuerySet[belegger] = models.PVEVersie.objects.filter(
-            belegger=belegger
-        )
+        BeleggerVersieQuerySet[belegger] = belegger.versie
 
     context = {}
     context["BeleggerVersieQuerySet"] = BeleggerVersieQuerySet
@@ -392,7 +386,7 @@ def PVEBewerkOverview(request, versie_pk):
 @staff_member_required(login_url="/404")
 def PVEHoofdstukListView(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
-    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie).order_by("id")
+    hoofdstukken = versie.hoofdstuk.all()
     context = {}
     context["hoofdstukken"] = hoofdstukken
     context["versie_pk"] = versie_pk
@@ -425,7 +419,7 @@ def DownloadWorksheet(request, versie_pk):
 @staff_member_required(login_url="/404")
 def PVEHoofdstukListViewEdit(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
-    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie).order_by("id")
+    hoofdstukken = versie.hoofdstuk.all()
     context = {}
     context["hoofdstukken"] = hoofdstukken
     context["versie_pk"] = versie_pk
@@ -435,7 +429,7 @@ def PVEHoofdstukListViewEdit(request, versie_pk):
 @staff_member_required(login_url="/404")
 def PVEHoofdstukListViewDelete(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
-    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie).order_by("id")
+    hoofdstukken = versie.hoofdstuk.all()
     context = {}
     context["hoofdstukken"] = hoofdstukken
     context["versie_pk"] = versie_pk
@@ -456,7 +450,7 @@ def PVEaddhoofdstukView(request, versie_pk):
             PVEHoofdstuk.save()
             return redirect("hoofdstukview", versie_pk=versie_pk)
 
-    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie).order_by("id")
+    hoofdstukken = versie.hoofdstuk.all()
 
     # form, initial chapter in specific onderdeel
     form = forms.ChapterForm()
@@ -471,23 +465,23 @@ def PVEaddhoofdstukView(request, versie_pk):
 def PVEedithoofdstukView(request, versie_pk, pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
 
-    if not models.PVEHoofdstuk.objects.filter(id=pk):
+    if not versie.hoofdstuk.filter(id=pk):
         return Http404("404")
 
     if request.method == "POST":
         form = forms.ChapterForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            PVEhoofdstuk = models.PVEHoofdstuk.objects.filter(id=pk).first()
+            PVEhoofdstuk = versie.hoofdstuk.get(id=pk)
             PVEhoofdstuk.hoofdstuk = form.cleaned_data["hoofdstuk"]
             PVEhoofdstuk.save()
             return redirect("hoofdstukview", versie_pk=versie_pk)
 
     # form, initial chapter in specific onderdeel
-    hoofdstuk = models.PVEHoofdstuk.objects.filter(versie=versie, id=pk).first()
+    hoofdstuk = versie.hoofdstuk.get(id=pk)
     form = forms.ChapterForm(instance=hoofdstuk)
 
-    hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie).order_by("id")
+    hoofdstukken = versie.hoofdstuk.all()
 
     # form, initial chapter in specific onderdeel
     context = {}
@@ -504,28 +498,24 @@ def paragraaflistView(request, versie_pk, pk):
     pk = int(pk)
     versie = models.PVEVersie.objects.get(id=versie_pk)
 
-    if models.PVEHoofdstuk.objects.filter(versie=versie, id=pk).exists():
-        hoofdstuk = models.PVEHoofdstuk.objects.filter(versie=versie, id=pk).first()
+    if versie.hoofdstuk.filter(id=pk).exists():
+        hoofdstuk = versie.hoofdstuk.get(id=pk)
     else:
         raise Http404("404")
 
-    items = models.PVEItem.objects.filter(versie=versie, hoofdstuk=hoofdstuk)
+    items = hoofdstuk.item.all()
 
     # if an item is already in the chapter and doesnt have a paragraph ->
     # redirect to items
     if items:
-        if items.first().paragraaf is None and not models.PVEParagraaf.objects.filter(
-                hoofdstuk=hoofdstuk, versie=versie
-            ).exists():
+        if items.first().paragraaf is None and not hoofdstuk.paragraaf.all():
             return redirect(
                 "itemlistview", versie_pk=versie_pk, chapter_id=pk, paragraph_id=0
             )
 
     # otherwise, show paragraphs
     context = {}
-    context["paragraven"] = models.PVEParagraaf.objects.filter(
-        hoofdstuk=hoofdstuk, versie=versie
-    )
+    context["paragraven"] = hoofdstuk.paragraaf.all()
     context["sectie"] = hoofdstuk
     context["versie_pk"] = versie_pk
     return render(request, "PVEParagraphList.html", context)
@@ -534,15 +524,14 @@ def paragraaflistView(request, versie_pk, pk):
 @staff_member_required(login_url="/404")
 def paragraaflistViewEdit(request, versie_pk, pk):
     pk = int(pk)
+    versie = models.PVEVersie.objects.get(id=versie_pk)
 
-    if models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk).exists():
-        hoofdstuk = models.PVEHoofdstuk.objects.filter(
-            versie__id=versie_pk, id=pk
-        ).first()
+    if versie.hoofdstuk.filter(id=pk).exists():
+        hoofdstuk = versie.hoofdstuk.get(id=pk)
     else:
         raise Http404("404")
 
-    items = models.PVEItem.objects.filter(versie__id=versie_pk, hoofdstuk=hoofdstuk)
+    items = hoofdstuk.item.all()
 
     # if an item is already in the chapter and doesnt have a paragraph ->
     # redirect to items
@@ -554,9 +543,7 @@ def paragraaflistViewEdit(request, versie_pk, pk):
 
     # otherwise, show paragraphs
     context = {}
-    context["paragraven"] = models.PVEParagraaf.objects.filter(
-        hoofdstuk=hoofdstuk, versie__id=versie_pk
-    )
+    context["paragraven"] = hoofdstuk.paragraaf.all()
     context["sectie"] = hoofdstuk
     context["id"] = pk
     context["versie_pk"] = versie_pk
@@ -566,15 +553,14 @@ def paragraaflistViewEdit(request, versie_pk, pk):
 @staff_member_required(login_url="/404")
 def paragraaflistViewDelete(request, versie_pk, pk):
     pk = int(pk)
+    versie = models.PVEVersie.objects.get(id=versie_pk)
 
-    if models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk).exists():
-        hoofdstuk = models.PVEHoofdstuk.objects.filter(
-            versie__id=versie_pk, id=pk
-        ).first()
+    if versie.hoofdstuk.filter(id=pk).exists():
+        hoofdstuk = versie.hoofdstuk.get(id=pk)
     else:
         raise Http404("404")
 
-    items = models.PVEItem.objects.filter(versie__id=versie_pk, hoofdstuk=hoofdstuk)
+    items = hoofdstuk.item.all()
 
     # if an item is already in the chapter and doesnt have a paragraph ->
     # redirect to items
@@ -586,9 +572,7 @@ def paragraaflistViewDelete(request, versie_pk, pk):
 
     # otherwise, show paragraphs
     context = {}
-    context["paragraven"] = models.PVEParagraaf.objects.filter(
-        versie__id=versie_pk, hoofdstuk=hoofdstuk
-    )
+    context["paragraven"] = hoofdstuk.paragraaf.all()
     context["sectie"] = hoofdstuk
     context["id"] = pk
     context["versie_pk"] = versie_pk
@@ -598,11 +582,10 @@ def paragraaflistViewDelete(request, versie_pk, pk):
 @staff_member_required(login_url="/404")
 def PVEaddparagraafView(request, versie_pk, pk):
     pk = int(pk)
-
-    if models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=pk).exists():
-        hoofdstuk = models.PVEHoofdstuk.objects.filter(
-            versie__id=versie_pk, id=pk
-        ).first()
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+    
+    if versie.hoofdstuk.filter(id=pk).exists():
+        hoofdstuk = versie.hoofdstuk.filter(id=pk).first()
     else:
         raise Http404("404")
 
@@ -613,7 +596,7 @@ def PVEaddparagraafView(request, versie_pk, pk):
             PVEParagraaf = models.PVEParagraaf()
             PVEParagraaf.hoofdstuk = hoofdstuk
             PVEParagraaf.paragraaf = form.cleaned_data["paragraaf"]
-            PVEParagraaf.versie = models.PVEVersie.objects.get(id=versie_pk)
+            PVEParagraaf.versie = versie
             PVEParagraaf.save()
             return HttpResponseRedirect(reverse("viewParagraaf", args=(versie_pk, pk)))
 
@@ -632,7 +615,7 @@ def PVEaddparagraafView(request, versie_pk, pk):
 
     # otherwise, show paragraphs
     context = {}
-    context["paragraven"] = models.PVEParagraaf.objects.filter(hoofdstuk=hoofdstuk)
+    context["paragraven"] = hoofdstuk.paragraaf.all()
     context["sectie"] = hoofdstuk
     context["form"] = form
     context["versie_pk"] = versie_pk
@@ -644,8 +627,8 @@ def PVEeditparagraafView(request, versie_pk, pk):
     pk = int(pk)
     versie = models.PVEVersie.objects.get(id=versie_pk)
 
-    if models.PVEParagraaf.objects.filter(versie=versie, id=pk).exists():
-        paragraaf = models.PVEParagraaf.objects.filter(versie=versie, id=pk).first()
+    if versie.paragraaf.filter(id=pk).exists():
+        paragraaf = versie.paragraaf.filter(id=pk).first()
         hoofdstuk = paragraaf.hoofdstuk
     else:
         raise Http404("404")
@@ -654,9 +637,7 @@ def PVEeditparagraafView(request, versie_pk, pk):
         form = forms.ParagraafForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            PVEparagraaf = models.PVEParagraaf.objects.filter(
-                versie=versie, id=pk
-            ).first()
+            PVEparagraaf = versie.paragraaf.filter(id=pk).first()
             PVEparagraaf.paragraaf = form.cleaned_data["paragraaf"]
             PVEparagraaf.versie = versie
             PVEparagraaf.save()
@@ -671,7 +652,8 @@ def PVEeditparagraafView(request, versie_pk, pk):
             )
 
     # View below modal
-    items = models.PVEItem.objects.filter(versie=versie, hoofdstuk=hoofdstuk)
+    items = hoofdstuk.item.all()
+
     # if an item is already in the chapter and doesnt have a paragraph ->
     # redirect to items
     if items:
@@ -687,7 +669,7 @@ def PVEeditparagraafView(request, versie_pk, pk):
 
     # otherwise, show paragraphs
     context = {}
-    context["paragraven"] = models.PVEParagraaf.objects.filter(hoofdstuk=hoofdstuk)
+    context["paragraven"] = hoofdstuk.paragraaf.all()
     context["sectie"] = hoofdstuk
     context["paragraph_id"] = pk
     context["id"] = hoofdstuk.id
@@ -701,44 +683,36 @@ def itemListView(request, versie_pk, chapter_id, paragraph_id):
     paragraph_id = int(paragraph_id)
     chapter_id = int(chapter_id)
 
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+    
     # Chapter_id doesnt exist
-    if not models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=chapter_id):
+    if not versie.hoofdstuk.filter(id=chapter_id).exists():
         raise Http404("404")
 
-    hoofdstuk = models.PVEHoofdstuk.objects.filter(
-        versie__id=versie_pk, id=chapter_id
-    ).first()
+    hoofdstuk = versie.hoofdstuk.get(id=chapter_id)
+
+    paragraven_exist = hoofdstuk.paragraaf.exists()
 
     # if no paragraph given but there are paragraphs in this chapter
     if paragraph_id == 0:
-        if models.PVEParagraaf.objects.filter(
-            versie__id=versie_pk, hoofdstuk__id=chapter_id
-        ).exists():
+        if paragraven_exist:
             raise Http404("404")
 
     # if paragraphs arent connected to this chapter
     if paragraph_id != 0:
-        if not models.PVEParagraaf.objects.filter(
-            versie__id=versie_pk, hoofdstuk__id=chapter_id
-        ).filter(id=paragraph_id):
+        if not paragraven_exist:
             raise Http404("404")
 
-        paragraaf = models.PVEParagraaf.objects.filter(
-            versie__id=versie_pk, id=paragraph_id
-        ).first()
+        paragraaf = versie.paragraaf.get(id=paragraph_id)
 
     context = {}
 
     # item niet in een paragraaf: haal ze van een hoofdstuk
     if paragraph_id == 0:
-        context["queryset"] = models.PVEItem.objects.filter(
-            versie__id=versie_pk, hoofdstuk__id=chapter_id
-        )
+        context["queryset"] = hoofdstuk.item.all()
         context["hoofdstuk"] = hoofdstuk
     else:
-        context["queryset"] = models.PVEItem.objects.filter(
-            versie__id=versie_pk, hoofdstuk__id=chapter_id
-        ).filter(versie__id=versie_pk, paragraaf__id=paragraph_id)
+        context["queryset"] = paragraaf.item.all()
         context["paragraaf"] = paragraaf
         context["hoofdstuk"] = hoofdstuk
 
@@ -752,14 +726,13 @@ def itemListView(request, versie_pk, chapter_id, paragraph_id):
 def itemListViewEdit(request, versie_pk, chapter_id, paragraph_id):
     paragraph_id = int(paragraph_id)
     chapter_id = int(chapter_id)
+    versie = models.PVEVersie.objects.get(id=versie_pk)
 
     # Chapter_id doesnt exist
-    if not models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=chapter_id):
+    if not versie.hoofdstuk.filter(id=chapter_id).exists():
         raise Http404("404")
 
-    hoofdstuk = models.PVEHoofdstuk.objects.filter(
-        versie__id=versie_pk, id=chapter_id
-    ).first()
+    hoofdstuk = versie.hoofdstuk.get(id=chapter_id)
 
     # if no paragraph given but there are paragraphs in this chapter
     if paragraph_id == 0:
@@ -1115,11 +1088,10 @@ def PVEdeletehoofdstukView(request, versie_pk, pk):
 @staff_member_required(login_url="/404")
 def PVEdeleteparagraafView(request, versie_pk, pk):
     pk = int(pk)
+    versie = models.PVEVersie.objects.get(id=versie_pk)
 
-    if models.PVEParagraaf.objects.filter(versie__id=versie_pk, id=pk).exists():
-        PVEParagraaf = models.PVEParagraaf.objects.filter(
-            versie__id=versie_pk, id=pk
-        ).first()
+    if versie.paragraaf.filter(id=pk).exists():
+        PVEParagraaf = versie.paragraaf.get(id=pk)
         hoofdstuk = PVEParagraaf.hoofdstuk
         paragraaf = PVEParagraaf.paragraaf
     else:
@@ -1136,30 +1108,36 @@ def PVEdeleteparagraafView(request, versie_pk, pk):
 
 @staff_member_required(login_url="/404")
 def kiesparametersView(request, versie_pk):
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+
     context = {}
-    context["bouwsoorten"] = models.Bouwsoort.objects.filter(versie__id=versie_pk)
-    context["typeObjecten"] = models.TypeObject.objects.filter(versie__id=versie_pk)
-    context["doelgroepen"] = models.Doelgroep.objects.filter(versie__id=versie_pk)
+    context["bouwsoorten"] = versie.bouwsoort.all()
+    context["typeObjecten"] = versie.typeobject.all()
+    context["doelgroepen"] = versie.doelgroep.all()
     context["versie_pk"] = versie_pk
     return render(request, "kiesparameters.html", context)
 
 
 @staff_member_required(login_url="/404")
 def kiesparametersViewEdit(request, versie_pk):
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+
     context = {}
-    context["bouwsoorten"] = models.Bouwsoort.objects.filter(versie__id=versie_pk)
-    context["typeObjecten"] = models.TypeObject.objects.filter(versie__id=versie_pk)
-    context["doelgroepen"] = models.Doelgroep.objects.filter(versie__id=versie_pk)
+    context["bouwsoorten"] = versie.bouwsoort.all()
+    context["typeObjecten"] = versie.typeobject.all()
+    context["doelgroepen"] = versie.doelgroep.all()
     context["versie_pk"] = versie_pk
     return render(request, "kiesparametersEdit.html", context)
 
 
 @staff_member_required(login_url="/404")
 def kiesparametersViewDelete(request, versie_pk):
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+
     context = {}
-    context["bouwsoorten"] = models.Bouwsoort.objects.filter(versie__id=versie_pk)
-    context["typeObjecten"] = models.TypeObject.objects.filter(versie__id=versie_pk)
-    context["doelgroepen"] = models.Doelgroep.objects.filter(versie__id=versie_pk)
+    context["bouwsoorten"] = versie.bouwsoort.all()
+    context["typeObjecten"] = versie.typeobject.all()
+    context["doelgroepen"] = versie.doelgroep.all()
     context["versie_pk"] = versie_pk
     return render(request, "kiesparametersDelete.html", context)
 
@@ -1167,6 +1145,7 @@ def kiesparametersViewDelete(request, versie_pk):
 @staff_member_required(login_url="/404")
 def addkiesparameterView(request, versie_pk, type_id):
     type_id = int(type_id)
+    versie = models.PVEVersie.objects.get(id=versie_pk)
 
     if request.method == "POST":
         # get user entered form
@@ -1189,7 +1168,7 @@ def addkiesparameterView(request, versie_pk, type_id):
                 item = models.Doelgroep()
 
             item.parameter = form.cleaned_data["parameter"]
-            item.versie = models.PVEVersie.objects.get(id=versie_pk)
+            item.versie = versie
             item.save()
 
             return HttpResponseRedirect(
@@ -1201,9 +1180,9 @@ def addkiesparameterView(request, versie_pk, type_id):
     context = {}
     context["form"] = form
     context["type_id"] = type_id
-    context["bouwsoorten"] = models.Bouwsoort.objects.filter(versie__id=versie_pk)
-    context["typeObjecten"] = models.TypeObject.objects.filter(versie__id=versie_pk)
-    context["doelgroepen"] = models.Doelgroep.objects.filter(versie__id=versie_pk)
+    context["bouwsoorten"] = versie.bouwsoort.all()
+    context["typeObjecten"] = versie.typeobject.all()
+    context["doelgroepen"] = versie.doelgroep.all()
     context["versie_pk"] = versie_pk
     return render(request, "addkiesparameter.html", context)
 
@@ -1213,29 +1192,30 @@ def bewerkkiesparameterView(request, versie_pk, type_id, item_id):
     type_id = int(type_id)
     item_id = int(item_id)
     versie_pk = int(versie_pk)
+    versie = models.PVEVersie.objects.get(id=versie_pk)
 
     if type_id != 1 and type_id != 2 and type_id != 3:
         raise Http404("404")
 
     if type_id == 1:  # Bouwsoort
-        if not models.Bouwsoort.objects.filter(versie__id=versie_pk, id=item_id):
+        if not versie.bouwsoort.filter(id=item_id):
             raise Http404("404")
 
-        item = models.Bouwsoort.objects.filter(versie__id=versie_pk, id=item_id).first()
+        item = versie.bouwsoort.filter(id=item_id).first()
 
     if type_id == 2:  # Type Object
-        if not models.TypeObject.objects.filter(versie__id=versie_pk, id=item_id):
+        if not versie.type_object.filter(id=item_id):
             raise Http404("404")
 
-        item = models.TypeObject.objects.filter(
-            versie__id=versie_pk, id=item_id
+        item = versie.type_object.filter(
+            id=item_id
         ).first()
 
     if type_id == 3:  # Doelgroep
-        if not models.Doelgroep.objects.filter(versie__id=versie_pk, id=item_id):
+        if not versie.doelgroep.filter(id=item_id):
             raise Http404("404")
 
-        item = models.Doelgroep.objects.filter(versie__id=versie_pk, id=item_id).first()
+        item = versie.doelgroep.filter(id=item_id).first()
 
     if request.method == "POST":
         form = forms.KiesParameterForm(request.POST)
@@ -1255,9 +1235,9 @@ def bewerkkiesparameterView(request, versie_pk, type_id, item_id):
     context["type_id"] = type_id
     context["item_id"] = item_id
     context["versie_pk"] = versie_pk
-    context["bouwsoorten"] = models.Bouwsoort.objects.filter(versie__id=versie_pk)
-    context["typeObjecten"] = models.TypeObject.objects.filter(versie__id=versie_pk)
-    context["doelgroepen"] = models.Doelgroep.objects.filter(versie__id=versie_pk)
+    context["bouwsoorten"] = versie.bouwsoort.all()
+    context["typeObjecten"] = versie.typeobject.all()
+    context["doelgroepen"] = versie.doelgroep.all()
 
     return render(request, "bewerkkiesparameter.html", context)
 
@@ -1267,29 +1247,30 @@ def deletekiesparameterView(request, versie_pk, type_id, item_id):
     type_id = int(type_id)
     item_id = int(item_id)
     versie_pk = int(versie_pk)
+    versie = models.PVEVersie.objects.get(id=versie_pk)
 
     if type_id != 1 and type_id != 2 and type_id != 3:
         raise Http404("404")
 
     if type_id == 1:  # Bouwsoort
-        if not models.Bouwsoort.objects.filter(versie__id=versie_pk, id=item_id):
+        if not versie.bouwsoort.filter(id=item_id):
             raise Http404("404")
 
-        item = models.Bouwsoort.objects.filter(versie__id=versie_pk, id=item_id).first()
+        item = versie.bouwsoort.filter(id=item_id).first()
 
     if type_id == 2:  # Type Object
-        if not models.TypeObject.objects.filter(versie__id=versie_pk, id=item_id):
+        if not versie.type_object.filter(id=item_id):
             raise Http404("404")
 
-        item = models.TypeObject.objects.filter(
-            versie__id=versie_pk, id=item_id
+        item = versie.type_object.filter(
+            id=item_id
         ).first()
 
     if type_id == 3:  # Doelgroep
-        if not models.Doelgroep.objects.filter(versie__id=versie_pk, id=item_id):
+        if not versie.doelgroep.filter(id=item_id):
             raise Http404("404")
 
-        item = models.Doelgroep.objects.filter(versie__id=versie_pk, id=item_id).first()
+        item = versie.doelgroep.filter(id=item_id).first()
 
     parameter = item.parameter
     item.delete()
@@ -1315,12 +1296,14 @@ def bijlagenView(request, versie_pk):
 
 @staff_member_required(login_url="/404")
 def bijlageDetail(request, versie_pk, pk):
-    bijlage = models.ItemBijlages.objects.filter(versie__id=versie_pk, id=pk).first()
+    bijlagen = models.ItemBijlages.objects.filter(versie__id=versie_pk)
+    bijlage = bijlagen.get(id=pk)
+
     items = bijlage.items.all()
 
     context = {}
     context["bijlage"] = bijlage
-    context["bijlagen"] = models.ItemBijlages.objects.filter(versie__id=versie_pk)
+    context["bijlagen"] = bijlagen
     context["items"] = items
     context["versie_pk"] = versie_pk
     return render(request, "bijlageDetail.html", context)
@@ -1328,6 +1311,8 @@ def bijlageDetail(request, versie_pk, pk):
 
 @staff_member_required(login_url="/404")
 def bijlageAdd(request, versie_pk):
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+
     if request.method == "POST":
         # get user entered form
         form = forms.bijlageEditForm(request.POST, request.FILES)
@@ -1336,7 +1321,7 @@ def bijlageAdd(request, versie_pk):
         if form.is_valid():
             nieuw_bijlage = models.ItemBijlages()
             nieuw_bijlage.bijlage = form.cleaned_data["bijlage"]
-            nieuw_bijlage.versie = models.PVEVersie.objects.get(id=versie_pk)
+            nieuw_bijlage.versie = versie
             if form.cleaned_data["naam"]:
                 nieuw_bijlage.naam = form.cleaned_data["naam"]
             nieuw_bijlage.save()
@@ -1350,9 +1335,7 @@ def bijlageAdd(request, versie_pk):
             print(form.errors())
 
     form = forms.bijlageEditForm()
-    form.fields["items"].queryset = models.PVEItem.objects.filter(
-        versie__id=versie_pk
-    ).all()
+    form.fields["items"].queryset = versie.item.all()
 
     context = {}
     context["versie_pk"] = versie_pk
@@ -1362,7 +1345,9 @@ def bijlageAdd(request, versie_pk):
 
 @staff_member_required(login_url="/404")
 def bijlageEdit(request, versie_pk, pk):
-    bijlage = models.ItemBijlages.objects.filter(versie__id=versie_pk, id=pk).first()
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+
+    bijlage = versie.itembijlage.get(id=pk)
 
     if request.method == "POST":
         # get user entered form
@@ -1373,7 +1358,7 @@ def bijlageEdit(request, versie_pk, pk):
             nieuw_bijlage = bijlage
             if form.cleaned_data["bijlage"]:
                 nieuw_bijlage.bijlage = form.cleaned_data["bijlage"]
-            nieuw_bijlage.versie = models.PVEVersie.objects.get(id=versie_pk)
+            nieuw_bijlage.versie = versie
             if form.cleaned_data["naam"]:
                 nieuw_bijlage.naam = form.cleaned_data["naam"]
             nieuw_bijlage.save()
@@ -1388,9 +1373,7 @@ def bijlageEdit(request, versie_pk, pk):
 
 
     form = forms.bijlageEditForm(initial={'naam':bijlage.naam, 'bijlage':bijlage.bijlage, 'items':bijlage.items.all()})
-    form.fields["items"].queryset = models.PVEItem.objects.filter(
-        versie__id=versie_pk
-    ).all()
+    form.fields["items"].queryset = versie.item.all()
 
     context = {}
     context["versie_pk"] = versie_pk

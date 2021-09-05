@@ -11,10 +11,10 @@ from users.managers import CustomUserManager
 class Organisatie(models.Model):
     naam = models.CharField(max_length=500)
     gebruikers = models.ManyToManyField(
-        "users.CustomUser", default=None, related_name="gebruikers"
+        "users.CustomUser", default=None, related_name="in_organisatie"
     )
     projecten = models.ManyToManyField(
-        "project.Project", default=None, related_name="projecten"
+        "project.Project", default=None, related_name="in_organisatie"
     )
 
     def __str__(self):
@@ -58,7 +58,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     type_user = models.CharField(max_length=3, choices=type_choices, default="SD")
 
-    organisatie = models.ForeignKey(Organisatie, on_delete=models.CASCADE, null=True)
+    organisatie = models.ForeignKey(Organisatie, on_delete=models.CASCADE, null=True, related_name="user")
 
     objects = CustomUserManager()
 

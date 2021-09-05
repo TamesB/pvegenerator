@@ -171,10 +171,7 @@ def SOGAddDerdenToProj(request, pk):
         # check whether it's valid:
         if form.is_valid():
             permitted = form.cleaned_data["permitted"]
-
-            for permit in permitted:
-                project.permitted.add(permit)
-
+            project.permitted.add(*permitted)
             project.save()
 
             if permitted:

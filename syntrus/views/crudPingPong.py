@@ -24,17 +24,15 @@ def CheckComments(request, proj_id):
     if request.user not in project.permitted.all():
         return render(request, "404_syn.html")
 
-    # get the frozencomments and the level
-    if not FrozenComments.objects.filter(project__id=proj_id):
+    # get the current_phase and the level
+    if not project.phase.exists():
         return render(request, "404_syn.html")
 
     # get the highest ID of the frozencomments phases; the current phase
-    frozencomments = (
-        FrozenComments.objects.filter(project__id=proj_id).order_by("-level").first()
-    )
+    current_phase = project.phase.first()
 
     # uneven level = turn of SD, even level = turn of SOG
-    if (frozencomments.level % 2) != 0:
+    if (current_phase.level % 2) != 0:
         # level uneven: make page only visible for SD
         if request.user.type_user == project.first_annotate:
             return render(request, "404_syn.html")
@@ -78,18 +76,9 @@ def CheckComments(request, proj_id):
                 or (form.cleaned_data["annotation"] != "")
                 or form.cleaned_data["kostenConsequenties"]
             ):
-                print(form)
                 # if the reply already exists, edit all fields that aren't the same as in the model.
-                if CommentReply.objects.filter(
-                    onComment__id=form.cleaned_data["comment_id"],
-                    commentphase=frozencomments,
-                    gebruiker=request.user,
-                ).exists():
-                    ann = CommentReply.objects.get(
-                        onComment__id=form.cleaned_data["comment_id"],
-                        commentphase=frozencomments,
-                        gebruiker=request.user,
-                    )
+                if current_phase.reply.onComment.filter(id=form.cleaned_data["comment_id"]).exists():
+                    ann = current_phase.reply.onComment.get(id=form.cleaned_data["comment_id"])
 
                     if form.cleaned_data["status"] != ann.status:
                         ann.status = form.cleaned_data["status"]
@@ -104,7 +93,7 @@ def CheckComments(request, proj_id):
                     ann.save()
                 else:
                     ann = CommentReply()
-                    ann.commentphase = frozencomments
+                    ann.commentphase = current_phase
                     ann.gebruiker = request.user
                     ann.onComment = PVEItemAnnotation.objects.get(
                                         id=form.cleaned_data["comment_id"]
@@ -130,7 +119,7 @@ def CheckComments(request, proj_id):
 
     # the GET method
     non_accepted_comments = (
-        frozencomments.comments.select_related("status")
+        current_phase.comments.select_related("status")
         .select_related("item")
         .select_related("item__hoofdstuk")
         .select_related("item__paragraaf")
@@ -138,7 +127,7 @@ def CheckComments(request, proj_id):
         .all()
     )
     accepted_comments = (
-        frozencomments.accepted_comments.select_related("status")
+        current_phase.accepted_comments.select_related("status")
         .select_related("item")
         .select_related("item__hoofdstuk")
         .select_related("item__paragraaf")
@@ -146,7 +135,7 @@ def CheckComments(request, proj_id):
         .all()
     )
     todo_comments = (
-        frozencomments.todo_comments.select_related("status")
+        current_phase.todo_comments.select_related("status")
         .select_related("item")
         .select_related("item__hoofdstuk")
         .select_related("item__paragraaf")
@@ -155,9 +144,9 @@ def CheckComments(request, proj_id):
     )
 
     # create the forms
-    ann_forms_accept = make_ann_forms(accepted_comments, frozencomments)
-    ann_forms_non_accept = make_ann_forms(non_accepted_comments, frozencomments)
-    ann_forms_todo = make_ann_forms(todo_comments, frozencomments)
+    ann_forms_accept = make_ann_forms(accepted_comments, current_phase)
+    ann_forms_non_accept = make_ann_forms(non_accepted_comments, current_phase)
+    ann_forms_todo = make_ann_forms(todo_comments, current_phase)
 
     # order items for the template
     hoofdstuk_ordered_items_non_accept = order_comments_for_commentcheck(
@@ -170,9 +159,7 @@ def CheckComments(request, proj_id):
         todo_comments, ann_forms_todo, proj_id
     )
 
-    context["items"] = models.PVEItem.objects.filter(
-        projects__id__contains=project.id
-    ).order_by("id")
+    context["items"] = project.item.all()
     context["project"] = project
     context["accepted_comments"] = accepted_comments
     context["non_accepted_comments"] = non_accepted_comments
@@ -232,11 +219,16 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
         if comment in made_on_comments.keys():
             last_reply = made_on_comments[comment][0]
 
+            second_to_last_reply = None
+            if len(made_on_comments[comment]) > 1:
+                second_to_last_reply = made_on_comments[comment][1]
+
             if last_reply.status is not None:
                 string = f"Nieuwe Status: {last_reply.status}"
 
-            if last_reply.accept:
-                last_accept = True
+            if second_to_last_reply:
+                if last_reply.accept and second_to_last_reply.accept:
+                    last_accept = True
 
             for reply in made_on_comments[comment]:
                 temp_commentbulk_list_non_accept.append(reply.comment)
@@ -330,12 +322,10 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
     return hoofdstuk_ordered_items_non_accept
 
 
-def make_ann_forms(comments, frozencomments):
+def make_ann_forms(comments, current_phase):
     ann_forms = []
     made_on_comments = {}
-    commentreplies = CommentReply.objects.select_related("onComment").filter(
-        Q(commentphase=frozencomments)
-    )
+    commentreplies = current_phase.reply.select_related("onComment").all()
 
     for reply in commentreplies:
         made_on_comments[reply.onComment] = reply
@@ -391,9 +381,7 @@ def MyReplies(request, pk, **kwargs):
     if project.frozenLevel == 0:
         return render(request, "404_syn.html")
 
-    commentphase = (
-        FrozenComments.objects.filter(project__id=pk).order_by("-level").first()
-    )
+    commentphase = project.phase.first()
 
     if request.user not in project.permitted.all():
         return render(request, "404_syn.html")
@@ -433,12 +421,10 @@ def MyReplies(request, pk, **kwargs):
                 or form.cleaned_data["kostenConsequenties"]
             ):
                 # true comment if either comment or voldoet
-                original_comment = PVEItemAnnotation.objects.filter(
+                original_comment = PVEItemAnnotation.objects.get(
                     id=form.cleaned_data["comment_id"]
-                ).first()
-                reply = CommentReply.objects.filter(
-                    Q(commentphase=commentphase) & Q(onComment=original_comment)
-                ).first()
+                )
+                reply = commentphase.reply.filter(onComment=original_comment)
 
                 if form.cleaned_data["annotation"]:
                     reply.comment = form.cleaned_data["annotation"]
@@ -462,7 +448,7 @@ def MyReplies(request, pk, **kwargs):
     bijlages = []
 
     for bijlage in BijlageToReply.objects.filter(
-        reply__commentphase=commentphase, reply__gebruiker=request.user
+        reply__commentphase=commentphase
     ):
         if bijlage.bijlage.url:
             bijlages.append(bijlage.bijlage.url)
@@ -472,9 +458,7 @@ def MyReplies(request, pk, **kwargs):
     ann_forms = []
     form_item_ids = []
 
-    replies = CommentReply.objects.select_related("onComment").select_related("onComment__item").filter(
-        commentphase=commentphase, gebruiker=request.user
-    ).order_by("-datum")
+    replies = commentphase.reply.select_related("onComment").select_related("onComment__item").all()
 
     paginator = Paginator(replies, 25) # Show 25 replies per page.
     page_number = request.GET.get('page')
@@ -509,7 +493,7 @@ def MyReplies(request, pk, **kwargs):
 
     context["ann_forms"] = ann_forms
     context["form_item_ids"] = form_item_ids
-    context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
+    context["items"] = project.item.all()
     context["replies"] = replies
     context["project"] = project
     context["bijlages"] = bijlages
@@ -528,12 +512,9 @@ def MyRepliesDelete(request, pk):
     if project.frozenLevel == 0:
         return render(request, "404_syn.html")
     
-    commentphase = (
-        FrozenComments.objects.filter(project__id=pk).order_by("-level").first()
-    )
-    replies = CommentReply.objects.filter(
-        commentphase=commentphase, gebruiker=request.user
-    ).order_by("-datum")
+    commentphase = project.phase.first()
+
+    replies = commentphase.replies.all()
 
     paginator = Paginator(replies, 25) # Show 25 replies per page.
     page_number = request.GET.get('page')
@@ -542,7 +523,7 @@ def MyRepliesDelete(request, pk):
     bijlages = []
 
     for bijlage in BijlageToReply.objects.filter(
-        reply__commentphase=commentphase, reply__gebruiker=request.user
+        reply__commentphase=commentphase
     ):
         if bijlage.bijlage.url:
             bijlages.append(bijlage.bijlage.url)
@@ -551,7 +532,7 @@ def MyRepliesDelete(request, pk):
 
     context = {}
     context["page_obj"] = page_obj
-    context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
+    context["items"] = project.items.all()
     context["replies"] = replies
     context["project"] = project
     context["bijlages"] = bijlages
@@ -572,19 +553,15 @@ def DeleteReply(request, pk, reply_id):
 
     # check if user is authorized to project
     if request.user.type_user != "B":
-        if not Project.objects.filter(
-            id=pk, permitted__username__iregex=r"\y{0}\y".format(request.user.username)
-        ).exists():
+        if not request.user.permittedprojects.filter(id=pk).exists():
             raise Http404("404")
 
     # check if user placed that annotation
-    if not CommentReply.objects.filter(id=reply_id, gebruiker=request.user).exists():
+    if not CommentReply.objects.filter(id=reply_id).exists():
         raise Http404("404")
 
-    reply = CommentReply.objects.filter(id=reply_id).first()
-    commentphase = (
-        FrozenComments.objects.filter(project__id=pk).order_by("-level").first()
-    )
+    reply = CommentReply.objects.get(id=reply_id)
+    commentphase = project.phase.first()
     
     page_number = request.GET.get('page')
 
@@ -600,7 +577,7 @@ def DeleteReply(request, pk, reply_id):
     bijlages = []
 
     for bijlage in BijlageToReply.objects.filter(
-        reply__commentphase=commentphase, reply__gebruiker=request.user
+        reply__commentphase=commentphase
     ):
         if bijlage.bijlage.url:
             bijlages.append(bijlage.bijlage.url)
@@ -609,10 +586,8 @@ def DeleteReply(request, pk, reply_id):
 
     context = {}
     context["reply"] = reply
-    context["items"] = models.PVEItem.objects.filter(projects__id__contains=pk)
-    context["replies"] = CommentReply.objects.filter(
-        commentphase=commentphase, gebruiker=request.user
-    ).order_by("-datum")
+    context["items"] = project.item.all()
+    context["replies"] = commentphase.reply.all()
     context["project"] = project
     context["bijlages"] = bijlages
     return render(request, "MyRepliesDeleteReply.html", context)
@@ -628,13 +603,10 @@ def AddReplyAttachment(request, pk, reply_id):
     if request.user not in project.permitted.all():
         return render(request, "404_syn.html")
 
-    commentphase = (
-        FrozenComments.objects.filter(project__id=pk).order_by("-level").first()
-    )
+    commentphase = project.phase.first()
+
     reply = CommentReply.objects.filter(id=reply_id).first()
-    replies = CommentReply.objects.filter(
-        commentphase=commentphase, gebruiker=request.user
-    ).order_by("-datum")
+    replies = commentphase.reply.all()
 
     paginator = Paginator(replies, 25) # Show 25 replies per page.
     page_number = request.GET.get('page')
@@ -681,20 +653,16 @@ def DeleteReplyAttachment(request, pk, reply_id):
 
     # check if user is authorized to project
     if request.user.type_user != "B":
-        if not Project.objects.filter(
-            id=pk, permitted__username__iregex=r"\y{0}\y".format(request.user.username)
-        ).exists():
+        if not request.user.permittedprojects.filter(id=pk):
             raise Http404("404")
 
     # check if user placed that annotation
-    if not CommentReply.objects.filter(id=reply_id, gebruiker=request.user).exists():
+    if not CommentReply.objects.filter(id=reply_id).exists():
         raise Http404("404")
 
     reply = CommentReply.objects.filter(id=reply_id).first()
     attachment = BijlageToReply.objects.filter(reply__id=reply_id).first()
-    commentphase = (
-        FrozenComments.objects.filter(project__id=pk).order_by("-level").first()
-    )
+    commentphase = project.phase.first()
 
     page_number = request.GET.get('page')
 
@@ -712,7 +680,7 @@ def DeleteReplyAttachment(request, pk, reply_id):
     bijlages = []
 
     for bijlage in BijlageToReply.objects.filter(
-        reply__commentphase=commentphase, reply__gebruiker=request.user
+        reply__commentphase=commentphase
     ):
         if bijlage.bijlage.url:
             bijlages.append(bijlage.bijlage.url)
@@ -721,10 +689,8 @@ def DeleteReplyAttachment(request, pk, reply_id):
 
     context = {}
     context["reply"] = reply
-    context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
-    context["replies"] = CommentReply.objects.filter(
-        commentphase=commentphase, gebruiker=request.user
-    ).order_by("-datum")
+    context["items"] = project.item.all()
+    context["replies"] = commentphase.replies.all()
     context["project"] = project
     context["bijlages"] = bijlages
     return render(request, "MyRepliesDeleteAttachment.html", context)

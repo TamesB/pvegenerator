@@ -17,8 +17,8 @@ from django.core.paginator import Paginator
 def AddCommentOverview(request):
     context = {}
 
-    if Project.objects.filter(permitted__username__contains=request.user).exists():
-        projects = Project.objects.filter(permitted__username__contains=request.user)
+    if request.user.projectspermitted.exists():
+        projects = request.user.projectspermitted.all()
         context["projects"] = projects
 
     return render(request, "plusOpmerkingOverview_syn.html", context)
@@ -70,16 +70,12 @@ def MyComments(request, pk):
         for form in ann_forms:
             # true comment if either comment or voldoet
             if form.cleaned_data["status"] or form.cleaned_data["init_accepted"]:
-                ann = PVEItemAnnotation.objects.filter(
-                    item=models.PVEItem.objects.filter(
-                        id=form.cleaned_data["item_id"]
-                    ).first()
-                ).first()
+                item = models.PVEItem.objects.get(id=form.cleaned_data["item_id"])
+
+                ann = item.annotation.first()
                 ann.project = project
                 ann.gebruiker = request.user
-                ann.item = models.PVEItem.objects.filter(
-                    id=form.cleaned_data["item_id"]
-                ).first()
+                ann.item = item
                 if form.cleaned_data["annotation"]:
                     ann.annotation = form.cleaned_data["annotation"]
                 if form.cleaned_data["status"]:
@@ -104,7 +100,7 @@ def MyComments(request, pk):
     totale_kosten = 0
     totale_kosten_lijst = [
         comment.kostenConsequenties
-        for comment in PVEItemAnnotation.objects.filter(project=project)
+        for comment in project.annotation.all()
         if comment.kostenConsequenties
     ]
     totale_kosten = sum(totale_kosten_lijst)
@@ -112,7 +108,7 @@ def MyComments(request, pk):
     bijlages = []
 
     for bijlage in BijlageToAnnotation.objects.filter(
-        ann__project=project, ann__gebruiker=request.user
+        ann__project=project
     ):
         if bijlage.bijlage.url:
             bijlages.append(bijlage.bijlage.url)
@@ -122,9 +118,7 @@ def MyComments(request, pk):
     ann_forms = []
     form_item_ids = []
 
-    comments = PVEItemAnnotation.objects.filter(
-        project=project, gebruiker=request.user
-    ).order_by("-datum")
+    comments = project.annotation.prefetch_related("status").select_related("item").all()
 
     paginator = Paginator(comments, 25) # Show 25 replies per page.
     page_number = request.GET.get('page')
@@ -148,14 +142,12 @@ def MyComments(request, pk):
     context["page_obj"] = page_obj
     context["ann_forms"] = ann_forms
     context["form_item_ids"] = form_item_ids
-    context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
+    context["items"] = project.item.all()
     context["comments"] = comments
     context["project"] = project
     context["bijlages"] = bijlages
     context["totale_kosten"] = totale_kosten
-    context["aantal_opmerkingen_gedaan"] = PVEItemAnnotation.objects.filter(
-        project=project, gebruiker=request.user
-    ).count()
+    context["aantal_opmerkingen_gedaan"] = project.annotation.count()
     return render(request, "MyComments.html", context)
 
 
@@ -172,7 +164,7 @@ def MyCommentsDelete(request, pk):
     totale_kosten = 0
     totale_kosten_lijst = [
         comment.kostenConsequenties
-        for comment in PVEItemAnnotation.objects.filter(project=project)
+        for comment in project.annotation.all()
         if comment.kostenConsequenties
     ]
     totale_kosten = sum(totale_kosten_lijst)
@@ -180,19 +172,16 @@ def MyCommentsDelete(request, pk):
     bijlages = []
 
     for bijlage in BijlageToAnnotation.objects.filter(
-        ann__project=project, ann__gebruiker=request.user
+        ann__project=project
     ):
         if bijlage.bijlage.url:
             bijlages.append(bijlage.bijlage.url)
         else:
             bijlages.append(None)
 
-    aantal_opmerkingen_gedaan = PVEItemAnnotation.objects.filter(
-        project=project, gebruiker=request.user
-    ).count()
+    aantal_opmerkingen_gedaan = project.annotation.count()
 
-    comments = PVEItemAnnotation.objects.filter(
-    project=project, gebruiker=request.user)
+    comments = project.annotation.all()
 
     paginator = Paginator(comments, 25) # Show 25 replies per page.
     page_number = request.GET.get('page')
@@ -200,10 +189,8 @@ def MyCommentsDelete(request, pk):
 
     context = {}
     context["page_obj"] = page_obj
-    context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
-    context["comments"] = PVEItemAnnotation.objects.filter(
-        project=project, gebruiker=request.user
-    ).order_by("id")
+    context["items"] = project.item.all()
+    context["comments"] = comments
     context["project"] = project
     context["bijlages"] = bijlages
     context["totale_kosten"] = totale_kosten
@@ -224,16 +211,14 @@ def deleteAnnotationPve(request, project_id, ann_id):
 
     # check if user is authorized to project
     if request.user.type_user != "B":
-        if not Project.objects.filter(
-            id=project_id, permitted__username__contains=request.user.username
-        ).exists():
+        if not request.user.projectpermitted.filter(id=project_id).exists():
             raise Http404("404")
 
     # check if user placed that annotation
-    if not PVEItemAnnotation.objects.filter(id=ann_id, gebruiker=request.user).exists():
+    if not PVEItemAnnotation.objects.filter(id=ann_id).exists():
         raise Http404("404")
 
-    comment = PVEItemAnnotation.objects.filter(id=ann_id).first()
+    comment = PVEItemAnnotation.objects.get(id=ann_id)
 
     if request.method == "POST":
         comment.delete()
@@ -247,7 +232,7 @@ def deleteAnnotationPve(request, project_id, ann_id):
     totale_kosten = 0
     totale_kosten_lijst = [
         comment.kostenConsequenties
-        for comment in PVEItemAnnotation.objects.filter(project=project)
+        for comment in project.annotation.all()
         if comment.kostenConsequenties
     ]
     for kosten in totale_kosten_lijst:
@@ -256,14 +241,14 @@ def deleteAnnotationPve(request, project_id, ann_id):
     bijlages = []
 
     for bijlage in BijlageToAnnotation.objects.filter(
-        ann__project=project, ann__gebruiker=request.user
+        ann__project=project
     ):
         if bijlage.bijlage.url:
             bijlages.append(bijlage.bijlage.url)
         else:
             bijlages.append(None)
 
-    comments = PVEItemAnnotation.objects.filter(project=project, gebruiker=request.user).order_by("id")
+    comments = project.annotation.all()
     
     paginator = Paginator(comments, 25) # Show 25 replies per page.
     page_number = request.GET.get('page')
@@ -272,10 +257,8 @@ def deleteAnnotationPve(request, project_id, ann_id):
     context = {}
     context["page_obj"] = page_obj
     context["comment"] = comment
-    context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
-    context["comments"] = PVEItemAnnotation.objects.filter(
-        project=project, gebruiker=request.user
-    ).order_by("id")
+    context["items"] = project.item.all()
+    context["comments"] = project.annotation.all()
     context["project"] = project
     context["bijlages"] = bijlages
     context["totale_kosten"] = totale_kosten
@@ -293,10 +276,8 @@ def AddAnnotationAttachment(request, projid, annid):
     if request.user not in project.permitted.all():
         return render(request, "404_syn.html")
 
-    annotation = PVEItemAnnotation.objects.filter(project=project, pk=annid).first()
-    comments = PVEItemAnnotation.objects.filter(
-        project=project, gebruiker=request.user
-    ).order_by("id")
+    comments = project.annotation.all()
+    annotation = comments.get(pk=annid)
 
     paginator = Paginator(comments, 25) # Show 25 replies per page.
     page_number = request.GET.get('page')
@@ -343,13 +324,11 @@ def VerwijderAnnotationAttachment(request, projid, annid):
 
     # check if user is authorized to project
     if request.user.type_user != "B":
-        if not Project.objects.filter(
-            id=projid, permitted__username__contains=request.user.username
-        ).exists():
+        if not request.user.projectspermitted.filter(id=projid).exists():
             raise Http404("404")
 
     # check if user placed that annotation
-    if not PVEItemAnnotation.objects.filter(id=annid, gebruiker=request.user).exists():
+    if not PVEItemAnnotation.objects.filter(id=annid).exists():
         raise Http404("404")
 
     comment = PVEItemAnnotation.objects.filter(id=annid).first()
@@ -367,7 +346,7 @@ def VerwijderAnnotationAttachment(request, projid, annid):
     totale_kosten = 0
     totale_kosten_lijst = [
         comment.kostenConsequenties
-        for comment in PVEItemAnnotation.objects.filter(project=project)
+        for comment in project.annotation.all()
         if comment.kostenConsequenties
     ]
     for kosten in totale_kosten_lijst:
@@ -376,16 +355,14 @@ def VerwijderAnnotationAttachment(request, projid, annid):
     bijlages = []
 
     for bijlage in BijlageToAnnotation.objects.filter(
-        ann__project=project, ann__gebruiker=request.user
+        ann__project=project
     ):
         if bijlage.bijlage.url:
             bijlages.append(bijlage.bijlage.url)
         else:
             bijlages.append(None)
 
-    comments = PVEItemAnnotation.objects.filter(
-        project=project, gebruiker=request.user
-    ).order_by("id")
+    comments = project.annotation.all()
 
     paginator = Paginator(comments, 25) # Show 25 replies per page.
     page_number = request.GET.get('page')
@@ -393,7 +370,7 @@ def VerwijderAnnotationAttachment(request, projid, annid):
 
     context = {}
     context["comment"] = comment
-    context["items"] = models.PVEItem.objects.filter(projects__id__contains=project.id)
+    context["items"] = project.item.all()
     context["project"] = project
     context["bijlages"] = bijlages
     context["totale_kosten"] = totale_kosten
@@ -413,13 +390,13 @@ def AllComments(request, pk):
     totale_kosten = 0
     totale_kosten_lijst = [
         comment.kostenConsequenties
-        for comment in PVEItemAnnotation.objects.filter(project=project)
+        for comment in project.annotation.all()
         if comment.kostenConsequenties
     ]
     for kosten in totale_kosten_lijst:
         totale_kosten += kosten
 
-    if PVEItemAnnotation.objects.filter(project=project):
+    if project.annotation.exists():
         gebruiker = PVEItemAnnotation.objects.filter(project=project).first()
         context["gebruiker"] = gebruiker
         context["comments"] = PVEItemAnnotation.objects.filter(
@@ -449,7 +426,7 @@ def AddComment(request, pk):
     if project.frozenLevel > 0:
         return render(request, "404_syn.html")
 
-    if not models.PVEItem.objects.filter(projects__id__contains=pk).exists():
+    if not project.item.exists():
         return render(request, "404_syn.html")
 
     if request.user not in project.permitted.all():
@@ -483,32 +460,16 @@ def AddComment(request, pk):
         for form in ann_forms:
             # true comment if either status or voldoet
             if form.cleaned_data["status"]:
-                if PVEItemAnnotation.objects.filter(
-                    Q(
-                        item=models.PVEItem.objects.filter(
-                            id=form.cleaned_data["item_id"]
-                        ).first()
-                    )
-                    & Q(project=project)
-                    & Q(gebruiker=request.user)
-                ).exists():
-                    ann = PVEItemAnnotation.objects.filter(
-                        Q(
-                            item=models.PVEItem.objects.filter(
-                                id=form.cleaned_data["item_id"]
-                            ).first()
-                        )
-                        & Q(project=project)
-                        & Q(gebruiker=request.user)
-                    ).first()
+                item = models.PVEItem.objects.get(id=form.cleaned_data["item_id"])
+
+                if project.annotation.filter(item=item).exists():
+                    ann = project.annotation.get(item=item)
                 else:
                     ann = PVEItemAnnotation()
 
                 ann.project = project
                 ann.gebruiker = request.user
-                ann.item = models.PVEItem.objects.filter(
-                    id=form.cleaned_data["item_id"]
-                ).first()
+                ann.item = item
 
                 if form.cleaned_data["annotation"]:
                     ann.annotation = form.cleaned_data["annotation"]
@@ -526,25 +487,17 @@ def AddComment(request, pk):
         # remove duplicate entries
         return redirect("mijnopmerkingen_syn", pk=project.id)
 
-    items = (
-        models.PVEItem.objects.select_related("hoofdstuk")
-        .select_related("paragraaf")
-        .filter(projects__id__contains=pk)
-        .order_by("id")
-    )
+    items = project.item.select_related("hoofdstuk").select_related("paragraaf").all()
+
     annotations = {}
 
-    for annotation in (
-        PVEItemAnnotation.objects.select_related("item")
-        .select_related("status")
-        .filter(Q(project=project) & Q(gebruiker=request.user))
-    ):
+    for annotation in project.annotation.select_related("item").select_related("status"):
         annotations[annotation.item] = annotation
 
     ann_forms = []
     hoofdstuk_ordered_items = {}
 
-    itembijlages = [_ for _ in models.ItemBijlages.objects.prefetch_related("items").filter(versie=project.pve_versie)]
+    itembijlages = [_ for _ in project.pve_versie.itembijlage.prefetch_related("items")]
     items_has_bijlages = [item.items.all() for item in itembijlages]
 
     for item in items:
@@ -553,7 +506,7 @@ def AddComment(request, pk):
         bijlage = None
 
         if item in items_has_bijlages:
-            bijlage = models.ItemBijlages.objects.get(items__id__contains=item.id)
+            bijlage = item.itembijlage.first()
 
         # create forms
         if item not in annotations.keys():

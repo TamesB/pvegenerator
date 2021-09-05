@@ -61,22 +61,12 @@ def LogoutView(request):
 def DashboardView(request):
     context = {}
 
-    if Project.objects.filter(
-        permitted__username__iregex=r"\y{0}\y".format(request.user.username), belegger__naam="Syntrus"
-    ).exists():
-        projects = (
-            Project.objects.filter(        
-                Q(belegger__naam="Syntrus") &
-                Q(permitted__username__iregex=r"\y{0}\y".format(request.user.username))
-            )
-            .distinct()
-        )
+    if request.user.projectspermitted.exists():
+        projects = request.user.projectspermitted.all()
         context["projects"] = projects
 
-    if PVEItemAnnotation.objects.filter(gebruiker=request.user).exists():
-        opmerkingen = PVEItemAnnotation.objects.filter(
-            gebruiker=request.user, project__belegger__naam="Syntrus"
-        )
+    if request.user.annotation.exists():
+        opmerkingen = request.user.annotation.all()
         context["opmerkingen"] = opmerkingen
 
     medewerkers = [proj.permitted.all() for proj in projects]
@@ -129,33 +119,21 @@ def GeneratePVEView(request):
     if request.method == "POST":
         # get user entered form
         form = forms.PVEParameterForm(request.POST)
-        form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(
-            versie=versie
-        ).all()
-        form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(
-            versie=versie
-        ).all()
-        form.fields["Bouwsoort3"].queryset = models.Bouwsoort.objects.filter(
-            versie=versie
-        ).all()
-        form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(
-            versie=versie
-        ).all()
-        form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(
-            versie=versie
-        ).all()
-        form.fields["TypeObject3"].queryset = models.TypeObject.objects.filter(
-            versie=versie
-        ).all()
-        form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(
-            versie=versie
-        ).all()
-        form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(
-            versie=versie
-        ).all()
-        form.fields["Doelgroep3"].queryset = models.Doelgroep.objects.filter(
-            versie=versie
-        ).all()
+
+        bouwsoort = versie.bouwsoort.all()
+        form.fields["Bouwsoort1"].queryset = bouwsoort
+        form.fields["Bouwsoort2"].queryset = bouwsoort
+        form.fields["Bouwsoort3"].queryset = bouwsoort
+
+        typeObject = versie.type_object.all()
+        form.fields["TypeObject1"].queryset = typeObject
+        form.fields["TypeObject2"].queryset = typeObject
+        form.fields["TypeObject3"].queryset = typeObject
+
+        doelgroep = versie.doelgroep.all()
+        form.fields["Doelgroep1"].queryset = doelgroep
+        form.fields["Doelgroep2"].queryset = doelgroep
+        form.fields["Doelgroep3"].queryset = doelgroep
 
         # check validity
         if form.is_valid():
@@ -192,101 +170,43 @@ def GeneratePVEView(request):
                 form.cleaned_data["JamesConcept"],
             )
 
-            versie = models.ActieveVersie.objects.get(belegger__naam="Syntrus").versie
             # Entered parameters are in the manytomany parameters of the object
-            basic_PVE = (
-                models.PVEItem.objects.select_related("hoofdstuk")
-                .select_related("paragraaf")
-                .filter(Q(versie=versie) & Q(basisregel=True))
-            )
-            basic_PVE = basic_PVE.union(
-                models.PVEItem.objects.select_related("hoofdstuk")
-                .select_related("paragraaf")
-                .filter(versie=versie, Bouwsoort__parameter__contains=Bouwsoort1)
-            )
+            basic_PVE = versie.item.select_related("paragraaf").select_related("hoofdstuk").filter(basisregel=True)
+
+            basic_PVE = basic_PVE.union(Bouwsoort1.item.select_related("hoofdstuk").select_related("paragraaf").all())
 
             if Bouwsoort2:
-                basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk")
-                    .select_related("paragraaf")
-                    .filter(versie=versie, Bouwsoort__parameter__contains=Bouwsoort2)
-                )
+                basic_PVE = basic_PVE.union(Bouwsoort2.item.select_related("hoofdstuk").select_related("paragraaf").all())
             if Bouwsoort3:
-                basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk")
-                    .select_related("paragraaf")
-                    .filter(versie=versie, Bouwsoort__parameter__contains=Bouwsoort3)
-                )
+                basic_PVE = basic_PVE.union(Bouwsoort3.item.select_related("hoofdstuk").select_related("paragraaf").all())
             if TypeObject1:
-                basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk")
-                    .select_related("paragraaf")
-                    .filter(versie=versie, TypeObject__parameter__contains=TypeObject1)
-                )
+                basic_PVE = basic_PVE.union(TypeObject1.item.select_related("hoofdstuk").select_related("paragraaf").all())
             if TypeObject2:
-                basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk")
-                    .select_related("paragraaf")
-                    .filter(versie=versie, TypeObject__parameter__contains=TypeObject2)
-                )
+                basic_PVE = basic_PVE.union(TypeObject2.item.select_related("hoofdstuk").select_related("paragraaf").all())
             if TypeObject3:
-                basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk")
-                    .select_related("paragraaf")
-                    .filter(versie=versie, TypeObject__parameter__contains=TypeObject3)
-                )
+                basic_PVE = basic_PVE.union(TypeObject3.item.select_related("hoofdstuk").select_related("paragraaf").all())
             if Doelgroep1:
-                basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk")
-                    .select_related("paragraaf")
-                    .filter(versie=versie, Doelgroep__parameter__contains=Doelgroep1)
-                )
+                basic_PVE = basic_PVE.union(Doelgroep1.item.select_related("hoofdstuk").select_related("paragraaf").all())
             if Doelgroep2:
-                basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk")
-                    .select_related("paragraaf")
-                    .filter(versie=versie, Doelgroep__parameter__contains=Doelgroep2)
-                )
+                basic_PVE = basic_PVE.union(Doelgroep2.item.select_related("hoofdstuk").select_related("paragraaf").all())
             if Doelgroep3:
-                basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk")
-                    .select_related("paragraaf")
-                    .filter(versie=versie, Doelgroep__parameter__contains=Doelgroep3)
-                )
+                basic_PVE = basic_PVE.union(Doelgroep3.item.select_related("hoofdstuk").select_related("paragraaf").all())
+
             # If line is extra (AED, Smarthome, Entree Upgrade); Always include
             # if box checked
             if AED:
-                basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk")
-                    .select_related("paragraaf")
-                    .filter(Q(versie=versie) & Q(AED=True))
-                )
+                basic_PVE = basic_PVE.union(versie.item.select_related("paragraaf").select_related("hoofdstuk").filter(AED=True))
             if Smarthome:
-                basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk")
-                    .select_related("paragraaf")
-                    .filter(Q(versie=versie) & Q(Smarthome=True))
-                )
+                basic_PVE = basic_PVE.union(versie.item.select_related("paragraaf").select_related("hoofdstuk").filter(Smarthome=True))
             if EntreeUpgrade:
-                basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk")
-                    .select_related("paragraaf")
-                    .filter(Q(versie=versie) & Q(EntreeUpgrade=True))
-                )
+                basic_PVE = basic_PVE.union(versie.item.select_related("paragraaf").select_related("hoofdstuk").filter(EntreeUpgrade=True))
             if Pakketdient:
-                basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk")
-                    .select_related("paragraaf")
-                    .filter(Q(versie=versie) & Q(Pakketdient=True))
-                )
+                basic_PVE = basic_PVE.union(versie.item.select_related("paragraaf").select_related("hoofdstuk").filter(Pakketdient=True))
             if JamesConcept:
-                basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk")
-                    .select_related("paragraaf")
-                    .filter(Q(versie=versie) & Q(JamesConcept=True))
-                )
+                basic_PVE = basic_PVE.union(versie.item.select_related("paragraaf").select_related("hoofdstuk").filter(JamesConcept=True))
 
             basic_PVE = basic_PVE.order_by("id")
+
             # make pdf
             parameters = []
             if Bouwsoort1:
@@ -317,6 +237,7 @@ def GeneratePVEView(request):
                 date.strftime("%m"),
                 date.strftime("%Y"),
             )
+            
             filename = f"PvE-{fileExt}"
             zipFilename = f"PvE_Compleet-{fileExt}"
             pdfmaker = writePdf.PDFMaker(versie.versie)
@@ -364,33 +285,20 @@ def GeneratePVEView(request):
             messages.warning(request, "Vul de verplichte keuzes in.")
 
     form = forms.PVEParameterForm()
-    form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(
-        versie=versie
-    ).all()
-    form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(
-        versie=versie
-    ).all()
-    form.fields["Bouwsoort3"].queryset = models.Bouwsoort.objects.filter(
-        versie=versie
-    ).all()
-    form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(
-        versie=versie
-    ).all()
-    form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(
-        versie=versie
-    ).all()
-    form.fields["TypeObject3"].queryset = models.TypeObject.objects.filter(
-        versie=versie
-    ).all()
-    form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(
-        versie=versie
-    ).all()
-    form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(
-        versie=versie
-    ).all()
-    form.fields["Doelgroep3"].queryset = models.Doelgroep.objects.filter(
-        versie=versie
-    ).all()
+    bouwsoort = versie.bouwsoort.all()
+    form.fields["Bouwsoort1"].queryset = bouwsoort
+    form.fields["Bouwsoort2"].queryset = bouwsoort
+    form.fields["Bouwsoort3"].queryset = bouwsoort
+
+    typeObject = versie.type_object.all()
+    form.fields["TypeObject1"].queryset = typeObject
+    form.fields["TypeObject2"].queryset = typeObject
+    form.fields["TypeObject3"].queryset = typeObject
+
+    doelgroep = versie.doelgroep.all()
+    form.fields["Doelgroep1"].queryset = doelgroep
+    form.fields["Doelgroep2"].queryset = doelgroep
+    form.fields["Doelgroep3"].queryset = doelgroep
 
     # if get method, just render the empty form
     context = {}

@@ -42,9 +42,9 @@ def accountProfile(request, pk):
         return Http404("404")
 
     user = models.CustomUser.objects.filter(id=pk).first()
-    projects = Project.objects.filter(permitted__username__contains=user.username)
+    projects = user.projectspermitted.all()
     context = {}
-    context["user"] = user
+    context["user"] = request.user
     context["projects"] = projects
     return render(request, "accProfile.html", context)
 

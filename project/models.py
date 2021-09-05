@@ -24,9 +24,9 @@ class Project(models.Model):
     plaatsnamen = models.CharField(max_length=250, default=None, null=True)
     vhe = models.FloatField(max_length=100, default=None)
     pensioenfonds = models.CharField(max_length=100, default=None)
-    statuscontract = models.ForeignKey(ContractStatus, on_delete=models.CASCADE)
+    statuscontract = models.ForeignKey(ContractStatus, on_delete=models.CASCADE, related_name="project")
     datum_aangemaakt = models.DateTimeField(auto_now=True)
-    belegger = models.ForeignKey(Beleggers, on_delete=models.CASCADE, null=True)
+    belegger = models.ForeignKey(Beleggers, on_delete=models.CASCADE, null=True, related_name="project")
 
     datum_recent_verandering = models.DateTimeField(
         "recente_verandering", auto_now=True
@@ -45,12 +45,12 @@ class Project(models.Model):
         default=PROJMANAGER,
     )
 
-    pve_versie = models.ForeignKey("app.PVEVersie", on_delete=models.CASCADE, null=True)
+    pve_versie = models.ForeignKey("app.PVEVersie", on_delete=models.CASCADE, null=True, related_name="project")
 
     organisaties = models.ManyToManyField(
         "users.Organisatie",
         default=None,
-        related_name="organisaties",
+        related_name="project",
         blank=True,
         null=True,
     )
@@ -58,11 +58,12 @@ class Project(models.Model):
         "users.CustomUser",
         default=None,
         on_delete=models.CASCADE,
+        related_name="projectmanager",
         blank=True,
         null=True,
     )
     permitted = models.ManyToManyField(
-        "users.CustomUser", default=None, related_name="permitted"
+        "users.CustomUser", default=None, related_name="projectspermitted"
     )
     pveconnected = models.BooleanField(blank=True, null=True, default=False)
 
@@ -143,14 +144,14 @@ class Project(models.Model):
 
 
 class PVEItemAnnotation(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, default=None)
-    item = models.ForeignKey("app.PVEItem", on_delete=models.CASCADE, default=None)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, default=None, related_name="annotation")
+    item = models.ForeignKey("app.PVEItem", on_delete=models.CASCADE, default=None, related_name="annotation")
     annotation = models.TextField(max_length=1000, default=None, null=True)
     status = models.ForeignKey(
-        "syntrus.CommentStatus", on_delete=models.CASCADE, default=None, null=True
+        "syntrus.CommentStatus", on_delete=models.CASCADE, default=None, null=True, related_name="annotation"
     )
     gebruiker = models.ForeignKey(
-        "users.CustomUser", on_delete=models.CASCADE, default=None, null=True
+        "users.CustomUser", on_delete=models.CASCADE, default=None, null=True, related_name="annotation"
     )
     datum = models.DateTimeField(auto_now=True)
     kostenConsequenties = models.DecimalField(
@@ -164,6 +165,6 @@ class PVEItemAnnotation(models.Model):
 
 
 class BijlageToAnnotation(models.Model):
-    ann = models.ForeignKey(PVEItemAnnotation, on_delete=models.CASCADE, default=None)
+    ann = models.ForeignKey(PVEItemAnnotation, on_delete=models.CASCADE, default=None, related_name="bijlageobject")
     bijlage = models.FileField(blank=True, null=True, upload_to="OpmerkingBijlages/")
     naam = models.CharField(max_length=100, blank=True, null=True)

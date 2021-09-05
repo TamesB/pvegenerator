@@ -221,13 +221,8 @@ def InviteUsersToProject(request, pk):
             permitted = form.cleaned_data["permitted"]
 
             project.projectmanager = projectmanager
-
-            for organisatie in organisaties:
-                project.organisaties.add(organisatie)
-
-            for permit in permitted:
-                project.permitted.add(permit)
-
+            project.organisaties.add(*organisaties)
+            project.permitted.add(*permitted)
             project.save()
 
             if organisaties:

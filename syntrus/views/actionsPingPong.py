@@ -31,16 +31,11 @@ def FirstFreeze(request, pk):
                 frozencomments.project = project
                 frozencomments.level = 1
                 frozencomments.save()
-                changed_comments = (
-                    PVEItemAnnotation.objects.select_related("item")
-                    .filter(Q(project=project))
-                    .all()
-                )
+                changed_comments = project.annotation.select_related("item").all()
+
 
                 changed_items_ids = [comment.item.id for comment in changed_comments]
-                unchanged_items = models.PVEItem.objects.filter(
-                    projects__id__contains=pk
-                ).exclude(id__in=changed_items_ids)
+                unchanged_items = project.item.exclude(id__in=changed_items_ids)
                 # add all initially changed comments to it
                 for comment in changed_comments:
                     frozencomments.comments.add(comment)
@@ -179,9 +174,7 @@ def SendReplies(request, pk):
                     total_comments_ids.append(comment.onComment.id)
 
                 # for the rest of the items without reply, if no status it is todo, if it has a status its automatically accepted
-                non_reacted_comments = PVEItemAnnotation.objects.select_related("status").filter(
-                    project__id=pk
-                ).exclude(id__in=total_comments_ids)
+                non_reacted_comments = project.annotation.select_related("status").exclude(id__in=total_comments_ids)
 
                 for comment in non_reacted_comments:
                     if not comment.status:
@@ -259,9 +252,7 @@ def FinalFreeze(request, pk):
         ).exists():
             raise Http404("404")
 
-    commentphase = (
-        FrozenComments.objects.filter(project=project).order_by("-level").first()
-    )
+    commentphase = project.phase.all()
 
     # check if the current commentphase has everything accepted
     if commentphase.comments or commentphase.todo_comments:
