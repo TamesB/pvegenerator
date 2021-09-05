@@ -208,7 +208,8 @@ ADMIN_ENABLED = True
 # making exports
 EXPORTS_URL = "/PVEexports/"
 EXPORTS_ROOT = os.path.join(BASE_DIR, "utils/PVEexports")
-
+VALIDATE_ROOT = os.path.join(BASE_DIR, ".well-known/pki-validation")
+VALIDATE_URL = "/.well-known/pki-validation/"
 # @login_required url redirect
 LOGIN_URL = "/"
 LOGIN_REDIRECT_URL = "/home"

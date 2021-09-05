@@ -17,9 +17,9 @@ urlpatterns = [
     path("beheer/users/", include("users.urls")),
     path("admin/", admin.site.urls),
     path("syntrus/", include("syntrus.urls")),
-    path(".well-known/pki-validation/9F8A5843ED591BF019E88EEB887A50A3.txt", validate, name="validate"),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.EXPORTS_URL, document_root=settings.EXPORTS_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.VALIDATE_URL, document_root=settings.VALIDATE_ROOT)
