@@ -41,83 +41,6 @@ def CheckComments(request, proj_id):
         if request.user.type_user != project.first_annotate:
             return render(request, "404_syn.html")
 
-    # the POST method
-    if request.method == "POST":
-        ann_forms = [
-            # todo: fix bijlages toevoegen
-            forms.CommentReplyForm(
-                dict(
-                    comment_id=comment_id,
-                    annotation=opmrk,
-                    status=status,
-                    accept=accept,
-                    kostenConsequenties=kostenConsequenties,
-                )
-            )
-            for comment_id, opmrk, status, accept, kostenConsequenties in zip(
-                request.POST.getlist("comment_id"),
-                request.POST.getlist("annotation"),
-                request.POST.getlist("status"),
-                request.POST.getlist("accept"),
-                request.POST.getlist("kostenConsequenties"),
-            )
-        ]
-
-        # only use valid forms
-        ann_forms = [
-            ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()
-        ]
-
-        
-        for form in ann_forms:
-            if (
-                (form.cleaned_data["accept"] == "True")
-                or form.cleaned_data["status"]
-                or (form.cleaned_data["annotation"] != "")
-                or form.cleaned_data["kostenConsequenties"]
-            ):
-                # if the reply already exists, edit all fields that aren't the same as in the model.
-                if current_phase.reply.onComment.filter(id=form.cleaned_data["comment_id"]).exists():
-                    ann = current_phase.reply.onComment.get(id=form.cleaned_data["comment_id"])
-
-                    if form.cleaned_data["status"] != ann.status:
-                        ann.status = form.cleaned_data["status"]
-                    if form.cleaned_data["annotation"] != ann.comment:
-                        ann.comment = form.cleaned_data["annotation"]
-                    if form.cleaned_data["kostenConsequenties"] != ann.kostenConsequenties:
-                        ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
-                    
-                    if form.cleaned_data["accept"] != ann.accept:
-                        ann.accept = form.cleaned_data["accept"]
-                    
-                    ann.save()
-                else:
-                    ann = CommentReply()
-                    ann.commentphase = current_phase
-                    ann.gebruiker = request.user
-                    ann.onComment = PVEItemAnnotation.objects.get(
-                                        id=form.cleaned_data["comment_id"]
-                                    )
-
-                    if form.cleaned_data["status"]:
-                        ann.status = form.cleaned_data["status"]
-                    if form.cleaned_data["annotation"]:
-                        ann.comment = form.cleaned_data["annotation"]
-                    if form.cleaned_data["kostenConsequenties"]:
-                        ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
-                    if form.cleaned_data["accept"]:
-                        ann.accept = form.cleaned_data["accept"]
-
-                    ann.save()
-
-        messages.warning(
-            request,
-            "Opmerkingen opgeslagen. U kunt later altijd terug naar deze pagina of naar de opmerkingpagina om uw opmerkingen te bewerken voordat u ze opstuurt naar de andere partij.",
-        )
-        # redirect to project after posting replies for now
-        return redirect("myreplies_syn", pk=project.id)
-
-    # the GET method
     non_accepted_comments = (
         current_phase.comments.select_related("status")
         .select_related("item")
@@ -143,10 +66,75 @@ def CheckComments(request, proj_id):
         .all()
     )
 
+    post_list = None
+
+    if request.method == "POST":
+        post_list = {}
+
+        for i in range(len(request.POST.getlist("comment_id"))):
+            post_list[int(request.POST.getlist("comment_id")[i])] = [
+                request.POST.getlist("annotation")[i],
+                None if request.POST.getlist("status")[i] == "" else int(request.POST.getlist("status")[i]),
+                request.POST.getlist("accept")[i],
+                request.POST.getlist("kostenConsequenties")[i]
+            ]
+
     # create the forms
-    ann_forms_accept = make_ann_forms(accepted_comments, current_phase)
-    ann_forms_non_accept = make_ann_forms(non_accepted_comments, current_phase)
-    ann_forms_todo = make_ann_forms(todo_comments, current_phase)
+    ann_forms_accept = make_ann_forms(post_list, accepted_comments, current_phase)
+    ann_forms_non_accept = make_ann_forms(post_list, non_accepted_comments, current_phase)
+    ann_forms_todo = make_ann_forms(post_list, todo_comments, current_phase)
+
+    # the POST method
+    if request.method == "POST":
+        ann_forms = ann_forms_todo + ann_forms_non_accept + ann_forms_accept
+
+        # only use valid forms
+        ann_forms = [
+            ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()
+        ]
+        for form in ann_forms:
+            if form.has_changed():
+                if form.changed_data != ['status'] or (form.fields['status'].initial != form.cleaned_data['status'].id):
+                    # if the reply already exists, edit all fields that aren't the same as in the model.
+                    if current_phase.reply.filter(onComment__id=form.cleaned_data["comment_id"]).exists():
+                        ann = current_phase.reply.filter(onComment__id=form.cleaned_data["comment_id"]).first()
+
+                        if form.cleaned_data["status"] != ann.status:
+                            ann.status = form.cleaned_data["status"]
+                        if form.cleaned_data["annotation"] != ann.comment:
+                            ann.comment = form.cleaned_data["annotation"]
+                        if form.cleaned_data["kostenConsequenties"] != ann.kostenConsequenties:
+                            ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+                        
+                        if form.cleaned_data["accept"] != ann.accept:
+                            ann.accept = form.cleaned_data["accept"]
+                        
+                        ann.save()
+                    else:
+                        ann = CommentReply()
+                        ann.commentphase = current_phase
+                        ann.gebruiker = request.user
+                        ann.onComment = PVEItemAnnotation.objects.get(
+                                            id=form.cleaned_data["comment_id"]
+                                        )
+
+                        if form.cleaned_data["status"]:
+                            ann.status = form.cleaned_data["status"]
+                        if form.cleaned_data["annotation"]:
+                            ann.comment = form.cleaned_data["annotation"]
+                        if form.cleaned_data["kostenConsequenties"]:
+                            ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+                        if form.cleaned_data["accept"]:
+                            ann.accept = form.cleaned_data["accept"]
+
+                        ann.save()
+
+        messages.warning(
+            request,
+            "Opmerkingen opgeslagen. U kunt later altijd terug naar deze pagina of naar de opmerkingpagina om uw opmerkingen te bewerken voordat u ze opstuurt naar de andere partij.",
+        )
+        # redirect to project after posting replies for now
+        return redirect("myreplies_syn", pk=project.id)
 
     # order items for the template
     hoofdstuk_ordered_items_non_accept = order_comments_for_commentcheck(
@@ -322,7 +310,7 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
     return hoofdstuk_ordered_items_non_accept
 
 
-def make_ann_forms(comments, current_phase):
+def make_ann_forms(post_list, comments, current_phase):
     ann_forms = []
     made_on_comments = {}
     commentreplies = current_phase.reply.select_related("onComment").all()
@@ -330,45 +318,54 @@ def make_ann_forms(comments, current_phase):
     for reply in commentreplies:
         made_on_comments[reply.onComment] = reply
 
+    i = 0
     for comment in comments:
         # look if the persons reply already exists, for later saving
         if comment not in made_on_comments.keys():
-            ann_forms.append(
-                forms.CommentReplyForm(
+            form = forms.CommentReplyForm(
+                dict(
+                    comment_id=comment.id,
+                    annotation=post_list[comment.id][0],
+                    status=post_list[comment.id][1],
+                    accept=post_list[comment.id][2],
+                    kostenConsequenties=post_list[comment.id][3],
+                ) if post_list else None,
                     initial={
                         "comment_id": comment.id,
-                        "accept": "False",
-                        "status": comment.status,
                     }
-                )
             )
+            if comment.status:
+                form.fields["status"].initial = comment.status.id
+            form.fields["accept"].initial = "False"
+
         else:
             reply = made_on_comments[comment]
 
+            form = forms.CommentReplyForm(
+                dict(
+                    comment_id=comment.id,
+                    annotation=post_list[comment.id][0],
+                    status=post_list[comment.id][1],
+                    accept=post_list[comment.id][2],
+                    kostenConsequenties=post_list[comment.id][3],
+                ) if post_list else None,
+                    initial={
+                        "comment_id": comment.id,
+                        "annotation": reply.comment,
+                        "kostenConsequenties": reply.kostenConsequenties,
+                    }
+            )
+            if reply.status:
+                form.fields["status"].initial = reply.status.id
+            
             if reply.accept:
-                ann_forms.append(
-                    forms.CommentReplyForm(
-                        initial={
-                            "comment_id": comment.id,
-                            "annotation": reply.comment,
-                            "accept": "True",
-                            "status": reply.status,
-                            "kostenConsequenties": reply.kostenConsequenties,
-                        }
-                    )
-                )
+                form.fields["accept"].initial = "True"
             else:
-                ann_forms.append(
-                    forms.CommentReplyForm(
-                        initial={
-                            "comment_id": comment.id,
-                            "annotation": reply.comment,
-                            "accept": "False",
-                            "status": reply.status,
-                            "kostenConsequenties": reply.kostenConsequenties,
-                        }
-                    )
-                )
+                form.fields["accept"].initial = "False"
+
+        ann_forms.append(form)
+        i += 1
+
     return ann_forms
 
 

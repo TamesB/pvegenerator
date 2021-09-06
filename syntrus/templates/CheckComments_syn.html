@@ -61,15 +61,19 @@
                           {% endif %}
                         </p>
                         {% if item|index:4 %}<p style="color:#FF8000; display:inline;font-weight:900;">Opmerking: {{ item|index:4 }}</p>{% endif %}
-                        <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}" hidden>
-                        <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold">Reactie (optioneel):</label>
+                        <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}" hidden>
+                        <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold"><p>Reactie (optioneel):</p></label>
                         <p class="formbox">{{ form.annotation }}</p>
                       </div>
                       <div class="status_not_added" id="status-{{ item|index:1 }}">
-                        <div><label for="{{ form.status.id_for_label }}">Status:</label>
+                        <div><label for="{{ form.status.id_for_label }}"><p>Status:</p></label>
                         {{ form.status }}</div>
-                        <div><label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil (optioneel):</label>
-                        {{ form.kostenConsequenties }}</div>               
+                        <div><label for="{{ form.kostenConsequenties.id_for_label }}"><p>Kostenverschil (optioneel):</p></label>
+                        {{ form.kostenConsequenties }}</div>
+                      <div style="display: none;">
+                          <label for="{{ form.accept.id_for_label }}"></label>Accepteer </label>
+                          {{ form.accept }}
+                      </div>
                       </div>
                   </div>
                   {% endwith %}
@@ -94,15 +98,19 @@
                           {% endif %}
                         </p>
                         {% if item|index:4 %}<p style="color:#FF8000; display:inline;font-weight:900;">Opmerking: {{ item|index:4 }}</p>{% endif %}
-                        <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}" hidden>
-                        <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold">Reactie (optioneel):</label>
+                        <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}" hidden>
+                        <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold"><p>Reactie (optioneel):</p></label>
                         <p class="formbox">{{ form.annotation }}</p>
                       </div>
                       <div class="status_not_added" id="status-{{ item|index:1 }}">
-                        <div><label for="{{ form.status.id_for_label }}">Status:</label>
+                        <div><label for="{{ form.status.id_for_label }}"><p>Status:</p></label>
                         {{ form.status }}</div>
-                        <div><label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil (optioneel):</label>
+                        <div><label for="{{ form.kostenConsequenties.id_for_label }}"><p>Kostenverschil (optioneel):</p></label>
                         {{ form.kostenConsequenties }}</div>               
+                      </div>
+                      <div style="display: none;">
+                          <label for="{{ form.accept.id_for_label }}"></label>Accepteer </label>
+                          {{ form.accept }}
                       </div>
                   </div>
                   {% endwith %}
@@ -169,7 +177,7 @@
                       {% endif %}
 
                       <div>
-                        <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}" hidden>
+                        <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}" hidden>
                         <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold"><p>Reactie (optioneel):</p></label>
                         <p class="formbox">{{ form.annotation }}</p>
                       </div>
@@ -257,7 +265,7 @@
                       {% endif %}
 
                       <div>
-                        <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}" hidden>
+                        <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}" hidden>
                         <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold"><p>Reactie (optioneel):</p></label>
                         <p class="formbox">{{ form.annotation }}</p>
                       </div>
@@ -362,7 +370,7 @@
                       {% endif %}
 
                       <div>
-                        <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}" hidden>
+                        <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}" hidden>
                         <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold"><p>Reactie (optioneel):</p></label>
                         <p class="formbox">{{ form.annotation }}</p>
                       </div>
@@ -449,7 +457,7 @@
                       {% endif %}
 
                       <div>
-                        <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}" hidden>
+                        <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}" hidden>
                         <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold"><p>Reactie (optioneel):</p></label>
                         <p class="formbox">{{ form.annotation }}</p>
                       </div>

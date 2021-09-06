@@ -193,7 +193,7 @@ class CheckboxInput(forms.CheckboxInput):
 class PVEItemAnnotationForm(forms.Form):
     item_id = forms.IntegerField(label="item_id")
     status = CachedModelChoiceField(
-        objects=lambda: CommentStatus.objects.all(), required=False
+        objects=lambda: CommentStatus.objects.all()
     )
     annotation = forms.CharField(
         label="annotation", max_length=1000, widget=forms.Textarea, required=False
@@ -201,6 +201,10 @@ class PVEItemAnnotationForm(forms.Form):
     kostenConsequenties = forms.DecimalField(
         label="(Optioneel) Kosten Consequenties", required=False
     )
+
+    def __init__(self, *args, **kwargs):
+        super(PVEItemAnnotationForm, self).__init__(*args, **kwargs)
+        self.fields["status"].required = False
 
 
 class BijlageToAnnotationForm(ModelForm):
@@ -346,7 +350,7 @@ class CommentReplyForm(forms.Form):
 
     comment_id = forms.IntegerField(label="comment_id")
     status = CachedModelChoiceField(
-        objects=lambda: CommentStatus.objects.all(), required=False
+        objects=lambda: CommentStatus.objects.all()
     )
     annotation = forms.CharField(
         label="annotation", max_length=1000, widget=forms.Textarea, required=False
@@ -356,6 +360,9 @@ class CommentReplyForm(forms.Form):
     )
     accept = forms.ChoiceField(choices=CHOICES, required=False)
 
+    def __init__(self, *args, **kwargs):
+        super(CommentReplyForm, self).__init__(*args, **kwargs)
+        self.fields["status"].required = False
 
 class BijlageToReplyForm(ModelForm):
     class Meta:

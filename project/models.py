@@ -163,6 +163,8 @@ class PVEItemAnnotation(models.Model):
     def __str__(self):
         return f"{self.annotation}"
 
+    class Meta:
+        ordering = ["-datum"]
 
 class BijlageToAnnotation(models.Model):
     ann = models.ForeignKey(PVEItemAnnotation, on_delete=models.CASCADE, default=None, related_name="bijlageobject")

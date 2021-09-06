@@ -48,20 +48,20 @@
                           {% endif %}
                         </p>
                         <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}" hidden>
-                        <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold">Aanvulling (optioneel):</label>
+                        <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold"><p>Aanvulling (optioneel):</p></label>
                         <p class="formbox">{{ form.annotation }}</p>
                       </div>
                     {% if item|index:2 %}
                       <div class="status_added" id="status-{{ item|index:1 }}">
                       <p>Status: {{ item|index:2 }}</p>
-                      <div><label for="{{ form.status.id_for_label }}">Bewerk:</label>
+                      <div><label for="{{ form.status.id_for_label }}"><p>Bewerk Status:</p></label>
                       {{ form.status }}</div>
                     {% else %}
                       <div class="status_not_added" id="status-{{ item|index:1 }}">
-                      <div><label for="{{ form.status.id_for_label }}">Status:</label>
+                      <div><label for="{{ form.status.id_for_label }}"><p>Status:</p></label>
                       {{ form.status }}</div>
                     {% endif %}
-                      <div><label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil (optioneel):</label>
+                      <div><label for="{{ form.kostenConsequenties.id_for_label }}"><p>Kostenverschil (optioneel):</p></label>
                       {{ form.kostenConsequenties }}</div>               
                     </div>
                   </div>
@@ -82,20 +82,20 @@
                 {% endif %}
               </p>
               <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}" hidden>
-              <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold">Aanvulling (optioneel):</label>
+              <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold"><p>Aanvulling (optioneel):</p></label>
               <p class="formbox">{{ form.annotation }}</p>
             </div>
           {% if item|index:2 %}
             <div class="status_added" id="status-{{ item|index:1 }}">
             <p>Status: {{ item|index:2 }}</p>
-            <div><label for="{{ form.status.id_for_label }}">Bewerk:</label>
+            <div><label for="{{ form.status.id_for_label }}"><p>Bewerk Status:</p></label>
             {{ form.status }}</div>
           {% else %}
             <div class="status_not_added" id="status-{{ item|index:1 }}">
-            <div><label for="{{ form.status.id_for_label }}">Status:</label>
+            <div><label for="{{ form.status.id_for_label }}"><p>Status:</p></label>
             {{ form.status }}</div>
           {% endif %}
-            <div><label for="{{ form.kostenConsequenties.id_for_label }}">Kostenverschil (optioneel):</label>
+            <div><label for="{{ form.kostenConsequenties.id_for_label }}"><p>Kostenverschil (optioneel):</p></label>
             {{ form.kostenConsequenties }}</div>               
           </div>
         </div>

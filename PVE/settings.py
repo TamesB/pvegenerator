@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_htmx",
     "leaflet",
     "django.contrib.gis",
     "app",
@@ -95,6 +96,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_htmx.middleware.HtmxMiddleware",
     "PVE.middleware.last_visit.last_visit_middleware",
     "simple_history.middleware.HistoryRequestMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
@@ -196,6 +198,7 @@ STATIC_HOST = env.str("DJANGO_STATIC_HOST", "")
 STATIC_URL = STATIC_HOST + "/static/"
 
 STATICFILES_DIRS = (os.path.join("static"),)
+
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 

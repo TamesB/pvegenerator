@@ -42,6 +42,8 @@ Django = "==3.1.12"
 Pillow = "==8.2.0"
 PyPDF2 = "==1.26.0"
 XlsxWriter = "==1.2.9"
+django-async-include = "*"
+django-htmx = "*"
 
 [dev-packages]
 
