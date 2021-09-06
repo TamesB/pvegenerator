@@ -423,7 +423,6 @@ def MyReplies(request, pk, **kwargs):
                 initial={
                     "comment_id": reply.onComment.id,
                     "annotation": reply.comment,
-                    "status": reply.status.id,
                     "kostenConsequenties": reply.kostenConsequenties,
                 }
             )
@@ -432,6 +431,9 @@ def MyReplies(request, pk, **kwargs):
             form.fields["accept"].initial = "True"
         else:
             form.fields["accept"].initial = "False"
+            
+        if reply.status:
+            form.fields["status"].initial = reply.status.id
 
         ann_forms.append(form)
         form_item_ids.append(reply.onComment.id)
