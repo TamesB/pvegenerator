@@ -118,7 +118,7 @@ def CheckComments(request, proj_id):
                                             id=form.cleaned_data["comment_id"]
                                         )
 
-                        if form.cleaned_data["status"]:
+                        if form.fields['status'].initial != form.cleaned_data['status'].id:
                             ann.status = form.cleaned_data["status"]
                         if form.cleaned_data["annotation"]:
                             ann.comment = form.cleaned_data["annotation"]
