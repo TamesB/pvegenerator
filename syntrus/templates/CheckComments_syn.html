@@ -223,7 +223,6 @@
     {% endfor %}
   {% else %}
         {% for item in one_deep %}
-                {% for item in items %}
                   {% with form=item|index:9 %}
                     {% if item|index:5 %}
                     <div class="item_content" style="background-color: #bcf5bc;">
@@ -305,7 +304,6 @@
                       </div>
                   </div>
                   {% endwith %}
-                {% endfor %}
                 </div>
                 {% endfor %}
     {% endif %}
