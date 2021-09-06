@@ -383,65 +383,6 @@ def MyReplies(request, pk, **kwargs):
     if request.user not in project.permitted.all():
         return render(request, "404_syn.html")
 
-    page_number = request.GET.get('page')
-
-    # multiple forms
-    if request.method == "POST":
-        ann_forms = [
-            # todo: fix bijlages toevoegen
-            forms.CommentReplyForm(
-                dict(
-                    comment_id=comment_id,
-                    annotation=opmrk,
-                    status=status,
-                    accept=accept,
-                    kostenConsequenties=kostenConsequenties,
-                )
-            )
-            for comment_id, opmrk, status, accept, kostenConsequenties in zip(
-                request.POST.getlist("comment_id"),
-                request.POST.getlist("annotation"),
-                request.POST.getlist("status"),
-                request.POST.getlist("accept"),
-                request.POST.getlist("kostenConsequenties"),
-            )
-        ]
-        # only use valid forms
-        ann_forms = [
-            ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()
-        ]
-        for form in ann_forms:
-            if (
-                (form.cleaned_data["accept"] == "True")
-                or form.cleaned_data["status"]
-                or (form.cleaned_data["annotation"] != "")
-                or form.cleaned_data["kostenConsequenties"]
-            ):
-                # true comment if either comment or voldoet
-                original_comment = PVEItemAnnotation.objects.get(
-                    id=form.cleaned_data["comment_id"]
-                )
-                reply = commentphase.reply.filter(onComment=original_comment)
-
-                if form.cleaned_data["annotation"]:
-                    reply.comment = form.cleaned_data["annotation"]
-
-                if form.cleaned_data["status"]:
-                    reply.status = form.cleaned_data["status"]
-
-                if form.cleaned_data["kostenConsequenties"]:
-                    reply.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
-
-                if form.cleaned_data["accept"] == "True":
-                    reply.accept = True
-                else:
-                    reply.accept = False
-
-                reply.save()
-
-        messages.warning(request, f"Opmerking succesvol bewerkt.")
-        return redirect("myreplies_syn", pk=project.id)
-
     bijlages = []
 
     for bijlage in BijlageToReply.objects.filter(
@@ -461,32 +402,74 @@ def MyReplies(request, pk, **kwargs):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    comment_id_post = None
+    if request.method == "POST":
+        comment_id_post = [None if comment_id == "" else int(comment_id) for comment_id in request.POST.getlist("comment_id")]
+        annotation_post = request.POST.getlist("annotation")
+        status_post = [None if status == "" else int(status) for status in request.POST.getlist("status")]
+        accept_post = request.POST.getlist("accept")
+        kostenConsequenties_post = request.POST.getlist("kostenConsequenties")
+
+    i = 0
     for reply in page_obj:
+        form = forms.CommentReplyForm(
+                dict(
+                    comment_id=comment_id_post[i],
+                    annotation=annotation_post[i],
+                    status=status_post[i],
+                    accept=accept_post[i],
+                    kostenConsequenties=kostenConsequenties_post[i],
+                ) if comment_id_post else None,
+                initial={
+                    "comment_id": reply.onComment.id,
+                    "annotation": reply.comment,
+                    "status": reply.status.id,
+                    "kostenConsequenties": reply.kostenConsequenties,
+                }
+            )
+
         if reply.accept:
-            ann_forms.append(
-                forms.CommentReplyForm(
-                    initial={
-                        "comment_id": reply.onComment.id,
-                        "annotation": reply.comment,
-                        "status": reply.status,
-                        "accept": "True",
-                        "kostenConsequenties": reply.kostenConsequenties,
-                    }
-                )
-            )
+            form.fields["accept"].initial = "True"
         else:
-            ann_forms.append(
-                forms.CommentReplyForm(
-                    initial={
-                        "comment_id": reply.onComment.id,
-                        "annotation": reply.comment,
-                        "status": reply.status,
-                        "accept": "False",
-                        "kostenConsequenties": reply.kostenConsequenties,
-                    }
-                )
-            )
+            form.fields["accept"].initial = "False"
+
+        ann_forms.append(form)
         form_item_ids.append(reply.onComment.id)
+        i += 1
+
+    # multiple forms
+    if request.method == "POST":
+        # only use valid forms
+        ann_forms = [
+            ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()
+        ]
+        for form in ann_forms:
+            if form.has_changed():
+                if form.changed_data != ['status'] or (form.fields['status'].initial != form.cleaned_data['status'].id):
+                    # true comment if either comment or voldoet
+                    original_comment = PVEItemAnnotation.objects.get(
+                        id=form.cleaned_data["comment_id"]
+                    )
+                    reply = commentphase.reply.filter(onComment__id=original_comment.id).first()
+                    print(commentphase.reply.filter(onComment__id=original_comment.id))
+                    if form.cleaned_data["annotation"]:
+                        reply.comment = form.cleaned_data["annotation"]
+
+                    if form.fields['status'].initial != form.cleaned_data['status'].id:
+                        reply.status = form.cleaned_data["status"]
+
+                    if form.cleaned_data["kostenConsequenties"]:
+                        reply.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+
+                    if form.cleaned_data["accept"] == "True":
+                        reply.accept = True
+                    else:
+                        reply.accept = False
+
+                    reply.save()
+
+        messages.warning(request, f"Opmerking succesvol bewerkt.")
+        return redirect("myreplies_syn", pk=project.id)
 
     context["ann_forms"] = ann_forms
     context["form_item_ids"] = form_item_ids
