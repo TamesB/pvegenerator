@@ -73,7 +73,7 @@ def FirstFreeze(request, pk):
 
                     messages.warning(
                         request,
-                        f"Uitnodiging voor opmerkingen checken verstuurd naar de derden {filteredDerden.join(', ')} via email.",
+                        f"Uitnodiging voor opmerkingen checken verstuurd naar de derden {', '.join(filteredDerden)} via email.",
                     )
                 else:
                     projectmanager = project.projectmanager
@@ -205,7 +205,7 @@ def SendReplies(request, pk):
                     )
                     messages.warning(
                         request,
-                        f"Opmerkingen doorgestuurd naar de derden. De ontvangers {filteredDerden.join(', ')}, hebben een e-mail ontvangen om uw opmerkingen te checken.",
+                        f"Opmerkingen doorgestuurd naar de derden. De ontvangers {', '.join(filteredDerden)}, hebben een e-mail ontvangen om uw opmerkingen te checken.",
                     )
                 elif request.user.type_user == "SD":
                     projectmanager = project.projectmanager
