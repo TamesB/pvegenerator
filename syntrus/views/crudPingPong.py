@@ -94,6 +94,7 @@ def CheckComments(request, proj_id):
         ]
         for form in ann_forms:
             if form.has_changed():
+                print(form.changed_data)
                 if form.changed_data != ['status'] or (form.fields['status'].initial != form.cleaned_data['status'].id):
                     # if the reply already exists, edit all fields that aren't the same as in the model.
                     if current_phase.reply.filter(onComment__id=form.cleaned_data["comment_id"]).exists():
@@ -321,7 +322,7 @@ def make_ann_forms(post_list, comments, current_phase):
     i = 0
     for comment in comments:
         form = forms.CommentReplyForm(
-                data=dict(
+                dict(
                     comment_id=comment.id,
                     annotation=post_list[comment.id][0],
                     status=post_list[comment.id][1],
@@ -400,18 +401,18 @@ def MyReplies(request, pk, **kwargs):
     i = 0
     for reply in page_obj:
         form = forms.CommentReplyForm(
-                data=dict(
+                dict(
                     comment_id=comment_id_post[i],
                     annotation=annotation_post[i],
                     status=status_post[i],
                     accept=accept_post[i],
                     kostenConsequenties=kostenConsequenties_post[i],
-                ) if comment_id_post else None, comm_id=comment_id_post[i] if comment_id_post else None,
+                ) if comment_id_post else None,
                 initial={
                     "comment_id": reply.onComment.id,
                     "annotation": reply.comment,
                     "kostenConsequenties": reply.kostenConsequenties,
-                }
+                }, comm_id=comment_id_post[i] if comment_id_post else None
             )
 
         if reply.accept:

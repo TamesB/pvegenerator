@@ -360,7 +360,8 @@ class CommentReplyForm(forms.Form):
     )
     accept = forms.ChoiceField(choices=CHOICES, required=False)
 
-    def __init__(self, initial=None, data=None, comm_id=None, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        comm_id = kwargs.pop('comm_id', None)
         self.CHOICES = [("True", "Ja"), ("False", "Nee")]
         super(CommentReplyForm, self).__init__(*args, **kwargs)
         self.fields["status"].required = False
