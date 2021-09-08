@@ -304,6 +304,7 @@ def download_pve(request, pk):
         .select_related("onComment")
         .select_related("onComment__item")
         .filter(commentphase__project=project)
+        .order_by("datum")
     )
 
     for reply in replies:

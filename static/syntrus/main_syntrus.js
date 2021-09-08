@@ -1,39 +1,23 @@
-$(document).ready(function(){
-    $('.ui.checkbox')
-        .checkbox();
-  
-     $('.ui.dropdown') 
-        .dropdown();
-     
-     $('select.dropdown')
-       .dropdown();
-    
-     $('.ui.modal')
-       .modal('show')
-     ;
+$(document).ready(function () {
+  $(".ui.checkbox").checkbox();
 
-     $('.ui.long.modal')
-       .modal('show')
-     ;
-     
-     $('.ui.longer.modal')
-       .modal('show')
-     ;
-     
-     $('.message .close')
-       .on('click', function() {
-         $(this)
-           .closest('.message')
-           .transition('fade')
-         ;
-       })
-     ;
+  $(".ui.dropdown").dropdown();
 
+  $("select.dropdown").dropdown();
+
+  $(".ui.modal").modal("show");
+
+  $(".ui.long.modal").modal("show");
+
+  $(".ui.longer.modal").modal("show");
+
+  $(".message .close").on("click", function () {
+    $(this).closest(".message").transition("fade");
+  });
 });
 
-
 /* Tooltip Info Bubble */
-const template = document.createElement('template');
+const template = document.createElement("template");
 template.innerHTML = `
   <style>
     .tooltip-container {
@@ -92,39 +76,39 @@ template.innerHTML = `
 `;
 
 class PopupNotify extends HTMLElement {
-  constructor () {
+  constructor() {
     super();
-    this.attachShadow({mode: 'open'});
+    this.attachShadow({ mode: "open" });
     this.shadowRoot.appendChild(template.content.cloneNode(true));
   }
 
   tooltip(expandState) {
-    const tooltip = this.shadowRoot.querySelector('.notify-container');
-    const alert = this.shadowRoot.querySelector('.alert');
-    const cancel = this.shadowRoot.querySelector('.cancel');
+    const tooltip = this.shadowRoot.querySelector(".notify-container");
+    const alert = this.shadowRoot.querySelector(".alert");
+    const cancel = this.shadowRoot.querySelector(".cancel");
 
     if (expandState == true) {
-      tooltip.style.transform = 'scale(1)'
-      alert.style.display = 'none'
-      cancel.style.display = 'block'
+      tooltip.style.transform = "scale(1)";
+      alert.style.display = "none";
+      cancel.style.display = "block";
       expandState = false;
     } else {
-      tooltip.style.transform = 'scale(0)'
-      alert.style.display = 'block'
-      cancel.style.display = 'none'
+      tooltip.style.transform = "scale(0)";
+      alert.style.display = "block";
+      cancel.style.display = "none";
       expandState = true;
     }
   }
 
   connectedCallback() {
-    this.shadowRoot.querySelector('.alert').addEventListener('click', () => {
-      this.tooltip(true)
+    this.shadowRoot.querySelector(".alert").addEventListener("click", () => {
+      this.tooltip(true);
     });
-    this.shadowRoot.querySelector('.cancel').addEventListener('click', () => {
-      this.tooltip(false)
+    this.shadowRoot.querySelector(".cancel").addEventListener("click", () => {
+      this.tooltip(false);
     });
   }
 }
 
-window.customElements.define('popup-notify', PopupNotify)
+window.customElements.define("popup-notify", PopupNotify);
 /* End Tooltip object */

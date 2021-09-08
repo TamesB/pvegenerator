@@ -173,7 +173,7 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
     commentreplies = (
         CommentReply.objects.select_related("onComment")
         .filter(onComment__in=comments_entry)
-        .order_by("-datum")
+        .order_by("datum")
         .all()
     )
 
@@ -219,7 +219,7 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
                     last_accept = True
 
             for reply in made_on_comments[comment]:
-                temp_commentbulk_list_non_accept.append(reply.comment)
+                temp_commentbulk_list_non_accept.append([reply.comment, reply.gebruiker])
 
                 if reply.bijlage:
                     temp_bijlage_list.append(reply.id)
@@ -228,8 +228,8 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
 
             comment_added = False
             for comment_str in temp_commentbulk_list_non_accept:
-                if comment_str:
-                    string += f""""{ comment_str }", """
+                if comment_str[0]:
+                    string += f""""{ comment_str[0] }" -{comment_str[1]}, """
                     comment_added = True
 
             if not comment_added:
@@ -320,41 +320,28 @@ def make_ann_forms(post_list, comments, current_phase):
 
     i = 0
     for comment in comments:
-        # look if the persons reply already exists, for later saving
-        if comment not in made_on_comments.keys():
-            form = forms.CommentReplyForm(
-                dict(
+        form = forms.CommentReplyForm(
+                data=dict(
                     comment_id=comment.id,
                     annotation=post_list[comment.id][0],
                     status=post_list[comment.id][1],
                     accept=post_list[comment.id][2],
                     kostenConsequenties=post_list[comment.id][3],
-                ) if post_list else None,
-                    initial={
-                        "comment_id": comment.id,
-                    }
-            )
+                ) if post_list else None, comm_id=comment.id
+        )
+        form.fields["comment_id"].initial = comment.id
+
+        # look if the persons reply already exists, for later saving
+        if comment not in made_on_comments.keys():
             if comment.status:
                 form.fields["status"].initial = comment.status.id
             form.fields["accept"].initial = "False"
 
         else:
             reply = made_on_comments[comment]
+            form.fields["annotation"].initial = reply.comment
+            form.fields["kostenConsequenties"].initial = reply.kostenConsequenties
 
-            form = forms.CommentReplyForm(
-                dict(
-                    comment_id=comment.id,
-                    annotation=post_list[comment.id][0],
-                    status=post_list[comment.id][1],
-                    accept=post_list[comment.id][2],
-                    kostenConsequenties=post_list[comment.id][3],
-                ) if post_list else None,
-                    initial={
-                        "comment_id": comment.id,
-                        "annotation": reply.comment,
-                        "kostenConsequenties": reply.kostenConsequenties,
-                    }
-            )
             if reply.status:
                 form.fields["status"].initial = reply.status.id
             
@@ -413,13 +400,13 @@ def MyReplies(request, pk, **kwargs):
     i = 0
     for reply in page_obj:
         form = forms.CommentReplyForm(
-                dict(
+                data=dict(
                     comment_id=comment_id_post[i],
                     annotation=annotation_post[i],
                     status=status_post[i],
                     accept=accept_post[i],
                     kostenConsequenties=kostenConsequenties_post[i],
-                ) if comment_id_post else None,
+                ) if comment_id_post else None, comm_id=comment_id_post[i],
                 initial={
                     "comment_id": reply.onComment.id,
                     "annotation": reply.comment,
@@ -431,7 +418,7 @@ def MyReplies(request, pk, **kwargs):
             form.fields["accept"].initial = "True"
         else:
             form.fields["accept"].initial = "False"
-            
+
         if reply.status:
             form.fields["status"].initial = reply.status.id
 
@@ -453,7 +440,7 @@ def MyReplies(request, pk, **kwargs):
                         id=form.cleaned_data["comment_id"]
                     )
                     reply = commentphase.reply.filter(onComment__id=original_comment.id).first()
-                    print(commentphase.reply.filter(onComment__id=original_comment.id))
+
                     if form.cleaned_data["annotation"]:
                         reply.comment = form.cleaned_data["annotation"]
 
