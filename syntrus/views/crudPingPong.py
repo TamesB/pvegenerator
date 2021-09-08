@@ -406,7 +406,7 @@ def MyReplies(request, pk, **kwargs):
                     status=status_post[i],
                     accept=accept_post[i],
                     kostenConsequenties=kostenConsequenties_post[i],
-                ) if comment_id_post else None, comm_id=comment_id_post[i],
+                ) if comment_id_post else None, comm_id=comment_id_post[i] if comment_id_post else None,
                 initial={
                     "comment_id": reply.onComment.id,
                     "annotation": reply.comment,
