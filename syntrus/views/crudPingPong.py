@@ -16,9 +16,13 @@ from django.core.paginator import Paginator
 @login_required(login_url="login_syn")
 def CheckComments(request, proj_id):
     context = {}
+    
+    # get the current_phase and the level
+    if not Project.objects.filter(pk=proj_id):
+        return render(request, "404_syn.html")
 
     # get the project
-    project = get_object_or_404(Project, pk=proj_id)
+    project = Project.objects.prefetch_related("phase").get(pk=proj_id)
 
     # check first if user is permitted to the project
     if request.user not in project.permitted.all():
@@ -151,13 +155,13 @@ def CheckComments(request, proj_id):
 
     # order items for the template
     hoofdstuk_ordered_items_non_accept = order_comments_for_commentcheck(
-        non_accepted_comments, ann_forms_non_accept, proj_id
+        non_accepted_comments, ann_forms_non_accept, project
     )
     hoofdstuk_ordered_items_accept = order_comments_for_commentcheck(
-        accepted_comments, ann_forms_accept, proj_id
+        accepted_comments, ann_forms_accept, project
     )
     hoofdstuk_ordered_items_todo = order_comments_for_commentcheck(
-        todo_comments, ann_forms_todo, proj_id
+        todo_comments, ann_forms_todo, project
     )
 
     context["items"] = project.item.all()
@@ -177,7 +181,7 @@ def CheckComments(request, proj_id):
     return render(request, "CheckComments_syn.html", context)
 
 
-def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
+def order_comments_for_commentcheck(comments_entry, ann_forms, project):
     # loop for reply ordering for the pagedesign
     hoofdstuk_ordered_items = {}
     made_on_comments = {}
@@ -186,6 +190,7 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
     commentreplies = (
         CommentReply.objects.select_related("onComment")
         .select_related("gebruiker")
+        .select_related("commentphase")
         .select_related("status")
         .filter(onComment__in=comments_entry)
         .order_by("datum")
@@ -220,13 +225,15 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
 
         # add all replies to this comment
         if comment in made_on_comments.keys():
-            last_reply = made_on_comments[comment][0]
+            last_reply = None
+            if len(made_on_comments[comment]) > 1:
+                last_reply = made_on_comments[comment][1]
 
             second_to_last_reply = None
-            if len(made_on_comments[comment]) > 1:
-                second_to_last_reply = made_on_comments[comment][1]
+            if len(made_on_comments[comment]) > 2:
+                second_to_last_reply = made_on_comments[comment][2]
 
-            if last_reply.status is not None:
+            if last_reply and last_reply.status is not None:
                 string = f"Nieuwe Status: {last_reply.status}"
 
             if second_to_last_reply:
@@ -234,12 +241,14 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
                     both_accepted = True
 
             for reply in made_on_comments[comment]:
-                temp_commentbulk_list_non_accept.append([reply.comment, reply.gebruiker])
+                if reply.commentphase != project.phase.first():
+                    temp_commentbulk_list_non_accept.append([reply.comment, reply.gebruiker])
 
-                if reply.bijlage:
-                    comment_bijlages.append(reply.id)
+                    if reply.bijlage:
+                        comment_bijlages.append(reply.id)
 
-            string += ", Opmerkingen: "
+            if len(temp_commentbulk_list_non_accept) != 0:
+                string += ", Opmerkingen: "
 
             comment_added = False
             for comment_str in temp_commentbulk_list_non_accept:

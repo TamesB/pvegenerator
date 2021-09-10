@@ -70,7 +70,7 @@ class Project(models.Model):
     # frozen level 0: all derde kunnen +opmerking doen. Frozen level 1: alleen aangegeven derde door projectmanager kan
     # de statussen accepteren of een opmerking maken. De volgende even frozens zijn dan projectmanager behandelbaar,
     # en de oneven is behandelbaar door de derde. Zo trechteren alle regels naar uiteindelijke acceptatie van alle
-    # statussen. Opmerkingen moeten wellicht bijgehouden worden. MOET NOG MIGRATEN
+    # statussen. Opmerkingen moeten wellicht bijgehouden worden.
     frozenLevel = models.IntegerField(default=0, null=True)
     fullyFrozen = models.BooleanField(default=False)
     commentchecker = models.ForeignKey(
