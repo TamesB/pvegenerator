@@ -179,7 +179,7 @@ def CheckComments(request, proj_id):
 
 def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
     # loop for reply ordering for the pagedesign
-    hoofdstuk_ordered_items_non_accept = {}
+    hoofdstuk_ordered_items = {}
     made_on_comments = {}
 
     # fix this with only showing it for one project, make commentreply model set to a project
@@ -264,20 +264,20 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
 
         # sort
         if item.paragraaf:
-            if item.hoofdstuk not in hoofdstuk_ordered_items_non_accept.keys():
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk] = {}
+            if item.hoofdstuk not in hoofdstuk_ordered_items.keys():
+                hoofdstuk_ordered_items[item.hoofdstuk] = {}
 
-            if item.paragraaf in hoofdstuk_ordered_items_non_accept[item.hoofdstuk]:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf].append(total_item_context)
+            if item.paragraaf in hoofdstuk_ordered_items[item.hoofdstuk]:
+                hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append(total_item_context)
             else:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf] = [total_item_context]
+                hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [total_item_context]
         else:
-            if item.hoofdstuk in hoofdstuk_ordered_items_non_accept:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk].append(total_item_context)
+            if item.hoofdstuk in hoofdstuk_ordered_items:
+                hoofdstuk_ordered_items[item.hoofdstuk].append(total_item_context)
             else:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk] = [total_item_context]
+                hoofdstuk_ordered_items[item.hoofdstuk] = [total_item_context]
 
-    return hoofdstuk_ordered_items_non_accept
+    return hoofdstuk_ordered_items
 
 
 def make_ann_forms(post_list, comments, current_phase):
@@ -381,7 +381,7 @@ def MyReplies(request, pk, **kwargs):
                     "comment_id": reply.onComment.id,
                     "annotation": reply.comment,
                     "kostenConsequenties": reply.kostenConsequenties,
-                }, comm_id=comment_id_post[i] if comment_id_post else None
+                }, comm_id=reply.onComment.id
             )
 
         if reply.accept:

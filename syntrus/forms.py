@@ -365,7 +365,7 @@ class CommentReplyForm(forms.Form):
         self.CHOICES = [("True", "Ja"), ("False", "Nee")]
         super(CommentReplyForm, self).__init__(*args, **kwargs)
         self.fields["status"].required = False
-        self.fields["accept"].widget = forms.Select(attrs = {'onChange' : f"toggleShowInput({comm_id}, this);"})
+        self.fields["accept"].widget = forms.Select(attrs = {'onChange' : f"toggleShowInput({comm_id}, this);", "class":"select_accept", "id": f"id_accept_{comm_id}"})
         self.fields["accept"].choices = self.CHOICES
 
 class BijlageToReplyForm(ModelForm):

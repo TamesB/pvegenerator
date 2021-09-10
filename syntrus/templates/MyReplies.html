@@ -4,6 +4,25 @@
 {% load static %}
 {% load custom_tags %}
 
+{% block topscripts %}
+<script>
+
+function toggleShowInput(id, el) {
+	show_div = document.getElementsByClassName("showaccept-" + id);
+  console.log(el.value)
+  
+  for (i = 0; i < show_div.length; i++) {
+    if (el.value === "False") {
+      show_div[i].style.display = "block"
+    } else {
+      show_div[i].style.display = "none"
+    }
+  }
+};
+
+</script>
+{% endblock %}
+
 {% block menu %}
 {% include 'MenuTypes.html' %}
 {% endblock %}
@@ -64,13 +83,21 @@
                         <div onclick="document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="sluit_x_button"><p>Sluit</p></div>
                         <input class="comment-id" name="comment_id" type="number" value="{{ form.comment_id.value }}" hidden>
                         <label for="{{ form.accept.id_for_label }}">Akkoord:</label>
-                        <p class="formbox">{{ form.accept }}</p>                    
-                        <label for="{{ form.status.id_for_label }}">(Optioneel) Nieuwe Status:</label>
-                        <p class="formbox">{{ form.status }}</p>
-                        <label for="{{ form.annotation.id_for_label }}">(Optioneel) Opmerking:</label>
-                        <p class="formbox">{{ form.annotation }}</p>
-                        <label for="{{ form.kostenConsequenties.id_for_label }}">(Optioneel) Kostenverschil:</label>
-                        <p class="formbox">{{ form.kostenConsequenties }}</p>
+                        <p class="formbox">{{ form.accept }}</p>           
+                        <div class="showaccept-{{ form.comment_id.value }}" style="display:block;">
+                          <div>         
+                          <label for="{{ form.status.id_for_label }}">(Optioneel) Nieuwe Status:</label>
+                          <p class="formbox">{{ form.status }}</p>
+                          </div>
+                          <div>
+                          <label for="{{ form.annotation.id_for_label }}">(Optioneel) Opmerking:</label>
+                          <p class="formbox">{{ form.annotation }}</p>
+                          </div>
+                          <div>
+                          <label for="{{ form.kostenConsequenties.id_for_label }}">(Optioneel) Kostenverschil:</label>
+                          <p class="formbox">{{ form.kostenConsequenties }}</p>
+                          </div>
+                        </div>
                         <span class="form_buttons">
                           <div onclick="document.getElementById('{{ form.comment_id.value|add:"-1" }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
                           <input type="submit" class="done_button" value="Gereed"></input>
@@ -103,4 +130,27 @@
 </div>
 {% endblock %}
 {% block modal %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+window.addEventListener("load",function(){
+    select_elements = document.getElementsByClassName("select_accept");
+    
+    for (i = 0; i < select_elements.length; i++) {
+      accepted = select_elements[i].value
+      id = select_elements[i].id.split("_")[2]
+	    show_div = document.getElementsByClassName("showaccept-" + id);
+
+      for (j = 0; j < show_div.length; j++) {
+        if (accepted === "False") {
+          show_div[j].style.display = "block"
+        } else {
+          show_div[j].style.display = "none"
+        }
+      }
+    }
+
+},false);
+</script>
 {% endblock %}

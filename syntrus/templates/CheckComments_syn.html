@@ -214,6 +214,10 @@
                     </div>
                     {% if string %}
                     <div class="status_added" id="status-{{ regel.id }}">
+                      <div>
+                          <label for="{{ form.accept.id_for_label }}">Accepteer</label>
+                          {{ form.accept }}
+                      </div>
                       <div class="showaccept-{{ comment.id }}" style="display:block;">
                         <div><label for="{{ form.status.id_for_label }}"><p>Verander status:</p></label>
                           {{ form.status }}
@@ -233,6 +237,10 @@
 
                     {% else %}
                     <div class="status_not_added" id="status-{{ regel.id }}">
+                      <div>
+                          <label for="{{ form.accept.id_for_label }}">Accepteer</label>
+                          {{ form.accept }}
+                      </div>
                       <div class="showaccept-{{ comment.id }}" style="display:block;">
                         <div><label for="{{ form.status.id_for_label }}">Status:</label>
                           {{ form.status }}
@@ -241,10 +249,6 @@
                           {{ form.kostenConsequenties }}
                         </div>  
                     {% endif %}
-                      </div>
-                      <div>
-                          <label for="{{ form.accept.id_for_label }}">Accepteer</label>
-                          {{ form.accept }}
                       </div>
                     </div>
 
@@ -316,6 +320,10 @@
                     </div>
                     {% if string %}
                     <div class="status_added" id="status-{{ regel.id }}">
+                      <div>
+                          <label for="{{ form.accept.id_for_label }}">Accepteer</label>
+                          {{ form.accept }}
+                      </div>
                       <div class="showaccept-{{ comment.id }}" style="display:block;">
                         <div><label for="{{ form.status.id_for_label }}"><p>Verander status:</p></label>
                           {{ form.status }}
@@ -335,6 +343,10 @@
 
                     {% else %}
                     <div class="status_not_added" id="status-{{ regel.id }}">
+                      <div>
+                          <label for="{{ form.accept.id_for_label }}">Accepteer</label>
+                          {{ form.accept }}
+                      </div>
                       <div class="showaccept-{{ comment.id }}" style="display:block;">
                         <div><label for="{{ form.status.id_for_label }}">Status:</label>
                           {{ form.status }}
@@ -343,10 +355,6 @@
                           {{ form.kostenConsequenties }}
                         </div>  
                     {% endif %}
-                      </div>
-                      <div>
-                          <label for="{{ form.accept.id_for_label }}">Accepteer</label>
-                          {{ form.accept }}
                       </div>
                     </div>
                   </div>
@@ -434,6 +442,10 @@
                     </div>
                     {% if string %}
                     <div class="status_added" id="status-{{ regel.id }}">
+                      <div>
+                          <label for="{{ form.accept.id_for_label }}">Accepteer</label>
+                          {{ form.accept }}
+                      </div>
                       <div class="showaccept-{{ comment.id }}" style="display:block;">
                         <div><label for="{{ form.status.id_for_label }}"><p>Verander status:</p></label>
                           {{ form.status }}
@@ -453,6 +465,10 @@
 
                     {% else %}
                     <div class="status_not_added" id="status-{{ regel.id }}">
+                      <div>
+                          <label for="{{ form.accept.id_for_label }}">Accepteer</label>
+                          {{ form.accept }}
+                      </div>
                       <div class="showaccept-{{ comment.id }}" style="display:block;">
                         <div><label for="{{ form.status.id_for_label }}">Status:</label>
                           {{ form.status }}
@@ -461,10 +477,6 @@
                           {{ form.kostenConsequenties }}
                         </div>  
                     {% endif %}
-                      </div>
-                      <div>
-                          <label for="{{ form.accept.id_for_label }}">Accepteer</label>
-                          {{ form.accept }}
                       </div>
                     </div>
 
@@ -538,6 +550,10 @@
                     </div>
                     {% if string %}
                     <div class="status_added" id="status-{{ regel.id }}">
+                      <div>
+                          <label for="{{ form.accept.id_for_label }}">Accepteer</label>
+                          {{ form.accept }}
+                      </div>
                       <div class="showaccept-{{ comment.id }}" style="display:block;">              
                         <div><label for="{{ form.status.id_for_label }}"><p>Verander status:</p></label>
                           {{ form.status }}
@@ -557,6 +573,10 @@
 
                     {% else %}
                     <div class="status_not_added" id="status-{{ regel.id }}">
+                      <div>
+                          <label for="{{ form.accept.id_for_label }}">Accepteer</label>
+                          {{ form.accept }}
+                      </div>
                       <div class="showaccept-{{ comment.id }}" style="display:block;">
                         <div><label for="{{ form.status.id_for_label }}">Status:</label>
                           {{ form.status }}
@@ -565,10 +585,6 @@
                           {{ form.kostenConsequenties }}
                         </div>  
                     {% endif %}
-                      </div>
-                      <div>
-                          <label for="{{ form.accept.id_for_label }}">Accepteer</label>
-                          {{ form.accept }}
                       </div>
                     </div>
 
@@ -644,8 +660,26 @@ function toggleShowInput(id, el) {
       show_div[i].style.display = "none"
     }
   }
-}
+};
 
+window.addEventListener("load",function(){
+    select_elements = document.getElementsByClassName("select_accept");
+    
+    for (i = 0; i < select_elements.length; i++) {
+      accepted = select_elements[i].value
+      id = select_elements[i].id.split("_")[2]
+	    show_div = document.getElementsByClassName("showaccept-" + id);
+
+      for (j = 0; j < show_div.length; j++) {
+        if (accepted === "False") {
+          show_div[j].style.display = "block"
+        } else {
+          show_div[j].style.display = "none"
+        }
+      }
+    }
+
+},false);
 </script>
 {% endblock %}
 {% endcache %}
