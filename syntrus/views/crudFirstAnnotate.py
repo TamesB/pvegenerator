@@ -492,48 +492,33 @@ def AddComment(request, pk):
         
         i += 1
 
+        total_context = [item, None, bijlage, form]
+
+        if opmerking:
+            total_context = [item, opmerking, bijlage, form]
+
         # create ordered items
         if item.paragraaf:
             if item.hoofdstuk not in hoofdstuk_ordered_items.keys():
                 hoofdstuk_ordered_items[item.hoofdstuk] = {}
 
             if item.paragraaf in hoofdstuk_ordered_items[item.hoofdstuk].keys():
-                if opmerking:
-                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append(
-                        [item, item.id, opmerking.status, bijlage, form]
-                    )
-                else:
-                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append(
-                        [item, item.id, None, bijlage, form]
-                    )
+                hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf].append(
+                    total_context
+                )
             else:
-                if opmerking:
-                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [
-                        [item, item.id, opmerking.status, bijlage, form]
-                    ]
-                else:
-                    hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [
-                        [item, item.id, None, bijlage, form]
-                    ]
+                hoofdstuk_ordered_items[item.hoofdstuk][item.paragraaf] = [
+                    total_context
+                ]
         else:
             if item.hoofdstuk in hoofdstuk_ordered_items.keys():
-                if opmerking:
-                    hoofdstuk_ordered_items[item.hoofdstuk].append(
-                        [item, item.id, opmerking.status, bijlage, form]
-                    )
-                else:
-                    hoofdstuk_ordered_items[item.hoofdstuk].append(
-                        [item, item.id, None, bijlage, form]
-                    )
+                hoofdstuk_ordered_items[item.hoofdstuk].append(
+                    total_context
+                )
             else:
-                if opmerking:
-                    hoofdstuk_ordered_items[item.hoofdstuk] = [
-                        [item, item.id, opmerking.status, bijlage, form]
-                    ]
-                else:
-                    hoofdstuk_ordered_items[item.hoofdstuk] = [
-                        [item, item.id, None, bijlage, form]
-                    ]
+                hoofdstuk_ordered_items[item.hoofdstuk] = [
+                    total_context
+                ]
 
     # easy entrance to item ids
     form_item_ids = [item.id for item in items]

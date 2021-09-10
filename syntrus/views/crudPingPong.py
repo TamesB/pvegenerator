@@ -173,6 +173,8 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
     # fix this with only showing it for one project, make commentreply model set to a project
     commentreplies = (
         CommentReply.objects.select_related("onComment")
+        .select_related("gebruiker")
+        .select_related("status")
         .filter(onComment__in=comments_entry)
         .order_by("datum")
         .all()
@@ -188,16 +190,16 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
     for i in range(len(comments_entry)):
         comment = comments_entry[i]
         form = ann_forms[i]
-        last_accept = False
+        both_accepted = False
         # set the PVEItem from the comment
         item = comment.item
 
-        bijlage = None
+        regel_bijlage = None
         # Fix bijlages later
         #if models.ItemBijlages.objects.get(items__id__contains=item.id).exists():
         #    bijlage = models.ItemBijlages.objects.get(items__id__contains=item.id)
             
-        temp_bijlage_list = []
+        comment_bijlages = []
         temp_commentbulk_list_non_accept = []
         string = ""
 
@@ -217,13 +219,13 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
 
             if second_to_last_reply:
                 if last_reply.accept and second_to_last_reply.accept:
-                    last_accept = True
+                    both_accepted = True
 
             for reply in made_on_comments[comment]:
                 temp_commentbulk_list_non_accept.append([reply.comment, reply.gebruiker])
 
                 if reply.bijlage:
-                    temp_bijlage_list.append(reply.id)
+                    comment_bijlages.append(reply.id)
 
             string += ", Opmerkingen: "
 
@@ -238,75 +240,30 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
             else:
                 string = string[:-2]
         
-        
+        total_item_context = [
+                        item,
+                        comment,
+                        form,
+                        string,
+                        both_accepted,
+                        comment_bijlages,
+                        regel_bijlage,
+                    ]
+
         # sort
         if item.paragraaf:
             if item.hoofdstuk not in hoofdstuk_ordered_items_non_accept.keys():
                 hoofdstuk_ordered_items_non_accept[item.hoofdstuk] = {}
 
             if item.paragraaf in hoofdstuk_ordered_items_non_accept[item.hoofdstuk]:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][
-                    item.paragraaf
-                ].append(
-                    [
-                        item.inhoud,
-                        item.id,
-                        comment.id,
-                        string,
-                        comment.annotation,
-                        last_accept,
-                        temp_bijlage_list,
-                        comment.kostenConsequenties,
-                        bijlage,
-                        form,
-                    ]
-                )
+                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf].append(total_item_context)
             else:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf] = [
-                    [
-                        item.inhoud,
-                        item.id,
-                        comment.id,
-                        string,
-                        comment.annotation,
-                        last_accept,
-                        temp_bijlage_list,
-                        comment.kostenConsequenties,
-                        bijlage,
-                        form,
-                    ]
-                ]
+                hoofdstuk_ordered_items_non_accept[item.hoofdstuk][item.paragraaf] = [total_item_context]
         else:
             if item.hoofdstuk in hoofdstuk_ordered_items_non_accept:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk].append(
-                    [
-                        item.inhoud,
-                        item.id,
-                        comment.id,
-                        string,
-                        comment.annotation,
-                        last_accept,
-                        temp_bijlage_list,
-                        comment.kostenConsequenties,
-                        bijlage,
-                        form,
-                    ]
-                )
+                hoofdstuk_ordered_items_non_accept[item.hoofdstuk].append(total_item_context)
             else:
-                hoofdstuk_ordered_items_non_accept[item.hoofdstuk] = [
-                    [
-                        item.inhoud,
-                        item.id,
-                        comment.id,
-                        string,
-                        comment.annotation,
-                        last_accept,
-                        temp_bijlage_list,
-                        comment.kostenConsequenties,
-                        bijlage,
-                        form,
-                    ]
-                ]
+                hoofdstuk_ordered_items_non_accept[item.hoofdstuk] = [total_item_context]
 
     return hoofdstuk_ordered_items_non_accept
 
@@ -314,9 +271,9 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, proj_id):
 def make_ann_forms(post_list, comments, current_phase):
     ann_forms = []
     made_on_comments = {}
-    commentreplies = current_phase.reply.select_related("onComment").all()
+    commentreplies = current_phase.reply.select_related("onComment").select_related("status").all()
 
-    for reply in commentreplies:
+    for reply in commentreplies.iterator():
         made_on_comments[reply.onComment] = reply
 
     i = 0

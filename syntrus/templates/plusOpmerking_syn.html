@@ -37,12 +37,15 @@
             <button type="button" class="paragraaf"><p>{{ paragraaf.paragraaf }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></p></button>
             <div class="paragraaf_content">
                 {% for item in items %}
-                  {% with form=item|index:4 %}
+                  {% with regel=item|index:0 %}
+                  {% with opmerking=item|index:1 %}
+                  {% with bijlage=item|index:2 %}
+                  {% with form=item|index:3 %}
                     <div class="item_content">
                       <div class="text_left">
                         <p style="font-style:italic;">
-                          {{ item|index:0 }}{% if item|index:3 %} 
-                          Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank">
+                          {{ regel }}{% if bijlage %} 
+                          Bijlage: <a href="{% url 'downloadbijlage' regel.id %}" target="_blank">
                           <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img>
                           </a>
                           {% endif %}
@@ -51,13 +54,13 @@
                         <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold"><p>Aanvulling (optioneel):</p></label>
                         <p class="formbox">{{ form.annotation }}</p>
                       </div>
-                    {% if item|index:2 %}
-                      <div class="status_added" id="status-{{ item|index:1 }}">
-                      <p>Status: {{ item|index:2 }}</p>
+                    {% if opmerking.status %}
+                      <div class="status_added" id="status-{{ regel.id }}">
+                      <p>Status: {{ opmerking.status }}</p>
                       <div><label for="{{ form.status.id_for_label }}"><p>Bewerk Status:</p></label>
                       {{ form.status }}</div>
                     {% else %}
-                      <div class="status_not_added" id="status-{{ item|index:1 }}">
+                      <div class="status_not_added" id="status-{{ regel.id }}">
                       <div><label for="{{ form.status.id_for_label }}"><p>Status:</p></label>
                       {{ form.status }}</div>
                     {% endif %}
@@ -66,17 +69,23 @@
                     </div>
                   </div>
                   {% endwith %}
+                  {% endwith %}
+                  {% endwith %}
+                  {% endwith %}
                 {% endfor %}
             </div>
         {% endfor %}
     {% else %}
         {% for item in one_deep %}
-        {% with form=item|index:4 %}
+          {% with regel=item|index:0 %}
+          {% with opmerking=item|index:1 %}
+          {% with bijlage=item|index:2 %}
+          {% with form=item|index:3 %}
           <div class="item_content">
             <div class="text_left">
               <p style="font-style:italic;">
-                {{ item|index:0 }}{% if item|index:3 %} 
-                Bijlage: <a href="{% url 'downloadbijlage' item|index:1 %}" target="_blank">
+                {{ regel }}{% if bijlage %} 
+                Bijlage: <a href="{% url 'downloadbijlage' regel.id %}" target="_blank">
                 <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img>
                 </a>
                 {% endif %}
@@ -85,13 +94,13 @@
               <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold"><p>Aanvulling (optioneel):</p></label>
               <p class="formbox">{{ form.annotation }}</p>
             </div>
-          {% if item|index:2 %}
-            <div class="status_added" id="status-{{ item|index:1 }}">
-            <p>Status: {{ item|index:2 }}</p>
+          {% if opmerking.status %}
+            <div class="status_added" id="status-{{ regel.id }}">
+            <p>Status: {{ opmerking.status }}</p>
             <div><label for="{{ form.status.id_for_label }}"><p>Bewerk Status:</p></label>
             {{ form.status }}</div>
           {% else %}
-            <div class="status_not_added" id="status-{{ item|index:1 }}">
+            <div class="status_not_added" id="status-{{ regel.id }}">
             <div><label for="{{ form.status.id_for_label }}"><p>Status:</p></label>
             {{ form.status }}</div>
           {% endif %}
@@ -99,6 +108,9 @@
             {{ form.kostenConsequenties }}</div>               
           </div>
         </div>
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
         {% endwith %}
         {% endfor %}  
     {% endif %}
