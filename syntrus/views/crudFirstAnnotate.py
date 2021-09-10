@@ -40,27 +40,65 @@ def MyComments(request, pk):
     if request.user not in project.permitted.all():
         return render(request, "404_syn.html")
 
+        
+    totale_kosten = 0
+    totale_kosten_lijst = [
+        comment.kostenConsequenties
+        for comment in project.annotation.all()
+        if comment.kostenConsequenties
+    ]
+    totale_kosten = sum(totale_kosten_lijst)
+
+    bijlages = []
+
+    for bijlage in BijlageToAnnotation.objects.filter(
+        ann__project=project
+    ):
+        if bijlage.bijlage.url:
+            bijlages.append(bijlage.bijlage.url)
+        else:
+            bijlages.append(None)
+
+    ann_forms = []
+    form_item_ids = []
+
+    comments = project.annotation.prefetch_related("status").select_related("item").all()
+
+    paginator = Paginator(comments, 25) # Show 25 replies per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    item_id_post = None
+    if request.method == "POST":
+        item_id_post = request.POST.getlist("item_id")
+        annotation_post = request.POST.getlist("annotation")
+        status_post = request.POST.getlist("status")
+        kostenConsequenties_post = request.POST.getlist("kostenConsequenties")
+
+    i = 0
+    for comment in page_obj:
+        form = forms.PVEItemAnnotationForm(
+            dict(
+                item_id=item_id_post[i],
+                annotation=annotation_post[i],
+                status=status_post[i],
+                kostenConsequenties=kostenConsequenties_post[i],
+            ) if item_id_post else None, 
+            initial={
+                "item_id": comment.item.id,
+                "annotation": comment.annotation,
+                "status": comment.status,
+                "kostenConsequenties": comment.kostenConsequenties,
+            }
+        )
+
+        ann_forms.append(form)
+
+        form_item_ids.append(comment.item.id)
+        i += 1
+
         # multiple forms
     if request.method == "POST":
-        ann_forms = [
-            # todo: fix bijlages toevoegen
-            forms.PVEItemAnnotationForm(
-                dict(
-                    item_id=item_id,
-                    annotation=opmrk,
-                    status=status,
-                    init_accepted=init_accepted,
-                    kostenConsequenties=kosten,
-                )
-            )
-            for item_id, opmrk, status, init_accepted, kosten in zip(
-                request.POST.getlist("item_id"),
-                request.POST.getlist("annotation"),
-                request.POST.getlist("status"),
-                request.POST.getlist("init_accepted"),
-                request.POST.getlist("kostenConsequenties"),
-            )
-        ]
 
         # only use valid forms
         ann_forms = [
@@ -97,48 +135,6 @@ def MyComments(request, pk):
         )
 
         return redirect("mijnopmerkingen_syn", pk=project.id)
-
-    totale_kosten = 0
-    totale_kosten_lijst = [
-        comment.kostenConsequenties
-        for comment in project.annotation.all()
-        if comment.kostenConsequenties
-    ]
-    totale_kosten = sum(totale_kosten_lijst)
-
-    bijlages = []
-
-    for bijlage in BijlageToAnnotation.objects.filter(
-        ann__project=project
-    ):
-        if bijlage.bijlage.url:
-            bijlages.append(bijlage.bijlage.url)
-        else:
-            bijlages.append(None)
-
-    ann_forms = []
-    form_item_ids = []
-
-    comments = project.annotation.prefetch_related("status").select_related("item").all()
-
-    paginator = Paginator(comments, 25) # Show 25 replies per page.
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    for comment in page_obj:
-        form = forms.PVEItemAnnotationForm(
-            initial={
-                "item_id": comment.item.id,
-                "annotation": comment.annotation,
-                "status": comment.status,
-                "init_accepted": comment.init_accepted,
-                "kostenConsequenties": comment.kostenConsequenties,
-            }
-        )
-
-        ann_forms.append(form)
-
-        form_item_ids.append(comment.item.id)
 
     context["page_obj"] = page_obj
     context["ann_forms"] = ann_forms
@@ -532,52 +528,34 @@ def AddComment(request, pk):
 
     # multiple forms
     if request.method == "POST":
-        ann_forms = [
-            # todo: fix bijlages toevoegen
-            forms.PVEItemAnnotationForm(
-                dict(
-                    item_id=item_id,
-                    annotation=opmrk,
-                    status=status,
-                    kostenConsequenties=kosten,
-                )
-            )
-            for item_id, opmrk, status, kosten in zip(
-                request.POST.getlist("item_id"),
-                request.POST.getlist("annotation"),
-                request.POST.getlist("status"),
-                request.POST.getlist("kostenConsequenties"),
-            )
-        ]
-
         # only use valid forms
         ann_forms = [
             ann_forms[i] for i in range(len(ann_forms)) if ann_forms[i].is_valid()
         ]
 
         for form in ann_forms:
-            # true comment if either status or voldoet
-            if form.cleaned_data["status"]:
-                item = models.PVEItem.objects.get(id=form.cleaned_data["item_id"])
+            if form.has_changed():
+                if form.changed_data != ['status'] or (form.fields['status'].initial != form.cleaned_data['status'].id):
+                    item = models.PVEItem.objects.get(id=form.cleaned_data["item_id"])
 
-                if project.annotation.filter(item=item).exists():
-                    ann = project.annotation.get(item=item)
-                else:
-                    ann = PVEItemAnnotation()
+                    if project.annotation.filter(item=item).exists():
+                        ann = project.annotation.get(item=item)
+                    else:
+                        ann = PVEItemAnnotation()
 
-                ann.project = project
-                ann.gebruiker = request.user
-                ann.item = item
+                    ann.project = project
+                    ann.gebruiker = request.user
+                    ann.item = item
 
-                if form.cleaned_data["annotation"]:
-                    ann.annotation = form.cleaned_data["annotation"]
-                if form.cleaned_data["status"]:
-                    ann.status = form.cleaned_data["status"]
-                # bijlage uit cleaned data halen en opslaan!
-                if form.cleaned_data["kostenConsequenties"]:
-                    ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+                    if form.cleaned_data["annotation"]:
+                        ann.annotation = form.cleaned_data["annotation"]
+                    if form.fields['status'].initial != form.cleaned_data['status'].id:
+                        ann.status = form.cleaned_data["status"]
+                    # bijlage uit cleaned data halen en opslaan!
+                    if form.cleaned_data["kostenConsequenties"]:
+                        ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
 
-                ann.save()
+                    ann.save()
         messages.warning(
             request,
             "Opmerkingen opgeslagen. U kunt later altijd terug naar deze pagina of naar de opmerkingpagina om uw opmerkingen te bewerken voordat u ze opstuurt.",

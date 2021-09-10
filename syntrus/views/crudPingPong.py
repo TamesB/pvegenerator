@@ -94,21 +94,29 @@ def CheckComments(request, proj_id):
         ]
         for form in ann_forms:
             if form.has_changed():
-                print(form.changed_data)
                 if form.changed_data != ['status'] or (form.fields['status'].initial != form.cleaned_data['status'].id):
                     # if the reply already exists, edit all fields that aren't the same as in the model.
                     if current_phase.reply.filter(onComment__id=form.cleaned_data["comment_id"]).exists():
                         ann = current_phase.reply.filter(onComment__id=form.cleaned_data["comment_id"]).first()
 
-                        if form.cleaned_data["status"] != ann.status:
-                            ann.status = form.cleaned_data["status"]
-                        if form.cleaned_data["annotation"] != ann.comment:
-                            ann.comment = form.cleaned_data["annotation"]
-                        if form.cleaned_data["kostenConsequenties"] != ann.kostenConsequenties:
-                            ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
-                        
                         if form.cleaned_data["accept"] != ann.accept:
                             ann.accept = form.cleaned_data["accept"]
+
+                        # dont add annotation/extra costs when the rule is accepted.
+                        if form.cleaned_data["accept"] == "True":
+                            ann.status = None
+                            ann.comment = None
+                            ann.kostenConsequenties = None
+                            ann.accept = True
+                        else:
+                            if form.cleaned_data["status"] != ann.status:
+                                ann.status = form.cleaned_data["status"]
+                            if form.cleaned_data["annotation"] != ann.comment:
+                                ann.comment = form.cleaned_data["annotation"]
+                            if form.cleaned_data["kostenConsequenties"] != ann.kostenConsequenties:
+                                ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+
+                            ann.accept = False                        
                         
                         ann.save()
                     else:
@@ -119,14 +127,18 @@ def CheckComments(request, proj_id):
                                             id=form.cleaned_data["comment_id"]
                                         )
 
-                        if form.fields['status'].initial != form.cleaned_data['status'].id:
-                            ann.status = form.cleaned_data["status"]
-                        if form.cleaned_data["annotation"]:
-                            ann.comment = form.cleaned_data["annotation"]
-                        if form.cleaned_data["kostenConsequenties"]:
-                            ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
-                        if form.cleaned_data["accept"]:
-                            ann.accept = form.cleaned_data["accept"]
+                        # if accepted rule, dont add any status/comment/costs, else add these.
+                        if form.cleaned_data["accept"] == "True":
+                            ann.accept = True
+                        else:
+                            if form.fields['status'].initial != form.cleaned_data['status'].id:
+                                ann.status = form.cleaned_data["status"]
+                            if form.cleaned_data["annotation"]:
+                                ann.comment = form.cleaned_data["annotation"]
+                            if form.cleaned_data["kostenConsequenties"]:
+                                ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+
+                            ann.accept = False
 
                         ann.save()
 
@@ -399,18 +411,18 @@ def MyReplies(request, pk, **kwargs):
                     )
                     reply = commentphase.reply.filter(onComment__id=original_comment.id).first()
 
-                    if form.cleaned_data["annotation"]:
-                        reply.comment = form.cleaned_data["annotation"]
-
-                    if form.fields['status'].initial != form.cleaned_data['status'].id:
-                        reply.status = form.cleaned_data["status"]
-
-                    if form.cleaned_data["kostenConsequenties"]:
-                        reply.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
-
                     if form.cleaned_data["accept"] == "True":
                         reply.accept = True
                     else:
+                        if form.cleaned_data["annotation"]:
+                            reply.comment = form.cleaned_data["annotation"]
+
+                        if form.fields['status'].initial != form.cleaned_data['status'].id:
+                            reply.status = form.cleaned_data["status"]
+
+                        if form.cleaned_data["kostenConsequenties"]:
+                            reply.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+
                         reply.accept = False
 
                     reply.save()
