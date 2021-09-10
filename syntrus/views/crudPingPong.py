@@ -193,7 +193,8 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, project):
         .select_related("commentphase")
         .select_related("status")
         .filter(onComment__in=comments_entry)
-        .order_by("datum")
+        .exclude(commentphase=project.phase.first())
+        .order_by("-datum")
         .all()
     )
 
@@ -226,26 +227,26 @@ def order_comments_for_commentcheck(comments_entry, ann_forms, project):
         # add all replies to this comment
         if comment in made_on_comments.keys():
             last_reply = None
-            if len(made_on_comments[comment]) > 1:
-                last_reply = made_on_comments[comment][1]
+            if len(made_on_comments[comment]) > 0:
+                last_reply = made_on_comments[comment][0]
 
             second_to_last_reply = None
-            if len(made_on_comments[comment]) > 2:
-                second_to_last_reply = made_on_comments[comment][2]
+            if len(made_on_comments[comment]) > 1:
+                second_to_last_reply = made_on_comments[comment][1]
 
-            if last_reply and last_reply.status is not None:
-                string = f"Nieuwe Status: {last_reply.status}"
+            if last_reply:
+                if last_reply.status is not None:
+                    string = f"Nieuwe Status: {last_reply.status}"
 
             if second_to_last_reply:
                 if last_reply.accept and second_to_last_reply.accept:
                     both_accepted = True
 
             for reply in made_on_comments[comment]:
-                if reply.commentphase != project.phase.first():
-                    temp_commentbulk_list_non_accept.append([reply.comment, reply.gebruiker])
+                temp_commentbulk_list_non_accept.append([reply.comment, reply.gebruiker])
 
-                    if reply.bijlage:
-                        comment_bijlages.append(reply.id)
+                if reply.bijlage:
+                    comment_bijlages.append(reply.id)
 
             if len(temp_commentbulk_list_non_accept) != 0:
                 string += ", Opmerkingen: "
