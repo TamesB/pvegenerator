@@ -413,6 +413,9 @@ def MyReplies(request, pk, **kwargs):
 
                     if form.cleaned_data["accept"] == "True":
                         reply.accept = True
+                        reply.annotation = None
+                        reply.status = None
+                        reply.kostenConsequenties = None
                     else:
                         if form.cleaned_data["annotation"]:
                             reply.comment = form.cleaned_data["annotation"]
