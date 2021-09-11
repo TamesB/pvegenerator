@@ -34,9 +34,9 @@ The ruleset is composed of many individual rules. Each rule is connected to para
 - The main page for each project. If its a persons turn it gets shown in to-do's
   ![Projectpage](/examples/projectpage.png)
 - First status appending to each rule
-  ![First status appendage](/examples/EersteStatus.png)
+  ![First status appendage](/examples/EersteStatusaanwijzing.png)
 - After first status got sent over, rules get divided in the three tabs, opposing party responds to these
-  ![Checklist further](/examples/CheckList.png)
+  ![Checklist further](/examples/InlineFormsChecklist.png)
 - Eventually all the rules get sent to the third column (accepted rules in last pingpong session) and the project can be frozen. Download the ruleset as PDF or as zip with all attachments, this can also be done at any stage of the project.
   ![Download PvE](/examples/PvEDownload.png)
 - Boom! PDF with all their comments.
