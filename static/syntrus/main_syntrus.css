@@ -1321,10 +1321,6 @@ html {
   opacity: 0.7;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content {
-  width: 75%;
-}
-
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1346,6 +1342,8 @@ html {
   padding-bottom: 3vh;
   border-radius: 16px;
   overflow-y: auto;
+  padding-left: 3vw;
+  padding-right: 3vw;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .item-id {
@@ -1398,14 +1396,24 @@ html {
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons {
-  display: inline;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   width: 100%;
   padding-left: 3vw;
   padding-right: 3vw;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .done_button {
-  display: inline-block;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   background-color: #31859a;
   width: 15vw;
   min-width: 100px;
@@ -1415,15 +1423,16 @@ html {
   border-radius: 16px;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-}
-
-#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .done_button p {
   font-family: "Montserrat";
   font-size: 1.5vh;
   margin-top: 0.5vh;
   text-align: center;
   font-weight: bold;
   color: white;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .done_button p {
+  margin-top: 0.8vh;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .niet_klaar {
@@ -1452,14 +1461,6 @@ html {
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .done_button:active {
   -webkit-transform: translateY(4px);
           transform: translateY(4px);
-}
-
-#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .right {
-  float: right;
-}
-
-#main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .left {
-  float: left;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .form_buttons .center {

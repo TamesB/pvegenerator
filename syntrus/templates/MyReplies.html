@@ -99,9 +99,9 @@ function toggleShowInput(id, el) {
                           </div>
                         </div>
                         <span class="form_buttons">
-                          <div onclick="document.getElementById('{{ form.comment_id.value|add:"-1" }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button left"><p>< Vorige</p></div>
+                          <div onclick="document.getElementById('{{ form.comment_id.value|add:"-1" }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button left"><p>&lt; Vorige</p></div>
                           <input type="submit" class="done_button" value="Gereed"></input>
-                          <div onclick="document.getElementById('{{ form.comment_id.value|add:1 }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button right"><p>Volgende ></p></div>
+                          <div onclick="document.getElementById('{{ form.comment_id.value|add:1 }}').style.display='block'; document.getElementById('{{ form.comment_id.value }}').style.display='none'" class="done_button right"><p>Volgende &gt;</p></div>
                         </span>
                     </div>
                 </div>

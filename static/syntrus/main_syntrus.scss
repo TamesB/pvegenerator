@@ -1197,7 +1197,6 @@ html {
           .opmerking_form_modal {
             .w3-modal {
               .w3-modal-content {
-                width: 75%;
                 .w3-container {
                   display: flex;
                   flex-direction: column;
@@ -1210,6 +1209,8 @@ html {
                   padding-bottom: 3vh;
                   border-radius: 16px;
                   overflow-y: auto;
+                  padding-left: 3vw;
+                  padding-right: 3vw;
 
                   .item-id {
                     display: none;
@@ -1258,12 +1259,14 @@ html {
                   }
 
                   .form_buttons {
-                    display: inline;
+                    display: flex;
+                    justify-content: space-between;
                     width: 100%;
                     padding-left: 3vw;
                     padding-right: 3vw;
                     .done_button {
-                      display: inline-block;
+                      display: flex;
+                      justify-content: center;
                       background-color: #31859a;
                       width: 15vw;
                       min-width: 100px;
@@ -1275,13 +1278,15 @@ html {
                       -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
                       box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
 
+                      font-family: "Montserrat";
+                      font-size: 1.5vh;
+                      margin-top: 0.5vh;
+                      text-align: center;
+                      font-weight: bold;
+                      color: white;
+
                       p {
-                        font-family: "Montserrat";
-                        font-size: 1.5vh;
-                        margin-top: 0.5vh;
-                        text-align: center;
-                        font-weight: bold;
-                        color: white;
+                        margin-top: 0.8vh;
                       }
                     }
 
@@ -1311,14 +1316,6 @@ html {
 
                     .done_button:active {
                       transform: translateY(4px);
-                    }
-
-                    .right {
-                      float: right;
-                    }
-
-                    .left {
-                      float: left;
                     }
 
                     .center {
