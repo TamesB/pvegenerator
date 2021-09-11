@@ -1347,6 +1347,59 @@ html {
           }
         }
 
+        .pagination {
+          height: 5vh;
+          margin-top: 1vh;
+          margin-bottom: 0.5vh;
+          font-family: "Montserrat";
+          font-weight: bold;
+
+          .step-links {
+            display: flex;
+            height: 100%;
+            justify-content: space-between;
+
+            .previous_next {
+              width: 7vw;
+              display: flex;
+              justify-content: space-between;
+
+              a {
+                background-color: #00a4a5;
+                border-radius: 5px;
+                display: flex;
+                justify-content: center;
+                -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+                -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+                box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+
+                p {
+                  padding-top: 0.8vh;
+                  padding-bottom: 1vh;
+                  padding-left: 1vw;
+                  padding-right: 1vw;
+                  font-size: 26px;
+                  font-weight: bold;
+                }
+              }
+            }
+            .current {
+              min-width: 90px;
+              width: 5vw;
+              display: flex;
+              justify-content: center;
+              background-color: #00a4a5;
+              border-radius: 5px;
+              -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+              -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+              box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+
+              p {
+                padding-top: 1vh;
+              }
+            }
+          }
+        }
         .flex_projectpagina {
           display: flex;
           justify-content: space-between;

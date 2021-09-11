@@ -1480,6 +1480,75 @@ html {
   width: 3vw;
 }
 
+#main .layerOneInner .article .article_content .pagination {
+  height: 5vh;
+  margin-top: 1vh;
+  margin-bottom: 0.5vh;
+  font-family: "Montserrat";
+  font-weight: bold;
+}
+
+#main .layerOneInner .article .article_content .pagination .step-links {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100%;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+#main .layerOneInner .article .article_content .pagination .step-links .previous_next {
+  width: 7vw;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+#main .layerOneInner .article .article_content .pagination .step-links .previous_next a {
+  background-color: #00a4a5;
+  border-radius: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+}
+
+#main .layerOneInner .article .article_content .pagination .step-links .previous_next a p {
+  padding-top: 0.8vh;
+  padding-bottom: 1vh;
+  padding-left: 1vw;
+  padding-right: 1vw;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+#main .layerOneInner .article .article_content .pagination .step-links .current {
+  min-width: 90px;
+  width: 5vw;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background-color: #00a4a5;
+  border-radius: 5px;
+  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+}
+
+#main .layerOneInner .article .article_content .pagination .step-links .current p {
+  padding-top: 1vh;
+}
+
 #main .layerOneInner .article .article_content .flex_projectpagina {
   display: -webkit-box;
   display: -ms-flexbox;

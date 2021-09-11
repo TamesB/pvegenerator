@@ -363,7 +363,7 @@ def MyReplies(request, pk, **kwargs):
     ann_forms = []
     form_item_ids = []
 
-    replies = commentphase.reply.select_related("onComment").select_related("onComment__item").all()
+    replies = commentphase.reply.select_related("onComment").select_related("onComment__item").select_related("status").all()
 
     paginator = Paginator(replies, 25) # Show 25 replies per page.
     page_number = request.GET.get('page')
