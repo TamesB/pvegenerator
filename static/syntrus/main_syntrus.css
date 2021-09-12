@@ -325,6 +325,7 @@ html {
   #main .layerOneInner .menu_left .hamburger {
     margin-left: 2vw;
     display: block;
+    margin-bottom: 10vh;
   }
   #main .layerOneInner .menu_left a {
     color: white;
