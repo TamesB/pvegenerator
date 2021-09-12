@@ -220,8 +220,8 @@ html {
   position: absolute;
   -webkit-transition: 0.1s ease;
   transition: 0.1s ease;
-  overflow-y: hidden;
   overflow-x: hidden;
+  overflow-y: auto;
   z-index: 3;
   min-width: 40px;
 }
@@ -254,20 +254,36 @@ html {
 }
 
 #main .layerOneInner .menu_left .hori-menu-logout {
-  display: inline-block;
+  display: none;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   font-size: 1.5vh;
   visibility: hidden;
   width: 100%;
-  display: none;
 }
 
-#main .layerOneInner .menu_left .hori-menu-logout a {
+#main .layerOneInner .menu_left .hori-menu-logout .links {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+}
+
+#main .layerOneInner .menu_left .hori-menu-logout .links a {
   visibility: hidden;
-  display: none;
-  margin-right: 2vw;
-  margin-left: 2vw;
+  width: 50%;
+}
+
+#main .layerOneInner .menu_left .hori-menu-logout .links a:first-child {
+  border-right: 0.3vw solid white;
+  padding-left: 5vw;
   text-align: left;
-  border-right: 0.4vw solid #373737;
+}
+
+#main .layerOneInner .menu_left .hori-menu-logout .links a:last-child {
+  padding-right: 5vw;
+  text-align: right;
 }
 
 #main .layerOneInner .menu_left:hover {
@@ -282,6 +298,16 @@ html {
 
 @media screen and (max-width: 768px) {
   #main .layerOneInner .menu_left {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
     top: 0;
     text-align: center;
     min-width: 100%;
@@ -289,32 +315,71 @@ html {
     position: absolute;
     -webkit-transition: 0.1s ease;
     transition: 0.1s ease;
-    overflow-y: hidden;
     overflow-x: hidden;
     z-index: 3;
     min-height: 40px;
   }
+  #main .layerOneInner .menu_left .menu_item:last-child {
+    padding-bottom: 5vh;
+  }
   #main .layerOneInner .menu_left .hamburger {
     margin-left: 2vw;
+    display: block;
   }
   #main .layerOneInner .menu_left a {
     color: white;
     display: block;
-    margin-bottom: 0.5vh;
     margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+    text-decoration: none;
+    cursor: pointer;
+    visibility: hidden;
   }
   #main .layerOneInner .menu_left .hori-menu-logout {
-    display: inline-block;
-    visibility: visible;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    font-size: 1.5vh;
+    min-height: 3.5vh;
+    width: 100%;
   }
-  #main .layerOneInner .menu_left .hori-menu-logout a {
-    visibility: visible;
-    display: inline-block;
+  #main .layerOneInner .menu_left .hori-menu-logout .links {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+  }
+  #main .layerOneInner .menu_left .hori-menu-logout .links a {
+    visibility: hidden;
+    width: 50%;
+  }
+  #main .layerOneInner .menu_left .hori-menu-logout .links a:first-child {
+    border-right: 0.3vw solid white;
+    padding-left: 5vw;
+    text-align: left;
+  }
+  #main .layerOneInner .menu_left .hori-menu-logout .links a:last-child {
+    padding-right: 5vw;
+    text-align: right;
   }
   #main .layerOneInner .menu_left:hover {
     min-width: 100vw;
-    min-height: 32vh;
+    min-height: 100%;
+    padding-top: 5vh;
+    padding-bottom: 5vh;
     z-index: 3;
+  }
+  #main .layerOneInner .menu_left:hover .hamburger {
+    display: none;
+  }
+  #main .layerOneInner .menu_left:hover a {
+    visibility: visible;
+  }
+  #main .layerOneInner .menu_left:hover .hori-menu-logout a {
+    visibility: visible;
   }
 }
 
@@ -1888,6 +1953,10 @@ html {
   padding-bottom: 0.5vh;
 }
 
+#main .layerOneInner .article .article_content .flex_projectpagina .extra_proj_info .title p {
+  font-weight: bold;
+}
+
 #main .layerOneInner .article .article_content .flex_projectpagina .extra_proj_info .content {
   width: 100%;
   height: 100%;
@@ -1944,6 +2013,10 @@ html {
   border-top-right-radius: 1.6vh;
   padding-top: 0.5vh;
   padding-bottom: 0.5vh;
+}
+
+#main .layerOneInner .article .article_content .flex_projectpagina .project_locatie .title p {
+  font-weight: bold;
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .project_locatie #card {

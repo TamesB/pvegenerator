@@ -439,8 +439,11 @@ def MyReplies(request, pk, **kwargs):
                         reply.accept = False
 
                     reply.save()
-
-        messages.warning(request, f"Opmerking succesvol bewerkt.")
+                
+                messages.warning(request, f"Opmerking succesvol bewerkt.")
+            else:
+                messages.warning(request, f"Opmerking niet veranderd.")
+                
         return redirect("myreplies_syn", pk=project.id)
 
     context["ann_forms"] = ann_forms
@@ -466,7 +469,7 @@ def MyRepliesDelete(request, pk):
     
     commentphase = project.phase.first()
 
-    replies = commentphase.replies.all()
+    replies = commentphase.replies.select_related("onComment").select_related("onComment__item").select_related("status").all()
 
     paginator = Paginator(replies, 25) # Show 25 replies per page.
     page_number = request.GET.get('page')
@@ -505,7 +508,7 @@ def DeleteReply(request, pk, reply_id):
 
     # check if user is authorized to project
     if request.user.type_user != "B":
-        if not request.user.permittedprojects.filter(id=pk).exists():
+        if not request.user.projectspermitted.filter(id=pk).exists():
             raise Http404("404")
 
     # check if user placed that annotation
@@ -514,8 +517,11 @@ def DeleteReply(request, pk, reply_id):
 
     reply = CommentReply.objects.get(id=reply_id)
     commentphase = project.phase.first()
-    
+    replies = commentphase.reply.select_related("onComment").select_related("onComment__item").select_related("status").all()
+    paginator = Paginator(replies, 25) # Show 25 replies per page.
     page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
 
     if request.method == "POST":
         messages.warning(
@@ -539,7 +545,7 @@ def DeleteReply(request, pk, reply_id):
     context = {}
     context["reply"] = reply
     context["items"] = project.item.all()
-    context["replies"] = commentphase.reply.all()
+    context["page_obj"] = page_obj
     context["project"] = project
     context["bijlages"] = bijlages
     return render(request, "MyRepliesDeleteReply.html", context)
@@ -558,7 +564,7 @@ def AddReplyAttachment(request, pk, reply_id):
     commentphase = project.phase.first()
 
     reply = CommentReply.objects.filter(id=reply_id).first()
-    replies = commentphase.reply.all()
+    replies = commentphase.reply.select_related("onComment").select_related("onComment__item").select_related("status").all()
 
     paginator = Paginator(replies, 25) # Show 25 replies per page.
     page_number = request.GET.get('page')
@@ -579,6 +585,9 @@ def AddReplyAttachment(request, pk, reply_id):
                     request, f"Bijlage toegevoegd."
                 )
                 return redirect("myreplies_syn", pk=project.id)
+            else:
+                messages.warning(request, "Vul de verplichte velden in.")
+
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
@@ -605,7 +614,7 @@ def DeleteReplyAttachment(request, pk, reply_id):
 
     # check if user is authorized to project
     if request.user.type_user != "B":
-        if not request.user.permittedprojects.filter(id=pk):
+        if not request.user.projectspermitted.filter(id=pk):
             raise Http404("404")
 
     # check if user placed that annotation

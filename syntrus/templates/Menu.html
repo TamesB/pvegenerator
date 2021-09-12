@@ -1,6 +1,12 @@
 {% load static %}
 
 <div class="hamburger"><img src="{% static 'syntrus/svg/hamburger.svg' %}" ></img></div>
+<div class="hori-menu-logout">
+    <div class="links">
+        <a href="{% url 'dashboard_syn' %}"><p>Ingelogd als {{ request.user }}</p></a>
+        <a href="{% url 'logout_syn' %}"><p>Afmelden</p></a>
+    </div>
+</div>
 <div class="menu_item"><a href="{% url 'dashboard_syn' %}" class="{{ 1|default:"" }}"><p>Dashboard</p></a></div>
 {% if type == 'derde' %}
 <div class="menu_item"><a href="{% url 'viewprojectoverview_syn' %}" class="{{ 1|default:"" }}"><p>Mijn Projecten</p></a></div>
@@ -18,9 +24,3 @@
 {% endif %}
 
 <div class="menu_item"><a href="{% url 'faq_syn' %}" class="{{ 4|default:"" }}"><p>FAQ</p></a></div>
-
-
-<div class="hori-menu-logout">
-    <a href="{% url 'dashboard_syn' %}">Ingelogd als {{ request.user }}</a>
-    <a href="{% url 'logout_syn' %}">Afmelden</a>
-</div>

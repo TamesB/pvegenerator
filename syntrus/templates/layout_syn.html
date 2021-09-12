@@ -19,7 +19,7 @@
     <body>
         <div id="main">
             <div class="layerOneInner">
-                <span class="header">
+                <div class="header">
 
                     <img src="{% static 'syntrus/svg/logo.svg' %}" class="logo_bg"></a>
 
@@ -31,15 +31,15 @@
                         <li><a href="#">Afgemeld</a></li>
                     {% endif %}
                     </ul>
-                </span>
-                <span class="menu_left">{% block menu %}{% endblock %}</span> 
-                <span class="article">
+                </div>
+                <div class="menu_left">{% block menu %}{% endblock %}</div> 
+                <div class="article">
                 <div class="loader" style="display: none;"></div>
                 <div class="article_content">
                 {% block main %}{% endblock %}
                 {% block modal %}{% endblock %}
                 </div>
-                </span> 
+                </div> 
             </div>
         </div>
         <script src="https://unpkg.com/htmx.org@1.5.0"></script>

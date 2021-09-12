@@ -169,14 +169,14 @@
                                     {% if request.user.type_user != first_annotate|index:forloop.counter0 %}
         <tr class="table_content">
           <td><p>{{ project.naam }}</p></td>
-          <td class="link"><a href="{% url 'commentscheck_syn' project.id %}"><img style="max-width: 1vw;" src="{% static 'syntrus/img/plus.png' %}"></img></a></p></td>
+          <td class="link"><a href="{% url 'commentscheck_syn' project.id %}"><img style="max-height: 2vh;" src="{% static 'syntrus/img/plus.png' %}"></img></a></p></td>
         </tr>
         {% endif %}
         {% else %}
                                     {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
         <tr class="table_content">
           <td><p>{{ project.naam }}</p></td>
-          <td class="link"><a href="{% url 'commentscheck_syn' project.id %}"><img style="max-width: 1vw;" src="{% static 'syntrus/img/plus.png' %}"></img></a></p></td>
+          <td class="link"><a href="{% url 'commentscheck_syn' project.id %}"><img style="max-height: 2vh;" src="{% static 'syntrus/img/plus.png' %}"></img></a></p></td>
         </tr>
         {% endif %}
         {% endif %}

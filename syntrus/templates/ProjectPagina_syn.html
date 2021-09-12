@@ -191,6 +191,10 @@
           <td><p class="contcontent">{% if project.projectmanager %}{{ project.projectmanager }}{% else %}Nog geen projectmanager.{% endif %}</p></td>
         </tr>
         <tr>
+          <td><p class="conttitle">Derden: </p></td>
+          <td><p class="contcontent">{% for medewerker in derden %}{{ medewerker }}, {% endfor%}</p></td>
+        </tr>
+        <tr>
           <td><p class="conttitle">Status Contract: </p></td>
           <td><p class="contcontent">{{ project.statuscontract }}</p></td>
         </tr>
@@ -216,10 +220,6 @@
         <tr>
           <td><p class="conttitle">Pensioenfonds: </p></td>
           <td><p class="contcontent">{{ project.pensioenfonds }}</p></td>
-        </tr>
-        <tr>
-          <td><p class="conttitle">Derden: </p></td>
-          <td><p class="contcontent">{% for medewerker in derden %}{{ medewerker }}, {% endfor%}</p></td>
         </tr>
       </table>
     </div>

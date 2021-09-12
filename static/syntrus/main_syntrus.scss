@@ -183,8 +183,8 @@ html {
       max-height: 90vh;
       position: absolute;
       transition: 0.1s ease;
-      overflow-y: hidden;
       overflow-x: hidden;
+      overflow-y: auto;
       z-index: 3;
       min-width: 40px;
 
@@ -215,19 +215,28 @@ html {
       }
 
       .hori-menu-logout {
-        display: inline-block;
+        display: none;
+        justify-content: center;
         font-size: 1.5vh;
         visibility: hidden;
         width: 100%;
-        display: none;
 
-        a {
-          visibility: hidden;
-          display: none;
-          margin-right: 2vw;
-          margin-left: 2vw;
-          text-align: left;
-          border-right: 0.4vw solid #373737;
+        .links {
+          display: flex;
+          width: 100%;
+          a {
+            visibility: hidden;
+            width: 50%;
+          }
+          a:first-child {
+            border-right: 0.3vw solid white;
+            padding-left: 5vw;
+            text-align: left;
+          }
+          a:last-child {
+            padding-right: 5vw;
+            text-align: right;
+          }
         }
       }
     }
@@ -244,43 +253,83 @@ html {
 
     @media screen and (max-width: 768px) {
       .menu_left {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
         top: 0;
         text-align: center;
         min-width: 100%;
         max-height: 4vh;
         position: absolute;
         transition: 0.1s ease;
-        overflow-y: hidden;
         overflow-x: hidden;
         z-index: 3;
         min-height: 40px;
-
+        .menu_item:last-child {
+          padding-bottom: 5vh;
+        }
         .hamburger {
           margin-left: 2vw;
+          display: block;
         }
 
         a {
           color: white;
           display: block;
-          margin-bottom: 0.5vh;
           margin-top: 0.5vh;
+          margin-bottom: 0.5vh;
+          text-decoration: none;
+          cursor: pointer;
+          visibility: hidden;
         }
 
         .hori-menu-logout {
-          display: inline-block;
-          visibility: visible;
+          display: flex;
+          justify-content: center;
+          font-size: 1.5vh;
+          min-height: 3.5vh;
+          width: 100%;
 
-          a {
-            visibility: visible;
-            display: inline-block;
+          .links {
+            display: flex;
+            width: 100%;
+            a {
+              visibility: hidden;
+              width: 50%;
+            }
+            a:first-child {
+              border-right: 0.3vw solid white;
+              padding-left: 5vw;
+              text-align: left;
+            }
+            a:last-child {
+              padding-right: 5vw;
+              text-align: right;
+            }
           }
         }
       }
 
       .menu_left:hover {
         min-width: 100vw;
-        min-height: 32vh;
+        min-height: 100%;
+        padding-top: 5vh;
+        padding-bottom: 5vh;
         z-index: 3;
+
+        .hamburger {
+          display: none;
+        }
+        a {
+          visibility: visible;
+        }
+
+        .hori-menu-logout {
+          a {
+            visibility: visible;
+          }
+        }
       }
     }
 
@@ -1679,6 +1728,10 @@ html {
               border-top-right-radius: 1.6vh;
               padding-top: 0.5vh;
               padding-bottom: 0.5vh;
+
+              p {
+                font-weight: bold;
+              }
             }
 
             .content {
@@ -1731,6 +1784,10 @@ html {
               border-top-right-radius: 1.6vh;
               padding-top: 0.5vh;
               padding-bottom: 0.5vh;
+
+              p {
+                font-weight: bold;
+              }
             }
 
             #card {
