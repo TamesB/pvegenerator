@@ -64,7 +64,7 @@
                     <div class="w3-container">
                         <a href="{% url 'mijnopmerkingen_syn' project.id %}" class="sluit_x_button"><p>Sluit</p></a>
                         <p class="formbox" hidden>{{ form.ann }}</p>
-                        <label for="{{ form.bijlage.id_for_label }}">Bijlage:</label>
+                        <label for="{{ form.bijlage.id_for_label }}"><p>Bijlage:</p></label>
                         <p class="formbox">{{ form.bijlage }}</p>
                         <span class="form_buttons">
                           <button type="submit" class="done_button" value="Gereed">Upload</a>

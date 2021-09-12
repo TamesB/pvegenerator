@@ -15,11 +15,11 @@
         <p class="description">Voeg een derde toe aan een van uw projecten, waar ze dan opmerkingen aan het PVE kunnen toevoegen. Een e-mail zal verstuurd worden voor het aanmelden voor uw project. De uitnodiging is 10 dagen geldig.</p>
         <form action="{% url 'invite_syn' %}" method="post">
             {% csrf_token %}
-            <label class="formtitle" for="{{ form.invitee.id_for_label }}">Voor project (optioneel):</label>
+            <label class="formtitle" for="{{ form.invitee.id_for_label }}"><p>Voor project (optioneel):</p></label>
             <p class="formbox">{{ form.project }}</p>
-            <label class="formtitle" for="{{ form.organisatie.id_for_label }}">Behoort tot Derde Partij (optioneel):</label>
+            <label class="formtitle" for="{{ form.organisatie.id_for_label }}"><p>Behoort tot Derde Partij (optioneel):</p></label>
             <p class="formbox">{{ form.organisatie }}</p>
-            <label class="formtitle" for="{{ form.invitee.id_for_label }}">E-mail derde:</label>
+            <label class="formtitle" for="{{ form.invitee.id_for_label }}"><p>E-mail derde:</p></label>
             <p class="formbox">{{ form.invitee }}</p>        
             <input type="submit" class="button" value="Nodig uit">
         </form>    

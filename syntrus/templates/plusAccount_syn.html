@@ -23,13 +23,13 @@
         <p class="description">Voeg een projectmanager toe aan de website, of nodig een derde uit.</p>
         <form action="{% url 'plusaccount_syn' %}" method="post">
             {% csrf_token %}
-            <label class="formtitle" for="{{ form.rang.id_for_label }}">Rang gebruiker:</label>
+            <label class="formtitle" for="{{ form.rang.id_for_label }}"><p>Rang gebruiker:</p></label>
             <p class="formbox">{{ form.rang }}</p>
-            <label class="formtitle" for="{{ form.project.id_for_label }}">Voor project (optioneel):</label>
+            <label class="formtitle" for="{{ form.project.id_for_label }}"><p>Voor project (optioneel):</p></label>
             <p class="formbox">{{ form.project }}</p>
-            <label class="formtitle" for="{{ form.organisatie.id_for_label }}">Derde Partij (optioneel):</label>
+            <label class="formtitle" for="{{ form.organisatie.id_for_label }}"><p>Derde Partij (optioneel):</p></label>
             <p class="formbox">{{ form.organisatie }}</p>
-            <label class="formtitle" for="{{ form.invitee.id_for_label }}">E-mail voor uitnodiging:</label>
+            <label class="formtitle" for="{{ form.invitee.id_for_label }}"><p>E-mail voor uitnodiging:</p></label>
             <p class="formbox">{{ form.invitee }}</p>        
             <input type="submit" class="button" value="Nodig uit">
         </form>    

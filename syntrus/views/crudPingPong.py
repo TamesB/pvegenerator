@@ -12,9 +12,11 @@ from syntrus.forms import BijlageToReplyForm
 from syntrus.models import BijlageToReply, CommentReply, FrozenComments
 
 from django.core.paginator import Paginator
+import time
 
 @login_required(login_url="login_syn")
 def CheckComments(request, proj_id):
+    start = time.time()
     context = {}
     
     # get the current_phase and the level
@@ -45,6 +47,9 @@ def CheckComments(request, proj_id):
         if request.user.type_user != project.first_annotate:
             return render(request, "404_syn.html")
 
+    clausetime = time.time()
+    print(f"Clauses: {clausetime - start}")
+
     non_accepted_comments = (
         current_phase.comments.select_related("status")
         .select_related("item")
@@ -70,6 +75,9 @@ def CheckComments(request, proj_id):
         .all()
     )
 
+    todotime = time.time()
+    print(f"Get todos: {todotime - clausetime}, total: {todotime - start}")
+
     post_list = None
 
     if request.method == "POST":
@@ -83,10 +91,17 @@ def CheckComments(request, proj_id):
                 request.POST.getlist("kostenConsequenties")[i]
             ]
 
+
+    postform = time.time()
+    print(f"Get POSTforms: {postform - todotime}, total: {postform - start}")
+
     # create the forms
     ann_forms_accept = make_ann_forms(post_list, accepted_comments, current_phase)
     ann_forms_non_accept = make_ann_forms(post_list, non_accepted_comments, current_phase)
     ann_forms_todo = make_ann_forms(post_list, todo_comments, current_phase)
+
+    create_ann = time.time()
+    print(f"create all ann_forms: {create_ann - postform}, total: {create_ann - start}")
 
     # the POST method
     if request.method == "POST":
@@ -164,6 +179,9 @@ def CheckComments(request, proj_id):
         todo_comments, ann_forms_todo, project
     )
 
+    orderhfst = time.time()
+    print(f"Order hfst: {orderhfst - create_ann}, total: {orderhfst - start}")
+
     context["items"] = project.item.all()
     context["project"] = project
     context["accepted_comments"] = accepted_comments
@@ -178,6 +196,10 @@ def CheckComments(request, proj_id):
     context["totale_kosten"] = PVEItemAnnotation.objects.filter(
         project=project
     ).aggregate(Sum("kostenConsequenties"))["kostenConsequenties__sum"]
+
+    contexts = time.time()
+    print(f"Create contexts, right before rendering: {contexts - orderhfst}, total: {contexts - start}")
+
     return render(request, "CheckComments_syn.html", context)
 
 

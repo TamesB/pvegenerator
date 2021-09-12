@@ -23,19 +23,19 @@
         <p class="description">Voeg de basisinformatie toe aan uw nieuwe project.</p>
         <form action="{% url 'plusproject_syn' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <label class="formtitle" for="{{ form.naam.id_for_label }}">Projectnaam:</label>
+            <label class="formtitle" for="{{ form.naam.id_for_label }}"><p>Projectnaam:</p></label>
             <p class="formbox">{{ form.naam }}</p>
-            <label class="formtitle" for="{{ form.nummer.id_for_label }}">Projectnummer:</label>
+            <label class="formtitle" for="{{ form.nummer.id_for_label }}"><p>Projectnummer:</p></label>
             <p class="formbox">{{ form.nummer }}</p>
-            <label class="formtitle" for="{{ form.vhe.id_for_label }}">Aantal Verhuureenheden:</label>
+            <label class="formtitle" for="{{ form.vhe.id_for_label }}"><p>Aantal Verhuureenheden:</p></label>
             <p class="formbox">{{ form.vhe }}</p>        
-            <label class="formtitle" for="{{ form.pensioenfonds.id_for_label }}">Pensioenfonds:</label>
+            <label class="formtitle" for="{{ form.pensioenfonds.id_for_label }}"><p>Pensioenfonds:</p></label>
             <p class="formbox">{{ form.pensioenfonds }}</p>
-            <label class="formtitle" for="{{ form.statuscontract.id_for_label }}">Contractstatus:</label>
+            <label class="formtitle" for="{{ form.statuscontract.id_for_label }}"><p>Contractstatus:</p></label>
             <p class="formbox">{{ form.statuscontract }}</p>
-            <label class="formtitle" for="{{ form.first_annotate.id_for_label }}">Eerste statusaanwijzing naar:</label>
+            <label class="formtitle" for="{{ form.first_annotate.id_for_label }}"><p>Eerste statusaanwijzing naar:</p></label>
             <p class="formbox">{{ form.first_annotate }}</p>
-            <label class="formtitle" for="{{ form.plaats.id_for_label }}">Locatie (klik de plaats aan op de kaart):</label>
+            <label class="formtitle" for="{{ form.plaats.id_for_label }}"><p>Locatie (klik de plaats aan op de kaart):</p></label>
             <p class="location-box">{{ form.plaats }}</p>
             <input type="submit" class="button" value="Maak project aan">
         </form>    
