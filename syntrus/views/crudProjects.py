@@ -9,7 +9,6 @@ from users.models import CustomUser
 from syntrus import forms
 from syntrus.forms import StartProjectForm
 
-
 @login_required(login_url="login_syn")
 def ManageProjects(request):
     allowed_users = ["B", "SB"]
@@ -39,21 +38,21 @@ def AddProject(request):
             project.belegger = Beleggers.objects.filter(naam="Syntrus").first()
             project.first_annotate = form.cleaned_data["first_annotate"]
             
-            geolocator = Nominatim(user_agent="tamesbpvegenerator")
-            if (
-                "city"
-                in geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}")
-                .raw["address"]
-                .keys()
-            ):
-                project.plaatsnamen = geolocator.reverse(
-                    f"{project.plaats.y}, {project.plaats.x}"
-                ).raw["address"]["city"]
-            else:
-                project.plaatsnamen = geolocator.reverse(
-                    f"{project.plaats.y}, {project.plaats.x}"
-                ).raw["address"]["town"]
-
+            #geolocator = Nominatim(user_agent="tamesbpvegenerator")
+            #if (
+            #    "city"
+            #    in geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}")
+            #    .raw["address"]
+            #    .keys()
+            #):
+            #    project.plaatsnamen = geolocator.reverse(
+            #        f"{project.plaats.y}, {project.plaats.x}"
+            #    ).raw["address"]["city"]
+            #else:
+            #    project.plaatsnamen = geolocator.reverse(
+            #        f"{project.plaats.y}, {project.plaats.x}"
+            #    ).raw["address"]["town"]
+            project.plaatsnamen = "Amsterdam"
             project.save()
             messages.warning(request, f"Project {project.naam} aangemaakt. Kies de parameters die het PvE heeft. Alleen de hoofdbouwsoort is verplicht in te vullen. U kunt ook deze stap overslaan en dit later doen.")
             return redirect("connectpve_syn", pk=project.id)
