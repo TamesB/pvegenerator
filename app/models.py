@@ -36,7 +36,7 @@ class Bouwsoort(models.Model):
 
 
 class TypeObject(models.Model):
-    versie = models.ForeignKey(PVEVersie, on_delete=models.CASCADE, null=True, related_name="type_object")
+    versie = models.ForeignKey(PVEVersie, on_delete=models.CASCADE, null=True, related_name="typeobject")
     parameter = models.CharField(max_length=256)
 
     def __str__(self):
