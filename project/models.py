@@ -26,7 +26,7 @@ class Project(models.Model):
     pensioenfonds = models.CharField(max_length=100, default=None)
     statuscontract = models.ForeignKey(ContractStatus, on_delete=models.CASCADE, related_name="project")
     datum_aangemaakt = models.DateTimeField(auto_now=True)
-    belegger = models.ForeignKey(Beleggers, null=True, related_name="project")
+    belegger = models.ForeignKey(Beleggers, on_delete=models.CASCADE, null=True, related_name="project")
 
     datum_recent_verandering = models.DateTimeField(
         "recente_verandering", auto_now=True
