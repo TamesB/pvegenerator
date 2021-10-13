@@ -471,6 +471,8 @@ def AddComment(request, pk):
                 ) if item_id_post else None, 
                 initial={"item_id": item.id}
             )
+            if item_id_post:
+                print(item_id_post[i], annotation_post[i], status_post[i], kostenConsequenties_post[i])
         else:
             opmerking = annotations[item]
             form = forms.PVEItemAnnotationForm(
@@ -487,7 +489,9 @@ def AddComment(request, pk):
                         "kostenConsequenties": opmerking.kostenConsequenties,
                     }
                 )
-                 
+            if item_id_post:
+                print(f"already made: {item_id_post[i], annotation_post[i], status_post[i], kostenConsequenties_post[i]}")
+
         ann_forms.append(form)
 
         i += 1
@@ -540,7 +544,7 @@ def AddComment(request, pk):
         for form in ann_forms:
             if form.has_changed():
                 print(form.changed_data)
-                if form.changed_data != ['status'] or (form.cleaned_data["status"] and form.fields['status'].initial != form.cleaned_data['status'].id) or form.changed_data != ['item_id']:
+                if (form.cleaned_data["status"] and form.fields['status'].initial != form.cleaned_data['status'].id) and (form.changed_data != ['item_id']):
                     item = models.PVEItem.objects.get(id=form.cleaned_data["item_id"])
 
                     if project.annotation.filter(item=item).exists():

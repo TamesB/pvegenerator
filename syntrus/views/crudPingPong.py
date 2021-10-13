@@ -113,7 +113,7 @@ def CheckComments(request, proj_id):
         ]
         for form in ann_forms:
             if form.has_changed():
-                if form.changed_data != ['status'] or (form.fields['status'].initial != form.cleaned_data['status'].id):
+                if (form.cleaned_data["status"] and form.fields['status'].initial != form.cleaned_data['status'].id) and (form.changed_data != ['item_id']):
                     # if the reply already exists, edit all fields that aren't the same as in the model.
                     if current_phase.reply.filter(onComment__id=form.cleaned_data["comment_id"]).exists():
                         ann = current_phase.reply.filter(onComment__id=form.cleaned_data["comment_id"]).first()
@@ -150,7 +150,7 @@ def CheckComments(request, proj_id):
                         if form.cleaned_data["accept"] == "True":
                             ann.accept = True
                         else:
-                            if form.fields['status'].initial != form.cleaned_data['status'].id:
+                            if form.cleaned_data["status"] and form.fields['status'].initial != form.cleaned_data['status'].id:
                                 ann.status = form.cleaned_data["status"]
                             if form.cleaned_data["annotation"]:
                                 ann.comment = form.cleaned_data["annotation"]
