@@ -200,7 +200,7 @@ def ConnectPVE(request, pk):
             messages.warning(
                 request, f"Parameters van het Programma van Eisen van project {project.naam} zijn toegevoegd. U kunt het PvE downloaden vanaf de projecthomepagina."
             )
-            return redirect("projectenaddprojmanager_syn", pk=project.id)
+            return redirect("dashboard_syn")
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 

@@ -74,6 +74,7 @@ def MyComments(request, pk):
         annotation_post = request.POST.getlist("annotation")
         status_post = request.POST.getlist("status")
         kostenConsequenties_post = request.POST.getlist("kostenConsequenties")
+        print(item_id_post, annotation_post, status_post, kostenConsequenties_post)
 
     i = 0
     for comment in page_obj:
@@ -108,22 +109,23 @@ def MyComments(request, pk):
         changed = False
         for form in ann_forms:
             # true comment if either comment or voldoet
-            if form.cleaned_data["status"] or form.cleaned_data["init_accepted"]:
-                item = models.PVEItem.objects.get(id=form.cleaned_data["item_id"])
+            if form.has_changed():
+                if form.changed_data != ['status'] or (form.cleaned_data['status'] and form.fields['status'].initial != form.cleaned_data['status'].id):
+                    item = models.PVEItem.objects.get(id=form.cleaned_data["item_id"])
 
-                ann = item.annotation.first()
-                ann.project = project
-                ann.gebruiker = request.user
-                ann.item = item
-                if form.cleaned_data["annotation"]:
-                    ann.annotation = form.cleaned_data["annotation"]
-                if form.cleaned_data["status"]:
-                    ann.status = form.cleaned_data["status"]
-                # bijlage uit cleaned data halen en opslaan!
-                if form.cleaned_data["kostenConsequenties"]:
-                    ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
-                ann.save()
-                changed = True
+                    ann = item.annotation.first()
+                    ann.project = project
+                    ann.gebruiker = request.user
+                    ann.item = item
+                    if form.cleaned_data["annotation"]:
+                        ann.annotation = form.cleaned_data["annotation"]
+                    if form.cleaned_data["status"]:
+                        ann.status = form.cleaned_data["status"]
+                    # bijlage uit cleaned data halen en opslaan!
+                    if form.cleaned_data["kostenConsequenties"]:
+                        ann.kostenConsequenties = form.cleaned_data["kostenConsequenties"]
+                    ann.save()
+                    changed = True
 
         if changed:
             bericht = "Statussen toegevoegd aan een of meerdere regels. U kunt altijd terug naar de status aanwijzing pagina om het aan te passen voordat u de lijst opstuurt naar de andere partij."
@@ -485,7 +487,9 @@ def AddComment(request, pk):
                         "kostenConsequenties": opmerking.kostenConsequenties,
                     }
                 )
-        
+                 
+        ann_forms.append(form)
+
         i += 1
 
         total_context = [item, None, bijlage, form]
@@ -535,11 +539,12 @@ def AddComment(request, pk):
 
         for form in ann_forms:
             if form.has_changed():
-                if form.changed_data != ['status'] or (form.fields['status'].initial != form.cleaned_data['status'].id):
+                print(form.changed_data)
+                if form.changed_data != ['status'] or (form.cleaned_data["status"] and form.fields['status'].initial != form.cleaned_data['status'].id) or form.changed_data != ['item_id']:
                     item = models.PVEItem.objects.get(id=form.cleaned_data["item_id"])
 
                     if project.annotation.filter(item=item).exists():
-                        ann = project.annotation.get(item=item)
+                        ann = project.annotation.filter(item=item).first()
                     else:
                         ann = PVEItemAnnotation()
 
@@ -547,9 +552,10 @@ def AddComment(request, pk):
                     ann.gebruiker = request.user
                     ann.item = item
 
+
                     if form.cleaned_data["annotation"]:
                         ann.annotation = form.cleaned_data["annotation"]
-                    if form.fields['status'].initial != form.cleaned_data['status'].id:
+                    if form.cleaned_data["status"] and form.fields['status'].initial != form.cleaned_data['status'].id:
                         ann.status = form.cleaned_data["status"]
                     # bijlage uit cleaned data halen en opslaan!
                     if form.cleaned_data["kostenConsequenties"]:
