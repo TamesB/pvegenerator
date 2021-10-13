@@ -105,7 +105,7 @@ def ConnectPVE(request, pk):
         form.fields["Bouwsoort2"].queryset = bouwsoort
         form.fields["Bouwsoort3"].queryset = bouwsoort
 
-        typeObject = versie.type_object.all()
+        typeObject = versie.typeobject.all()
         form.fields["TypeObject1"].queryset = typeObject
         form.fields["TypeObject2"].queryset = typeObject
         form.fields["TypeObject3"].queryset = typeObject
@@ -211,7 +211,7 @@ def ConnectPVE(request, pk):
     form.fields["Bouwsoort2"].queryset = bouwsoort
     form.fields["Bouwsoort3"].queryset = bouwsoort
 
-    typeObject = versie.type_object.all()
+    typeObject = versie.typeobject.all()
     form.fields["TypeObject1"].queryset = typeObject
     form.fields["TypeObject2"].queryset = typeObject
     form.fields["TypeObject3"].queryset = typeObject
