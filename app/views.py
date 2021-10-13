@@ -1204,10 +1204,10 @@ def bewerkkiesparameterView(request, versie_pk, type_id, item_id):
         item = versie.bouwsoort.filter(id=item_id).first()
 
     if type_id == 2:  # Type Object
-        if not versie.type_object.filter(id=item_id):
+        if not versie.typeobject.filter(id=item_id):
             raise Http404("404")
 
-        item = versie.type_object.filter(
+        item = versie.typeobject.filter(
             id=item_id
         ).first()
 
@@ -1259,10 +1259,10 @@ def deletekiesparameterView(request, versie_pk, type_id, item_id):
         item = versie.bouwsoort.filter(id=item_id).first()
 
     if type_id == 2:  # Type Object
-        if not versie.type_object.filter(id=item_id):
+        if not versie.typeobject.filter(id=item_id):
             raise Http404("404")
 
-        item = versie.type_object.filter(
+        item = versie.typeobject.filter(
             id=item_id
         ).first()
 
@@ -1277,7 +1277,7 @@ def deletekiesparameterView(request, versie_pk, type_id, item_id):
 
     messages.success(request, f"{parameter} verwijderd.")
 
-    return HttpResponseRedirect(reverse("kiesparametersviewdelete", args=(versie_pk,)))
+    return HttpResponseRedirect(reverse("kiesparametersview", args=(versie_pk,)))
 
 
 #bijlagesView
