@@ -177,7 +177,7 @@ html {
       font-weight: bold;
       font-size: 1.5em;
       width: 3vw;
-      background-image: linear-gradient(bottom right, #026189, #00aca9);
+      background-image: linear-gradient(bottom right, #0077AD, #66ACD1);
       top: 10vh;
       height: 100%;
       max-height: 90vh;
@@ -369,7 +369,7 @@ html {
             background: rgb(178, 219, 221);
             background: linear-gradient(
               0deg,
-              #00a4a5 20%,
+              #66ACD1 20%,
               rgba(247, 247, 248, 1) 20%
             );
             border-radius: 1.6vh;
@@ -455,7 +455,7 @@ html {
           overflow-x: scroll;
 
           table {
-            background-color: #00a4a5;
+            background-color: #66ACD1;
             display: table;
             justify-content: space-between;
             -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
@@ -494,7 +494,7 @@ html {
             }
 
             .table_title {
-              background-color: #00a4a5;
+              background-color: #66ACD1;
               letter-spacing: 0.1em;
               font-weight: 900;
               width: 100%;
@@ -757,7 +757,7 @@ html {
                 background: rgb(178, 219, 221);
                 background: linear-gradient(
                   0deg,
-                  #00a4a5 15%,
+                  #66ACD1 15%,
                   rgba(247, 247, 248, 1) 15%
                 );
                 border-radius: 1.6vh;
@@ -2074,7 +2074,7 @@ html {
 .loader {
   border: 16px solid #f3f3f3;
   border-radius: 50%;
-  border-top: 16px solid #00a4a5;
+  border-top: 16px solid #66ACD1;
   width: 5em;
   height: 5em;
   margin-top: 20%;

@@ -212,8 +212,8 @@ html {
   font-weight: bold;
   font-size: 1.5em;
   width: 3vw;
-  background-image: -webkit-gradient(linear, right bottom, left top, from(#026189), to(#00aca9));
-  background-image: linear-gradient(bottom right, #026189, #00aca9);
+  background-image: -webkit-gradient(linear, right bottom, left top, from(#0077AD), to(#66ACD1));
+  background-image: linear-gradient(bottom right, #0077AD, #66ACD1);
   top: 10vh;
   height: 100%;
   max-height: 90vh;
@@ -426,8 +426,8 @@ html {
   margin-left: 3vw;
   margin-right: 3vw;
   background: #b2dbdd;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(20%, #00a4a5), color-stop(20%, #f7f7f8));
-  background: linear-gradient(0deg, #00a4a5 20%, #f7f7f8 20%);
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(20%, #66ACD1), color-stop(20%, #f7f7f8));
+  background: linear-gradient(0deg, #66ACD1 20%, #f7f7f8 20%);
   border-radius: 1.6vh;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
@@ -528,7 +528,7 @@ html {
 }
 
 #main .layerOneInner .article .article_content .base_info_table table {
-  background-color: #00a4a5;
+  background-color: #66ACD1;
   display: table;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
@@ -569,7 +569,7 @@ html {
 }
 
 #main .layerOneInner .article .article_content .base_info_table table .table_title {
-  background-color: #00a4a5;
+  background-color: #66ACD1;
   letter-spacing: 0.1em;
   font-weight: 900;
   width: 100%;
@@ -843,8 +843,8 @@ html {
   width: 20vw;
   min-width: 225px;
   background: #b2dbdd;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(15%, #00a4a5), color-stop(15%, #f7f7f8));
-  background: linear-gradient(0deg, #00a4a5 15%, #f7f7f8 15%);
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(15%, #66ACD1), color-stop(15%, #f7f7f8));
+  background: linear-gradient(0deg, #66ACD1 15%, #f7f7f8 15%);
   border-radius: 1.6vh;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
@@ -2295,7 +2295,7 @@ html {
 .loader {
   border: 16px solid #f3f3f3;
   border-radius: 50%;
-  border-top: 16px solid #00a4a5;
+  border-top: 16px solid #66ACD1;
   width: 5em;
   height: 5em;
   margin-top: 20%;
