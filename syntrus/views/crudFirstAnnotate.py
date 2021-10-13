@@ -208,7 +208,7 @@ def deleteAnnotationPve(request, project_id, ann_id):
 
     # check if user is authorized to project
     if request.user.type_user != "B":
-        if not request.user.projectpermitted.filter(id=project_id).exists():
+        if not request.user.projectspermitted.filter(id=project_id).exists():
             raise Http404("404")
 
     # check if user placed that annotation
