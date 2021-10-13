@@ -58,7 +58,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     type_user = models.CharField(max_length=3, choices=type_choices, default="SD")
 
-    organisatie = models.ForeignKey(Organisatie, on_delete=models.CASCADE, null=True, related_name="user")
+    organisatie = models.ForeignKey(Organisatie, null=True, related_name="user")
 
     objects = CustomUserManager()
 
