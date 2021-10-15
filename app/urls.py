@@ -8,6 +8,8 @@ from . import views
 urlpatterns = [
     path("", views.LoginPageView, name="login"),
     path("dashboard", views.DashboardView, name="dashboard"),
+    path("klanten", views.KlantOverzicht, name="klantoverzicht"),
+    path("klanten/add", views.KlantToevoegen, name="klanttoevoegen"),
     path("logout", views.LogoutView, name="logout"),
 
     path(

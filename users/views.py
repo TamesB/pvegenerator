@@ -7,14 +7,20 @@ from django.http import Http404
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
-from project.models import Project
-
+from project.models import Project, Beleggers
+from syntrus.views.utils import GetAWSURL
 from . import forms, models
 
 
 # Create your views here.
 @staff_member_required
-def signup(request):
+def signup(request, client_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.get(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     if request.method == "POST":
         form = forms.CustomUserCreationForm(request.POST)
         if form.is_valid():
@@ -23,21 +29,40 @@ def signup(request):
             return redirect("accoverview")
     else:
         form = forms.CustomUserCreationForm()
-
-    return render(request, "createAccount.html", {"form": form})
+    context = {}
+    context["form"] = form
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
+    return render(request, "createAccount.html", context)
 
 
 @staff_member_required
-def accountOverview(request):
+def accountOverview(request, client_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.get(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     users = models.CustomUser.objects.all()
 
     context = {}
     context["users"] = users
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "accountOverview.html", context)
 
 
 @staff_member_required
-def accountProfile(request, pk):
+def accountProfile(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.get(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     if not models.CustomUser.objects.filter(id=pk):
         return Http404("404")
 
@@ -46,10 +71,19 @@ def accountProfile(request, pk):
     context = {}
     context["user"] = request.user
     context["projects"] = projects
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "accProfile.html", context)
 
 
-def ForgotPassword(request):
+def ForgotPassword(request, client_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.get(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     if request.user.is_authenticated:
         raise Http404("404_syn.html")
 
@@ -111,10 +145,19 @@ def ForgotPassword(request):
 
     context = {}
     context["form"] = forms.ForgotPassForm()
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "ForgotPassword.html", context)
 
 
-def ResetPassword(request, key):
+def ResetPassword(request, client_pk, key):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.get(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     if not models.ForgotPassInvite.objects.filter(key=key):
         raise Http404("404_syn.html")
 
@@ -138,4 +181,7 @@ def ResetPassword(request, key):
     context = {}
     context["form"] = forms.ResetPassForm()
     context["key"] = key
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "ResetPassword.html", context)

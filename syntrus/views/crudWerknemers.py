@@ -10,30 +10,46 @@ from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
-from project.models import Project
+from project.models import Project, Beleggers
 from syntrus import forms
 from users.forms import AcceptInvitationForm
 from users.models import CustomUser, Invitation
-
+from syntrus.views.utils import GetAWSURL
+from users.models import Organisatie
 utc = pytz.UTC
 
 
 @login_required(login_url="login_syn")
-def ManageWerknemers(request):
+def ManageWerknemers(request, client_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
         return render(request, "404_syn.html")
 
     context = {}
-    context["werknemers"] = CustomUser.objects.filter(
+    context["werknemers"] = client.werknemer.all().filter(
         Q(type_user="SD") | Q(type_user="SOG")
     ).order_by("-last_visit")
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "beheerWerknemers_syn.html", context)
 
 
 @login_required(login_url="login_syn")
-def AddAccount(request):
+def AddAccount(request, client_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     allowed_users = ["B", "SB", "SOG"]
     staff_users = ["B", "SB"]
     if request.user.type_user not in allowed_users:
@@ -51,6 +67,7 @@ def AddAccount(request):
             invitation.inviter = request.user
             invitation.invitee = form.cleaned_data["invitee"]
             invitation.rang = form.cleaned_data["rang"]
+            invitation.klantenorganisatie = client
 
             if form.cleaned_data["project"]:
                 invitation.project = form.cleaned_data["project"]
@@ -77,7 +94,7 @@ def AddAccount(request):
                     f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor een of meerdere projecten van Syntrus.
                     
                     Klik op de uitnodigingslink om rechtstreeks de tool in te gaan.
-                    Link: https://pvegenerator.net/syntrus/invite/{invitation.key}
+                    Link: https://pvegenerator.net/pvetool/invite/{invitation.key}
                     
                     Deze link is 10 dagen geldig.""",
                     "admin@pvegenerator.net",
@@ -95,7 +112,7 @@ def AddAccount(request):
                     3. Check de projectpagina's en volg de To Do stappen om commentaar te leveren op de regels.
 
                     Klik op de uitnodigingslink om rechtstreeks de tool in te gaan.
-                    Link: https://pvegenerator.net/syntrus/invite/{invitation.key}
+                    Link: https://pvegenerator.net/pvetool/invite/{invitation.key}
                     
                     Deze link is 10 dagen geldig.""",
                     "admin@pvegenerator.net",
@@ -107,7 +124,7 @@ def AddAccount(request):
                 request,
                 f"Uitnodiging verstuurd naar { form.cleaned_data['invitee'] }. De uitnodiging zal verlopen in { expiry_length } dagen.)",
             )
-            return redirect("dashboard_syn")
+            return redirect("dashboard_syn", client_pk=client_pk)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
@@ -120,10 +137,15 @@ def AddAccount(request):
     else:
         form = forms.KoppelDerdeUserForm()
 
-    # set projects to own
-    form.fields["project"].queryset = projecten
+    form.fields["project"].queryset = Project.objects.filter(belegger=client)
+    form.fields["organisatie"].queryset = Organisatie.objects.filter(klantenorganisatie=client)
+
     context = {}
     context["form"] = form
+
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
 
     if request.user.type_user in staff_users:
         return render(request, "plusAccount_syn.html", context)
@@ -131,7 +153,13 @@ def AddAccount(request):
         return render(request, "plusDerde_syn.html", context)
 
 
-def AcceptInvite(request, key):
+def AcceptInvite(request, client_pk, key):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     if not key or not Invitation.objects.filter(key=key):
         return render(request, "404_syn.html")
 
@@ -153,6 +181,9 @@ def AcceptInvite(request, key):
             user.email = invitation.invitee
             if invitation.organisatie:
                 user.organisatie = invitation.organisatie
+            if invitation.klantenorganisatie:
+                user.klantenorganisatie = invitation.klanteorganisatie
+
             user.save()
 
             user = authenticate(
@@ -192,7 +223,7 @@ def AcceptInvite(request, key):
             if user is not None:
                 login(request, user)
                 messages.warning(request, f"Account aangemaakt met gebruikersnaam: {user.username}. Uw logingegevens zijn naar u gemaild.")
-                return redirect("viewprojectoverview_syn")
+                return redirect("viewprojectoverview_syn", client_pk=client_pk)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
@@ -200,11 +231,20 @@ def AcceptInvite(request, key):
     context = {}
     context["form"] = form
     context["key"] = key
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "acceptInvitation_syn.html", context)
 
 
 @login_required(login_url="login_syn")
-def InviteUsersToProject(request, pk):
+def InviteUsersToProject(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
@@ -219,6 +259,10 @@ def InviteUsersToProject(request, pk):
             organisaties = form.cleaned_data["organisaties"]
             projectmanager = form.cleaned_data["projectmanager"]
             permitted = form.cleaned_data["permitted"]
+            
+            for user in permitted:
+                if user.klantenorganisatie != client:
+                    return render(request, "404_syn.html")
 
             project.projectmanager = projectmanager
             project.organisaties.add(*organisaties)
@@ -241,7 +285,7 @@ def InviteUsersToProject(request, pk):
                         f"""{ request.user } heeft u uitgenodigd om mee te werken aan het project { project } van Syntrus.
                         
                         U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
-                        Link: https://pvegenerator.net/syntrus/project/{project.id}""",
+                        Link: https://pvegenerator.net/pvetool/project/{project.id}""",
                         "admin@pvegenerator.net",
                         [f"{gebruiker.email}"],
                         fail_silently=False,
@@ -253,7 +297,7 @@ def InviteUsersToProject(request, pk):
                     f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor het project { project } van Syntrus.
                     
                     U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
-                    Link: https://pvegenerator.net/syntrus/project/{project.id}""",
+                    Link: https://pvegenerator.net/pvetool/project/{project.id}""",
                     "admin@pvegenerator.net",
                     [f"{projectmanager.email}"],
                     fail_silently=False,
@@ -268,21 +312,26 @@ def InviteUsersToProject(request, pk):
                         f"""{ request.user } heeft u uitgenodigd om mee te werken aan het project { project } van Syntrus.
                         
                         U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
-                        Link: https://pvegenerator.net/syntrus/project/{project.id}""",
+                        Link: https://pvegenerator.net/pvetool/project/{project.id}""",
                         "admin@pvegenerator.net",
                         [f"{gebruiker.email}"],
                         fail_silently=False,
                     )
             messages.warning(request, f"Personen zijn uitgenodigd en de uitnodigings E-Mails zijn succesvol verstuurd.")
-            return redirect("connectpve_syn", pk=project.id)
+            return redirect("connectpve_syn", client_pk=client_pk, pk=project.id)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
     # form
     form = forms.InviteProjectStartForm()
+    form.fields["organisaties"].queryset = Organisatie.objects.filter(klantenorganisatie=client)
+    form.fields["organisaties"].queryset = CustomUser.objects.filter(klantenorganisatie=client)
 
     context = {}
     context["form"] = form
     context["project"] = project
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "InviteUsersToProject_syn.html", context)
 

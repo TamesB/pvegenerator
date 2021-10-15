@@ -6,14 +6,14 @@
 
 {% block modal %}
 
-<form class="opmerking_form" action="{% url 'addreplyattachment_syn' project.id reply.id %}?page={{ page_obj.number }}" method="POST" enctype="multipart/form-data">
+<form class="opmerking_form" action="{% url 'addreplyattachment_syn' client_pk project.id reply.id %}?page={{ page_obj.number }}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 
 <div class="opmerking_form_modal">
             <div id="" class="w3-modal" style="display:block;">
                 <div class="w3-modal-content">
                     <div class="w3-container">
-                        <a href="{% url 'myreplies_syn' project.id %}?page={{ page_obj.number }}" class="sluit_x_button"><p>Sluit</p></a>
+                        <a href="{% url 'myreplies_syn' client_pk project.id %}?page={{ page_obj.number }}" class="sluit_x_button"><p>Sluit</p></a>
                         <p class="formbox" hidden>{{ form.reply }}</p>
                         <label for="{{ form.bijlage.id_for_label }}">Bijlage:</label>
                         <p class="formbox">{{ form.bijlage }}</p>

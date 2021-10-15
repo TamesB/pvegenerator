@@ -10,9 +10,9 @@
 
 {% block main %}
 <div class="ui breadcrumb" style="margin-bottom:3vh;">
-<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
   <i class="right chevron icon divider"></i>
-<a class="section" href="{% url 'manageprojecten_syn' %}">Projecten</a>
+<a class="section" href="{% url 'manageprojecten_syn' client_pk %}">Projecten</a>
   <i class="right chevron icon divider"></i>
 <a class="active section">Start Project</a>
   <i class="right chevron icon divider"></i>
@@ -21,7 +21,7 @@
 
 <div class="general_title"><img src="{% static 'syntrus/img/genereer.png'%}" class="title_img"></img><p>+ Programma van Eisen (Actieve Versie: {{ versie.versie }}</p></div>
 <div class="generator_form">
-    <form action="{% url 'connectpve_syn' project.id %}" method="POST" enctype="multipart/form-data">
+    <form action="{% url 'connectpve_syn' client_pk project.id %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="parameter_container">
         <div class="parameter_item">

@@ -10,7 +10,7 @@
 
 {% block main %}
 <div class="ui breadcrumb" style="margin-bottom:3vh;">
-<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
   <i class="right chevron icon divider"></i>
   <div class="active section">Mijn Projecten</div>
 </div>
@@ -29,18 +29,18 @@
         {% if projects %}
         {% for project in projects %}
         <tr class="table_content">
-          <td><p><a href="{% url 'viewproject_syn' project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
+          <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
           <td><p>
           {% if project.frozenLevel == 0 %}
             {% if derden_toegevoegd|index:forloop.counter0 %}
               {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
-                <a href="{% url 'plusopmerking_syn' project.id %}"><button class="ui basic button">Eerste statusaanwijzing<i class="right arrow icon"></i></button></a>
+                <a href="{% url 'plusopmerking_syn' client_pk project.id %}"><button class="ui basic button">Eerste statusaanwijzing<i class="right arrow icon"></i></button></a>
               {% else %}
                 <i>Eerste statusaanwijzing</i>
               {% endif %}
             {% else %}
               {% if request.user.type_user == "SOG" %}
-                <a href="{% url 'sogaddderden' project.id %}"><button class="ui basic button">Voeg derden toe<i class="right arrow icon"></i></button></a>
+                <a href="{% url 'sogaddderden' client_pk project.id %}"><button class="ui basic button">Voeg derden toe<i class="right arrow icon"></i></button></a>
               {% else %}
                 <i>Nog geen derden</i>
               {% endif %}
@@ -49,14 +49,14 @@
           {% else %}
             {% if request.user.type_user != first_annotate|index:forloop.counter0 %}
               {% if not project.frozenLevel|divisibleby:2 %}
-                <a href="{% url 'commentscheck_syn' project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>
+                <a href="{% url 'commentscheck_syn' client_pk project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>
               {% else %}
                 <i>Beurt van andere partij</i>
               {% endif %}
             {% else %}
               {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
                 {% if project.frozenLevel|divisibleby:2 %}
-                  <a href="{% url 'commentscheck_syn' project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>
+                  <a href="{% url 'commentscheck_syn' client_pk project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>
                 {% else %}
                   <i>Beurt van andere partij</i>
                 {% endif %}

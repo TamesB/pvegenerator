@@ -12,16 +12,16 @@
 {% block main %}
 
 <div class="ui breadcrumb" style="margin-bottom:3vh;">
-<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'viewprojectoverview_syn' %}">Mijn Projecten</a>
+  <a class="section" href="{% url 'viewprojectoverview_syn' client_pk %}">Mijn Projecten</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'viewproject_syn' project.id %}">Project: {{ project.naam }}</a>
+  <a class="section" href="{% url 'viewproject_syn' client_pk project.id %}">Project: {{ project.naam }}</a>
   <i class="right chevron icon divider"></i>
   <div class="active section">Eerste statusaanwijzing</div>
 </div>
 
-<form class="opmerking_form" action="{% url 'plusopmerking_syn' project.id %}" method="POST" enctype="multipart/form-data">
+<form class="opmerking_form" action="{% url 'plusopmerking_syn' client_pk project.id %}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 
 <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Eerste statusaanwijzing / Aanvullingen op regels<input type="submit" class="submit_button" value="Opslaan >"></input></p></div>
@@ -45,7 +45,7 @@
                       <div class="text_left">
                         <p style="font-style:italic;">
                           {{ regel }}{% if bijlage %} 
-                          Bijlage: <a href="{% url 'downloadbijlage' regel.id %}" target="_blank">
+                          Bijlage: <a href="{% url 'downloadbijlage' client_pk regel.id %}" target="_blank">
                           <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img>
                           </a>
                           {% endif %}
@@ -85,7 +85,7 @@
             <div class="text_left">
               <p style="font-style:italic;">
                 {{ regel }}{% if bijlage %} 
-                Bijlage: <a href="{% url 'downloadbijlage' regel.id %}" target="_blank">
+                Bijlage: <a href="{% url 'downloadbijlage' client_pk regel.id %}" target="_blank">
                 <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img>
                 </a>
                 {% endif %}

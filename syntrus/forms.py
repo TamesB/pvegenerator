@@ -131,52 +131,57 @@ class PVEParameterForm(ModelForm):
 
 
 class KoppelDerdeUserForm(ModelForm):
+    organisatie = forms.ModelChoiceField(
+        queryset=Organisatie.objects.none(), label="Organisatie:"
+    )
+    project = forms.ModelChoiceField(
+        queryset=Project.objects.none(), label="Project:"
+    )
     class Meta:
         model = Invitation
         fields = {
-            "project",
             "invitee",
-            "organisatie",
         }
         labels = {
-            "project": "Project:",
             "invitee": "E-Mail:",
-            "organisatie": "Organisatie:",
         }
 
 
 class PlusAccountForm(ModelForm):
     type_choices = (
-        ("SOG", "Syntrus Projectmanager"),
+        ("SOG", "Projectmanager"),
         ("SD", "Derde"),
     )
 
     rang = forms.ChoiceField(choices=type_choices)
-
+    organisatie = forms.ModelChoiceField(
+        queryset=Organisatie.objects.none(), label="Organisatie (optioneel):"
+    )
+    project = forms.ModelChoiceField(
+        queryset=Project.objects.none(), label="Project (optioneel):"
+    )
     class Meta:
         model = Invitation
         fields = {
-            "project",
             "invitee",
-            "organisatie",
         }
         labels = {
             "rang": "Rang gebruiker:",
-            "project": "Project (Optioneel):",
             "invitee": "E-Mail:",
-            "organisatie": "Organisatie (Optioneel):",
         }
 
 class PlusDerdeToProjectForm(ModelForm):
+    organisatie = forms.ModelChoiceField(
+        queryset=Organisatie.objects.none(), label="Organisatie (optioneel):"
+    )
+
     class Meta:
         model = Invitation
         fields = {
             "project",
-            "organisatie",
         }
         labels = {
             "invitee": "E-Mail:",
-            "organisatie": "Organisatie (Optioneel):",
         }
 
 class CheckboxInput(forms.CheckboxInput):
@@ -229,7 +234,7 @@ class AddOrganisatieForm(forms.Form):
 
 class AddUserToOrganisatieForm(forms.Form):
     werknemer = forms.ModelChoiceField(
-        queryset=CustomUser.objects.filter(type_user="SD"), label="Werknemer:"
+        queryset=CustomUser.objects.none(), label="Werknemer:"
     )
 
     class Meta:
@@ -240,7 +245,7 @@ class AddUserToOrganisatieForm(forms.Form):
 
 class AddProjectmanagerToProjectForm(forms.Form):
     projectmanager = forms.ModelChoiceField(
-        queryset=CustomUser.objects.filter(type_user="SOG"), label="Projectmanager:"
+        queryset=CustomUser.objects.none(), label="Projectmanager:"
     )
 
     class Meta:
@@ -251,7 +256,7 @@ class AddProjectmanagerToProjectForm(forms.Form):
 
 class AddOrganisatieToProjectForm(forms.Form):
     organisatie = forms.ModelChoiceField(
-        queryset=Organisatie.objects.all(), label="Organisatie:"
+        queryset=Organisatie.objects.none(), label="Organisatie:"
     )
 
     class Meta:
@@ -303,35 +308,33 @@ class StartProjectForm(ModelForm):
         }
 
 
-class InviteProjectStartForm(ModelForm):
+class InviteProjectStartForm(forms.Form):
+    projectmanager = forms.ModelChoiceField(
+        queryset=CustomUser.objects.none(), label="Projectmanager:"
+    )
+    organisaties = forms.ModelMultipleChoiceField(
+        queryset=Organisatie.objects.none(), label="Organisaties (Voegt alle derden toe van een organisatie):"
+    )
+    permitted = forms.ModelMultipleChoiceField(
+        queryset=CustomUser.objects.none(), label="Handmatig Derden:"
+    )
     class Meta:
-        model = Project
-        fields = ("projectmanager", "organisaties", "permitted")
-        labels = {
-            "projectmanager": "Projectmanager:",
-            "organisaties": "Organisaties (Voegt alle derden toe van een organisatie):",
-            "permitted": "Handmatig Derden:",
-        }
         widgets = {
             "permitted": forms.SelectMultiple(
-                choices=CustomUser.objects.filter(type_user="SD"),
                 attrs={"class": "ui dropdown"},
             ),
             "organisaties": forms.SelectMultiple(
-                choices=Organisatie.objects.all(), attrs={"class": "ui dropdown"}
+                attrs={"class": "ui dropdown"},
             ),
         }
 
-class SOGAddDerdenForm(ModelForm):
+class SOGAddDerdenForm(forms.Form):
+    permitted = forms.ModelMultipleChoiceField(
+        queryset=CustomUser.objects.none(), label="Handmatig Derden Toevoegen:"
+    )
     class Meta:
-        model = Project
-        fields = ("permitted",)
-        labels = {
-            "permitted": "Handmatig Derden Toevoegen:",
-        }
         widgets = {
             "permitted": forms.SelectMultiple(
-                choices=CustomUser.objects.none(),
                 attrs={"class": "ui dropdown"},
             ),
         }

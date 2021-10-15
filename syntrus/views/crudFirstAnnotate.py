@@ -6,30 +6,49 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from app import models
-from project.models import BijlageToAnnotation, Project, PVEItemAnnotation
+from project.models import BijlageToAnnotation, Project, PVEItemAnnotation, Beleggers
 from syntrus import forms
 from syntrus.forms import BijlageToAnnotationForm
 from syntrus.models import CommentStatus
+from syntrus.views.utils import GetAWSURL
 
 from django.core.paginator import Paginator
 import asyncio
 
 @login_required(login_url="login_syn")
-def AddCommentOverview(request):
+def AddCommentOverview(request, client_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     context = {}
 
-    if request.user.projectspermitted.exists():
-        projects = request.user.projectspermitted.all()
+    if request.user.projectspermitted.all().filter(belegger__id=client_pk).exists():
+        projects = request.user.projectspermitted.all().filter(belegger__id=client_pk)
         context["projects"] = projects
 
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "plusOpmerkingOverview_syn.html", context)
 
 
 @login_required(login_url="login_syn")
-def MyComments(request, pk):
+def MyComments(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     context = {}
 
     project = get_object_or_404(Project, pk=pk)
+
+    if project.belegger != client:
+        return render(request, "404_syn.html")
 
     if project.frozenLevel > 0:
         return render(request, "404_syn.html")
@@ -136,7 +155,7 @@ def MyComments(request, pk):
             request, bericht
         )
 
-        return redirect("mijnopmerkingen_syn", pk=project.id)
+        return redirect("mijnopmerkingen_syn", client_pk=client_pk, pk=project.id)
 
     context["page_obj"] = page_obj
     context["ann_forms"] = ann_forms
@@ -147,12 +166,23 @@ def MyComments(request, pk):
     context["bijlages"] = bijlages
     context["totale_kosten"] = totale_kosten
     context["aantal_opmerkingen_gedaan"] = project.annotation.count()
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "MyComments.html", context)
 
 
 @login_required(login_url="login_syn")
-def MyCommentsDelete(request, pk):
+def MyCommentsDelete(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     project = get_object_or_404(Project, pk=pk)
+    if project.belegger != client:
+        return render(request, "404_syn.html")
 
     if request.user not in project.permitted.all():
         return render(request, "404_syn.html")
@@ -194,13 +224,24 @@ def MyCommentsDelete(request, pk):
     context["bijlages"] = bijlages
     context["totale_kosten"] = totale_kosten
     context["aantal_opmerkingen_gedaan"] = aantal_opmerkingen_gedaan
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "MyCommentsDelete.html", context)
 
 
 @login_required(login_url="login_syn")
-def deleteAnnotationPve(request, project_id, ann_id):
+def deleteAnnotationPve(request, client_pk, project_id, ann_id):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     # check if project exists
     project = get_object_or_404(Project, id=project_id)
+    if project.belegger != client:
+        return render(request, "404_syn.html")
 
     if project.frozenLevel > 0:
         return render(request, "404_syn.html")
@@ -261,12 +302,21 @@ def deleteAnnotationPve(request, project_id, ann_id):
     context["project"] = project
     context["bijlages"] = bijlages
     context["totale_kosten"] = totale_kosten
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
 
     return render(request, "deleteAnnotationModal_syn.html", context)
 
 
 @login_required(login_url="login_syn")
-def AddAnnotationAttachment(request, projid, annid):
+def AddAnnotationAttachment(request, client_pk, projid, annid):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     project = get_object_or_404(Project, pk=projid)
 
     if project.frozenLevel > 0:
@@ -296,7 +346,7 @@ def AddAnnotationAttachment(request, projid, annid):
                 messages.warning(
                     request, f"Bijlage toegevoegd."
                 )
-                return redirect("mijnopmerkingen_syn", pk=project.id)
+                return redirect("mijnopmerkingen_syn", client_pk=client_pk, pk=project.id)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
@@ -307,11 +357,20 @@ def AddAnnotationAttachment(request, projid, annid):
     context["project"] = project
     context["comments"] = comments
     context["page_obj"] = page_obj
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "addBijlagetoAnnotation_syn.html", context)
 
 
 @login_required(login_url="login_syn")
-def VerwijderAnnotationAttachment(request, projid, annid):
+def VerwijderAnnotationAttachment(request, client_pk, projid, annid):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     # check if project exists
     project = get_object_or_404(Project, pk=projid)
     
@@ -374,14 +433,25 @@ def VerwijderAnnotationAttachment(request, projid, annid):
     context["bijlages"] = bijlages
     context["totale_kosten"] = totale_kosten
     context["page_obj"] = page_obj
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "deleteAttachmentAnnotation_syn.html", context)
 
 
 @login_required(login_url="login_syn")
-def AllComments(request, pk):
+def AllComments(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     context = {}
 
     project = get_object_or_404(Project, pk=pk)
+    if project.belegger != client:
+        return render(request, "404_syn.html")
 
     if request.user not in project.permitted.all():
         return render(request, "404_syn.html")
@@ -410,14 +480,25 @@ def AllComments(request, pk):
     context["aantal_opmerkingen_gedaan"] = PVEItemAnnotation.objects.filter(
         project=project
     ).count()
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "AllCommentsOfProject_syn.html", context)
 
 
 @login_required(login_url="login_syn")
-def AddComment(request, pk):
+def AddComment(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     context = {}
 
     project = get_object_or_404(Project, pk=pk)
+    if project.belegger != client:
+        return render(request, "404_syn.html")
 
     if request.user.type_user != project.first_annotate:
         return render(request, "404_syn.html")
@@ -571,7 +652,7 @@ def AddComment(request, pk):
             "Opmerkingen opgeslagen. U kunt later altijd terug naar deze pagina of naar de opmerkingpagina om uw opmerkingen te bewerken voordat u ze opstuurt.",
         )
         # remove duplicate entries
-        return redirect("mijnopmerkingen_syn", pk=project.id)
+        return redirect("mijnopmerkingen_syn", client_pk=client_pk, pk=project.id)
 
     context["forms"] = ann_forms
     context["items"] = items
@@ -580,4 +661,7 @@ def AddComment(request, pk):
     context["form_item_ids"] = form_item_ids
     context["hoofdstuk_ordered_items"] = hoofdstuk_ordered_items
     context["project"] = project
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "plusOpmerking_syn.html", context)

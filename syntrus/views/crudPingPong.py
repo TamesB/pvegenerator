@@ -6,16 +6,23 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from app import models
-from project.models import Project, PVEItemAnnotation
+from project.models import Project, PVEItemAnnotation, Beleggers
 from syntrus import forms
 from syntrus.forms import BijlageToReplyForm
 from syntrus.models import BijlageToReply, CommentReply, FrozenComments
+from syntrus.views.utils import GetAWSURL
 
 from django.core.paginator import Paginator
 import time
 
 @login_required(login_url="login_syn")
-def CheckComments(request, proj_id):
+def CheckComments(request, client_pk, proj_id):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     start = time.time()
     context = {}
     
@@ -25,7 +32,8 @@ def CheckComments(request, proj_id):
 
     # get the project
     project = Project.objects.prefetch_related("phase").get(pk=proj_id)
-
+    if project.belegger != client:
+        return render(request, "404_syn.html")
     # check first if user is permitted to the project
     if request.user not in project.permitted.all():
         return render(request, "404_syn.html")
@@ -113,7 +121,7 @@ def CheckComments(request, proj_id):
         ]
         for form in ann_forms:
             if form.has_changed():
-                if (form.cleaned_data["status"] and form.fields['status'].initial != form.cleaned_data['status'].id) and (form.changed_data != ['item_id']):
+                if (form.changed_data != ['status'] or (form.cleaned_data["status"] and form.fields['status'].initial != form.cleaned_data['status'].id)) and (form.changed_data != ['item_id']):
                     # if the reply already exists, edit all fields that aren't the same as in the model.
                     if current_phase.reply.filter(onComment__id=form.cleaned_data["comment_id"]).exists():
                         ann = current_phase.reply.filter(onComment__id=form.cleaned_data["comment_id"]).first()
@@ -166,7 +174,7 @@ def CheckComments(request, proj_id):
             "Opmerkingen opgeslagen. U kunt later altijd terug naar deze pagina of naar de opmerkingpagina om uw opmerkingen te bewerken voordat u ze opstuurt naar de andere partij.",
         )
         # redirect to project after posting replies for now
-        return redirect("myreplies_syn", pk=project.id)
+        return redirect("myreplies_syn", client_pk=client_pk, pk=project.id)
 
     # order items for the template
     hoofdstuk_ordered_items_non_accept = order_comments_for_commentcheck(
@@ -200,6 +208,9 @@ def CheckComments(request, proj_id):
     contexts = time.time()
     print(f"Create contexts, right before rendering: {contexts - orderhfst}, total: {contexts - start}")
 
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "CheckComments_syn.html", context)
 
 
@@ -359,11 +370,19 @@ def make_ann_forms(post_list, comments, current_phase):
 
 
 @login_required
-def MyReplies(request, pk, **kwargs):
+def MyReplies(request, client_pk, pk, **kwargs):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     context = {}
 
     project = get_object_or_404(Project, pk=pk)
-
+    if project.belegger != client:
+        return render(request, "404_syn.html")
+   
     if project.frozenLevel == 0:
         return render(request, "404_syn.html")
 
@@ -466,7 +485,7 @@ def MyReplies(request, pk, **kwargs):
             else:
                 messages.warning(request, f"Opmerking niet veranderd.")
                 
-        return redirect("myreplies_syn", pk=project.id)
+        return redirect("myreplies_syn", client_pk=client_pk, pk=project.id)
 
     context["ann_forms"] = ann_forms
     context["form_item_ids"] = form_item_ids
@@ -476,12 +495,23 @@ def MyReplies(request, pk, **kwargs):
     context["bijlages"] = bijlages
     context["aantal_opmerkingen_gedaan"] = replies.count()
     context["page_obj"] = page_obj
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "MyReplies.html", context)
 
 
 @login_required
-def MyRepliesDelete(request, pk):
+def MyRepliesDelete(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     project = get_object_or_404(Project, pk=pk)
+    if project.belegger != client:
+        return render(request, "404_syn.html")
 
     if request.user not in project.permitted.all():
         return render(request, "404_syn.html")
@@ -514,13 +544,24 @@ def MyRepliesDelete(request, pk):
     context["project"] = project
     context["bijlages"] = bijlages
     context["aantal_opmerkingen_gedaan"] = replies.count()
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "MyRepliesDelete.html", context)
 
 
 @login_required
-def DeleteReply(request, pk, reply_id):
+def DeleteReply(request, client_pk, pk, reply_id):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     # check if project exists
     project = get_object_or_404(Project, id=pk)
+    if project.belegger != client:
+        return render(request, "404_syn.html")
 
     if project.frozenLevel == 0:
         return render(request, "404_syn.html")
@@ -570,12 +611,23 @@ def DeleteReply(request, pk, reply_id):
     context["page_obj"] = page_obj
     context["project"] = project
     context["bijlages"] = bijlages
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "MyRepliesDeleteReply.html", context)
 
 
 @login_required
-def AddReplyAttachment(request, pk, reply_id):
+def AddReplyAttachment(request, client_pk, pk, reply_id):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     project = get_object_or_404(Project, pk=pk)
+    if project.belegger != client:
+        return render(request, "404_syn.html")
 
     if project.frozenLevel == 0:
         return render(request, "404_syn.html")
@@ -606,7 +658,7 @@ def AddReplyAttachment(request, pk, reply_id):
                 messages.warning(
                     request, f"Bijlage toegevoegd."
                 )
-                return redirect("myreplies_syn", pk=project.id)
+                return redirect("myreplies_syn", client_pk=client_pk, pk=project.id)
             else:
                 messages.warning(request, "Vul de verplichte velden in.")
 
@@ -620,11 +672,20 @@ def AddReplyAttachment(request, pk, reply_id):
     context["project"] = project
     context["replies"] = replies
     context["page_obj"] = page_obj
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "MyRepliesAddAttachment.html", context)
 
 
 @login_required
-def DeleteReplyAttachment(request, pk, reply_id):
+def DeleteReplyAttachment(request, client_pk, pk, reply_id):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     # check if project exists
     project = get_object_or_404(Project, pk=pk)
 
@@ -657,7 +718,7 @@ def DeleteReplyAttachment(request, pk, reply_id):
             request, f"Bijlage verwijderd."
         )
         return HttpResponseRedirect(
-            reverse("myreplies_syn", args=(project.id,))
+            reverse("myreplies_syn", args=(client_pk, project.id,))
         )
 
     bijlages = []
@@ -676,4 +737,7 @@ def DeleteReplyAttachment(request, pk, reply_id):
     context["replies"] = commentphase.replies.all()
     context["project"] = project
     context["bijlages"] = bijlages
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "MyRepliesDeleteAttachment.html", context)

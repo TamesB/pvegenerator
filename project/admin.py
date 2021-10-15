@@ -6,7 +6,8 @@ from .models import (
     BijlageToAnnotation,
     ContractStatus,
     Project,
-    PVEItemAnnotation
+    PVEItemAnnotation,
+    Abbonement
 )
 
 
@@ -23,7 +24,7 @@ class CustomGeoAdmin(GeoModelAdmin):
         "defaultZoom": 4,
     }
 
-
+admin.site.register(Abbonement)
 admin.site.register(Project, CustomGeoAdmin)
 admin.site.register(ContractStatus)
 admin.site.register(Beleggers)

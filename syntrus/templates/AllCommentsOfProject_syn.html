@@ -27,7 +27,7 @@
     <td class="voldoening"><p>{% if comment.status %}{{ comment.status }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="voldoening"><p>{% if comment.annotation %}{{ comment.annotation }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="kosten"><p>{% if comment.kostenConsequenties %}€ {{ comment.kostenConsequenties }}{% else %}&nbsp;{% endif %}</p></td>
-    <td class="voldoening"><p>{% if not comment.bijlage %}&nbsp;{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>Download</button></a>{% endif %}</p></td>
+    <td class="voldoening"><p>{% if not comment.bijlage %}&nbsp;{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project.id comment.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>Download</button></a>{% endif %}</p></td>
     <td class="voldoening"><p>{% if comment.gebruiker %}{{ comment.gebruiker }}{% else %}&nbsp;{% endif %}</p></td>
 
   </tr>

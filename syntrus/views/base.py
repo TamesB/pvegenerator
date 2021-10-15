@@ -7,38 +7,51 @@ from django.db.models import Q
 from django.shortcuts import redirect, render
 
 from app import models
-from project.models import Project, PVEItemAnnotation
+from project.models import Project, PVEItemAnnotation, Beleggers
 from syntrus import forms
 from syntrus.models import FAQ
 from utils import createBijlageZip, writePdf, pve_csv_extract
+from syntrus.views.utils import GetAWSURL
+from users.models import CustomUser
 
+def LoginView(request, client_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
 
-def LoginView(request):
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     # cant see lander page if already logged in
     if request.user:
         if request.user.is_authenticated:
-            return redirect("dashboard_syn")
+            return redirect("dashboard_syn", client_pk=client_pk)
 
     if request.method == "POST":
         form = forms.LoginForm(request.POST)
 
         if form.is_valid():
-            if "@" in form.cleaned_data["username"]:
-                (email, password) = (
-                    form.cleaned_data["username"],
-                    form.cleaned_data["password"],
-                )
-                user = authenticate(request, email=email, password=password)
+            (username, password) = (
+                form.cleaned_data["username"],
+                form.cleaned_data["password"],
+            )
+            
+            if "@" in username:
+                email = username.split("@")
+                email = email[0]
+
+                user_check = CustomUser.objects.filter(username=email)
+
+                if user_check.exists():
+                    user_check = user_check.first()
+                    user = authenticate(request, username=email, password=password)
+                else:
+                    messages.warning(request, "Invalid login credentials")
             else:
-                (username, password) = (
-                    form.cleaned_data["username"],
-                    form.cleaned_data["password"],
-                )
                 user = authenticate(request, username=username, password=password)
 
             if user is not None:
                 login(request, user)
-                return redirect("dashboard_syn")
+                return redirect("dashboard_syn", client_pk=client_pk)
             else:
                 messages.warning(request, "Invalid login credentials")
         else:
@@ -47,41 +60,61 @@ def LoginView(request):
     # render the page
     context = {}
     context["form"] = forms.LoginForm()
-
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "login_syn.html", context)
 
 
 @login_required(login_url="login_syn")
-def LogoutView(request):
+def LogoutView(request, client_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
     logout(request)
-    return redirect("login_syn")
+    return redirect("login_syn", client_pk=client_pk)
 
 
 @login_required
-def DashboardView(request):
-    context = {}
+def DashboardView(request, client_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
 
-    if request.user.projectspermitted.exists():
-        projects = request.user.projectspermitted.all()
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
+    context = {}
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
+    
+    if request.user.projectspermitted.all().filter(belegger__id=client_pk).exists():
+        projects = request.user.projectspermitted.all().filter(belegger__id=client_pk)
         context["projects"] = projects
 
-    if request.user.annotation.exists():
-        opmerkingen = request.user.annotation.all()
-        context["opmerkingen"] = opmerkingen
 
-    medewerkers = [proj.permitted.all() for proj in projects]
+        if request.user.annotation.exists():
+            opmerkingen = request.user.annotation.all()
+            context["opmerkingen"] = opmerkingen
 
-    derden_toegevoegd = []
-    for medewerker_list in medewerkers:
-        derdes = False
-        for medewerker in medewerker_list:
-            if medewerker.type_user == "SD":
-                derdes = True
-        derden_toegevoegd.append(derdes)
-        
-    context["derden_toegevoegd"] = derden_toegevoegd
-    context["first_annotate"] = [project.first_annotate for project in projects]
-    
+        medewerkers = [proj.permitted.all() for proj in projects]
+
+        derden_toegevoegd = []
+        for medewerker_list in medewerkers:
+            derdes = False
+            for medewerker in medewerker_list:
+                if medewerker.type_user == "SD":
+                    derdes = True
+            derden_toegevoegd.append(derdes)
+            
+        context["derden_toegevoegd"] = derden_toegevoegd
+        context["first_annotate"] = [project.first_annotate for project in projects]
+    else:
+        context["projects"] = None
+        context["opmerkingen"] = None
+        context["derden_toegevoegd"] = None
+        context["first_annotate"] = None
+
     if request.user.type_user == "B":
         return render(request, "dashboardBeheerder_syn.html", context)
     if request.user.type_user == "SB":
@@ -93,7 +126,13 @@ def DashboardView(request):
 
 
 @login_required(login_url="login_syn")
-def FAQView(request):
+def FAQView(request, client_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     faqquery = FAQ.objects.all()
     if request.user.type_user == "SB":
         faqquery = FAQ.objects.filter(gebruikersrang="SB")
@@ -104,17 +143,29 @@ def FAQView(request):
 
     context = {}
     context["faqquery"] = faqquery
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url    
     return render(request, "FAQ_syn.html", context)
 
 
 @login_required(login_url="login_syn")
-def GeneratePVEView(request):
+def GeneratePVEView(request, client_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
         return render(request, "404_syn.html")
 
-    versie = models.ActieveVersie.objects.get(belegger__naam="Syntrus").versie
+    if not models.ActieveVersie.objects.filter(belegger=client).exists():
+        return render(request, "404_syn.html")
+    else:
+        versie = models.ActieveVersie.objects.get(belegger=client).versie
 
     if request.method == "POST":
         # get user entered form
@@ -304,4 +355,7 @@ def GeneratePVEView(request):
     context = {}
     context["form"] = form
     context["versie"] = versie
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url    
     return render(request, "GeneratePVE_syn.html", context)

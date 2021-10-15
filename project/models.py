@@ -1,9 +1,25 @@
 from django.contrib.gis.db import models as gismodels
 from django.db import models
 
+from users.models import CustomUser
+
+class Abbonement(models.Model):
+    soort = models.CharField(max_length=255, blank=True, null=True)
+
+    # alles per maand
+    kosten = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    projectlimiet = models.IntegerField(null=True, blank=True)
+    werknemerlimiet = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.soort} - €{self.kosten} p/m - Projecten: {self.projectlimiet} - Werknemers: {self.werknemerlimiet}"
 
 class Beleggers(models.Model):
     naam = models.CharField(max_length=100, blank=True, null=True)
+    beheerder = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    abbonement = models.ForeignKey(Abbonement, on_delete=models.CASCADE, null=True, blank=True)
+
+    logo = models.FileField(blank=True, null=True, upload_to="KlantLogos")
 
     def __str__(self):
         return f"{self.naam}"

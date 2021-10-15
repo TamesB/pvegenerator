@@ -10,15 +10,15 @@
 
 {% block main %}
 <div class="ui breadcrumb" style="margin-bottom:3vh;">
-<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'viewprojectoverview_syn' %}">Mijn Projecten</a>
+  <a class="section" href="{% url 'viewprojectoverview_syn' client_pk %}">Mijn Projecten</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'viewproject_syn' project.id %}">Project: {{ project.naam }}</a>
+  <a class="section" href="{% url 'viewproject_syn' client_pk project.id %}">Project: {{ project.naam }}</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'plusopmerking_syn' project.id %}">Eerste statusaanwijzing</a>
+  <a class="section" href="{% url 'plusopmerking_syn' client_pk project.id %}">Eerste statusaanwijzing</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'mijnopmerkingen_syn' project.id %}">Laatste check</a>
+  <a class="section" href="{% url 'mijnopmerkingen_syn' client_pk project.id %}">Laatste check</a>
   <i class="right chevron icon divider"></i>
   <div class="active section">Stuur door</div>
 </div>
@@ -27,7 +27,7 @@
 <div class="invite-container">
     <div class="box">
             <p class="description">Stuur uw eerste statusaanwijzing en afwijkingen door aan de derde partijen om het PvE verder op te merken. Regels waar nog geen status/opmerking aan is toegevoegd worden genoteerd als TODO voor de andere partij.</p>
-        <form action="{% url 'firstfreeze_syn' pk %}" method="post">
+        <form action="{% url 'firstfreeze_syn' client_pk pk %}" method="post">
             {% csrf_token %}
             <label class="formtitle" for="{{ form.confirm.id_for_label }}">Vink aan voor bevestiging.</label>
             <p class="formbox">{{ form.confirm }}</p>

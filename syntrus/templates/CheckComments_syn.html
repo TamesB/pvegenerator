@@ -12,16 +12,16 @@
 
 {% block main %}
 <div class="ui breadcrumb" style="margin-bottom:3vh;">
-<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'viewprojectoverview_syn' %}">Mijn Projecten</a>
+  <a class="section" href="{% url 'viewprojectoverview_syn' client_pk %}">Mijn Projecten</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'viewproject_syn' project.id %}">Project: {{ project.naam }}</a>
+  <a class="section" href="{% url 'viewproject_syn' client_pk project.id %}">Project: {{ project.naam }}</a>
   <i class="right chevron icon divider"></i>
   <div class="active section">Checklist</div>
 </div>
 
-<form class="opmerking_form" action="{% url 'commentscheck_syn' project.id %}" method="POST" enctype="multipart/form-data">
+<form class="opmerking_form" action="{% url 'commentscheck_syn' client_pk project.id %}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 
 <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Checklist (Huidig kostenverschil: &#8364;{{ totale_kosten }})<input type="submit" class="submit_button" value="Opslaan >"></input></p></div>
@@ -60,7 +60,7 @@
                         <p style="font-style:italic;">
                           {{ regel.inhoud }}
                           {% if regel_bijlage %} 
-                          Bijlage: <a href="{% url 'downloadbijlage' regel.id %}" target="_blank">
+                          Bijlage: <a href="{% url 'downloadbijlage' client_pk regel.id %}" target="_blank">
                           <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img>
                           </a>
                           {% endif %}
@@ -109,7 +109,7 @@
                         <p style="font-style:italic;">
                           {{ regel.inhoud }}
                           {% if regel_bijlage %} 
-                          Bijlage: <a href="{% url 'downloadbijlage' regel.id %}" target="_blank">
+                          Bijlage: <a href="{% url 'downloadbijlage' client_pk regel.id %}" target="_blank">
                           <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img>
                           </a>
                           {% endif %}
@@ -177,7 +177,7 @@
                         <p style="display:inline;font-style:italic;">
                         {{ regel.inhoud }}
                         {% if regel_bijlage %} 
-                          Bijlage: <a href="{% url 'downloadbijlage' regel.id %}" target="_blank">
+                          Bijlage: <a href="{% url 'downloadbijlage' client_pk regel.id %}" target="_blank">
                           <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
                         {% endif %}
                         </p>
@@ -197,7 +197,7 @@
                         {% if comment_bijlages %}
                         <br>Opmerkingbijlages: 
                         {% for bijlage in comment_bijlages %}
-                          <a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
+                          <a href="{% url 'downloadreplyattachment_syn' client_pk project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
                         {% endfor %}
                         {% endif %}
 
@@ -283,7 +283,7 @@
                         <p style="display:inline;font-style:italic;">
                         {{ regel.inhoud }}
                         {% if regel_bijlage %} 
-                          Bijlage: <a href="{% url 'downloadbijlage' regel.id %}" target="_blank">
+                          Bijlage: <a href="{% url 'downloadbijlage' client_pk regel.id %}" target="_blank">
                           <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
                         {% endif %}
                         </p>
@@ -303,7 +303,7 @@
                         {% if comment_bijlages %}
                         <br>Opmerkingbijlages: 
                         {% for bijlage in comment_bijlages %}
-                          <a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
+                          <a href="{% url 'downloadreplyattachment_syn' client_pk project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
                         {% endfor %}
                         {% endif %}
 
@@ -405,7 +405,7 @@
                         <p style="display:inline;font-style:italic;">
                         {{ regel.inhoud }}
                         {% if regel_bijlage %} 
-                          Bijlage: <a href="{% url 'downloadbijlage' regel.id %}" target="_blank">
+                          Bijlage: <a href="{% url 'downloadbijlage' client_pk regel.id %}" target="_blank">
                           <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
                         {% endif %}
                         </p>
@@ -425,7 +425,7 @@
                         {% if comment_bijlages %}
                         <br>Opmerkingbijlages: 
                         {% for bijlage in comment_bijlages %}
-                          <a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
+                          <a href="{% url 'downloadreplyattachment_syn' client_pk project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
                         {% endfor %}
                         {% endif %}
 
@@ -513,7 +513,7 @@
                         <p style="display:inline;font-style:italic;">
                         {{ regel.inhoud }}
                         {% if regel_bijlage %} 
-                          Bijlage: <a href="{% url 'downloadbijlage' regel.id %}" target="_blank">
+                          Bijlage: <a href="{% url 'downloadbijlage' client_pk regel.id %}" target="_blank">
                           <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
                         {% endif %}
                         </p>
@@ -533,7 +533,7 @@
                         {% if comment_bijlages %}
                         <br>Opmerkingbijlages: 
                         {% for bijlage in comment_bijlages %}
-                          <a href="{% url 'downloadreplyattachment_syn' project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
+                          <a href="{% url 'downloadreplyattachment_syn' client_pk project.id bijlage %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
                         {% endfor %}
                         {% endif %}
 

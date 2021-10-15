@@ -3,24 +3,24 @@
 <div class="hamburger"><img src="{% static 'syntrus/svg/hamburger.svg' %}" ></img></div>
 <div class="hori-menu-logout">
     <div class="links">
-        <a href="{% url 'dashboard_syn' %}"><p>Ingelogd als {{ request.user }}</p></a>
-        <a href="{% url 'logout_syn' %}"><p>Afmelden</p></a>
+        <a href="{% url 'dashboard_syn' client_pk %}"><p>Ingelogd als {{ request.user }}</p></a>
+        <a href="{% url 'logout_syn' client_pk %}"><p>Afmelden</p></a>
     </div>
 </div>
-<div class="menu_item"><a href="{% url 'dashboard_syn' %}" class="{{ 1|default:"" }}"><p>Dashboard</p></a></div>
+<div class="menu_item"><a href="{% url 'dashboard_syn' client_pk %}" class="{{ 1|default:"" }}"><p>Dashboard</p></a></div>
 {% if type == 'derde' %}
-<div class="menu_item"><a href="{% url 'viewprojectoverview_syn' %}" class="{{ 1|default:"" }}"><p>Mijn Projecten</p></a></div>
-    <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' %}" class="{{ 3|default:"" }}"><p>Download PVE</p></a></div>
+<div class="menu_item"><a href="{% url 'viewprojectoverview_syn' client_pk %}" class="{{ 1|default:"" }}"><p>Mijn Projecten</p></a></div>
+    <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' client_pk %}" class="{{ 3|default:"" }}"><p>Download PVE</p></a></div>
 {% elif type == 'manager' %}
-<div class="menu_item"><a href="{% url 'viewprojectoverview_syn' %}" class="{{ 1|default:"" }}"><p>Mijn Projecten</p></a></div>
-    <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' %}" class="{{ 4|default:"" }}"><p>Download PVE</p></a></div>
+<div class="menu_item"><a href="{% url 'viewprojectoverview_syn' client_pk %}" class="{{ 1|default:"" }}"><p>Mijn Projecten</p></a></div>
+    <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' client_pk %}" class="{{ 4|default:"" }}"><p>Download PVE</p></a></div>
 {% elif type == 'beheerder' %}
-    <div class="menu_item"><a href="{% url 'managewerknemers_syn' %}" class="{{ 2|default:"" }}"><p>Beheer Werknemers</p></a></div>
-    <div class="menu_item"><a href="{% url 'manageorganisaties_syn' %}" class="{{ 3|default:"" }}"><p>Beheer Partijen</p></a></div>
-    <div class="menu_item"><a href="{% url 'manageprojecten_syn' %}" class="{{ 4|default:"" }}"><p>Beheer Projecten</p></a></div>
-    <div class="menu_item"><a href="{% url 'generate_syn' %}" class="{{ 7|default:"" }}"><p>Genereer PVE</p></a></div>
+    <div class="menu_item"><a href="{% url 'managewerknemers_syn' client_pk %}" class="{{ 2|default:"" }}"><p>Beheer Werknemers</p></a></div>
+    <div class="menu_item"><a href="{% url 'manageorganisaties_syn' client_pk %}" class="{{ 3|default:"" }}"><p>Beheer Partijen</p></a></div>
+    <div class="menu_item"><a href="{% url 'manageprojecten_syn' client_pk %}" class="{{ 4|default:"" }}"><p>Beheer Projecten</p></a></div>
+    <div class="menu_item"><a href="{% url 'generate_syn' client_pk %}" class="{{ 7|default:"" }}"><p>Genereer PVE</p></a></div>
 {% elif type == 'checker' %}
     &nbsp;
 {% endif %}
 
-<div class="menu_item"><a href="{% url 'faq_syn' %}" class="{{ 4|default:"" }}"><p>FAQ</p></a></div>
+<div class="menu_item"><a href="{% url 'faq_syn' client_pk %}" class="{{ 4|default:"" }}"><p>FAQ</p></a></div>

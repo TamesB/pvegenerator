@@ -10,20 +10,20 @@
 
 {% block main %}
 <div class="ui breadcrumb" style="margin-bottom:3vh;">
-<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'viewprojectoverview_syn' %}">Mijn Projecten</a>
+  <a class="section" href="{% url 'viewprojectoverview_syn' client_pk %}">Mijn Projecten</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'viewproject_syn' project.id %}">Project: {{ project.naam }}</a>
+  <a class="section" href="{% url 'viewproject_syn' client_pk project.id %}">Project: {{ project.naam }}</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'plusopmerking_syn' project.id %}">Eerste statusaanwijzing</a>
-  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'plusopmerking_syn' client_pk project.id %}">Eerste statusaanwijzing</a>
+  <i class="right chevron icon divider"></i> 
   <div class="active section">Laatste check</div>
 </div>
 
 <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Laatste Check
-<input type="button" class="submit_button" onClick="javascript:location.href='{% url 'firstfreeze_syn' project.id %}';" value="Stuur door >"></input>
-<a href="{% url 'mijnopmerkingendelete_syn' project.id %}?page={{ page_obj.number }}"><button class="ui basic red button"><i class="icon trash"></i></button></a></p></div>
+<input type="button" class="submit_button" onClick="javascript:location.href='{% url 'firstfreeze_syn' client_pk project.id %}';" value="Stuur door >"></input>
+<a href="{% url 'mijnopmerkingendelete_syn' client_pk project.id %}?page={{ page_obj.number }}"><button class="ui basic red button"><i class="icon trash"></i></button></a></p></div>
 
 <div class="opmerkingtable_wrapper">
 <table>
@@ -44,7 +44,7 @@
     <td class="voldoening"><p>{% if comment.annotation %}{{ comment.annotation }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="kosten"><p>{% if comment.kostenConsequenties %}€ {{ comment.kostenConsequenties }}{% else %}&nbsp;{% endif %}</p></td>
     <td class="voldoening"><p style="float: left;" onClick="document.getElementById('{{ comment.item.id }}').style.display='block'"><button class="ui icon basic button"><i class="icon edit"></i></button></p></td>
-    <td class="voldoening">{% if not comment.bijlage %}<p><a href="{% url 'bijlageaanopmerking_syn' project.id comment.id %}"><button class="ui icon basic button"><i class="icon plus"></i></button></a></p>{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' project.id comment.id %}?page={{ page_obj.number }}" style="float:left;" target="_blank"><button class="ui icon basic button"><i class="icon download"></i></button></a>{% endif %}</td>
+    <td class="voldoening">{% if not comment.bijlage %}<p><a href="{% url 'bijlageaanopmerking_syn' client_pk project.id comment.id %}"><button class="ui icon basic button"><i class="icon plus"></i></button></a></p>{% else %}<a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project.id comment.id %}?page={{ page_obj.number }}" style="float:left;" target="_blank"><button class="ui icon basic button"><i class="icon download"></i></button></a>{% endif %}</td>
     <td class="voldoening"><p>{{ comment.datum }}</p></td>
   </tr>
   {% endfor %}
@@ -55,14 +55,14 @@
 </table>
 </div>
 
-<form class="opmerking_form" action="{% url 'bijlageaanopmerking_syn' project.id annotation.id %}?page={{ page_obj.number }}" method="POST" enctype="multipart/form-data">
+<form class="opmerking_form" action="{% url 'bijlageaanopmerking_syn' client_pk project.id annotation.id %}?page={{ page_obj.number }}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 
 <div class="opmerking_form_modal">
             <div id="" class="w3-modal" style="display:block;">
                 <div class="w3-modal-content">
                     <div class="w3-container">
-                        <a href="{% url 'mijnopmerkingen_syn' project.id %}" class="sluit_x_button"><p>Sluit</p></a>
+                        <a href="{% url 'mijnopmerkingen_syn' client_pk project.id %}" class="sluit_x_button"><p>Sluit</p></a>
                         <p class="formbox" hidden>{{ form.ann }}</p>
                         <label for="{{ form.bijlage.id_for_label }}"><p>Bijlage:</p></label>
                         <p class="formbox">{{ form.bijlage }}</p>

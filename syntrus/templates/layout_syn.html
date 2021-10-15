@@ -22,12 +22,12 @@
             <div class="layerOneInner">
                 <div class="header">
 
-                    <img src="{% static 'syntrus/svg/logo.svg' %}" class="logo_bg"></a>
+                    <img src="{{ logo_url }}" class="logo_bg"></a>
 
                     <ul class="menu_right">
                     {% if user.is_authenticated %}
-                        <li><a href="{% url 'logout_syn' %}">Afmelden</a></li>
-                        <li><a href="{% url 'dashboard_syn' %}">Ingelogd als {{ request.user }}</a></li>
+                        <li><a href="{% url 'logout_syn' client_pk %}">Afmelden</a></li>
+                        <li><a href="{% url 'dashboard_syn' client_pk %}">Ingelogd als {{ request.user }}</a></li>
                     {% else %}
                         <li><a href="#">Afgemeld</a></li>
                     {% endif %}

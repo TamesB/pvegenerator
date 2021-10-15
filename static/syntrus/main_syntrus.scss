@@ -62,8 +62,8 @@ html {
 
     img {
       padding: 1.5vw 1.5vh;
-      width: 20vw;
-      min-width: 250px;
+      height: 10vh;
+      min-height: 50px;
     }
 
     .login-button {
@@ -127,8 +127,6 @@ html {
         padding-left: 1vw;
         padding-top: 1vw;
         padding-bottom: 1vw;
-        width: 17vw;
-        min-width: 225px;
         min-height: 90px;
       }
 
@@ -177,7 +175,7 @@ html {
       font-weight: bold;
       font-size: 1.5em;
       width: 3vw;
-      background-image: linear-gradient(bottom right, #0077AD, #66ACD1);
+      background-image: linear-gradient(bottom right, #0078AE, #66ACD1);
       top: 10vh;
       height: 100%;
       max-height: 90vh;
@@ -369,7 +367,7 @@ html {
             background: rgb(178, 219, 221);
             background: linear-gradient(
               0deg,
-              #66ACD1 20%,
+              #0085B7 20%,
               rgba(247, 247, 248, 1) 20%
             );
             border-radius: 1.6vh;
@@ -455,7 +453,7 @@ html {
           overflow-x: scroll;
 
           table {
-            background-color: #66ACD1;
+            background-color:#0085B7;
             display: table;
             justify-content: space-between;
             -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
@@ -494,7 +492,7 @@ html {
             }
 
             .table_title {
-              background-color: #66ACD1;
+              background-color: #0085B7;
               letter-spacing: 0.1em;
               font-weight: 900;
               width: 100%;
@@ -595,7 +593,7 @@ html {
             font-weight: bold;
             color: white;
             letter-spacing: 0.2vw;
-            background-color: #00a4a5;
+            background-color: #0085B7;
           }
         }
 
@@ -632,7 +630,7 @@ html {
             font-style: bold;
             width: 100%;
             padding-right: 2vw;
-            color: #2b786e;
+            color: #0078AE;
           }
 
           a {
@@ -757,7 +755,7 @@ html {
                 background: rgb(178, 219, 221);
                 background: linear-gradient(
                   0deg,
-                  #66ACD1 15%,
+                  #0078AE 15%,
                   rgba(247, 247, 248, 1) 15%
                 );
                 border-radius: 1.6vh;
@@ -823,7 +821,7 @@ html {
                 padding-left: 1.5vw;
                 font-size: 2vh;
                 font-style: bold;
-                color: #2b786e;
+                color: #0078AE;
               }
             }
 
@@ -1108,7 +1106,7 @@ html {
           }
 
           .titel_plusopmerking {
-            background-color: #287183;
+            background-color: #0078AE;
             color: white;
             padding: 18px;
             margin: 0;
@@ -1146,7 +1144,7 @@ html {
             }
 
             .hoofdstuk {
-              background-color: #31859a;
+              background-color: #0078AE;
               color: white;
               cursor: pointer;
               padding-top: 1vh;
@@ -1172,8 +1170,8 @@ html {
             }
 
             .paragraaf {
-              background-color: #b6dde8;
-              color: #215967;
+              background-color: #66ACD1;
+              color: white;
               cursor: pointer;
               padding-top: 1vh;
               padding-bottom: 1vh;
@@ -1472,7 +1470,7 @@ html {
               width: 100%;
               padding-top: 0.3vh;
               padding-bottom: 0.3vh;
-              background-color: #00a4a5;
+              background-color: #0085B7;
               border-top-left-radius: 1.6vh;
               border-top-right-radius: 1.6vh;
             }
@@ -1719,7 +1717,7 @@ html {
             overflow-x: scroll;
 
             .title {
-              background: #00a4a5;
+              background: #0085B7;
               min-width: 100%;
               width: 100%;
               font-size: 2.5vh;
@@ -1775,7 +1773,7 @@ html {
             box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
 
             .title {
-              background: #00a4a5;
+              background: #0085B7;
               min-width: 100%;
               width: 100%;
               font-size: 2.5vh;
@@ -1849,7 +1847,7 @@ html {
             font-style: bold;
             width: 65%;
             padding-right: 2vw;
-            color: #2b786e;
+            color: #0078AE;
           }
 
           .progress {
@@ -1877,7 +1875,7 @@ html {
             box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
             background: linear-gradient(
               180deg,
-              #00a4a5 95px,
+              #0078AE 95px,
               rgba(247, 247, 248, 1) 95px
             );
             overflow-y: auto;

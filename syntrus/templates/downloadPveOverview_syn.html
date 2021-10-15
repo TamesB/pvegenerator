@@ -25,9 +25,9 @@
             {% if projects %}
             {% for project in projects %}
             <tr class="table_content">
-      <td><p><a href="{% url 'viewproject_syn' project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
+      <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
                       <td><p>{{ project.datum_recent_verandering }}</p></td>
-                <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' project.id %}"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% else %}Niet beschikbaar{% endif %}</p></td>
+                <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="dimg" style="align-self: right; max-width: 2vw;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% else %}Niet beschikbaar{% endif %}</p></td>
             </tr>
             {% endfor %}
             {% else %}

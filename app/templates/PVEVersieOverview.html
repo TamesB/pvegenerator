@@ -54,24 +54,6 @@
     </tbody>
   </table>
   {% endfor %}
-  <div class="ui divider"></div>
-  <div style="float: center">
-    <a href="{% url 'addbelegger' %}"
-      ><button class="ui green button">
-        <i class="icon plus"></i>Voeg belegger toe
-      </button></a
-    >
-  </div>
   {% else %}
-  <p>Nog geen beleggers!</p>
-  <div class="d-inline" style="float: left">
-    <span class="float right"
-      ><a href="{% url 'addbelegger' %}"
-        ><button class="ui green button">
-          <i class="icon plus"></i>Voeg belegger toe
-        </button></a
-      ></span
-    >
-  </div>
   {% endif %} {% block modal %}{% endblock %} {% endblock %}
 </div>

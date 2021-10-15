@@ -10,9 +10,9 @@
 
 {% block main %}
 <div class="ui breadcrumb" style="margin-bottom:3vh;">
-<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
   <i class="right chevron icon divider"></i>
-<a class="section" href="{% url 'manageprojecten_syn' %}">Projecten</a>
+<a class="section" href="{% url 'manageprojecten_syn' client_pk %}">Projecten</a>
   <i class="right chevron icon divider"></i>
   <div class="active section">Start Project</div>
 </div>
@@ -21,7 +21,7 @@
 <div class="invite-container">
     <div class="box">
         <p class="description">Voeg de basisinformatie toe aan uw nieuwe project.</p>
-        <form action="{% url 'plusproject_syn' %}" method="POST" enctype="multipart/form-data">
+        <form action="{% url 'plusproject_syn' client_pk %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <label class="formtitle" for="{{ form.naam.id_for_label }}"><p>Projectnaam:</p></label>
             <p class="formbox">{{ form.naam }}</p>

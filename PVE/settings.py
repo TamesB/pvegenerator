@@ -146,8 +146,12 @@ DATABASES = {
     # },
     # environment variable database (Database URI's)
     "default": {
-        "NAME": env.db,
         "ENGINE": "django.contrib.gis.db.backends.postgis",
+        'NAME': os.environ["NAME"],
+        'USER': os.environ["USER"],
+        'PASSWORD': os.environ["PASSWORD"],
+        'HOST': os.environ["HOST"],
+        'PORT':  os.environ["PORT"],
     }
 }
 
@@ -171,7 +175,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
-    "users.authentication.EmailAuthBackend",
 )
 
 # Internationalization

@@ -7,15 +7,22 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
 from app import models
-from project.models import BijlageToAnnotation, Project, PVEItemAnnotation
+from project.models import BijlageToAnnotation, Project, PVEItemAnnotation, Beleggers
 from syntrus import forms
 from syntrus.models import BijlageToReply, CommentReply, FrozenComments
 from utils import createBijlageZip, writePdf
+from syntrus.views.utils import GetAWSURL
 
 
 @login_required(login_url="login_syn")
-def ViewProjectOverview(request):
-    projects = request.user.projectspermitted.all()
+def ViewProjectOverview(request, client_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
+    projects = request.user.projectspermitted.filter(belegger__id=client_pk)
 
     medewerkers = [proj.permitted.all() for proj in projects]
 
@@ -32,16 +39,28 @@ def ViewProjectOverview(request):
     context["projects"] = projects
     context["derden_toegevoegd"] = derden_toegevoegd
     context["first_annotate"] = [project.first_annotate for project in projects]
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "MyProjecten_syn.html", context)
 
 
 @login_required(login_url="login_syn")
-def ViewProject(request, pk):
+def ViewProject(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     if not request.user.projectspermitted.filter(id=pk).exists():
         return render(request, "404_syn.html")
 
     project = get_object_or_404(Project, id=pk)
 
+    if project.belegger != client:
+        return render(request, "404_syn.html")
+        
     medewerkers = [medewerker.username for medewerker in project.permitted.all()]
     derden = [medewerker.username for medewerker in project.permitted.all() if medewerker.type_user == "SD"]
     
@@ -79,11 +98,20 @@ def ViewProject(request, pk):
     context["project"] = project
     context["medewerkers"] = medewerkers
     context["derden"] = derden
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "ProjectPagina_syn.html", context)
 
 
 @login_required(login_url="login_syn")
-def ConnectPVE(request, pk):
+def ConnectPVE(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     allowed_users = ["B", "SB", "SOG"]
 
     if request.user.type_user not in allowed_users:
@@ -91,6 +119,9 @@ def ConnectPVE(request, pk):
 
     project = get_object_or_404(Project, pk=pk)
 
+    if project.belegger != client:
+        return render(request, "404_syn.html")
+        
     # we get the active version of the pve based on what is active right now
     versie = models.ActieveVersie.objects.get(belegger__naam="Syntrus").versie
 
@@ -200,7 +231,7 @@ def ConnectPVE(request, pk):
             messages.warning(
                 request, f"Parameters van het Programma van Eisen van project {project.naam} zijn toegevoegd. U kunt het PvE downloaden vanaf de projecthomepagina."
             )
-            return redirect("dashboard_syn")
+            return redirect("dashboard_syn", client_pk=client_pk)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
@@ -224,23 +255,41 @@ def ConnectPVE(request, pk):
     context = {}
     context["form"] = form
     context["project"] = project
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     context["versie"] = versie
     return render(request, "ConnectPVE_syn.html", context)
 
 
 @login_required
-def download_pve_overview(request):
-    projects = Project.objects.filter(
+def download_pve_overview(request, client_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
+    projects = client.project.all().filter(
         Q(permitted__username__iregex=r"\y{0}\y".format(request.user.username))
     ).distinct()
 
     context = {}
     context["projects"] = projects
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "downloadPveOverview_syn.html", context)
 
 
 @login_required
-def download_pve(request, pk):
+def download_pve(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     if request.user.type_user != "B":
         if not Project.objects.filter(
             id=pk, 
@@ -249,6 +298,9 @@ def download_pve(request, pk):
             raise Http404("404")
 
     project = get_object_or_404(Project, id=pk)
+    if project.belegger != client:
+        return render(request, "404_syn.html")
+        
     versie = project.pve_versie
 
     basic_PVE = (
@@ -383,4 +435,7 @@ def download_pve(request, pk):
     context["filename"] = filename
     context["zipFilename"] = zipFilename
     context["project"] = project
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "PVEResult_syn.html", context)

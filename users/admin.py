@@ -23,6 +23,7 @@ class CustomUserAdmin(UserAdmin):
         (_("Personal info"), {"fields": ("first_name", "last_name")}),
         (_("Permissions"), {"fields": ("type_user", "is_staff", "is_superuser")}),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+        (_("Klantenorganisatie"), {"fields": ("klantenorganisatie", "organisatie")}),
     )
     add_fieldsets = (
         (

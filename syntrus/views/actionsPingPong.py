@@ -6,13 +6,23 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
 from app import models
-from project.models import Project, PVEItemAnnotation
+from project.models import Project, PVEItemAnnotation, Beleggers
 from syntrus.forms import FirstFreezeForm
 from syntrus.models import CommentReply, FrozenComments
+from syntrus.views.utils import GetAWSURL
 
 @login_required(login_url="login_syn")
-def FirstFreeze(request, pk):
+def FirstFreeze(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     project = get_object_or_404(Project, pk=pk)
+
+    if client != project.belegger:
+        return render(request, "404_syn.html")
 
     if request.user.type_user != project.first_annotate:
         return render(request, "404_syn.html")
@@ -60,11 +70,11 @@ def FirstFreeze(request, pk):
                         user.email for user in allprojectusers if user.type_user == "SD"
                     ]
                     send_mail(
-                        f"Syntrus Projecten - Uitnodiging opmerkingscheck voor project {project}",
-                        f"""{ request.user } heeft de initiele statussen van de PvE-regels ingevuld en nodigt u uit deze te checken voor het project { project } van Syntrus.
+                        f"{ project.belegger.naam } Projecten - Uitnodiging opmerkingscheck voor project {project}",
+                        f"""{ request.user } heeft de initiele statussen van de PvE-regels ingevuld en nodigt u uit deze te checken voor het project { project } van { project.belegger.naam }.
                         
                         Klik op de link om rechtstreeks de statussen langs te gaan.
-                        Link: https://pvegenerator.net/syntrus/project/{project.id}/check
+                        Link: https://pvegenerator.net/pvetool/project/{project.id}/check
                         """,
                         "admin@pvegenerator.net",
                         filteredDerden,
@@ -78,11 +88,11 @@ def FirstFreeze(request, pk):
                 else:
                     projectmanager = project.projectmanager
                     send_mail(
-                        f"Syntrus Projecten - Uitnodiging opmerkingscheck voor project {project}",
-                        f"""{ request.user } heeft de initiele statussen van de PvE-regels ingevuld en nodigt u uit deze te checken voor het project { project } van Syntrus.
+                        f"{ project.belegger.naam } Projecten - Uitnodiging opmerkingscheck voor project {project}",
+                        f"""{ request.user } heeft de initiele statussen van de PvE-regels ingevuld en nodigt u uit deze te checken voor het project { project } van { project.belegger.naam }.
                         
                         Klik op de link om rechtstreeks de statussen langs te gaan.
-                        Link: https://pvegenerator.net/syntrus/project/{project.id}/check
+                        Link: https://pvegenerator.net/pvetool/project/{project.id}/check
                         """,
                         "admin@pvegenerator.net",
                         [f"{projectmanager.email}"],
@@ -94,7 +104,7 @@ def FirstFreeze(request, pk):
                         f"Uitnodiging voor opmerkingen checken verstuurd naar de projectmanager {projectmanager.naam} via email.",
                     )
 
-                return redirect("viewproject_syn", pk=project.id)
+                return redirect("viewproject_syn", client_pk=client_pk, pk=project.id)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
@@ -102,12 +112,24 @@ def FirstFreeze(request, pk):
     context["form"] = FirstFreezeForm(request.POST)
     context["pk"] = pk
     context["project"] = project
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "FirstFreeze.html", context)
 
 
 @login_required
-def SendReplies(request, pk):
+def SendReplies(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     project = get_object_or_404(Project, pk=pk)
+
+    if project.belegger != client:
+        return render(request, "404_syn.html")
 
     if project.frozenLevel == 0:
         return render(request, "404_syn.html")
@@ -193,11 +215,11 @@ def SendReplies(request, pk):
                         user.email for user in allprojectusers if user.type_user == "SD"
                     ]
                     send_mail(
-                        f"Syntrus Projecten - Reactie van opmerkingen op PvE ontvangen voor project {project}",
+                        f"{ project.belegger.naam } Projecten - Reactie van opmerkingen op PvE ontvangen voor project {project}",
                         f"""U heeft reactie ontvangen van de opmerkingen van de projectmanager voor project {project}
                         
                         Klik op de link om rechtstreeks de statussen langs te gaan.
-                        Link: https://pvegenerator.net/syntrus/project/{project.id}/check
+                        Link: https://pvegenerator.net/pvetool/project/{project.id}/check
                         """,
                         "admin@pvegenerator.net",
                         filteredDerden,
@@ -211,11 +233,11 @@ def SendReplies(request, pk):
                     projectmanager = project.projectmanager
 
                     send_mail(
-                        f"Syntrus Projecten - Reactie van opmerkingen op PvE ontvangen voor project {project}",
+                        f"{ project.belegger.naam } Projecten - Reactie van opmerkingen op PvE ontvangen voor project {project}",
                         f"""U heeft reactie ontvangen van de opmerkingen van de derde partijen voor project {project}
                         
                         Klik op de link om rechtstreeks de opmerkingen te checken.
-                        Link: https://pvegenerator.net/syntrus/project/{project.id}/check
+                        Link: https://pvegenerator.net/pvetool/project/{project.id}/check
                         """,
                         "admin@pvegenerator.net",
                         [f"{projectmanager.email}"],
@@ -226,7 +248,7 @@ def SendReplies(request, pk):
                         request,
                         f"Opmerkingen doorgestuurd naar de projectmanager {projectmanager.username}. De ontvanger heeft een e-mail ontvangen om uw opmerkingen te checken.",
                     )
-                return redirect("viewproject_syn", pk=project.id)
+                return redirect("viewproject_syn", client_pk=client_pk, pk=project.id)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
@@ -234,14 +256,26 @@ def SendReplies(request, pk):
     context["form"] = FirstFreezeForm(request.POST)
     context["pk"] = pk
     context["project"] = project
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     # set Nieuwe Statussen as the status of PVEItemannotations
     return render(request, "SendReplies.html", context)
 
 
 @login_required
-def FinalFreeze(request, pk):
+def FinalFreeze(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
     project = get_object_or_404(Project, id=pk)
 
+    if project.belegger != client:
+        return render(request, "404_syn.html")
+        
     if project.frozenLevel == 0:
         return render(request, "404_syn.html")
 
@@ -270,11 +304,11 @@ def FinalFreeze(request, pk):
                 user.email for user in allprojectusers if user.type_user == "SD"
             ]
             send_mail(
-                f"Syntrus Projecten - Project {project} is bevroren, download het PvE",
+                f"{ project.belegger.naam } Projecten - Project {project} is bevroren, download het PvE",
                 f"""Alle regels in het project {project} zijn akkoord mee gegaan en de projectmanager heeft het project afgesloten.
                 
                 Klik op de link om het PvE met alle opmerkingen en bijlages te downloaden.
-                Link: https://pvegenerator.net/syntrus/project/{project.id}/pve
+                Link: https://pvegenerator.net/pvetool/project/{project.id}/pve
                 """,
                 "admin@pvegenerator.net",
                 filteredDerden,
@@ -283,11 +317,11 @@ def FinalFreeze(request, pk):
             projectmanager = project.projectmanager
 
             send_mail(
-                f"Syntrus Projecten - Project {project} is bevroren, download het PvE",
+                f"{ project.belegger.naam } Projecten - Project {project} is bevroren, download het PvE",
                 f"""Alle regels in het project {project} zijn akkoord mee gegaan en de projectmanager heeft het project afgesloten.
                 
                 Klik op de link om het PvE met alle opmerkingen en bijlages te downloaden.
-                Link: https://pvegenerator.net/syntrus/project/{project.id}/pve
+                Link: https://pvegenerator.net/pvetool/project/{project.id}/pve
                 """,
                 "admin@pvegenerator.net",
                 [f"{projectmanager.email}"],
@@ -305,4 +339,7 @@ def FinalFreeze(request, pk):
     context["form"] = FirstFreezeForm()
     context["pk"] = project.id
     context["project"] = project
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
     return render(request, "FinalFreeze.html", context)

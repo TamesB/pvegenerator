@@ -39,9 +39,12 @@ class KiesParameterForm(forms.Form):
 class BeleggerForm(ModelForm):
     class Meta:
         model = Beleggers
-        fields = ("naam",)
+        fields = ("naam", "abbonement", "beheerder", "logo")
         labels = {
             "naam": "Naam:",
+            "abbonement": "Abbonement Type:",
+            "beheerder": "Beheerder:",
+            "logo": "Upload Logo:",
         }
 
 

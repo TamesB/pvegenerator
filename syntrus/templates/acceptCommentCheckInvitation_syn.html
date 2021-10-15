@@ -9,7 +9,7 @@
     <div class="box">
         <p class="title">Uitnodiging voor opmerkingschecken voor project {{ project.naam }}</p>
         <p class="description">Registreer een account, en u wordt doorgewezen naar de project pagina waar u de opmerkingen kan accepteren of checken.</p>
-    <form action="{% url 'acceptcommentcheck_syn' key %}" method="POST" enctype="multipart/form-data">
+    <form action="{% url 'acceptcommentcheck_syn' client_pk key %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
             <label for="{{ form.username.id_for_label }}">Gebruikersnaam:</label>
             <p class="formbox">{{ form.username }}</p>

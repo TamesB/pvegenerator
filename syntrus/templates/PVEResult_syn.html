@@ -11,19 +11,19 @@
 {% block main %}
 {% if project %}
 <div class="ui breadcrumb" style="margin-bottom:3vh;">
-<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'viewprojectoverview_syn' %}">Mijn Projecten</a>
+  <a class="section" href="{% url 'viewprojectoverview_syn' client_pk %}">Mijn Projecten</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'viewproject_syn' project.id %}">Project: {{ project.naam }}</a>
+  <a class="section" href="{% url 'viewproject_syn' client_pk project.id %}">Project: {{ project.naam }}</a>
   <i class="right chevron icon divider"></i>
   <div class="active section">PvE Download</div>
 </div>
 {% else %}
 <div class="ui breadcrumb" style="margin-bottom:3vh;">
-<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
   <i class="right chevron icon divider"></i>
-<a class="section" href="{% url 'generate_syn' %}">Genereer PvE</a>
+<a class="section" href="{% url 'generate_syn' client_pk %}">Genereer PvE</a>
   <i class="right chevron icon divider"></i>
   <div class="active section">Resultaat</div>
 </div>

@@ -27,13 +27,13 @@
         <div class="loader" style="display: none;"></div>
     <div class="centered_login">
     <div class="login_box">
-      <img src="{% static 'syntrus/svg/logo.svg' %}">
+      <img src="{{ logo_url }}">
       <p>PvE Tool</p>
-      <form action="{% url 'login_syn' %}" class="ui form" method="post">
+      <form action="{% url 'login_syn' client_pk %}" class="ui form" method="post">
           {% csrf_token %}
           {% render_form form %}
           <input type="submit" class="login-button" value="Login">
-          <p><a href="{% url 'forgotpass' %}">Wachtwoord vergeten?</a></p>
+          <p><a href="{% url 'forgotpass' client_pk %}">Wachtwoord vergeten?</a></p>
       </form>
     </div>
   </div>

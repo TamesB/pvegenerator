@@ -57,7 +57,7 @@
         {% for project in projects %}
         <tr class="table_content">
           <td><p>{{ project.nummer }}</p></td>
-      <td><p><a href="{% url 'viewproject_syn' project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
+      <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
           <td><p>{{ project.plaatsnamen }}</p></td>
           <td><p>{{ project.vhe }}</p></td>
           <td><p>{{ project.statuscontract }}</p></td>
@@ -66,13 +66,13 @@
           {% if project.frozenLevel == 0 %}
             {% if derden_toegevoegd|index:forloop.counter0 %}
               {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
-                <a href="{% url 'plusopmerking_syn' project.id %}"><button class="ui basic button">Eerste statusaanwijzing<i class="right arrow icon"></i></button></a>
+                <a href="{% url 'plusopmerking_syn' client_pk project.id %}"><button class="ui basic button">Eerste statusaanwijzing<i class="right arrow icon"></i></button></a>
               {% else %}
                 <i>Eerste statusaanwijzing</i>
               {% endif %}
             {% else %}
               {% if request.user.type_user == "SOG" %}
-                <a href="{% url 'sogaddderden' project.id %}"><button class="ui basic button">Voeg derden toe<i class="right arrow icon"></i></button></a>
+                <a href="{% url 'sogaddderden' client_pk project.id %}"><button class="ui basic button">Voeg derden toe<i class="right arrow icon"></i></button></a>
               {% else %}
                 <i>Nog geen derden</i>
               {% endif %}
@@ -81,14 +81,14 @@
           {% else %}
             {% if request.user.type_user != first_annotate|index:forloop.counter0 %}
               {% if not project.frozenLevel|divisibleby:2 %}
-                <a href="{% url 'commentscheck_syn' project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>
+                <a href="{% url 'commentscheck_syn' client_pk project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>
               {% else %}
                 <i>Beurt van andere partij</i>
               {% endif %}
             {% else %}
               {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
                 {% if project.frozenLevel|divisibleby:2 %}
-                  <a href="{% url 'commentscheck_syn' project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>
+                  <a href="{% url 'commentscheck_syn' client_pk project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>
                 {% else %}
                   <i>Beurt van andere partij</i>
                 {% endif %}
@@ -96,7 +96,7 @@
             {% endif %}
           {% endif %}
           </p></td> 
-          <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' project.id %}"><img src="{% static 'syntrus/img/download.png' %}"></img></a>{% else %}Nog geen PvE{% endif %}</p></td>
+          <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img src="{% static 'syntrus/img/download.png' %}"></img></a>{% else %}Nog geen PvE{% endif %}</p></td>
         </tr>
         {% endfor %}
       {% else %}
@@ -129,7 +129,7 @@
         {% for project in projects %}
           <tr>
             <td><p>{{ project.naam }}</p></td>
-            <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' project.id %}"><img class="dimg" style="align-self: right; max-height: 2vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% else %}Niet beschikbaar{% endif %}</p></td>
+            <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="dimg" style="align-self: right; max-height: 2vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>{% else %}Niet beschikbaar{% endif %}</p></td>
           </tr>
         {% endfor %}
         {% else %}
@@ -160,7 +160,7 @@
                                     {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
         <tr class="table_content">
           <td><p>{{ project.naam }}</p></td>
-          <td class="link"><a href="{% url 'plusopmerking_syn' project.id %}"><img style="max-height: 2vh;" src="{% static 'syntrus/img/plus.png' %}"></img></a></p></td>
+          <td class="link"><a href="{% url 'plusopmerking_syn' client_pk project.id %}"><img style="max-height: 2vh;" src="{% static 'syntrus/img/plus.png' %}"></img></a></p></td>
         </tr>
         {% endif %}
                 {% else %}
@@ -168,14 +168,14 @@
                                     {% if request.user.type_user != first_annotate|index:forloop.counter0 %}
         <tr class="table_content">
           <td><p>{{ project.naam }}</p></td>
-          <td class="link"><a href="{% url 'commentscheck_syn' project.id %}"><img style="max-height: 2vh;" src="{% static 'syntrus/img/plus.png' %}"></img></a></p></td>
+          <td class="link"><a href="{% url 'commentscheck_syn' client_pk project.id %}"><img style="max-height: 2vh;" src="{% static 'syntrus/img/plus.png' %}"></img></a></p></td>
         </tr>
         {% endif %}
         {% else %}
                                     {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
         <tr class="table_content">
           <td><p>{{ project.naam }}</p></td>
-          <td class="link"><a href="{% url 'commentscheck_syn' project.id %}"><img style="max-height: 2vh;" src="{% static 'syntrus/img/plus.png' %}"></img></a></p></td>
+          <td class="link"><a href="{% url 'commentscheck_syn' client_pk project.id %}"><img style="max-height: 2vh;" src="{% static 'syntrus/img/plus.png' %}"></img></a></p></td>
         </tr>
         {% endif %}
         {% endif %}

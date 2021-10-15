@@ -10,7 +10,7 @@ static %} {% block modal %}
   </div>
   <div class="content">
     <form
-      action="{% url 'deletereply_syn' project.id reply.id %}?page={{ page_obj.number }}"
+      action="{% url 'deletereply_syn' client_pk project.id reply.id %}?page={{ page_obj.number }}"
       class="ui form"
       method="POST"
       enctype="multipart/form-data"
@@ -26,7 +26,7 @@ static %} {% block modal %}
 
     <p>
       <a
-        href="{% url 'myreplies_syn' project.id %}?page={{ page_obj.number }}"
+        href="{% url 'myreplies_syn' client_pk project.id %}?page={{ page_obj.number }}"
         class="bewerk_button"
         ><button style="float: left" class="ui green button">Behoud</button></a
       >

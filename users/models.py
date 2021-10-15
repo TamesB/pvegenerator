@@ -7,9 +7,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from users.managers import CustomUserManager
 
-
 class Organisatie(models.Model):
     naam = models.CharField(max_length=500)
+    klantenorganisatie = models.ForeignKey("project.Beleggers", on_delete=models.CASCADE, null=True, blank=True, related_name="organisatie")
     gebruikers = models.ManyToManyField(
         "users.CustomUser", default=None, related_name="in_organisatie"
     )
@@ -51,15 +51,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     type_choices = (
         ("B", "Beheerder"),
-        ("SB", "Syntrus Beheerder"),
-        ("SOG", "Syntrus Projectmanager"),
-        ("SD", "Syntrus Derden"),
+        ("SB", "Klant Beheerder"),
+        ("SOG", "Projectmanager"),
+        ("SD", "Derden"),
     )
 
     type_user = models.CharField(max_length=3, choices=type_choices, default="SD")
 
-    organisatie = models.ForeignKey(Organisatie, on_delete=models.CASCADE, null=True, related_name="user")
-
+    organisatie = models.ForeignKey(Organisatie, on_delete=models.CASCADE, null=True, blank=True, related_name="user")
+    klantenorganisatie = models.ForeignKey("project.Beleggers", on_delete=models.CASCADE, null=True, blank=True, default=None, related_name="werknemer")
     objects = CustomUserManager()
 
     USERNAME_FIELD = "username"
@@ -93,7 +93,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 # Create your models here.
 class Invitation(models.Model):
     type_choices = (
-        ("SOG", "Syntrus Projectmanager"),
+        ("SOG", "Projectmanager"),
         ("SD", "Derde"),
     )
     inviter = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -101,6 +101,9 @@ class Invitation(models.Model):
     organisatie = models.ForeignKey(
         Organisatie, on_delete=models.CASCADE, null=True, blank=True
     )
+    klantenorganisatie = models.ForeignKey(
+        "project.Beleggers", on_delete=models.CASCADE, null=True, blank=True
+         )
     project = models.ForeignKey(
         "project.Project", on_delete=models.CASCADE, null=True, blank=True
     )

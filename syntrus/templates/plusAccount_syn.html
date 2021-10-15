@@ -11,9 +11,9 @@
 
 {% block main %}
 <div class="ui breadcrumb" style="margin-bottom:3vh;">
-<a class="section" href="{% url 'dashboard_syn' %}">Dashboard</a>
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'managewerknemers_syn' %}">Werknemers</a>
+  <a class="section" href="{% url 'managewerknemers_syn' client_pk %}">Werknemers</a>
   <i class="right chevron icon divider"></i>
   <div class="active section">Uitnodigen</div>
 </div>
@@ -21,7 +21,7 @@
 <div class="invite-container">
     <div class="box">
         <p class="description">Voeg een projectmanager toe aan de website, of nodig een derde uit.</p>
-        <form action="{% url 'plusaccount_syn' %}" method="post">
+        <form action="{% url 'plusaccount_syn' client_pk %}" method="post">
             {% csrf_token %}
             <label class="formtitle" for="{{ form.rang.id_for_label }}"><p>Rang gebruiker:</p></label>
             <p class="formbox">{{ form.rang }}</p>

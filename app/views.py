@@ -17,7 +17,7 @@ from django.urls import reverse
 
 from project.models import Beleggers, Project
 from utils import writeExcel
-
+from users.models import CustomUser
 from . import forms, models
 
 
@@ -38,15 +38,25 @@ def LoginPageView(request):
             
             if "@" in username:
                 email = username.split("@")
-                username = email[0]
+                email = email[0]
 
-            user = authenticate(request, username=username, password=password)
+                user_check = CustomUser.objects.filter(username=email)
+
+                if user_check.exists():
+                    user_check = user_check.first()
+                    user = authenticate(request, username=email, password=password)
+                else:
+                    messages.warning(request, "Invalid login credentials")
+            else:
+                user = authenticate(request, username=username, password=password)
 
             if user is not None:
                 login(request, user)
                 return redirect("dashboard")
             else:
                 messages.warning(request, "Invalid login credentials")
+        else:
+            messages.warning(request, "Vul de verplichte velden in.")
 
     # render the page
     context = {}
@@ -92,7 +102,24 @@ def DashboardView(request):
 
     return render(request, "dashboard.html", context)
 
+@staff_member_required(login_url="/404")
+def KlantOverzicht(request):
+    context = {}
+    context["klanten"] = Beleggers.objects.all()
+    return render(request, 'klantenOverzicht.html', context)
 
+@staff_member_required(login_url="/404")
+def KlantToevoegen(request):
+    if request.method == "POST":
+        form = forms.BeleggerForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect("klantoverzicht")
+        
+    context = {}
+    context["form"] = forms.BeleggerForm()
+    return render(request, 'klantToevoegen.html', context)
+    
 @staff_member_required(login_url="/404")
 def PVEBeleggerVersieOverview(request):
     beleggers = Beleggers.objects.all()
@@ -1027,8 +1054,22 @@ def addItemView(request, versie_pk, chapter_id, paragraph_id):
             # and reverse
             return HttpResponseRedirect(reverse("viewitem", args=(versie_pk, pk)))
 
+    form = forms.PVEItemEditForm()
+    form.fields["BestaandeBijlage"].queryset = models.ItemBijlages.objects.filter(
+        versie__id=versie_pk
+    ).all()
+    form.fields["Bouwsoort"].queryset = models.Bouwsoort.objects.filter(
+        versie__id=versie_pk
+    ).all()    
+    form.fields["TypeObject"].queryset = models.TypeObject.objects.filter(
+        versie__id=versie_pk
+    ).all()    
+    form.fields["Doelgroep"].queryset = models.Doelgroep.objects.filter(
+        versie__id=versie_pk
+    ).all()
+
     context = {}
-    context["form"] = forms.PVEItemEditForm()
+    context["form"] = form
     context["chapter_id"] = chapter_id
     context["paragraph_id"] = int(paragraph_id)
     context["versie_pk"] = versie_pk
