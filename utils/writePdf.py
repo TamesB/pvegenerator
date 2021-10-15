@@ -2,18 +2,20 @@
 
 import datetime
 import os.path
-
 from django.conf import settings
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
-
+from urllib.request import urlopen
+import io
 from app import models
-
+from reportlab.lib.utils import ImageReader
+from PIL import Image
+import numpy as np
 
 class PDFMaker:
-    def __init__(self, versie):
+    def __init__(self, versie, logo_url):
         self.date = datetime.datetime.now()
 
         self.bedrijfsnaam = "Syntrus"
@@ -51,7 +53,13 @@ class PDFMaker:
         self.OpmerkingBoxTitelHeight = 20
         self.OpmerkingBoxHeight = -150
         self.PrePVEBoxHeight = -75
-        self.logo = "./utils/logo.png"
+
+        data = urlopen(logo_url).read()
+        rgba = np.array(Image.open(io.BytesIO(data)))
+        # make transparent white
+        rgba[rgba[...,-1]==0] = [255,255,255,0]
+        logo = Image.fromarray(rgba)
+        self.logo = logo
 
         self.hoofdstukStyle = ParagraphStyle(
             textColor=colors.Color(red=1, green=1, blue=1),

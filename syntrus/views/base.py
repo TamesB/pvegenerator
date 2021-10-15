@@ -291,7 +291,7 @@ def GeneratePVEView(request, client_pk):
             
             filename = f"PvE-{fileExt}"
             zipFilename = f"PvE_Compleet-{fileExt}"
-            pdfmaker = writePdf.PDFMaker(versie.versie)
+            pdfmaker = writePdf.PDFMaker(versie.versie, logo_url)
             opmerkingen = {}
             bijlagen = {}
             reacties = {}

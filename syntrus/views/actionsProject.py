@@ -300,7 +300,7 @@ def download_pve(request, client_pk, pk):
     project = get_object_or_404(Project, id=pk)
     if project.belegger != client:
         return render(request, "404_syn.html")
-        
+
     versie = project.pve_versie
 
     basic_PVE = (
@@ -380,7 +380,7 @@ def download_pve(request, client_pk, pk):
             accepted_id.id for accepted_id in commentphase.accepted_comments.all()
         ]
 
-    pdfmaker = writePdf.PDFMaker(versie.versie)
+    pdfmaker = writePdf.PDFMaker(versie.versie, logo_url)
 
     # verander CONCEPT naar DEFINITIEF als het project volbevroren is.
     if project.fullyFrozen:
