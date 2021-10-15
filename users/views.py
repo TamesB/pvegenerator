@@ -18,7 +18,7 @@ def signup(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
         return render(request, "404_syn.html")
 
-    client = Beleggers.objects.get(pk=client_pk).first()
+    client = Beleggers.objects.get(pk=client_pk)
     logo_url = GetAWSURL(client)
 
     if request.method == "POST":
@@ -42,7 +42,7 @@ def accountOverview(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
         return render(request, "404_syn.html")
 
-    client = Beleggers.objects.get(pk=client_pk).first()
+    client = Beleggers.objects.get(pk=client_pk)
     logo_url = GetAWSURL(client)
 
     users = models.CustomUser.objects.all()
@@ -60,7 +60,7 @@ def accountProfile(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
         return render(request, "404_syn.html")
 
-    client = Beleggers.objects.get(pk=client_pk).first()
+    client = Beleggers.objects.get(pk=client_pk)
     logo_url = GetAWSURL(client)
 
     if not models.CustomUser.objects.filter(id=pk):
@@ -81,7 +81,7 @@ def ForgotPassword(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
         return render(request, "404_syn.html")
 
-    client = Beleggers.objects.get(pk=client_pk).first()
+    client = Beleggers.objects.get(pk=client_pk)
     logo_url = GetAWSURL(client)
 
     if request.user.is_authenticated:
@@ -155,7 +155,7 @@ def ResetPassword(request, client_pk, key):
     if not Beleggers.objects.filter(pk=client_pk).exists():
         return render(request, "404_syn.html")
 
-    client = Beleggers.objects.get(pk=client_pk).first()
+    client = Beleggers.objects.get(pk=client_pk)
     logo_url = GetAWSURL(client)
 
     if not models.ForgotPassInvite.objects.filter(key=key):

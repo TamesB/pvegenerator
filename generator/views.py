@@ -350,7 +350,7 @@ def compareFormView(request, versie_pk, pk):
     context = {}
     context["pk"] = pk
     context["versie_pk"] = versie_pk
-
+    
     if request.method == "POST":
         if pk == 1:
             # get user entered form
