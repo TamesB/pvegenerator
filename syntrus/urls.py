@@ -21,7 +21,8 @@ urlpatterns = [
     path("<int:client_pk>/logout", base.LogoutView, name="logout_syn"),
     path("<int:client_pk>/dashboard", base.DashboardView, name="dashboard_syn"),
     path("<int:client_pk>/faq", base.FAQView, name="faq_syn"),
-    path("<int:client_pk>/generate", base.GeneratePVEView, name="generate_syn"),
+    path("<int:client_pk>/generate/kiespve", base.KiesPVEGenerate, name="kiespvegenerate"),
+    path("<int:client_pk>/generate/<int:versie_pk>", base.GeneratePVEView, name="generate_syn"),
 
     # organisatie beheer (groep van derden) CRUD
     path("<int:client_pk>/organisaties", crudPartijen.ManageOrganisaties, name="manageorganisaties_syn"),
@@ -29,7 +30,12 @@ urlpatterns = [
     path(
         "<int:client_pk>/organisaties/<int:pk>/users/add",
         crudPartijen.AddUserOrganisatie,
-        name="addusersorganisatie_syn",
+        name="addusersorganisatie",
+    ),
+    path(
+        "<int:client_pk>/organisaties/<int:pk>/users/get",
+        crudPartijen.GetUsersInOrganisatie,
+        name="getusersorganisatie",
     ),
     path(
         "<int:client_pk>/organisaties/<int:pk>/delete",
@@ -40,15 +46,21 @@ urlpatterns = [
     # projectbeheer CRUD
     path("<int:client_pk>/projectbeheer", crudProjects.ManageProjects, name="manageprojecten_syn"),
     path("<int:client_pk>/project/add", crudProjects.AddProject, name="plusproject_syn"),
+    path("<int:client_pk>/project/projectbeheer/<int:pk>/projectmanager", crudProjects.GetProjectManagerOfProject, name="getprojectmanager_syn"),
     path(
-        "<int:client_pk>/projectbeheer/<int:pk>/addprojmanager",
-        crudProjects.AddProjectManager,
-        name="projectenaddprojmanager_syn",
+        "<int:client_pk>/projectbeheer/<int:pk>/addprojmanagertest",
+        crudProjects.AddProjectManagerToProject,
+        name="addprojmanagertoproject_syn",
+    ),
+    path(
+        "<int:client_pk>/projectbeheer/<int:pk>/getorganisaties",
+        crudProjects.GetOrganisatieToProject,
+        name="getprojectpartijen",
     ),
     path(
         "<int:client_pk>/projectbeheer/<int:pk>/addorganisatie",
         crudProjects.AddOrganisatieToProject,
-        name="projectenaddorganisatie_syn",
+        name="projectaddpartijform",
     ),
     path("<int:client_pk>/project/addsd/<int:pk>", crudProjects.SOGAddDerdenToProj, name="sogaddderden"),
 
@@ -68,7 +80,8 @@ urlpatterns = [
     path("<int:client_pk>/project/<int:pk>", actionsProject.ViewProject, name="viewproject_syn"),
     path("<int:client_pk>/project/pve", actionsProject.download_pve_overview, name="downloadPveOverview_syn"),
     path("<int:client_pk>/project/<int:pk>/pve", actionsProject.download_pve, name="download_pve_syn"),
-    path("<int:client_pk>/project/<int:pk>/addpve", actionsProject.ConnectPVE, name="connectpve_syn"),
+    path("<int:client_pk>/project/<int:pk>/<int:versie_pk>/addpve", actionsProject.ConnectPVE, name="connectpve_syn"),
+    path("<int:client_pk>/project/<int:pk>/addpvepartial", actionsProject.KiesPVE, name="kiespveversie"),
 
     # first annotate crud
     path("<int:client_pk>/comment", crudFirstAnnotate.AddCommentOverview, name="plusopmerkingOverview_syn"),

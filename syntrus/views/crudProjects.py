@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
 from geopy.geocoders import Nominatim
-
+from django.db.models import Q
 from project.models import Beleggers, Project
 from users.models import CustomUser
 from syntrus import forms
@@ -18,6 +18,9 @@ def ManageProjects(request, client_pk):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     allowed_users = ["B", "SB"]
 
@@ -39,6 +42,9 @@ def AddProject(request, client_pk):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     allowed_users = ["B", "SB"]
     if request.user.type_user not in allowed_users:
@@ -71,8 +77,8 @@ def AddProject(request, client_pk):
             #    ).raw["address"]["town"]
             project.plaatsnamen = "Amsterdam"
             project.save()
-            messages.warning(request, f"Project {project.naam} aangemaakt. Kies de parameters die het PvE heeft. Alleen de hoofdbouwsoort is verplicht in te vullen. U kunt ook deze stap overslaan en dit later doen.")
-            return redirect("connectpve_syn", client_pk=client_pk, pk=project.id)
+            messages.warning(request, f"Project {project.naam} aangemaakt.")
+            return redirect("manageprojecten_syn", client_pk=client_pk)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
@@ -83,36 +89,60 @@ def AddProject(request, client_pk):
     context["logo_url"] = logo_url
     return render(request, "plusProject_syn.html", context)
 
-
 @login_required(login_url="login_syn")
-def AddProjectManager(request, client_pk, pk):
+def GetProjectManagerOfProject(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        print("1")
+        return render(request, "partials/tests_error.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        print("2")
+        return render(request, "partials/tests_error.html")
 
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
-        return render(request, "404_syn.html")
+        print("3")
+        return render(request, "partials/tests_error.html")
 
     project = get_object_or_404(Project, id=pk)
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        print("4")
+        return render(request, "partials/tests_error.html")
+
+    context = {}
+    context["project"] = project
+    context["client_pk"] = client_pk
+    return render(request, "partials/projectmanager_detail.html", context)
+
+@login_required(login_url="login_syn")
+def AddProjectManagerToProject(request, client_pk, pk):
+    client = Beleggers.objects.get(id=client_pk)
+    logo_url = GetAWSURL(client)
+    project = Project.objects.get(id=pk)
+    form = forms.AddProjectmanagerToProjectForm(request.POST or None)
+    form.fields["projectmanager"].queryset = CustomUser.objects.filter(type_user="SOG", klantenorganisatie=client)
+    form.fields["projectmanager"].initial = project.projectmanager
     
-    if request.user not in project.permitted.all():
-        return render(request, "404_syn.html")
+    context = {}
+    context["client_pk"] = client_pk
+    context["project"] = project
+    context["projectmanager"] = project.projectmanager
 
-    if request.method == "POST":
-        form = forms.AddProjectmanagerToProjectForm(request.POST)
-
+    if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
             if form.cleaned_data["projectmanager"].klantenorganisatie != client:
-                return render(request, "404_syn.html")
-                
+                return render(request, "partials/tests_error.html")
+            
+            if project.projectmanager == form.cleaned_data["projectmanager"]:
+                return render(request, "partials/projectmanager_detail.html", context)
+
             project.projectmanager = form.cleaned_data["projectmanager"]
-            project.permitted.add(form.cleaned_data["projectmanager"])
+
+            if form.cleaned_data["projectmanager"] not in project.permitted.all():
+                project.permitted.add(form.cleaned_data["projectmanager"])
             project.save()
 
             send_mail(
@@ -125,22 +155,41 @@ def AddProjectManager(request, client_pk, pk):
                 [f'{form.cleaned_data["projectmanager"].email}'],
                 fail_silently=False,
             )
-            messages.warning(request, f"""De projectmanager van Project: {project.naam} is nu {form.cleaned_data["projectmanager"]}. Voeg uw derden toe via partij toevoegen.""")
-            return redirect("manageprojecten_syn", client_pk=client_pk)
+            messages.warning(request, f"""De projectmanager van Project: {project.naam} is nu {form.cleaned_data["projectmanager"]}.""")
+            return render(request, "partials/projectmanager_detail.html", context)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
-    form = forms.AddProjectmanagerToProjectForm()
-    form.fields["projectmanager"].queryset = CustomUser.objects.filter(type_user="SOG", klantenorganisatie=client)
+
+    context["form"] = form
+    return render(request, "partials/projectmanager_form.html", context)
+
+@login_required(login_url="login_syn")
+def GetOrganisatieToProject(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
+    allowed_users = ["B", "SB"]
+
+    if request.user.type_user not in allowed_users:
+        return render(request, "404_syn.html")
+
+    project = get_object_or_404(Project, id=pk)
+    if project.belegger != client:
+        return render(request, "404_syn.html")
 
     context = {}
-    context["projecten"] = client.project.all().order_by("-datum_recent_verandering")
     context["project"] = project
-    context["form"] = form
     context["client_pk"] = client_pk
     context["client"] = client
     context["logo_url"] = logo_url
-    return render(request, "beheerAddProjmanager.html", context)
+    return render(request, "partials/projectpartijen_detail.html", context)
 
 
 @login_required(login_url="login_syn")
@@ -151,6 +200,9 @@ def AddOrganisatieToProject(request, client_pk, pk):
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
 
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
@@ -159,10 +211,10 @@ def AddOrganisatieToProject(request, client_pk, pk):
     project = get_object_or_404(Project, id=pk)
     if project.belegger != client:
         return render(request, "404_syn.html")
-        
-    if request.method == "POST":
-        form = forms.AddOrganisatieToProjectForm(request.POST)
+    form = forms.AddOrganisatieToProjectForm(request.POST or None)
+    form.fields["organisatie"].queryset = Organisatie.objects.filter(Q(klantenorganisatie=client) & ~Q(projecten=project))
 
+    if request.method == "POST":
         if form.is_valid():
             # voeg project toe aan organisatie
             organisatie = form.cleaned_data["organisatie"]
@@ -197,20 +249,17 @@ def AddOrganisatieToProject(request, client_pk, pk):
                     fail_silently=False,
                 )
 
-            return redirect("manageprojecten_syn", client_pk=client_pk)
+            return redirect("getprojectpartijen", client_pk=client_pk)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
-    form = forms.AddOrganisatieToProjectForm()
-    form.fields["organisatie"].queryset = Organisatie.objects.filter(klantenorganisatie=client)
 
     context = {}
-    context["projecten"] = Project.objects.all().order_by("-datum_recent_verandering")
     context["project"] = project
     context["form"] = form
     context["client_pk"] = client_pk
     context["client"] = client
     context["logo_url"] = logo_url
-    return render(request, "beheerAddOrganisatieToProject.html", context)
+    return render(request, "partials/projectpartijen_form.html", context)
 
 @login_required(login_url="login_syn")
 def SOGAddDerdenToProj(request, client_pk, pk):
@@ -219,6 +268,9 @@ def SOGAddDerdenToProj(request, client_pk, pk):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     allowed_users = ["SOG"]
 

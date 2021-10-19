@@ -12,35 +12,36 @@
 <div class="ui breadcrumb" style="margin-bottom:3vh;">
 <a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
   <i class="right chevron icon divider"></i>
-  <div class="active section">Partijen</div>
+  <div class="active section">Stakeholders</div>
 </div>
 
 <div class="opmerking_project_list">
-    <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Partijen <a href="{% url 'addorganisatie_syn' client_pk %}"><button class="ui icon green button"><i class="icon plus"></i>Maak Partij Aan</button></a></p> </div>
-<input type="text" class="searchable_table_input" id="myInput" onkeyup="searchableLookup()" placeholder="Zoek op organisatie.." title="Typ een organisatie in">
+    <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Stakeholders <a href="{% url 'addorganisatie_syn' client_pk %}"><button class="ui icon green button"><i class="icon plus"></i>Maak Stakeholder Aan</button></a></p> </div>
+<input type="text" class="searchable_table_input" id="myInput" onkeyup="searchableLookup()" placeholder="Zoek op stakeholder.." title="Typ een stakeholder in">
 
 <div class="base_info_table">
   <table id="myTable">
 <tbody>        
 <tr class="table_title">
-          <th><p>Partij</p></th>
+          <th><p>Stakeholder</p></th>
           <th><p>Projecten</p></th>
           <th><p>Werknemers</p></th>
           <th><p>Acties</p></th>
         </tr>
         {% if organisaties %}
             {% for organisatie in organisaties %}
-        <tr class="table_content">
+        <tr class="table_content" hx-target="this" hx-swap="outerHTML">
           <td><p>{{ organisatie.naam }}</p></td>
           <td><p>{% if organisatie.projecten.all %}{% for project in organisatie.projecten.all %}{{ project }}, {% endfor %}{% else %}<i>Geen</i>{% endif %}</p></td>
-          <td><p>{% for gebruiker in organisatie.gebruikers.all %}{{ gebruiker }} ({{ gebruiker.email }}), {% endfor %} <a href="{% url 'addusersorganisatie_syn' client_pk organisatie.id %}"><img src="{% static 'syntrus/img/plus.png' %}"></img></a></p></td>
-          <td><p><a href="{% url 'deleteorganisatie_syn' client_pk organisatie.id %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></p></td>
+        <td>
+        <p>{% include 'partials/organisatie_detail.html' %}</p></td>
+          <td><p><button hx-post="{% url 'deleteorganisatie_syn' client_pk organisatie.id %}" class="ui icon basic red button"><i class="icon delete"></i></button></p></td>
         </tr>
         {% endfor %}
         {% else %}
         <tr class="table_content">
           <td><p>
-          <i>Nog geen partijen toegevoegd.</i>
+          <i>Nog geen stakeholders toegevoegd.</i>
           </p></td>
           <td>&nbsp;</td>
           <td>&nbsp;</td>

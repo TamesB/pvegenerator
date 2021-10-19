@@ -50,8 +50,11 @@ def LoginView(request, client_pk):
                 user = authenticate(request, username=username, password=password)
 
             if user is not None:
-                login(request, user)
-                return redirect("dashboard_syn", client_pk=client_pk)
+                if user.klantenorganisatie == client and user.type_user != "B":
+                    login(request, user)
+                    return redirect("dashboard_syn", client_pk=client_pk)
+
+                messages.warning(request, "Invalid login credentials")
             else:
                 messages.warning(request, "Invalid login credentials")
         else:
@@ -82,6 +85,9 @@ def DashboardView(request, client_pk):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     context = {}
     context["client_pk"] = client_pk
@@ -133,6 +139,9 @@ def FAQView(request, client_pk):
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
 
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
     faqquery = FAQ.objects.all()
     if request.user.type_user == "SB":
         faqquery = FAQ.objects.filter(gebruikersrang="SB")
@@ -148,24 +157,57 @@ def FAQView(request, client_pk):
     context["logo_url"] = logo_url    
     return render(request, "FAQ_syn.html", context)
 
-
 @login_required(login_url="login_syn")
-def GeneratePVEView(request, client_pk):
+def KiesPVEGenerate(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
 
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
+    allowed_users = ["B", "SB", "SOG"]
+
+    if request.user.type_user not in allowed_users:
+        return render(request, "404_syn.html")
+
+    form = forms.PVEVersieKeuzeForm(request.POST or None)
+    form.fields["pve_versie"].queryset = models.PVEVersie.objects.filter(belegger=client, public=True)
+
+    if request.method == "POST" or request.method == "PUT":
+        if form.is_valid():
+            return redirect("generate_syn", client_pk=client_pk, versie_pk=form.cleaned_data["pve_versie"].id)
+
+    context = {}
+    context["form"] = form
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
+    return render(request, "kiespvegenereer.html", context)
+
+@login_required(login_url="login_syn")
+def GeneratePVEView(request, client_pk, versie_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+
+    logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
         return render(request, "404_syn.html")
 
-    if not models.ActieveVersie.objects.filter(belegger=client).exists():
+    if not models.PVEVersie.objects.filter(pk=versie_pk).exists():
         return render(request, "404_syn.html")
     else:
-        versie = models.ActieveVersie.objects.get(belegger=client).versie
+        versie = models.PVEVersie.objects.filter(pk=versie_pk).first()
 
     if request.method == "POST":
         # get user entered form
@@ -355,6 +397,7 @@ def GeneratePVEView(request, client_pk):
     context = {}
     context["form"] = form
     context["versie"] = versie
+    context["versie_pk"] = versie_pk
     context["client_pk"] = client_pk
     context["client"] = client
     context["logo_url"] = logo_url    

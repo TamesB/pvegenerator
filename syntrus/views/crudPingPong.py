@@ -23,6 +23,9 @@ def CheckComments(request, client_pk, proj_id):
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
 
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
     start = time.time()
     context = {}
     
@@ -377,6 +380,9 @@ def MyReplies(request, client_pk, pk, **kwargs):
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
 
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
     context = {}
 
     project = get_object_or_404(Project, pk=pk)
@@ -509,6 +515,9 @@ def MyRepliesDelete(request, client_pk, pk):
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
 
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
     project = get_object_or_404(Project, pk=pk)
     if project.belegger != client:
         return render(request, "404_syn.html")
@@ -557,6 +566,9 @@ def DeleteReply(request, client_pk, pk, reply_id):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     # check if project exists
     project = get_object_or_404(Project, id=pk)
@@ -625,6 +637,9 @@ def AddReplyAttachment(request, client_pk, pk, reply_id):
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
 
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
     project = get_object_or_404(Project, pk=pk)
     if project.belegger != client:
         return render(request, "404_syn.html")
@@ -685,6 +700,9 @@ def DeleteReplyAttachment(request, client_pk, pk, reply_id):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     # check if project exists
     project = get_object_or_404(Project, pk=pk)

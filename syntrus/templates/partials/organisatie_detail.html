@@ -1,0 +1,20 @@
+{% extends "_partial.html" %}
+
+{% load semanticui %}
+
+{% load filename %}
+
+{% block main %}
+
+<div hx-target="this" hx-swap="outerHTML">
+{% if organisatie.gebruikers.all %}
+    {% for gebruiker in organisatie.gebruikers.all %}{{ gebruiker }} ({{ gebruiker.email }}), {% endfor %}
+    {% endif %}
+<button hx-get="{% url 'addusersorganisatie' client_pk organisatie.id %}" class="ui icon basic button"><i class="icon plus"></i></button>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{% include "partials/messages.html" %}
+{% endblock %}

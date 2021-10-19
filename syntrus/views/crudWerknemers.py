@@ -27,6 +27,9 @@ def ManageWerknemers(request, client_pk):
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
 
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
@@ -49,6 +52,9 @@ def AddAccount(request, client_pk):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     allowed_users = ["B", "SB", "SOG"]
     staff_users = ["B", "SB"]
@@ -160,6 +166,9 @@ def AcceptInvite(request, client_pk, key):
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
 
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
     if not key or not Invitation.objects.filter(key=key):
         return render(request, "404_syn.html")
 
@@ -245,6 +254,9 @@ def InviteUsersToProject(request, client_pk, pk):
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
 
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
@@ -325,7 +337,6 @@ def InviteUsersToProject(request, client_pk, pk):
     # form
     form = forms.InviteProjectStartForm()
     form.fields["organisaties"].queryset = Organisatie.objects.filter(klantenorganisatie=client)
-    form.fields["organisaties"].queryset = CustomUser.objects.filter(klantenorganisatie=client)
 
     context = {}
     context["form"] = form
@@ -334,4 +345,3 @@ def InviteUsersToProject(request, client_pk, pk):
     context["client"] = client
     context["logo_url"] = logo_url
     return render(request, "InviteUsersToProject_syn.html", context)
-

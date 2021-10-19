@@ -16,9 +16,9 @@
     <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' client_pk %}" class="{{ 4|default:"" }}"><p>Download PVE</p></a></div>
 {% elif type == 'beheerder' %}
     <div class="menu_item"><a href="{% url 'managewerknemers_syn' client_pk %}" class="{{ 2|default:"" }}"><p>Beheer Werknemers</p></a></div>
-    <div class="menu_item"><a href="{% url 'manageorganisaties_syn' client_pk %}" class="{{ 3|default:"" }}"><p>Beheer Partijen</p></a></div>
+    <div class="menu_item"><a href="{% url 'manageorganisaties_syn' client_pk %}" class="{{ 3|default:"" }}"><p>Beheer Stakeholders</p></a></div>
     <div class="menu_item"><a href="{% url 'manageprojecten_syn' client_pk %}" class="{{ 4|default:"" }}"><p>Beheer Projecten</p></a></div>
-    <div class="menu_item"><a href="{% url 'generate_syn' client_pk %}" class="{{ 7|default:"" }}"><p>Genereer PVE</p></a></div>
+    <div class="menu_item"><a href="{% url 'kiespvegenerate' client_pk %}" class="{{ 7|default:"" }}"><p>Genereer PVE</p></a></div>
 {% elif type == 'checker' %}
     &nbsp;
 {% endif %}

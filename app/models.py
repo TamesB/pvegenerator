@@ -8,6 +8,7 @@ from project.models import Beleggers
 class PVEVersie(models.Model):
     belegger = models.ForeignKey(Beleggers, on_delete=models.CASCADE, related_name='versie')
     versie = models.CharField(max_length=50, null=True, blank=True)
+    public = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
         return f"{self.belegger}: Versie {self.versie}"

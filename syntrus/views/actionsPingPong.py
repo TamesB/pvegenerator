@@ -19,6 +19,9 @@ def FirstFreeze(request, client_pk, pk):
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
 
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
     project = get_object_or_404(Project, pk=pk)
 
     if client != project.belegger:
@@ -125,6 +128,9 @@ def SendReplies(request, client_pk, pk):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     project = get_object_or_404(Project, pk=pk)
 
@@ -270,6 +276,9 @@ def FinalFreeze(request, client_pk, pk):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     project = get_object_or_404(Project, id=pk)
 

@@ -5,7 +5,7 @@ from django import forms
 from django.contrib.gis import forms
 from django.forms import ModelForm
 
-from app.models import Bouwsoort, Doelgroep, PVEItem, TypeObject
+from app.models import Bouwsoort, Doelgroep, PVEItem, TypeObject, PVEVersie
 from project.models import BijlageToAnnotation, Project
 from syntrus.models import BijlageToReply, CommentStatus
 from users.models import CustomUser, Invitation, Organisatie
@@ -21,6 +21,14 @@ class LoginForm(forms.Form):
 
     widgets = {
         "password": forms.PasswordInput(),
+    }
+
+
+class PVEVersieKeuzeForm(forms.Form):
+    pve_versie = forms.ModelChoiceField(queryset=PVEVersie.objects.none(), label="PvE Versie")
+
+    widgets = {
+        "pve_versie": forms.Select(attrs={"class": "ui dropdown"}),
     }
 
 
@@ -234,34 +242,34 @@ class AddOrganisatieForm(forms.Form):
 
 class AddUserToOrganisatieForm(forms.Form):
     werknemer = forms.ModelChoiceField(
-        queryset=CustomUser.objects.none(), label="Werknemer:"
+        queryset=CustomUser.objects.none(), label=""
     )
 
     class Meta:
         labels = {
-            "werknemer": "Werknemer:",
+            "werknemer": "",
         }
 
 
 class AddProjectmanagerToProjectForm(forms.Form):
     projectmanager = forms.ModelChoiceField(
-        queryset=CustomUser.objects.none(), label="Projectmanager:"
+        queryset=CustomUser.objects.none(), label=""
     )
 
     class Meta:
         labels = {
-            "projectmanager": "Projectmanager:",
+            "projectmanager": "",
         }
 
 
 class AddOrganisatieToProjectForm(forms.Form):
     organisatie = forms.ModelChoiceField(
-        queryset=Organisatie.objects.none(), label="Organisatie:"
+        queryset=Organisatie.objects.none(), label=""
     )
 
     class Meta:
         labels = {
-            "organisatie": "Organisatie:",
+            "organisatie": "",
         }
 
 

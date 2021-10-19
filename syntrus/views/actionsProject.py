@@ -22,6 +22,9 @@ def ViewProjectOverview(request, client_pk):
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
 
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
     projects = request.user.projectspermitted.filter(belegger__id=client_pk)
 
     medewerkers = [proj.permitted.all() for proj in projects]
@@ -52,6 +55,9 @@ def ViewProject(request, client_pk, pk):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     if not request.user.projectspermitted.filter(id=pk).exists():
         return render(request, "404_syn.html")
@@ -105,12 +111,52 @@ def ViewProject(request, client_pk, pk):
 
 
 @login_required(login_url="login_syn")
-def ConnectPVE(request, client_pk, pk):
+def KiesPVE(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
+    allowed_users = ["B", "SB", "SOG"]
+
+    if request.user.type_user not in allowed_users:
+        return render(request, "404_syn.html")
+
+    project = get_object_or_404(Project, pk=pk)
+
+    if project.belegger != client:
+        return render(request, "404_syn.html")
+        
+    form = forms.PVEVersieKeuzeForm(request.POST or None)
+    form.fields["pve_versie"].queryset = models.PVEVersie.objects.filter(belegger=client, public=True)
+
+    if request.method == "POST" or request.method == "PUT":
+        if form.is_valid():
+            return redirect("connectpve_syn", client_pk=client_pk, pk=pk, versie_pk=form.cleaned_data["pve_versie"].id)
+
+    context = {}
+    context["form"] = form
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
+    context["pk"] = pk
+    context["project"] = project
+    return render(request, "kiespve.html", context)
+
+@login_required(login_url="login_syn")
+def ConnectPVE(request, client_pk, pk, versie_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     allowed_users = ["B", "SB", "SOG"]
 
@@ -123,7 +169,7 @@ def ConnectPVE(request, client_pk, pk):
         return render(request, "404_syn.html")
         
     # we get the active version of the pve based on what is active right now
-    versie = models.ActieveVersie.objects.get(belegger__naam="Syntrus").versie
+    versie = models.PVEVersie.objects.filter(id=versie_pk).first()
 
     if project.pveconnected:
         return render(request, "404_syn.html")
@@ -231,7 +277,7 @@ def ConnectPVE(request, client_pk, pk):
             messages.warning(
                 request, f"Parameters van het Programma van Eisen van project {project.naam} zijn toegevoegd. U kunt het PvE downloaden vanaf de projecthomepagina."
             )
-            return redirect("dashboard_syn", client_pk=client_pk)
+            return redirect("manageprojecten_syn", client_pk=client_pk)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
@@ -259,6 +305,7 @@ def ConnectPVE(request, client_pk, pk):
     context["client"] = client
     context["logo_url"] = logo_url
     context["versie"] = versie
+    context["versie_pk"] = versie_pk
     return render(request, "ConnectPVE_syn.html", context)
 
 
@@ -269,6 +316,9 @@ def download_pve_overview(request, client_pk):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     projects = client.project.all().filter(
         Q(permitted__username__iregex=r"\y{0}\y".format(request.user.username))
@@ -289,6 +339,9 @@ def download_pve(request, client_pk, pk):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     if request.user.type_user != "B":
         if not Project.objects.filter(

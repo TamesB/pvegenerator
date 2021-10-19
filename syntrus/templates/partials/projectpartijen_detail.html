@@ -1,0 +1,19 @@
+{% extends "_partial.html" %}
+
+{% load semanticui %}
+
+{% load filename %}
+
+{% block main %}
+
+<div hx-target="this" hx-swap="outerHTML">
+{% if project.organisaties.all %}
+    {% for organisatie in project.organisaties.all %}{{ organisatie }}, {% endfor %}
+    {% endif %}
+<button hx-get="{% url 'projectaddpartijform' client_pk project.id %}" class="ui icon basic button"><i class="icon plus"></i></button>
+</div>
+
+{% endblock %}
+{% block scripts %}
+{% include "partials/messages.html" %}
+{% endblock %}

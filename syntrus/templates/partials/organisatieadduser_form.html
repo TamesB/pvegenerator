@@ -1,0 +1,20 @@
+{% extends "_partial.html" %}
+
+{% load semanticui %}
+
+{% load filename %}
+
+{% block main %}
+    <form hx-target="this" hx-swap="outerHTML" class="ui form" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+        {{ form }}
+        <button hx-get="{% url 'getusersorganisatie' client_pk organisatie.id %}" style="float: left;" class="ui basic button">Terug</button>
+        <button hx-post="{% url 'addusersorganisatie' client_pk organisatie.id %}" type="submit" class="ui icon green button"><i class="icon plus"></i></button>
+
+    </form>  
+
+{% endblock %}
+
+{% block scripts %}
+{% include "partials/messages.html" %}
+{% endblock %}

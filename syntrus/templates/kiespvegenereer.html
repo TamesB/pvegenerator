@@ -1,0 +1,39 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+{% block menu %}
+{% include 'MenuTypes.html' %}
+{% endblock %}
+
+{% block main %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Genereer</div>
+</div>
+
+<div class="general_title"><img src="{% static 'syntrus/img/plusproject.png'%}" class="title_img"></img><p>Programma van Eisen Genereren</p></div>
+<div class="invite-container">
+    <div class="box">
+        <p class="description">Kies de PvE versie die u wil genereren.</p>
+        <form action="{% url 'kiespvegenerate' client_pk %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label class="formtitle" for="{{ form.pve_versie.id_for_label }}"><p>Versie:</p></label>
+            <p class="formbox">{{ form.pve_versie }}</p>
+            <input type="submit" class="button" value="Volgende >">
+        </form>    
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function(){
+    $('[value=""]').remove();
+});
+
+</script>
+{% endblock %}

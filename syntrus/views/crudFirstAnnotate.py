@@ -23,6 +23,9 @@ def AddCommentOverview(request, client_pk):
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
 
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
     context = {}
 
     if request.user.projectspermitted.all().filter(belegger__id=client_pk).exists():
@@ -42,6 +45,9 @@ def MyComments(request, client_pk, pk):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     context = {}
 
@@ -180,6 +186,9 @@ def MyCommentsDelete(request, client_pk, pk):
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
 
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
     project = get_object_or_404(Project, pk=pk)
     if project.belegger != client:
         return render(request, "404_syn.html")
@@ -237,6 +246,9 @@ def deleteAnnotationPve(request, client_pk, project_id, ann_id):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     # check if project exists
     project = get_object_or_404(Project, id=project_id)
@@ -317,6 +329,9 @@ def AddAnnotationAttachment(request, client_pk, projid, annid):
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
 
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
     project = get_object_or_404(Project, pk=projid)
 
     if project.frozenLevel > 0:
@@ -370,6 +385,9 @@ def VerwijderAnnotationAttachment(request, client_pk, projid, annid):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     # check if project exists
     project = get_object_or_404(Project, pk=projid)
@@ -447,6 +465,9 @@ def AllComments(request, client_pk, pk):
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
 
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
+
     context = {}
 
     project = get_object_or_404(Project, pk=pk)
@@ -493,6 +514,9 @@ def AddComment(request, client_pk, pk):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+        return render(request, "404_syn.html")
 
     context = {}
 

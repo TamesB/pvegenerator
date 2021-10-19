@@ -53,7 +53,7 @@ class Project(models.Model):
 
     FIRST_ANNOTATE_CHOICES = [
         (PROJMANAGER, 'Projectmanager'),
-        (DERDEN, 'Derde'),
+        (DERDEN, 'Stakeholder'),
     ]
     first_annotate = models.CharField(
         max_length=3,
