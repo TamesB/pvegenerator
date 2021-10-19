@@ -10,44 +10,8 @@
 <h1 class="ui header center aligned">Projecten</h1>
 <a href="{% url 'dashboard' %}"><input type="button" class="ui primary button d-inline" value="< Dashboard" /></a>
 <br><br>
-{% if projects %}
-<div>
-	<table class="ui fixed multiple line blue table">
-		<thead>
-			<tr>
-				<th>
-					Project
-				</th>				
-				<th>
-					Belegger
-				</th>
-				<th>
-					Fase
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-				{% for project in projects %}
-				<tr>
-                    <td> 
-					<a href="{% url 'projectview' project.id %}">{{ project.naam }}</a> &nbsp; 
-                    </td>
-                    <td> 
-                        {{ project.belegger }}
-                    </td>
-                    <td> 
-                        {{ project.statuscontract }}
-                    </td>
-				</tr>
-				{% endfor %}
-		</tbody>
-	</table>
-{% else %}
-<p>Nog geen projecten</p>
-{% endif %}
-
 <div class="card">
-    <h3>Locaties</h3>
+    <h3>Projecten</h3>
    {% leaflet_map "card" callback="map_init" %}
 </div>
 

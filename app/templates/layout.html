@@ -13,27 +13,10 @@
         <title>PvE Generator</title>
     </head>
     <body>
-      {% if request.user.user_type == 'B' %}
-        <nav class="ui blue fixed three item top menu">
-          <a class="item" href="{% url 'dashboard' %}">Dashboard</a>
-          <div class="ui pointing dropdown link item">
-            <span class="text">PvE</span>
-            <i class="dropdown icon"></i>
-            <div class="menu">
-              <div class="header">Programma van Eisen</div>
-                <a class="item" href="{% url 'generate' %}">Voorbeeld PvE genereren</a>
-                <a class="item" href="{% url 'kiesparametersview' %}">Bewerk Keuzematrix</a>
-                <a class="item" href="{% url 'sectionview' %}">Bewerk Programma van Eisen</a>
-              </div>
-            </div>
-          <a class="item" href="{% url 'logout' %}">Logout</a>
-        </nav>
-      {% else %}
-        <nav class="ui blue fixed two item top menu">
-          <a class="item" href="{% url 'dashboard' %}">Dashboard</a>
-          <a class="item" href="{% url 'logout' %}">Logout</a>
-        </nav>
-      {% endif %}
+    <div class="ui equal width grid" style="height: 100%">
+    <div class="two wide column">
+    {% include '_menu.html' %}
+    </div>
       <div id="main" class="ui raised very padded text container segment">
         <article>
           {% if messages %}

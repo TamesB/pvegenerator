@@ -1,0 +1,16 @@
+{% load static %} {% load semanticui %}
+<div
+  class="ui inverted labeled icon left vertical visible sidebar menu"
+  style=""
+  id="menu"
+>
+  <a class="item" href="{% url 'dashboard' %}"> Dashboard </a>
+  <a class="item" href="{% url 'klantoverzicht' %}"> Klantenoverzicht </a>
+  <a class="item" href="{% url 'klanttoevoegen' %}"> + Klant toevoegen </a>
+  <a class="item" href="{% url 'beleggerversieoverview' %}"> Bewerk PvE's </a>
+  <a class="item" href="{% url 'allprojects' %}"> Projecten </a>
+  <a class="item" href="{% url 'projectheatmap' %}"> Project Heatmap </a>
+  <a class="item" href="{% url 'logout' %}"> Log Uit </a>
+</div>
+
+<script></script>

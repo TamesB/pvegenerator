@@ -1,0 +1,23 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+{% block main %}
+<div class="invite-container">
+    <div class="box">
+        <p class="title">Uitnodiging voor de PvE Tool</p>
+        <p class="description">Maak uw wachtwoord aan, en u wordt als beheerder doorverwezen naar uw subwebsite. Vanaf daar kan u werknemers uitnodigen en projecten starten.</p>
+    <form action="{% url 'acceptuitnodigingbeheerder' client_pk key %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+            <label for="{{ form.password1.id_for_label }}">Wachtwoord:</label>
+            <p class="formbox">{{ form.password1 }}</p>
+            <label for="{{ form.password2.id_for_label }}">Herhaal wachtwoord:</label>
+            <p class="formbox">{{ form.password2 }}</p>
+            <input type="submit" class="button" value="Registreer">
+        </form>    
+    </div>
+</div>
+
+{% endblock %}

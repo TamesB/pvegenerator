@@ -15,55 +15,116 @@
   <div class="active section">Projecten</div>
 </div>
 
+
+
+
 <div class="opmerking_project_list">
-    <div class="general_title"><img src="{% static 'syntrus/img/plusproject.png'%}" class="title_img"></img><p>Projecten <a href="{% url 'plusproject_syn' client_pk %}"><button class="ui icon green button"><i class="icon plus"></i>Start Project</button></a></p> </div>
-<input type="text" class="searchable_table_input" id="myInput" onkeyup="searchableLookup()" placeholder="Zoek op project.." title="Typ een project in">
+<div class="general_title"><img src="{% static 'syntrus/img/plusproject.png'%}" class="title_img"></img><p>Projecten <a href="{% url 'plusproject_syn' client_pk %}"><button class="ui icon green button"><i class="icon plus"></i>Start Project</button></a></p> </div>
 
+<div class="ui top attached tabular menu">
+  <a class="item active" data-tab="todo_projects">TODO Projecten</a>
+  <a class="item" data-tab="ready_projects">Ready Projecten</a>
+</div>
 
-<div class="base_info_table">
-  <table id="myTable">
-<tbody>
-    <tr class="table_title">
-      <th><p>Project</p></th>
-      <th><p>Laatste Verandering</p></th>
-      <th><p>Locatie</p></th>
-      <th><p>Aantal VHE</p></th>
-      <th><p>Fase</p></th>
-      <th><p>Projectmanager</p></th>
-      <th><p>Stakeholders</p></th>
-      <th><p>PvE</p></th>
-    </tr>
-    {% if projecten %}
-        {% for project in projecten %}
-    <tr class="table_content">
-      <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
-      <td><p>{{ project.datum_recent_verandering }}</p></td>
-      <td><p>{{ project.plaatsnamen }}</p></td>
-      <td><p>{{ project.vhe }}</p></td>
-      <td><p>{{ project.statuscontract }}</p></td>
-        <td>
-        <p>{% include 'partials/projectmanager_detail.html' %}</p></td>
-        <td>
-        <p>{% include 'partials/projectpartijen_detail.html' %}</p></td>
-          <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="img" src="{% static 'syntrus/img/download.png' %}"></img></a>{% else %}<a href="{% url 'kiespveversie' client_pk project.id %}"><button class="ui icon basic button"><i class="icon plus"></i>Verbind PvE</button></a>{% endif %}</p></td>
-    </tr>
-    {% endfor %}
-        {% else %}
-        <tr class="table_content">
-          <td><p>
-          <i>Nog geen projecten toegevoegd.</i>
-          </p></td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
+<div class="ui bottom attached tab segment active" data-tab="todo_projects">
+  <input type="text" class="searchable_table_input" id="myInput1" onkeyup="searchableLookup1()" placeholder="Zoek op project.." title="Typ een project in">
+  <div class="base_info_table">
+    <table id="myTable1">
+    <tbody>
+        <tr class="table_title">
+          <th><p>Project</p></th>
+          <th><p>Laatste Verandering</p></th>
+          <th><p>Locatie</p></th>
+          <th><p>Aantal VHE</p></th>
+          <th><p>Fase</p></th>
+          <th><p>Projectmanager</p></th>
+          <th><p>Stakeholders</p></th>
+          <th><p>PvE</p></th>
         </tr>
-        {% endif %}
-</tbody>
-</table>
+        {% if new_projecten %}
+            {% for project in new_projecten %}
+        <tr class="table_content">
+          <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
+          <td><p>{{ project.datum_recent_verandering }}</p></td>
+          <td><p>{{ project.plaatsnamen }}</p></td>
+          <td><p>{{ project.vhe }}</p></td>
+          <td><p>{{ project.statuscontract }}</p></td>
+            <td>
+            <p>{% include 'partials/projectmanager_detail.html' %}</p></td>
+            <td>
+            <p>{% include 'partials/projectpartijen_detail.html' %}</p></td>
+              <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="img" src="{% static 'syntrus/img/download.png' %}"></img></a>{% else %}<a href="{% url 'kiespveversie' client_pk project.id %}"><button class="ui icon basic button"><i class="icon plus"></i>Verbind PvE</button></a>{% endif %}</p></td>
+        </tr>
+        {% endfor %}
+            {% else %}
+            <tr class="table_content">
+              <td><p>
+              <i>Nog geen projecten toegevoegd.</i>
+              </p></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            {% endif %}
+    </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="ui bottom attached tab segment" data-tab="ready_projects">
+  <input type="text" class="searchable_table_input" id="myInput2" onkeyup="searchableLookup2()" placeholder="Zoek op project.." title="Typ een project in">
+  <div class="base_info_table">
+    <table id="myTable2">
+    <tbody>
+      <tr class="table_title">
+        <th><p>Project</p></th>
+        <th><p>Laatste Verandering</p></th>
+        <th><p>Locatie</p></th>
+        <th><p>Aantal VHE</p></th>
+        <th><p>Fase</p></th>
+        <th><p>Projectmanager</p></th>
+        <th><p>Stakeholders</p></th>
+        <th><p>PvE</p></th>
+      </tr>
+      {% if old_projecten %}
+          {% for project in old_projecten %}
+      <tr class="table_content">
+        <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
+        <td><p>{{ project.datum_recent_verandering }}</p></td>
+        <td><p>{{ project.plaatsnamen }}</p></td>
+        <td><p>{{ project.vhe }}</p></td>
+        <td><p>{{ project.statuscontract }}</p></td>
+          <td>
+          <p>{% include 'partials/projectmanager_detail.html' %}</p></td>
+          <td>
+          <p>{% include 'partials/projectpartijen_detail.html' %}</p></td>
+            <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="img" src="{% static 'syntrus/img/download.png' %}"></img></a>{% else %}<a href="{% url 'kiespveversie' client_pk project.id %}"><button class="ui icon basic button"><i class="icon plus"></i>Verbind PvE</button></a>{% endif %}</p></td>
+      </tr>
+      {% endfor %}
+          {% else %}
+          <tr class="table_content">
+            <td><p>
+            <i>Nog geen start-ready projecten.</i>
+            </p></td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+          </tr>
+          {% endif %}
+    </tbody>
+    </table>
+  </div>
+</div>
+
+
 </div>
 {% endblock %}
 {% block modal %}
@@ -85,11 +146,11 @@ function comparer(index) {
 }
 function getCellValue(row, index){ return $(row).children('td').eq(index).text() }
 
-function searchableLookup() {
+function searchableLookup1() {
   var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("myInput");
+  input = document.getElementById("myInput1");
   filter = input.value.toUpperCase();
-  table = document.getElementById("myTable");
+  table = document.getElementById("myTable1");
   tr = table.getElementsByTagName("tr");
   for (i = 0; i < tr.length; i++) {
     td = tr[i].getElementsByTagName("td")[0];
@@ -104,5 +165,27 @@ function searchableLookup() {
   }
 }
 
+function searchableLookup2() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput2");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable2");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+
+$('.menu .item')
+  .tab()
+;
 </script>
 {% endblock %}

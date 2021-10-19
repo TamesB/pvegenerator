@@ -26,9 +26,20 @@ def ManageProjects(request, client_pk):
 
     if request.user.type_user not in allowed_users:
         return render(request, "404_syn.html")
+    projecten = client.project.all().order_by("-datum_recent_verandering")
+
+    new_projecten = []
+    old_projecten = []
+
+    for project in projecten:
+        if not project.pveconnected or not project.projectmanager:
+            new_projecten.append(project)
+        else:
+            old_projecten.append(project)
 
     context = {}
-    context["projecten"] = client.project.all().order_by("-datum_recent_verandering")
+    context["new_projecten"] = new_projecten
+    context["old_projecten"] = old_projecten
     context["client_pk"] = client_pk
     context["client"] = client
     context["logo_url"] = logo_url
@@ -125,7 +136,7 @@ def AddProjectManagerToProject(request, client_pk, pk):
     form = forms.AddProjectmanagerToProjectForm(request.POST or None)
     form.fields["projectmanager"].queryset = CustomUser.objects.filter(type_user="SOG", klantenorganisatie=client)
     form.fields["projectmanager"].initial = project.projectmanager
-    
+
     context = {}
     context["client_pk"] = client_pk
     context["project"] = project

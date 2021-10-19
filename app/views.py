@@ -15,7 +15,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from project.models import Beleggers, Project
+from project.models import Beleggers, Project, BeheerdersUitnodiging
 from utils import writeExcel
 from users.models import CustomUser
 from . import forms, models
@@ -110,10 +110,45 @@ def KlantOverzicht(request):
 
 @staff_member_required(login_url="/404")
 def KlantToevoegen(request):
+    form = forms.BeleggerForm(request.POST or None)
+    form.fields["beheerder"].queryset = CustomUser.objects.filter(type_user="SB")
+
     if request.method == "POST":
         form = forms.BeleggerForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            new_klant = Beleggers()
+            new_klant.naam = form.cleaned_data["naam"]
+            new_klant.abbonement = form.cleaned_data["abbonement"]
+            new_klant.logo = form.cleaned_data["logo"]
+            new_klant.save()
+
+            if form.cleaned_data["email"]:
+                invitation = BeheerdersUitnodiging()
+                expiry_length = 10
+                expire_date = timezone.now() + timezone.timedelta(expiry_length)
+                invitation.expires = expire_date
+                invitation.key = secrets.token_urlsafe(30)
+                invitation.invitee = form.cleaned_data["email"]
+                invitation.klantenorganisatie = new_klant
+                invitation.save()
+
+                send_mail(
+                    f"Programma van Eisen Tool - Uitnodiging als beheerder voor uw website",
+                    f"""Beste, 
+                    
+                    Uw subwebsite is gereed. Maak een wachtwoord aan via de uitnodigingslink 
+                    
+                    Uitnodigingslink: https://pvegenerator.net/pvetool/{new_klant.id}/accept/{invitation.key}
+                    """,
+                    "admin@pvegenerator.net",
+                    form.cleaned_data["email"],
+                    fail_silently=False,
+                )
+            else:
+                if form.cleaned_data["beheerder"]:
+                    new_klant.beheerder = form.cleaned_data["beheerder"]
+                    new_klant.save()
+
             return redirect("klantoverzicht")
         
     context = {}
@@ -373,33 +408,21 @@ def AddPvEVersie(request, belegger_pk):
     context["belegger"] = belegger
     return render(request, "addPvEVersie.html", context)
 
+@staff_member_required(login_url="/404")
+def ActivateVersie(request, versie_pk):
+    versie = models.PVEVersie.objects.filter(id=versie_pk).first()
+    versie.public = True
+    versie.save()
+    messages.warning(request, f"Versie geactiveerd: {versie}")
+    return redirect("beleggerversieoverview")
 
 @staff_member_required(login_url="/404")
-def ActievePVEVersieOverview(request):
-    actieve_versies = models.ActieveVersie.objects.all()
-    context = {}
-    context["actieve_versies"] = actieve_versies
-    return render(request, "ActieveVersiesOverview.html", context)
-
-
-@staff_member_required(login_url="/404")
-def ActievePVEVersieEdit(request, pk):
-    actieve_versie = models.ActieveVersie.objects.get(id=pk)
-
-    if request.method == "POST":
-        form = forms.ActieveVersieEditForm(request.POST)
-        if form.is_valid():
-            actieve_versie.versie = form.cleaned_data["versie"]
-            actieve_versie.save()
-            return redirect("actieveversies")
-
-    actieve_versies = models.ActieveVersie.objects.all()
-    context = {}
-    context["actieve_versies"] = actieve_versies
-    context["form"] = forms.ActieveVersieEditForm(instance=actieve_versie)
-    context["belegger"] = actieve_versie.belegger
-    return render(request, "ActieveVersiesEdit.html", context)
-
+def DeactivateVersie(request, versie_pk):
+    versie = models.PVEVersie.objects.filter(id=versie_pk).first()
+    versie.public = False
+    versie.save()
+    messages.warning(request, f"Versie gedeactiveerd: {versie}")
+    return redirect("beleggerversieoverview")
 
 @staff_member_required(login_url="/404")
 def PVEBewerkOverview(request, versie_pk):

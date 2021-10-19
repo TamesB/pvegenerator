@@ -4,6 +4,7 @@ from django import forms
 from django.forms import ModelForm
 
 from project.models import Beleggers
+from users.models import CustomUser
 
 from .models import (
     ActieveVersie,
@@ -37,6 +38,8 @@ class KiesParameterForm(forms.Form):
 
 
 class BeleggerForm(ModelForm):
+    email = forms.EmailField(required=False)
+    beheerder = forms.ModelChoiceField(queryset=CustomUser.objects.none(), required=False)
     class Meta:
         model = Beleggers
         fields = ("naam", "abbonement", "beheerder", "logo")
@@ -45,8 +48,27 @@ class BeleggerForm(ModelForm):
             "abbonement": "Abbonement Type:",
             "beheerder": "Beheerder:",
             "logo": "Upload Logo:",
+            "email": "E-mail beheerder (optioneel):"
         }
 
+        layout = [
+            ("Text", '<h2 class="ui dividing header">Basisinformatie</h2>'),
+            ("Field", "naam"),
+            ("Field", "abbonement"),
+            ("Text", '<h2 class="ui dividing header">Beheerder</h2>'),
+            (
+                "Text",
+                "<i>Kies een bestaande beheerder of vul de e-mail van de beheerder van de klant in. Een e-mail wordt naar hen gestuurd voor toegang naar de gegenereerde sub-website.</i>",
+            ),
+            ("Field", "beheerder"),
+            ("Field", "email"),
+            ("Text", '<h2 class="ui dividing header">Klantenlogo</h2>'),
+            (
+                "Text",
+                "<i>Upload hier de logo van de klant. Deze logo wordt gebruikt voor hun subwebsite en PvE's.</i><br>",
+            ),
+            ("Field", "logo"),
+        ]
 
 class PVEVersieForm(ModelForm):
     kopie_versie = forms.ModelChoiceField(

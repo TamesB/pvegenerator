@@ -6,7 +6,7 @@ from project.models import Beleggers
 
 
 class PVEVersie(models.Model):
-    belegger = models.ForeignKey(Beleggers, on_delete=models.CASCADE, related_name='versie')
+    belegger = models.ForeignKey(Beleggers, on_delete=models.SET_NULL, null=True, related_name='versie')
     versie = models.CharField(max_length=50, null=True, blank=True)
     public = models.BooleanField(default=False, null=True, blank=True)
 
@@ -17,7 +17,7 @@ class PVEVersie(models.Model):
 
 
 class ActieveVersie(models.Model):
-    belegger = models.ForeignKey(Beleggers, on_delete=models.CASCADE, related_name='actieve_versie')
+    belegger = models.ForeignKey(Beleggers, on_delete=models.SET_NULL, null=True, related_name='actieve_versie')
     versie = models.ForeignKey(PVEVersie, on_delete=models.CASCADE, related_name='actieve_versie')
 
     def __str__(self):

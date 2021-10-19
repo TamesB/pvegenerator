@@ -7,12 +7,13 @@ from django.db.models import Q
 from django.shortcuts import redirect, render
 
 from app import models
-from project.models import Project, PVEItemAnnotation, Beleggers
+from project.models import Project, PVEItemAnnotation, Beleggers, BeheerdersUitnodiging
 from syntrus import forms
 from syntrus.models import FAQ
 from utils import createBijlageZip, writePdf, pve_csv_extract
 from syntrus.views.utils import GetAWSURL
 from users.models import CustomUser
+from users.forms import AcceptInvitationForm
 
 def LoginView(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -68,6 +69,71 @@ def LoginView(request, client_pk):
     context["logo_url"] = logo_url
     return render(request, "login_syn.html", context)
 
+def BeheerdersAcceptUitnodiging(request, client_pk, key):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "404_syn.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = GetAWSURL(client)
+
+    if not key or not BeheerdersUitnodiging.objects.filter(key=key):
+        return render(request, "404_syn.html")
+
+    invitation = BeheerdersUitnodiging.objects.filter(key=key).first()
+
+    if utc.localize(datetime.datetime.now()) > invitation.expires:
+        return render(request, "404verlopen_syn.html")
+
+    if request.method == "POST":
+        form = AcceptInvitationForm(request.POST)
+
+        if form.is_valid():
+            # strip the email by its first part to automatically create a username
+            sep = "@"
+            username = invitation.invitee.split(sep, 1)[0]
+            user = CustomUser.objects.create_user(
+                username, password=form.cleaned_data["password1"]
+            )
+            user.email = invitation.invitee
+            if invitation.klantenorganisatie:
+                user.klantenorganisatie = invitation.klanteorganisatie
+
+            user.save()
+
+            klant = invitation.klantenorganisatie
+            klant.beheerder = user
+            klant.save()
+
+            user = authenticate(
+                request, username=username, password=form.cleaned_data["password1"]
+            )
+
+            invitation.delete()
+
+            send_mail(
+                f"{klant.naam} PvE Tool - Uw Logingegevens",
+                f"""Reeds heeft u zich aangemeld bij de PvE tool.
+                Voor het vervolgens inloggen op de tool is uw gebruikersnaam: {user.username}
+                en het wachtwoord wat u heeft aangegeven bij het aanmelden.""",
+                "admin@pvegenerator.net",
+                [f"{invitation.invitee}"],
+                fail_silently=False,
+            )
+            if user is not None:
+                login(request, user)
+                messages.warning(request, f"Account aangemaakt met gebruikersnaam: {user.username}. Uw logingegevens zijn naar u gemaild.")
+                return redirect("dashboard_syn")
+        else:
+            messages.warning(request, "Vul de verplichte velden in.")
+
+    form = AcceptInvitationForm()
+    context = {}
+    context["form"] = form
+    context["key"] = key
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
+    return render(request, "acceptBeheerderInvite.html", context)
 
 @login_required(login_url="login_syn")
 def LogoutView(request, client_pk):

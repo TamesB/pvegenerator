@@ -1186,6 +1186,10 @@ html {
           transform: translateY(4px);
 }
 
+#main .layerOneInner .article .article_content .opmerking_project_list {
+  margin-bottom: 4vh;
+}
+
 #main .layerOneInner .article .article_content .opmerking_project_list .general_title {
   margin-bottom: 4vh;
 }

@@ -74,7 +74,7 @@ class CommentReply(models.Model):
         max_digits=10, decimal_places=2, blank=True, null=True, default=None
     )
     status = models.ForeignKey(
-        CommentStatus, on_delete=models.CASCADE, null=True, blank=True, related_name='reply'
+        CommentStatus, on_delete=models.SET_NULL, null=True, blank=True, related_name='reply'
     )
     gebruiker = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name="reply"

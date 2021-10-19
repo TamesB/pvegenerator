@@ -18,6 +18,7 @@ from .views import (
 urlpatterns = [
     # base functions
     path("<int:client_pk>", base.LoginView, name="login_syn"),
+    path("<int:client_pk>/accept/<str:key>", base.BeheerdersAcceptUitnodiging, name="acceptuitnodigingbeheerder"),
     path("<int:client_pk>/logout", base.LogoutView, name="logout_syn"),
     path("<int:client_pk>/dashboard", base.DashboardView, name="dashboard_syn"),
     path("<int:client_pk>/faq", base.FAQView, name="faq_syn"),

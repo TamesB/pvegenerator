@@ -23,13 +23,9 @@ urlpatterns = [
         name="pvebewerkoverview",
     ),
     path("addpveversie/<int:belegger_pk>", views.AddPvEVersie, name="addpveversie"),
+    path("makeactive/<int:versie_pk>", views.ActivateVersie, name="maakactief"),
+    path("makeinactive/<int:versie_pk>", views.DeactivateVersie, name="maakinactief"),
     path("addbelegger", views.AddBelegger, name="addbelegger"),
-    path("actieveversies", views.ActievePVEVersieOverview, name="actieveversies"),
-    path(
-        "actieveversies/<int:pk>/edit",
-        views.ActievePVEVersieEdit,
-        name="actieveversiesedit",
-    ),
     path(
         "parameters/<int:versie_pk>/download",
         views.DownloadWorksheet,

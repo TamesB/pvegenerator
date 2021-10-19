@@ -24,6 +24,16 @@ class Beleggers(models.Model):
     def __str__(self):
         return f"{self.naam}"
 
+class BeheerdersUitnodiging(models.Model):
+    invitee = models.EmailField()
+    klantenorganisatie = models.ForeignKey(
+        "project.Beleggers", on_delete=models.CASCADE, null=True, blank=True
+         )
+    expires = models.DateTimeField(auto_now=False)
+    key = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"Invitee: { self.invitee }. Expires { self.expires }"
 
 class ContractStatus(models.Model):
     contrstatus = models.CharField(max_length=100, blank=True)
@@ -40,9 +50,9 @@ class Project(models.Model):
     plaatsnamen = models.CharField(max_length=250, default=None, null=True)
     vhe = models.FloatField(max_length=100, default=None)
     pensioenfonds = models.CharField(max_length=100, default=None)
-    statuscontract = models.ForeignKey(ContractStatus, on_delete=models.CASCADE, related_name="project")
+    statuscontract = models.ForeignKey(ContractStatus, on_delete=models.SET_NULL, null=True, related_name="project")
     datum_aangemaakt = models.DateTimeField(auto_now=True)
-    belegger = models.ForeignKey(Beleggers, on_delete=models.CASCADE, null=True, related_name="project")
+    belegger = models.ForeignKey(Beleggers, on_delete=models.SET_NULL, null=True, related_name="project")
 
     datum_recent_verandering = models.DateTimeField(
         "recente_verandering", auto_now=True
@@ -61,7 +71,7 @@ class Project(models.Model):
         default=PROJMANAGER,
     )
 
-    pve_versie = models.ForeignKey("app.PVEVersie", on_delete=models.CASCADE, null=True, related_name="project")
+    pve_versie = models.ForeignKey("app.PVEVersie", on_delete=models.SET_NULL, null=True, related_name="project")
 
     organisaties = models.ManyToManyField(
         "users.Organisatie",
@@ -73,7 +83,7 @@ class Project(models.Model):
     projectmanager = models.ForeignKey(
         "users.CustomUser",
         default=None,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name="projectmanager",
         blank=True,
         null=True,
@@ -91,59 +101,59 @@ class Project(models.Model):
     fullyFrozen = models.BooleanField(default=False)
     commentchecker = models.ForeignKey(
         "users.CustomUser",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True,
         related_name="commentchecker",
     )
 
     bouwsoort1 = models.ForeignKey(
-        "app.Bouwsoort", on_delete=models.CASCADE, blank=True, null=True
+        "app.Bouwsoort", on_delete=models.SET_NULL, blank=True, null=True
     )
     typeObject1 = models.ForeignKey(
-        "app.TypeObject", on_delete=models.CASCADE, blank=True, null=True
+        "app.TypeObject", on_delete=models.SET_NULL, blank=True, null=True
     )
     doelgroep1 = models.ForeignKey(
-        "app.Doelgroep", on_delete=models.CASCADE, blank=True, null=True
+        "app.Doelgroep", on_delete=models.SET_NULL, blank=True, null=True
     )
     bouwsoort2 = models.ForeignKey(
         "app.Bouwsoort",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True,
         related_name="SubBouwsoort",
     )
     typeObject2 = models.ForeignKey(
         "app.TypeObject",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True,
         related_name="SubTypeObject",
     )
     doelgroep2 = models.ForeignKey(
         "app.Doelgroep",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True,
         related_name="SubDoelgroep",
     )
     bouwsoort3 = models.ForeignKey(
         "app.Bouwsoort",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True,
         related_name="SubSubBouwsoort",
     )
     typeObject3 = models.ForeignKey(
         "app.TypeObject",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True,
         related_name="SubSubTypeObject",
     )
     doelgroep3 = models.ForeignKey(
         "app.Doelgroep",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True,
         related_name="SubSubDoelgroep",

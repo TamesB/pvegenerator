@@ -43,6 +43,21 @@
               type="button"
               value="Open"
             />
+          {% if item.public %}
+            <input
+              class="ui basic red button d-inline"
+              onclick="window.location.href='{% url 'maakinactief' item.id %}';"
+              type="button"
+              value="Deactiveer"
+            />
+            {% else %}
+            <input
+              class="ui basic green button d-inline"
+              onclick="window.location.href='{% url 'maakactief' item.id %}';"
+              type="button"
+              value="Activeer"
+            />
+            {% endif %}
           </div>
         </td>
       </tr>
