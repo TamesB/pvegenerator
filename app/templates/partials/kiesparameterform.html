@@ -1,0 +1,12 @@
+{% extends "partials/_base.html" %}
+
+{% block main %}
+    <form hx-target="this" hx-swap="outerHTML" class="ui form" method="POST" hx-encoding='multipart/form-data' enctype="multipart/form-data">
+    {% csrf_token %}
+        {{ form }}
+        <button hx-get="{% url 'kiesparameterdetail' versie_pk type parameter.id %}" style="float: left;" class="ui basic button">Terug</button>
+        <button hx-post="{% url 'kiesparameterform' versie_pk type parameter.id %}" type="submit" class="ui icon green button"><i class="icon plus"></i></button>
+    </form>  
+
+
+{% endblock %}

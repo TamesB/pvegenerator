@@ -29,9 +29,9 @@ def LoginPageView(request):
         if request.user.is_authenticated:
             return redirect("dashboard")
 
-    if request.method == "POST":
-        form = forms.LoginForm(request.POST)
+    form = forms.LoginForm(request.POST or None)
 
+    if request.method == "POST":
         if form.is_valid():
             (username, password) = (
                 form.cleaned_data["username"],
@@ -286,15 +286,13 @@ def PVEBeleggerVersieOverview(request):
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def AddBelegger(request):
+    form = forms.BeleggerForm(request.POST or None)
+
     if request.method == "POST":
-        form = forms.BeleggerForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             form.save()
             return redirect("beleggerversieoverview")
-
-    # form
-    form = forms.BeleggerForm()
 
     # View below modal
     beleggers = Beleggers.objects.all()
@@ -314,9 +312,10 @@ def AddBelegger(request):
 @staff_member_required(login_url=reverse_lazy("logout"))
 def AddPvEVersie(request, belegger_pk):
     belegger = Beleggers.objects.get(id=belegger_pk)
+    # form
+    form = forms.PVEVersieForm(request.POST or None, initial={"belegger": belegger})
 
     if request.method == "POST":
-        form = forms.PVEVersieForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             kopie_versie = form.cleaned_data["kopie_versie"]
@@ -504,8 +503,6 @@ def AddPvEVersie(request, belegger_pk):
 
             return redirect("beleggerversieoverview")
 
-    # form
-    form = forms.PVEVersieForm(initial={"belegger": belegger})
 
     # View below modal
     beleggers = Beleggers.objects.all()
@@ -604,9 +601,9 @@ def PVEHoofdstukListViewDelete(request, versie_pk):
 @staff_member_required(login_url=reverse_lazy("logout"))
 def PVEaddhoofdstukView(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
+    form = forms.ChapterForm(request.POST or None)
 
     if request.method == "POST":
-        form = forms.ChapterForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             PVEHoofdstuk = models.PVEHoofdstuk()
@@ -617,8 +614,6 @@ def PVEaddhoofdstukView(request, versie_pk):
 
     hoofdstukken = versie.hoofdstuk.all()
 
-    # form, initial chapter in specific onderdeel
-    form = forms.ChapterForm()
     context = {}
     context["hoofdstukken"] = hoofdstukken
     context["versie_pk"] = versie_pk
@@ -633,8 +628,11 @@ def PVEedithoofdstukView(request, versie_pk, pk):
     if not versie.hoofdstuk.filter(id=pk):
         return Http404("404")
 
+    # form, initial chapter in specific onderdeel
+    hoofdstuk = versie.hoofdstuk.get(id=pk)
+    form = forms.ChapterForm(request.POST or None, instance=hoofdstuk)
+
     if request.method == "POST":
-        form = forms.ChapterForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             PVEhoofdstuk = versie.hoofdstuk.get(id=pk)
@@ -642,9 +640,6 @@ def PVEedithoofdstukView(request, versie_pk, pk):
             PVEhoofdstuk.save()
             return redirect("hoofdstukview", versie_pk=versie_pk)
 
-    # form, initial chapter in specific onderdeel
-    hoofdstuk = versie.hoofdstuk.get(id=pk)
-    form = forms.ChapterForm(instance=hoofdstuk)
 
     hoofdstukken = versie.hoofdstuk.all()
 
@@ -754,8 +749,9 @@ def PVEaddparagraafView(request, versie_pk, pk):
     else:
         raise Http404("404")
 
+    form = forms.ParagraafForm(request.POST or None, initial={"hoofdstuk": hoofdstuk})
+
     if request.method == "POST":
-        form = forms.ParagraafForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             PVEParagraaf = models.PVEParagraaf()
@@ -776,7 +772,6 @@ def PVEaddparagraafView(request, versie_pk, pk):
                 "itemlistview", versie_pk=versie_pk, chapter_id=pk, paragraph_id=0
             )
 
-    form = forms.ParagraafForm(initial={"hoofdstuk": hoofdstuk})
 
     # otherwise, show paragraphs
     context = {}
@@ -797,9 +792,9 @@ def PVEeditparagraafView(request, versie_pk, pk):
         hoofdstuk = paragraaf.hoofdstuk
     else:
         raise Http404("404")
+    form = forms.ParagraafForm(request.POST or None, instance=paragraaf)
 
     if request.method == "POST":
-        form = forms.ParagraafForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             PVEparagraaf = versie.paragraaf.filter(id=pk).first()
@@ -830,7 +825,6 @@ def PVEeditparagraafView(request, versie_pk, pk):
                 paragraph_id=0,
             )
 
-    form = forms.ParagraafForm(instance=paragraaf)
 
     # otherwise, show paragraphs
     context = {}
@@ -1071,15 +1065,27 @@ def downloadBijlageView(request, pk):
 @staff_member_required(login_url=reverse_lazy("logout"))
 def editItemView(request, versie_pk, pk):
     pk = int(pk)
-
     if models.PVEItem.objects.filter(versie__id=versie_pk, id=pk).exists():
         PVEItem = models.PVEItem.objects.filter(versie__id=versie_pk, id=pk).first()
     else:
         raise Http404("Item does not exist.")
+    
+    form = forms.PVEItemEditForm(request.POST or None, request.FILES or None, instance=PVEItem)
+    form.fields["BestaandeBijlage"].queryset = models.ItemBijlages.objects.filter(
+        versie__id=versie_pk
+    ).all()
+    form.fields["Bouwsoort"].queryset = models.Bouwsoort.objects.filter(
+        versie__id=versie_pk
+    ).all()    
+    form.fields["TypeObject"].queryset = models.TypeObject.objects.filter(
+        versie__id=versie_pk
+    ).all()    
+    form.fields["Doelgroep"].queryset = models.Doelgroep.objects.filter(
+        versie__id=versie_pk
+    ).all()
 
     if request.method == "POST":
         # get user entered form
-        form = forms.PVEItemEditForm(request.POST, request.FILES)
 
         # check validity
         if form.is_valid():
@@ -1115,8 +1121,19 @@ def editItemView(request, versie_pk, pk):
             # and reverse
             return HttpResponseRedirect(reverse("viewitem", args=(versie_pk, pk)))
 
+    # if get method, just render the empty form
+    context = {}
+    context["form"] = form
+    context["id"] = pk
+    context["versie_pk"] = versie_pk
+    return render(request, "PVEItemEdit.html", context)
 
-    form = forms.PVEItemEditForm(instance=PVEItem)
+
+@staff_member_required(login_url=reverse_lazy("logout"))
+def addItemView(request, versie_pk, chapter_id, paragraph_id):
+    paragraph_id = int(paragraph_id)
+
+    form = forms.PVEItemEditForm(request.POST or None, request.FILES or None)
     form.fields["BestaandeBijlage"].queryset = models.ItemBijlages.objects.filter(
         versie__id=versie_pk
     ).all()
@@ -1130,21 +1147,7 @@ def editItemView(request, versie_pk, pk):
         versie__id=versie_pk
     ).all()
 
-    # if get method, just render the empty form
-    context = {}
-    context["form"] = form
-    context["id"] = pk
-    context["versie_pk"] = versie_pk
-    return render(request, "PVEItemEdit.html", context)
-
-
-@staff_member_required(login_url=reverse_lazy("logout"))
-def addItemView(request, versie_pk, chapter_id, paragraph_id):
-    paragraph_id = int(paragraph_id)
-
     if request.method == "POST":
-        # get user entered form
-        form = forms.PVEItemEditForm(request.POST, request.FILES)
 
         # check validity
         if form.is_valid():
@@ -1191,20 +1194,6 @@ def addItemView(request, versie_pk, chapter_id, paragraph_id):
 
             # and reverse
             return HttpResponseRedirect(reverse("viewitem", args=(versie_pk, pk)))
-
-    form = forms.PVEItemEditForm()
-    form.fields["BestaandeBijlage"].queryset = models.ItemBijlages.objects.filter(
-        versie__id=versie_pk
-    ).all()
-    form.fields["Bouwsoort"].queryset = models.Bouwsoort.objects.filter(
-        versie__id=versie_pk
-    ).all()    
-    form.fields["TypeObject"].queryset = models.TypeObject.objects.filter(
-        versie__id=versie_pk
-    ).all()    
-    form.fields["Doelgroep"].queryset = models.Doelgroep.objects.filter(
-        versie__id=versie_pk
-    ).all()
 
     context = {}
     context["form"] = form
@@ -1298,30 +1287,6 @@ def kiesparametersView(request, versie_pk):
 
 
 @staff_member_required(login_url=reverse_lazy("logout"))
-def kiesparametersViewEdit(request, versie_pk):
-    versie = models.PVEVersie.objects.get(id=versie_pk)
-
-    context = {}
-    context["bouwsoorten"] = versie.bouwsoort.all()
-    context["typeObjecten"] = versie.typeobject.all()
-    context["doelgroepen"] = versie.doelgroep.all()
-    context["versie_pk"] = versie_pk
-    return render(request, "kiesparametersEdit.html", context)
-
-
-@staff_member_required(login_url=reverse_lazy("logout"))
-def kiesparametersViewDelete(request, versie_pk):
-    versie = models.PVEVersie.objects.get(id=versie_pk)
-
-    context = {}
-    context["bouwsoorten"] = versie.bouwsoort.all()
-    context["typeObjecten"] = versie.typeobject.all()
-    context["doelgroepen"] = versie.doelgroep.all()
-    context["versie_pk"] = versie_pk
-    return render(request, "kiesparametersDelete.html", context)
-
-
-@staff_member_required(login_url=reverse_lazy("logout"))
 def addkiesparameterView(request, versie_pk, type_id):
     type_id = int(type_id)
     versie = models.PVEVersie.objects.get(id=versie_pk)
@@ -1366,61 +1331,87 @@ def addkiesparameterView(request, versie_pk, type_id):
     return render(request, "addkiesparameter.html", context)
 
 
+
 @staff_member_required(login_url=reverse_lazy("logout"))
-def bewerkkiesparameterView(request, versie_pk, type_id, item_id):
-    type_id = int(type_id)
-    item_id = int(item_id)
-    versie_pk = int(versie_pk)
+def kiesparameterform(request, versie_pk, type, parameter_id):
     versie = models.PVEVersie.objects.get(id=versie_pk)
 
-    if type_id != 1 and type_id != 2 and type_id != 3:
+    if type != 1 and type != 2 and type != 3:
         raise Http404("404")
 
-    if type_id == 1:  # Bouwsoort
-        if not versie.bouwsoort.filter(id=item_id):
+    if type == 1:  # Bouwsoort
+        if not versie.bouwsoort.filter(id=parameter_id):
             raise Http404("404")
 
-        item = versie.bouwsoort.filter(id=item_id).first()
+        parameter = versie.bouwsoort.filter(id=parameter_id).first()
 
-    if type_id == 2:  # Type Object
-        if not versie.typeobject.filter(id=item_id):
+    if type == 2:  # Type Object
+        if not versie.typeobject.filter(id=parameter_id):
             raise Http404("404")
 
-        item = versie.typeobject.filter(
-            id=item_id
+        parameter = versie.typeobject.filter(
+            id=parameter_id
         ).first()
 
-    if type_id == 3:  # Doelgroep
-        if not versie.doelgroep.filter(id=item_id):
+    if type == 3:  # Doelgroep
+        if not versie.doelgroep.filter(id=parameter_id):
             raise Http404("404")
 
-        item = versie.doelgroep.filter(id=item_id).first()
+        parameter = versie.doelgroep.filter(id=parameter_id).first()
 
-    if request.method == "POST":
-        form = forms.KiesParameterForm(request.POST)
-
-        if form.is_valid():
-            item.parameter = form.cleaned_data["parameter"]
-            item.save()
-
-            return HttpResponseRedirect(
-                reverse("kiesparametersviewedit", args=(versie_pk,))
-            )
-
-    form = forms.KiesParameterForm(initial={"parameter": item.parameter})
+    form = forms.KiesParameterForm(request.POST or None, initial={"parameter": parameter.parameter})
 
     context = {}
     context["form"] = form
-    context["type_id"] = type_id
-    context["item_id"] = item_id
     context["versie_pk"] = versie_pk
-    context["bouwsoorten"] = versie.bouwsoort.all()
-    context["typeObjecten"] = versie.typeobject.all()
-    context["doelgroepen"] = versie.doelgroep.all()
+    context["type"] = type
+    context["parameter_id"] = parameter_id
+    context["parameter"] = parameter
 
-    return render(request, "bewerkkiesparameter.html", context)
+    if request.method == "POST":
+        if form.is_valid():
+            parameter.parameter = form.cleaned_data["parameter"]
+            parameter.save()
 
+            return redirect("kiesparameterdetail", versie_pk=versie_pk, type=type, parameter_id=parameter_id)
+    
 
+    return render(request, "partials/kiesparameterform.html", context)
+
+@staff_member_required(login_url=reverse_lazy("logout"))
+def kiesparameterdetail(request, versie_pk, type, parameter_id):
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+
+    if type != 1 and type != 2 and type != 3:
+        raise Http404("404")
+
+    if type == 1:  # Bouwsoort
+        if not versie.bouwsoort.filter(id=parameter_id):
+            raise Http404("404")
+
+        parameter = versie.bouwsoort.filter(id=parameter_id).first()
+
+    if type == 2:  # Type Object
+        if not versie.typeobject.filter(id=parameter_id):
+            raise Http404("404")
+
+        parameter = versie.typeobject.filter(
+            id=parameter_id
+        ).first()
+
+    if type == 3:  # Doelgroep
+        if not versie.doelgroep.filter(id=parameter_id):
+            raise Http404("404")
+
+        parameter = versie.doelgroep.filter(id=parameter_id).first()
+
+    context = {}
+    context["versie_pk"] = versie_pk
+    context["type"] = type
+    context["parameter_id"] = parameter_id
+    context["parameter"] = parameter
+    return render(request, "partials/kiesparameterdetail.html", context)
+    
 @staff_member_required(login_url=reverse_lazy("logout"))
 def deletekiesparameterView(request, versie_pk, type_id, item_id):
     type_id = int(type_id)
@@ -1454,9 +1445,9 @@ def deletekiesparameterView(request, versie_pk, type_id, item_id):
     parameter = item.parameter
     item.delete()
 
-    messages.success(request, f"{parameter} verwijderd.")
+    messages.warning(request, f"Parameter: {parameter} verwijderd.")
 
-    return HttpResponseRedirect(reverse("kiesparametersview", args=(versie_pk,)))
+    return HttpResponse("")
 
 
 #bijlagesView
@@ -1491,10 +1482,10 @@ def bijlageDetail(request, versie_pk, pk):
 @staff_member_required(login_url=reverse_lazy("logout"))
 def bijlageAdd(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
+    form = forms.bijlageEditForm(request.POST or None, request.FILES or None)
+    form.fields["items"].queryset = versie.item.all()
 
     if request.method == "POST":
-        # get user entered form
-        form = forms.bijlageEditForm(request.POST, request.FILES)
 
         # check validity
         if form.is_valid():
@@ -1513,9 +1504,6 @@ def bijlageAdd(request, versie_pk):
         else:
             print(form.errors())
 
-    form = forms.bijlageEditForm()
-    form.fields["items"].queryset = versie.item.all()
-
     context = {}
     context["versie_pk"] = versie_pk
     context["form"] = form
@@ -1527,10 +1515,11 @@ def bijlageEdit(request, versie_pk, pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
 
     bijlage = versie.itembijlage.get(id=pk)
+    form = forms.bijlageEditForm(request.POST or None, request.FILES or None, initial={'naam':bijlage.naam, 'bijlage':bijlage.bijlage, 'items':bijlage.items.all()})
+    form.fields["items"].queryset = versie.item.all()
 
     if request.method == "POST":
         # get user entered form
-        form = forms.bijlageEditForm(request.POST, request.FILES)
 
         # check validity
         if form.is_valid():
@@ -1549,10 +1538,6 @@ def bijlageEdit(request, versie_pk, pk):
             )
         else:
             print(form.errors)
-
-
-    form = forms.bijlageEditForm(initial={'naam':bijlage.naam, 'bijlage':bijlage.bijlage, 'items':bijlage.items.all()})
-    form.fields["items"].queryset = versie.item.all()
 
     context = {}
     context["versie_pk"] = versie_pk

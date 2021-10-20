@@ -1,0 +1,16 @@
+{% extends "partials/_base.html" %}
+
+{% load filename %}
+
+{% block main %}
+
+<span hx-target="this" hx-swap="outerHTML">
+{% if parameter.parameter %}
+<p style="float: left;">{{ parameter.parameter }} </p>
+<button hx-get="{% url 'kiesparameterform' versie_pk type parameter.id %}" class="ui icon basic button"><i class="icon edit"></i></button>
+{% else %}
+<button hx-get="{% url 'kiesparameterform' versie_pk type parameter.id %}" class="ui icon basic button"><i class="icon plus"></i></button>
+{% endif %}
+</span>
+
+{% endblock %}

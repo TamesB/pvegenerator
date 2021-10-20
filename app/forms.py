@@ -34,7 +34,7 @@ class LoginForm(forms.Form):
 
 
 class KiesParameterForm(forms.Form):
-    parameter = forms.CharField(label="Naam", max_length=100)
+    parameter = forms.CharField(label="", max_length=100)
 
 class LogoKlantForm(ModelForm):
     class Meta: 
@@ -264,3 +264,8 @@ class PVEItemEditForm(ModelForm):
                 ("Field", "JamesConcept"),
             ),
         ]
+
+    def __init__(self, *args, **kwargs):
+        super(PVEItemEditForm, self).__init__(*args, **kwargs)
+        self.fields['bijlage'].required = False
+        self.fields['BestaandeBijlage'].required = False

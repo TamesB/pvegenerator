@@ -44,4 +44,14 @@
   -webkit-transform: translateY(4px);
           transform: translateY(4px);
 }
+
+.menu_left {
+  display: block;
+}
+
+@media screen and (max-width: 900px) {
+  .menu_left {
+    display: none;
+  }
+}
 /*# sourceMappingURL=main_styles.css.map */

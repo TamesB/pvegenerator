@@ -154,24 +154,19 @@ urlpatterns = [
         name="kiesparametersview",
     ),
     path(
-        "kiesparameters/<int:versie_pk>/edit",
-        views.kiesparametersViewEdit,
-        name="kiesparametersviewedit",
+        "kiesparameters/<int:versie_pk>/<int:type>/<int:parameter_id>/form",
+        views.kiesparameterform,
+        name="kiesparameterform",
     ),
     path(
-        "kiesparameters/<int:versie_pk>/delete",
-        views.kiesparametersViewDelete,
-        name="kiesparametersviewdelete",
+        "kiesparameters/<int:versie_pk>/<int:type>/<int:parameter_id>/get",
+        views.kiesparameterdetail,
+        name="kiesparameterdetail",
     ),
     path(
         "kiesparameters/<int:versie_pk>/<int:type_id>/add",
         views.addkiesparameterView,
         name="addkiesparameter",
-    ),
-    path(
-        "kiesparameters/<int:versie_pk>/<int:type_id>/<int:item_id>/edit",
-        views.bewerkkiesparameterView,
-        name="kiesparameteredit",
     ),
     path(
         "kiesparameters/<int:versie_pk>/<int:type_id>/<int:item_id>/delete",

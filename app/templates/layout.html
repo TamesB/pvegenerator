@@ -7,6 +7,7 @@
         {{ form.media }}
         <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
         <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'main_styles.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'Semantic-UI-Alert.css' %}">
         {% block head %}{% endblock %}
@@ -14,7 +15,7 @@
     </head>
     <body>
     <div class="ui equal width grid" style="height: 100%">
-    <div class="two wide column">
+    <div class="menu_left two wide column">
     {% include '_menu.html' %}
     </div>
       <div id="main" class="ui raised very padded text container segment">
@@ -35,11 +36,6 @@
             {% block main %}{% endblock %}
           </article>
         </div>
-      <footer>
-        <div class="ui center aligned">
-            <span class="float center">© 2021 Copyright <a href="mailto:info@tboon.nl">Tames Boon</a></span>
-        </div>
-      </footer>
               <script src="https://unpkg.com/htmx.org@1.5.0"></script>
       <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
       <script src="{% static 'semantic.min.js' %}"></script>
