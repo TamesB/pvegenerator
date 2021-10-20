@@ -14,6 +14,7 @@ from utils import createBijlageZip, writePdf, pve_csv_extract
 from syntrus.views.utils import GetAWSURL
 from users.models import CustomUser
 from users.forms import AcceptInvitationForm
+from django.utils import timezone
 
 def LoginView(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -85,7 +86,7 @@ def BeheerdersAcceptUitnodiging(request, client_pk, key):
 
     invitation = BeheerdersUitnodiging.objects.filter(key=key).first()
 
-    if utc.localize(datetime.datetime.now()) > invitation.expires:
+    if timezone.now() > invitation.expires:
         return render(request, "404verlopen_syn.html")
 
     if request.method == "POST":

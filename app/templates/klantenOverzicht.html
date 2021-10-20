@@ -32,8 +32,8 @@
 			<tr>
 				<td>{{ klant.naam }}</td>
 				<td>{{ klant.abbonement }}</td>
-				<td>{% include 'partials/getbeheerderklant.html' %}</td>
-				<td>{% include 'partials/getlogoklant.html' %}</td>
+				<td hx-get="{% url 'getbeheerderklant' klant.id %}" hx-trigger="load"></td>
+				<td hx-get="{% url 'logoklantdetail' klant.id %}" hx-trigger="load"></td>
 			</tr>
       {% endfor %}
 		</tbody>

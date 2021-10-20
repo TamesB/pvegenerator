@@ -1,6 +1,5 @@
 {% extends "partials/_base.html" %}
 
-{% load semanticui %}
 
 {% load filename %}
 
@@ -8,7 +7,7 @@
 
 <div hx-target="this" hx-swap="outerHTML">
 {% if klant.logo %}
-{% for key, value in logo_urls.items %}{% if key == klant.id %}<img style="max-width: 10vw;" src="{{ value }}"></img>{% endif %}{% endfor %}
+<img style="max-width: 10vw;" src="{{ logo_url }}"></img>
 <button hx-get="{% url 'logoklantform' klant.id %}" class="ui icon basic button"><i class="icon edit"></i></button>
 {% else %}
 <button hx-get="{% url 'logoklantform' klant.id %}" class="ui icon basic button"><i class="icon plus"></i></button>

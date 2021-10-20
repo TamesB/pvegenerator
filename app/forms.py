@@ -42,26 +42,10 @@ class LogoKlantForm(ModelForm):
         fields = ("logo",)
         labels = {"logo": ""}
 
-class BeheerderKlantForm(ModelForm):
-    beheerder = forms.ModelChoiceField(queryset=CustomUser.objects.none(), required=True)
-    email = forms.EmailField(required=False, label="Of E-mail")
-    class Meta: 
-        model = Beleggers
-        fields = ("beheerder",)
-        labels = {"beheerder": ""}
-
-        widgets = {
-            "beheerder": forms.Select(attrs={"class": "ui dropdown"})
-        }
+class BeheerderKlantForm(forms.Form):
+    email = forms.EmailField(label="E-mail Beheerder")
 class BeleggerForm(ModelForm):
     email = forms.EmailField(required=False)
-    beheerder = forms.ModelChoiceField(queryset=CustomUser.objects.none(), required=False)
-
-    widgets = {
-        "beheerder": forms.Select(
-            attrs={"class": "ui dropdown"}
-        ),
-    }
 
     class Meta:
         model = Beleggers
@@ -69,7 +53,6 @@ class BeleggerForm(ModelForm):
         labels = {
             "naam": "Naam:",
             "abbonement": "Abbonement Type:",
-            "beheerder": "Beheerder:",
             "logo": "Upload Logo:",
             "email": "E-mail beheerder (optioneel):"
         }
@@ -81,9 +64,8 @@ class BeleggerForm(ModelForm):
             ("Text", '<h2 class="ui dividing header">Beheerder</h2>'),
             (
                 "Text",
-                "<i>Kies een bestaande beheerder of vul de e-mail van de beheerder van de klant in. Een e-mail wordt naar hen gestuurd voor toegang naar de gegenereerde sub-website.</i>",
+                "<i>Vul de e-mail van de beheerder van de klant in. Een e-mail wordt naar hen gestuurd voor toegang naar de gegenereerde sub-website.</i>",
             ),
-            ("Field", "beheerder"),
             ("Field", "email"),
             ("Text", '<h2 class="ui dividing header">Klantenlogo</h2>'),
             (

@@ -20,7 +20,9 @@ from . import forms
 def GeneratePVEView(request, client_pk, versie_pk):
     pve_versie = models.PVEVersie.objects.get(id=versie_pk)
     client = Beleggers.objects.get(id=client_pk)
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.method == "POST":
 
@@ -355,8 +357,15 @@ def compareView(request, versie_pk):
 @staff_member_required
 def compareFormView(request, versie_pk, pk):
     pk = int(pk)
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+    client = Beleggers.objects.get(id=versie.belegger.id)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
+
     context = {}
     context["pk"] = pk
+    context["logo_url"] = logo_url
     context["versie_pk"] = versie_pk
     
     if request.method == "POST":
@@ -482,4 +491,5 @@ def compareFormView(request, versie_pk, pk):
         ).all()
 
     context["form"] = form
+    context["logo_url"] = logo_url
     return render(request, "compareForm.html", context)

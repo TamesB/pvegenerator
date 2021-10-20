@@ -1,9 +1,5 @@
 {% extends "_partial.html" %}
 
-{% load semanticui %}
-
-{% load filename %}
-{% load static %}
 {% block main %}
 
 <div hx-target="this" hx-swap="outerHTML">
@@ -14,7 +10,4 @@
 {% endif %}
 </div>
 
-{% endblock %}
-{% block scripts %}
-{% include "partials/messages.html" %}
 {% endblock %}

@@ -107,42 +107,35 @@ def DashboardView(request):
 
 @staff_member_required(login_url="/404")
 def KlantOverzicht(request):
-    logo_urls = {}
     klanten = Beleggers.objects.all()
-    for klant in klanten:
-        if klant.logo:
-            logo_urls[klant.id] = GetAWSURL(klant)
 
     context = {}
     context["klanten"] = klanten
-    context["logo_urls"] = logo_urls
     return render(request, 'klantenOverzicht.html', context)
 
 @staff_member_required(login_url="/404")
 def GetLogo(request, client_pk):
     klant = Beleggers.objects.get(id=client_pk)
         
-    logo_urls = {}
-    klanten = Beleggers.objects.all()
-    for klantu in klanten:
-        if klantu.logo:
-            logo_urls[klantu.id] = GetAWSURL(klantu)
+    logo_url = None
+    
+    if klant.logo:
+        logo_url = GetAWSURL(klant)
 
     context = {}
     context["klant"] = klant
     context["client_pk"] = client_pk
-    context["logo_urls"] = logo_urls
+    context["logo_url"] = logo_url
     return render(request, "partials/getlogoklant.html", context)
 
 @staff_member_required(login_url="/404")
 def LogoKlantForm(request, client_pk):
     klant = Beleggers.objects.get(id=client_pk)
 
-    logo_urls = {}
-    klanten = Beleggers.objects.all()
-    for klantu in klanten:
-        if klantu.logo:
-            logo_urls[klantu.id] = GetAWSURL(klantu)
+    logo_url = None
+    
+    if klant.logo:
+        logo_url = GetAWSURL(klant)
 
     form = forms.LogoKlantForm(request.POST or None)
     if klant.logo:
@@ -152,7 +145,7 @@ def LogoKlantForm(request, client_pk):
     context["client_pk"] = client_pk
     context["form"] = form
     context["klant"] = klant
-    context["logo_urls"] = logo_urls
+    context["logo_url"] = logo_url
 
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
@@ -168,9 +161,14 @@ def LogoKlantForm(request, client_pk):
 def GetBeheerderKlant(request, client_pk):
     klant = Beleggers.objects.get(id=client_pk)
 
+    in_progress = False
+    if BeheerdersUitnodiging.objects.filter(klantenorganisatie=klant):
+        in_progress = True
+
     context = {}
     context["klant"] = klant
     context["client_pk"] = client_pk
+    context["in_progress"] = in_progress
     return render(request, "partials/getbeheerderklant.html", context)
 
 @staff_member_required(login_url="/404")
@@ -178,10 +176,6 @@ def BeheerderKlantForm(request, client_pk):
     klant = Beleggers.objects.get(id=client_pk)
 
     form = forms.BeheerderKlantForm(request.POST or None)
-    form.fields["beheerder"].queryset = CustomUser.objects.filter(type_user="SB")
-
-    if klant.beheerder:
-        form.fields["beheerder"].initial = klant.beheerder
 
     context = {}
     context["client_pk"] = client_pk
@@ -190,33 +184,27 @@ def BeheerderKlantForm(request, client_pk):
 
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
-            if not form.cleaned_data["email"]:
-                klant.beheerder = form.cleaned_data["beheerder"]
-                klant.save()
-                messages.warning(request, "Beheerder succesvol aangewezen!")
-            else:
-                if form.cleaned_data["email"]:
-                    expiry_length = 10
-                    expire_date = timezone.now() + timezone.timedelta(expiry_length)
-                    invitation = BeheerdersUitnodiging.objects.create(expires=expire_date)
-                    invitation.key = secrets.token_urlsafe(30)
-                    invitation.invitee = form.cleaned_data["email"]
-                    invitation.klantenorganisatie = klant
-                    invitation.save()
+            if form.cleaned_data["email"]:
+                expiry_length = 10
+                expire_date = timezone.now() + timezone.timedelta(expiry_length)
+                invitation = BeheerdersUitnodiging.objects.create(key=secrets.token_urlsafe(30), expires=expire_date)
+                invitation.invitee = form.cleaned_data["email"]
+                invitation.klantenorganisatie = klant
+                invitation.save()
 
-                    send_mail(
-                        f"Programma van Eisen Tool - Uitnodiging als beheerder voor uw website",
-                        f"""Beste, 
-                        
-                        Uw subwebsite is gereed. Maak een wachtwoord aan via de uitnodigingslink 
-                        
-                        Uitnodigingslink: https://pvegenerator.net/pvetool/{new_klant.id}/accept/{invitation.key}
-                        """,
-                        "admin@pvegenerator.net",
-                        form.cleaned_data["email"],
-                        fail_silently=False,
-                    )
-                    messages.warning(request, "Uitnodigings Email verstuurd! De beheerder is aangewezen aan deze klant zodra de uitnodiging is geaccepteerd en het account is aangemaakt.")
+                send_mail(
+                    f"Programma van Eisen Tool - Uitnodiging als beheerder voor uw website",
+                    f"""Beste, 
+                    
+                    Uw subwebsite is gereed. Maak een wachtwoord aan via de uitnodigingslink 
+                    
+                    Uitnodigingslink: https://pvegenerator.net/pvetool/{klant.id}/accept/{invitation.key}
+                    """,
+                    "admin@pvegenerator.net",
+                    [form.cleaned_data["email"]],
+                    fail_silently=False,
+                )
+                messages.warning(request, "Uitnodigings Email verstuurd! De beheerder is aangewezen aan deze klant zodra de uitnodiging is geaccepteerd en het account is aangemaakt.")
 
             return render(request, "partials/getbeheerderklant.html", context)
         else:
@@ -235,7 +223,6 @@ def DeletePVEVersie(request, belegger_pk, versie_pk):
 @staff_member_required(login_url="/404")
 def KlantToevoegen(request):
     form = forms.BeleggerForm(request.POST or None)
-    form.fields["beheerder"].queryset = CustomUser.objects.filter(type_user="SB")
 
     if request.method == "POST":
         form = forms.BeleggerForm(request.POST, request.FILES)
@@ -265,13 +252,9 @@ def KlantToevoegen(request):
                     Uitnodigingslink: https://pvegenerator.net/pvetool/{new_klant.id}/accept/{invitation.key}
                     """,
                     "admin@pvegenerator.net",
-                    form.cleaned_data["email"],
+                    [form.cleaned_data["email"]],
                     fail_silently=False,
                 )
-            else:
-                if form.cleaned_data["beheerder"]:
-                    new_klant.beheerder = form.cleaned_data["beheerder"]
-                    new_klant.save()
 
             return redirect("klantoverzicht")
         

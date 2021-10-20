@@ -53,13 +53,15 @@ class PDFMaker:
         self.OpmerkingBoxTitelHeight = 20
         self.OpmerkingBoxHeight = -150
         self.PrePVEBoxHeight = -75
-
-        data = urlopen(logo_url).read()
-        rgba = np.array(Image.open(io.BytesIO(data)))
-        # make transparent white
-        rgba[rgba[...,-1]==0] = [255,255,255,0]
-        logo = Image.fromarray(rgba)
-        self.logo = logo
+        if logo_url:
+            data = urlopen(logo_url).read()
+            rgba = np.array(Image.open(io.BytesIO(data)))
+            # make transparent white
+            rgba[rgba[...,-1]==0] = [255,255,255,0]
+            logo = Image.fromarray(rgba)
+            self.logo = logo
+        else:
+            self.logo = None
 
         self.hoofdstukStyle = ParagraphStyle(
             textColor=colors.Color(red=1, green=1, blue=1),
@@ -175,13 +177,14 @@ class PDFMaker:
             fill=0,
         )
 
-        canvas.drawInlineImage(
-            self.logo,
-            self.LeftPadding + 8,
-            self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 3) - 8,
-            self.PAGE_WIDTH / 3,
-            (-self.OpmerkingBoxHeight / 3),
-        )
+        if self.logo:
+            canvas.drawInlineImage(
+                self.logo,
+                self.LeftPadding + 8,
+                self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 3) - 8,
+                self.PAGE_WIDTH / 3,
+                (-self.OpmerkingBoxHeight / 3),
+            )
 
         canvas.setFillColorRGB(0, 0, 0)
         canvas.setFont("Calibri", 8)

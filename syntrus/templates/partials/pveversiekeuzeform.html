@@ -1,8 +1,5 @@
 {% extends "_partial.html" %}
 
-{% load semanticui %}
-
-{% load filename %}
 
 {% block main %}
     <form hx-target="this" hx-swap="outerHTML" class="ui form" method="POST" enctype="multipart/form-data">
@@ -14,6 +11,3 @@
 
 {% endblock %}
 
-{% block scripts %}
-{% include "partials/messages.html" %}
-{% endblock %}
