@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from app import models
 from project.models import BijlageToAnnotation, Project, PVEItemAnnotation, Beleggers
@@ -15,10 +15,10 @@ from syntrus.views.utils import GetAWSURL
 from django.core.paginator import Paginator
 import asyncio
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def AddCommentOverview(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -26,7 +26,7 @@ def AddCommentOverview(request, client_pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     context = {}
 
@@ -40,10 +40,10 @@ def AddCommentOverview(request, client_pk):
     return render(request, "plusOpmerkingOverview_syn.html", context)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def MyComments(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -51,23 +51,23 @@ def MyComments(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     context = {}
 
     project = get_object_or_404(Project, pk=pk)
 
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if project.frozenLevel > 0:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.user not in project.permitted.all():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
         
     totale_kosten = 0
@@ -182,10 +182,10 @@ def MyComments(request, client_pk, pk):
     return render(request, "MyComments.html", context)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def MyCommentsDelete(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -193,17 +193,17 @@ def MyCommentsDelete(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.user not in project.permitted.all():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if project.frozenLevel > 0:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     totale_kosten = 0
     totale_kosten_lijst = [
@@ -245,10 +245,10 @@ def MyCommentsDelete(request, client_pk, pk):
     return render(request, "MyCommentsDelete.html", context)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def deleteAnnotationPve(request, client_pk, project_id, ann_id):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -256,18 +256,18 @@ def deleteAnnotationPve(request, client_pk, project_id, ann_id):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     # check if project exists
     project = get_object_or_404(Project, id=project_id)
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if project.frozenLevel > 0:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.user not in project.permitted.all():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     # check if user is authorized to project
     if request.user.type_user != "B":
@@ -329,10 +329,10 @@ def deleteAnnotationPve(request, client_pk, project_id, ann_id):
     return render(request, "deleteAnnotationModal_syn.html", context)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def AddAnnotationAttachment(request, client_pk, projid, annid):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -340,15 +340,15 @@ def AddAnnotationAttachment(request, client_pk, projid, annid):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=projid)
 
     if project.frozenLevel > 0:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.user not in project.permitted.all():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     comments = project.annotation.all()
     annotation = comments.get(pk=annid)
@@ -358,7 +358,7 @@ def AddAnnotationAttachment(request, client_pk, projid, annid):
     page_obj = paginator.get_page(page_number)
 
     if annotation.gebruiker != request.user:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.method == "POST":
         form = forms.BijlageToAnnotationForm(request.POST, request.FILES)
@@ -388,10 +388,10 @@ def AddAnnotationAttachment(request, client_pk, projid, annid):
     return render(request, "addBijlagetoAnnotation_syn.html", context)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def VerwijderAnnotationAttachment(request, client_pk, projid, annid):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -399,16 +399,16 @@ def VerwijderAnnotationAttachment(request, client_pk, projid, annid):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     # check if project exists
     project = get_object_or_404(Project, pk=projid)
     
     if request.user not in project.permitted.all():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if project.frozenLevel > 0:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     # check if user is authorized to project
     if request.user.type_user != "B":
@@ -469,10 +469,10 @@ def VerwijderAnnotationAttachment(request, client_pk, projid, annid):
     return render(request, "deleteAttachmentAnnotation_syn.html", context)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def AllComments(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -480,16 +480,16 @@ def AllComments(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     context = {}
 
     project = get_object_or_404(Project, pk=pk)
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.user not in project.permitted.all():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     totale_kosten = 0
     totale_kosten_lijst = [
@@ -521,10 +521,10 @@ def AllComments(request, client_pk, pk):
     return render(request, "AllCommentsOfProject_syn.html", context)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def AddComment(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -532,25 +532,25 @@ def AddComment(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     context = {}
 
     project = get_object_or_404(Project, pk=pk)
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if project.frozenLevel > 0:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if not project.item.exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.user not in project.permitted.all():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     items = project.item.select_related("hoofdstuk").select_related("paragraaf").all()
 

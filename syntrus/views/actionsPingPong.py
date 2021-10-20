@@ -4,17 +4,17 @@ from django.core.mail import send_mail
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
-
+from django.urls import reverse_lazy
 from app import models
 from project.models import Project, PVEItemAnnotation, Beleggers
 from syntrus.forms import FirstFreezeForm
 from syntrus.models import CommentReply, FrozenComments
 from syntrus.views.utils import GetAWSURL
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def FirstFreeze(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -22,15 +22,15 @@ def FirstFreeze(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
 
     if client != project.belegger:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.method == "POST":
         form = FirstFreezeForm(request.POST)
@@ -123,10 +123,10 @@ def FirstFreeze(request, client_pk, pk):
     return render(request, "FirstFreeze.html", context)
 
 
-@login_required
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def SendReplies(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -134,15 +134,15 @@ def SendReplies(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
 
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if project.frozenLevel == 0:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     # check if user is authorized to project
     if request.user.type_user != "B":
@@ -273,10 +273,10 @@ def SendReplies(request, client_pk, pk):
     return render(request, "SendReplies.html", context)
 
 
-@login_required
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def FinalFreeze(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -284,15 +284,15 @@ def FinalFreeze(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, id=pk)
 
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
         
     if project.frozenLevel == 0:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     # check if user is authorized to project
     if request.user.type_user != "B":

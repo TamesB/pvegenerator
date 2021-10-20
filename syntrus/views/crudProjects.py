@@ -10,11 +10,12 @@ from syntrus import forms
 from syntrus.forms import StartProjectForm
 from syntrus.views.utils import GetAWSURL
 from users.models import CustomUser, Organisatie
+from django.urls import reverse_lazy
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def ManageProjects(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -22,12 +23,12 @@ def ManageProjects(request, client_pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
     projecten = client.project.all().order_by("-datum_recent_verandering")
 
     new_projecten = []
@@ -49,10 +50,10 @@ def ManageProjects(request, client_pk):
     return render(request, "beheerProjecten_syn.html", context)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def AddProject(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -60,11 +61,11 @@ def AddProject(request, client_pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]
     if request.user.type_user not in allowed_users:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.method == "POST":
         form = forms.StartProjectForm(request.POST)
@@ -105,7 +106,7 @@ def AddProject(request, client_pk):
     context["logo_url"] = logo_url
     return render(request, "plusProject_syn.html", context)
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def GetProjectManagerOfProject(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
         print("1")
@@ -133,7 +134,7 @@ def GetProjectManagerOfProject(request, client_pk, pk):
     context["client_pk"] = client_pk
     return render(request, "partials/projectmanager_detail.html", context)
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def AddProjectManagerToProject(request, client_pk, pk):
     client = Beleggers.objects.get(id=client_pk)
     logo_url = None
@@ -182,10 +183,10 @@ def AddProjectManagerToProject(request, client_pk, pk):
     context["form"] = form
     return render(request, "partials/projectmanager_form.html", context)
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def GetOrganisatieToProject(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -193,16 +194,16 @@ def GetOrganisatieToProject(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, id=pk)
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     context = {}
     context["project"] = project
@@ -212,10 +213,10 @@ def GetOrganisatieToProject(request, client_pk, pk):
     return render(request, "partials/projectpartijen_detail.html", context)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def AddOrganisatieToProject(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -223,16 +224,16 @@ def AddOrganisatieToProject(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, id=pk)
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
     form = forms.AddOrganisatieToProjectForm(request.POST or None)
     form.fields["organisatie"].queryset = Organisatie.objects.filter(Q(klantenorganisatie=client) & ~Q(projecten=project))
 
@@ -241,7 +242,7 @@ def AddOrganisatieToProject(request, client_pk, pk):
             # voeg project toe aan organisatie
             organisatie = form.cleaned_data["organisatie"]
             if organisatie.klantenorganisatie != client:
-                return render(request, "404_syn.html")
+                return redirect("logout_syn", client_pk=client_pk)
             
             organisatie.projecten.add(project)
             organisatie.save()
@@ -255,7 +256,7 @@ def AddOrganisatieToProject(request, client_pk, pk):
 
             for werknemer in werknemers:
                 if werknemer.klantenorganisatie != client:
-                    return render(request, "404_syn.html")
+                    return redirect("logout_syn", client_pk=client_pk)
 
                 project.permitted.add(werknemer)
                 project.save()
@@ -283,10 +284,10 @@ def AddOrganisatieToProject(request, client_pk, pk):
     context["logo_url"] = logo_url
     return render(request, "partials/projectpartijen_form.html", context)
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def SOGAddDerdenToProj(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -294,20 +295,20 @@ def SOGAddDerdenToProj(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["SOG"]
 
     if request.user.type_user not in allowed_users:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if not client.project.filter(id=pk):
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     project = client.project.filter(id=pk).first()
 
     if request.user not in project.permitted.all():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.method == "POST":
         form = forms.SOGAddDerdenForm(request.POST)

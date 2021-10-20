@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.utils import timezone
+from django.urls import reverse_lazy
 
 from project.models import Project, Beleggers
 from syntrus import forms
@@ -19,10 +20,10 @@ from users.models import Organisatie
 utc = pytz.UTC
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def ManageWerknemers(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -30,12 +31,12 @@ def ManageWerknemers(request, client_pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     context = {}
     context["werknemers"] = client.werknemer.all().filter(
@@ -47,10 +48,10 @@ def ManageWerknemers(request, client_pk):
     return render(request, "beheerWerknemers_syn.html", context)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def AddAccount(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -58,12 +59,12 @@ def AddAccount(request, client_pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB", "SOG"]
     staff_users = ["B", "SB"]
     if request.user.type_user not in allowed_users:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.method == "POST":
         # get user entered form
@@ -165,7 +166,7 @@ def AddAccount(request, client_pk):
 
 def AcceptInvite(request, client_pk, key):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -173,10 +174,10 @@ def AcceptInvite(request, client_pk, key):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if not key or not Invitation.objects.filter(key=key):
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     invitation = Invitation.objects.filter(key=key).first()
 
@@ -252,10 +253,10 @@ def AcceptInvite(request, client_pk, key):
     return render(request, "acceptInvitation_syn.html", context)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def InviteUsersToProject(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -263,12 +264,12 @@ def InviteUsersToProject(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     project = Project.objects.filter(id=pk).first()
 
@@ -282,7 +283,7 @@ def InviteUsersToProject(request, client_pk, pk):
             
             for user in permitted:
                 if user.klantenorganisatie != client:
-                    return render(request, "404_syn.html")
+                    return redirect("logout_syn", client_pk=client_pk)
 
             project.projectmanager = projectmanager
             project.organisaties.add(*organisaties)

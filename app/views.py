@@ -13,9 +13,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.core.mail import send_mail
-
 from syntrus.views.utils import GetAWSURL
 from project.models import Beleggers, Project, BeheerdersUitnodiging
 from utils import writeExcel
@@ -73,7 +72,7 @@ def LogoutView(request):
     logout(request)
     return redirect("login")
 
-@staff_member_required
+@staff_member_required(login_url=reverse_lazy("logout"))
 def DashboardView(request):
         
     hour = datetime.datetime.utcnow().hour + 2  # UTC + 2 = CEST
@@ -105,7 +104,7 @@ def DashboardView(request):
 
     return render(request, "dashboard.html", context)
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def KlantOverzicht(request):
     klanten = Beleggers.objects.all()
 
@@ -113,7 +112,15 @@ def KlantOverzicht(request):
     context["klanten"] = klanten
     return render(request, 'klantenOverzicht.html', context)
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
+def KlantVerwijderen(request, client_pk):
+    klant = Beleggers.objects.get(id=client_pk)
+    naam = klant.naam
+    klant.delete()
+    messages.warning(request, f"Klant: {naam} succesvol verwijderd!")
+    return HttpResponse("")
+
+@staff_member_required(login_url=reverse_lazy("logout"))
 def GetLogo(request, client_pk):
     klant = Beleggers.objects.get(id=client_pk)
         
@@ -128,7 +135,7 @@ def GetLogo(request, client_pk):
     context["logo_url"] = logo_url
     return render(request, "partials/getlogoklant.html", context)
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def LogoKlantForm(request, client_pk):
     klant = Beleggers.objects.get(id=client_pk)
 
@@ -137,7 +144,7 @@ def LogoKlantForm(request, client_pk):
     if klant.logo:
         logo_url = GetAWSURL(klant)
 
-    form = forms.LogoKlantForm(request.POST or None)
+    form = forms.LogoKlantForm(request.POST or None, request.FILES or None, instance=klant)
     if klant.logo:
         form.fields["logo"].initial = klant.logo
 
@@ -150,14 +157,15 @@ def LogoKlantForm(request, client_pk):
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
             form.save()
+            print(form.cleaned_data["logo"])
             messages.warning(request, "Klantlogo succesvol geupload!")
-            return render(request, "partials/getlogoklant.html", context)
+            return redirect("logoklantdetail", client_pk=client_pk)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
     return render(request, "partials/logoklantform.html", context)
     
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def GetBeheerderKlant(request, client_pk):
     klant = Beleggers.objects.get(id=client_pk)
 
@@ -171,7 +179,7 @@ def GetBeheerderKlant(request, client_pk):
     context["in_progress"] = in_progress
     return render(request, "partials/getbeheerderklant.html", context)
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def BeheerderKlantForm(request, client_pk):
     klant = Beleggers.objects.get(id=client_pk)
 
@@ -212,7 +220,7 @@ def BeheerderKlantForm(request, client_pk):
 
     return render(request, "partials/beheerderklantform.html", context)
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def DeletePVEVersie(request, belegger_pk, versie_pk):
     versie = models.PVEVersie.objects.get(belegger__id=belegger_pk, id=versie_pk)
     naam = versie.versie
@@ -220,12 +228,11 @@ def DeletePVEVersie(request, belegger_pk, versie_pk):
     messages.warning(request, f"Versie: {naam} succesvol verwijderd.")
     return HttpResponse("")
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def KlantToevoegen(request):
-    form = forms.BeleggerForm(request.POST or None)
+    form = forms.BeleggerForm(request.POST or None, request.FILES or None)
 
     if request.method == "POST":
-        form = forms.BeleggerForm(request.POST, request.FILES)
         if form.is_valid():
             new_klant = Beleggers()
             new_klant.naam = form.cleaned_data["naam"]
@@ -262,7 +269,7 @@ def KlantToevoegen(request):
     context["form"] = form
     return render(request, 'klantToevoegen.html', context)
     
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def PVEBeleggerVersieOverview(request):
     beleggers = Beleggers.objects.all()
 
@@ -277,7 +284,7 @@ def PVEBeleggerVersieOverview(request):
     return render(request, "PVEVersieOverview.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def AddBelegger(request):
     if request.method == "POST":
         form = forms.BeleggerForm(request.POST)
@@ -304,7 +311,7 @@ def AddBelegger(request):
     return render(request, "addBelegger.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def AddPvEVersie(request, belegger_pk):
     belegger = Beleggers.objects.get(id=belegger_pk)
 
@@ -515,7 +522,7 @@ def AddPvEVersie(request, belegger_pk):
     context["belegger"] = belegger
     return render(request, "addPvEVersie.html", context)
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def ActivateVersie(request, versie_pk):
     versie = models.PVEVersie.objects.filter(id=versie_pk).first()
     versie.public = True
@@ -523,7 +530,7 @@ def ActivateVersie(request, versie_pk):
     messages.warning(request, f"Versie geactiveerd: {versie}")
     return redirect("beleggerversieoverview")
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def DeactivateVersie(request, versie_pk):
     versie = models.PVEVersie.objects.filter(id=versie_pk).first()
     versie.public = False
@@ -531,7 +538,7 @@ def DeactivateVersie(request, versie_pk):
     messages.warning(request, f"Versie gedeactiveerd: {versie}")
     return redirect("beleggerversieoverview")
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def PVEBewerkOverview(request, versie_pk):
     pve_versie = models.PVEVersie.objects.get(id=versie_pk)
     client = pve_versie.belegger
@@ -541,7 +548,7 @@ def PVEBewerkOverview(request, versie_pk):
     return render(request, "PVEBewerkOverview.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def PVEHoofdstukListView(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
     hoofdstukken = versie.hoofdstuk.all()
@@ -551,7 +558,7 @@ def PVEHoofdstukListView(request, versie_pk):
     return render(request, "PVEListHfst.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def DownloadWorksheet(request, versie_pk):
     fl_path = settings.EXPORTS_ROOT
 
@@ -574,7 +581,7 @@ def DownloadWorksheet(request, versie_pk):
     return response
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def PVEHoofdstukListViewEdit(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
     hoofdstukken = versie.hoofdstuk.all()
@@ -584,7 +591,7 @@ def PVEHoofdstukListViewEdit(request, versie_pk):
     return render(request, "PVEListHfstEdit.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def PVEHoofdstukListViewDelete(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
     hoofdstukken = versie.hoofdstuk.all()
@@ -594,7 +601,7 @@ def PVEHoofdstukListViewDelete(request, versie_pk):
     return render(request, "PVEListHfstDelete.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def PVEaddhoofdstukView(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
 
@@ -619,7 +626,7 @@ def PVEaddhoofdstukView(request, versie_pk):
     return render(request, "addchapterform.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def PVEedithoofdstukView(request, versie_pk, pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
 
@@ -651,7 +658,7 @@ def PVEedithoofdstukView(request, versie_pk, pk):
     return render(request, "changechapterform.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def paragraaflistView(request, versie_pk, pk):
     pk = int(pk)
     versie = models.PVEVersie.objects.get(id=versie_pk)
@@ -679,7 +686,7 @@ def paragraaflistView(request, versie_pk, pk):
     return render(request, "PVEParagraphList.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def paragraaflistViewEdit(request, versie_pk, pk):
     pk = int(pk)
     versie = models.PVEVersie.objects.get(id=versie_pk)
@@ -708,7 +715,7 @@ def paragraaflistViewEdit(request, versie_pk, pk):
     return render(request, "PVEParagraphListEdit.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def paragraaflistViewDelete(request, versie_pk, pk):
     pk = int(pk)
     versie = models.PVEVersie.objects.get(id=versie_pk)
@@ -737,7 +744,7 @@ def paragraaflistViewDelete(request, versie_pk, pk):
     return render(request, "PVEParagraphListDelete.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def PVEaddparagraafView(request, versie_pk, pk):
     pk = int(pk)
     versie = models.PVEVersie.objects.get(id=versie_pk)
@@ -780,7 +787,7 @@ def PVEaddparagraafView(request, versie_pk, pk):
     return render(request, "addparagraphform.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def PVEeditparagraafView(request, versie_pk, pk):
     pk = int(pk)
     versie = models.PVEVersie.objects.get(id=versie_pk)
@@ -836,7 +843,7 @@ def PVEeditparagraafView(request, versie_pk, pk):
     return render(request, "changeparagraphform.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def itemListView(request, versie_pk, chapter_id, paragraph_id):
     paragraph_id = int(paragraph_id)
     chapter_id = int(chapter_id)
@@ -880,7 +887,7 @@ def itemListView(request, versie_pk, chapter_id, paragraph_id):
     return render(request, "PVEItemList.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def itemListViewEdit(request, versie_pk, chapter_id, paragraph_id):
     paragraph_id = int(paragraph_id)
     chapter_id = int(chapter_id)
@@ -931,7 +938,7 @@ def itemListViewEdit(request, versie_pk, chapter_id, paragraph_id):
     return render(request, "PVEItemListEdit.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def itemListViewDelete(request, versie_pk, chapter_id, paragraph_id):
     paragraph_id = int(paragraph_id)
     chapter_id = int(chapter_id)
@@ -983,7 +990,7 @@ def itemListViewDelete(request, versie_pk, chapter_id, paragraph_id):
     return render(request, "PVEItemListDelete.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def viewItemView(request, versie_pk, pk):
     pk = int(pk)
 
@@ -1061,7 +1068,7 @@ def downloadBijlageView(request, pk):
     return HttpResponseRedirect(response)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def editItemView(request, versie_pk, pk):
     pk = int(pk)
 
@@ -1131,7 +1138,7 @@ def editItemView(request, versie_pk, pk):
     return render(request, "PVEItemEdit.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def addItemView(request, versie_pk, chapter_id, paragraph_id):
     paragraph_id = int(paragraph_id)
 
@@ -1207,7 +1214,7 @@ def addItemView(request, versie_pk, chapter_id, paragraph_id):
     return render(request, "PVEAddItem.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def deleteItemView(request, versie_pk, pk):
     pk = int(pk)
 
@@ -1238,7 +1245,7 @@ def deleteItemView(request, versie_pk, pk):
     )
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def PVEdeletehoofdstukView(request, versie_pk, pk):
     pk = int(pk)
 
@@ -1257,7 +1264,7 @@ def PVEdeletehoofdstukView(request, versie_pk, pk):
     return redirect("hoofdstukview", versie_pk=versie_pk)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def PVEdeleteparagraafView(request, versie_pk, pk):
     pk = int(pk)
     versie = models.PVEVersie.objects.get(id=versie_pk)
@@ -1278,7 +1285,7 @@ def PVEdeleteparagraafView(request, versie_pk, pk):
     )
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def kiesparametersView(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
 
@@ -1290,7 +1297,7 @@ def kiesparametersView(request, versie_pk):
     return render(request, "kiesparameters.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def kiesparametersViewEdit(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
 
@@ -1302,7 +1309,7 @@ def kiesparametersViewEdit(request, versie_pk):
     return render(request, "kiesparametersEdit.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def kiesparametersViewDelete(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
 
@@ -1314,7 +1321,7 @@ def kiesparametersViewDelete(request, versie_pk):
     return render(request, "kiesparametersDelete.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def addkiesparameterView(request, versie_pk, type_id):
     type_id = int(type_id)
     versie = models.PVEVersie.objects.get(id=versie_pk)
@@ -1359,7 +1366,7 @@ def addkiesparameterView(request, versie_pk, type_id):
     return render(request, "addkiesparameter.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def bewerkkiesparameterView(request, versie_pk, type_id, item_id):
     type_id = int(type_id)
     item_id = int(item_id)
@@ -1414,7 +1421,7 @@ def bewerkkiesparameterView(request, versie_pk, type_id, item_id):
     return render(request, "bewerkkiesparameter.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def deletekiesparameterView(request, versie_pk, type_id, item_id):
     type_id = int(type_id)
     item_id = int(item_id)
@@ -1458,7 +1465,7 @@ def deletekiesparameterView(request, versie_pk, type_id, item_id):
 #bijlageAdd
 #bijlageDelete
 #ItemBijlage: versie items bijlage naam
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def bijlagenView(request, versie_pk):
     context = {}
     context["bijlagen"] = models.ItemBijlages.objects.filter(versie__id=versie_pk)
@@ -1466,7 +1473,7 @@ def bijlagenView(request, versie_pk):
     return render(request, "bijlagenView.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def bijlageDetail(request, versie_pk, pk):
     bijlagen = models.ItemBijlages.objects.filter(versie__id=versie_pk)
     bijlage = bijlagen.get(id=pk)
@@ -1481,7 +1488,7 @@ def bijlageDetail(request, versie_pk, pk):
     return render(request, "bijlageDetail.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def bijlageAdd(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
 
@@ -1515,7 +1522,7 @@ def bijlageAdd(request, versie_pk):
     return render(request, "bijlageAdd.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def bijlageEdit(request, versie_pk, pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
 
@@ -1554,7 +1561,7 @@ def bijlageEdit(request, versie_pk, pk):
     return render(request, "bijlageEdit.html", context)
 
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def bijlageDelete(request, versie_pk, pk):
     bijlage = models.ItemBijlages.objects.filter(versie__id=versie_pk, id=pk)
     bijlage.delete()
@@ -1562,7 +1569,7 @@ def bijlageDelete(request, versie_pk, pk):
         reverse("bijlageview", args=(versie_pk,))
     )
 
-@staff_member_required(login_url="/404")
+@staff_member_required(login_url=reverse_lazy("logout"))
 def projectHeatmap(request):
     context = {}
 

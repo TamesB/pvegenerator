@@ -10,11 +10,12 @@ from project.models import Beleggers
 from syntrus.views.utils import GetAWSURL
 from users.models import CustomUser
 from django.db.models import Q
+from django.urls import reverse_lazy
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def ManageOrganisaties(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -22,12 +23,12 @@ def ManageOrganisaties(request, client_pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     context = {}
     context["organisaties"] = Organisatie.objects.filter(klantenorganisatie=client)
@@ -37,10 +38,10 @@ def ManageOrganisaties(request, client_pk):
     return render(request, "organisatieManager.html", context)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def AddOrganisatie(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -48,12 +49,12 @@ def AddOrganisatie(request, client_pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.method == "POST":
         form = forms.AddOrganisatieForm(request.POST)
@@ -79,10 +80,10 @@ def AddOrganisatie(request, client_pk):
     return render(request, "organisatieAdd.html", context)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def DeleteOrganisatie(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -90,16 +91,16 @@ def DeleteOrganisatie(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     organisatie = get_object_or_404(Organisatie, id=pk)
     if organisatie.klantenorganisatie != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.method == "POST":
         naam = organisatie.naam
@@ -112,10 +113,10 @@ def DeleteOrganisatie(request, client_pk, pk):
     return redirect("manageorganisaties_syn", client_pk=client_pk)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def AddUserOrganisatie(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -123,14 +124,14 @@ def AddUserOrganisatie(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
     if not Organisatie.objects.filter(id=pk):
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     organisatie = Organisatie.objects.filter(id=pk, klantenorganisatie=client).first()
     organisaties = Organisatie.objects.filter(klantenorganisatie=client)
@@ -144,7 +145,7 @@ def AddUserOrganisatie(request, client_pk, pk):
         if form.is_valid():
             werknemer = form.cleaned_data["werknemer"]
             if werknemer.klantenorganisatie != client:
-                return render(request, "404_syn.html")
+                return redirect("logout_syn", client_pk=client_pk)
 
             organisatie.gebruikers.add(werknemer)
 
@@ -185,10 +186,10 @@ def AddUserOrganisatie(request, client_pk, pk):
     context["logo_url"] = logo_url
     return render(request, "partials/organisatieadduser_form.html", context)
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def GetUsersInOrganisatie(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -196,14 +197,14 @@ def GetUsersInOrganisatie(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
     if not Organisatie.objects.filter(id=pk):
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     organisatie = Organisatie.objects.filter(id=pk, klantenorganisatie=client).first()
     organisaties = Organisatie.objects.filter(klantenorganisatie=client)

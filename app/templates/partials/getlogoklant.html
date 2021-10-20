@@ -6,7 +6,7 @@
 {% block main %}
 
 <div hx-target="this" hx-swap="outerHTML">
-{% if klant.logo %}
+{% if logo_url %}
 <img style="max-width: 10vw;" src="{{ logo_url }}"></img>
 <button hx-get="{% url 'logoklantform' klant.id %}" class="ui icon basic button"><i class="icon edit"></i></button>
 {% else %}
@@ -14,7 +14,4 @@
 {% endif %}
 </div>
 
-{% endblock %}
-{% block scripts %}
-{% include "partials/messages_beheer.html" %}
 {% endblock %}

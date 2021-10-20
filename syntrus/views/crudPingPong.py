@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Sum
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from app import models
 from project.models import Project, PVEItemAnnotation, Beleggers
@@ -15,10 +15,10 @@ from syntrus.views.utils import GetAWSURL
 from django.core.paginator import Paginator
 import time
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def CheckComments(request, client_pk, proj_id):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -26,26 +26,26 @@ def CheckComments(request, client_pk, proj_id):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     start = time.time()
     context = {}
     
     # get the current_phase and the level
     if not Project.objects.filter(pk=proj_id):
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     # get the project
     project = Project.objects.prefetch_related("phase").get(pk=proj_id)
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
     # check first if user is permitted to the project
     if request.user not in project.permitted.all():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     # get the current_phase and the level
     if not project.phase.exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     # get the highest ID of the frozencomments phases; the current phase
     current_phase = project.phase.first()
@@ -54,11 +54,11 @@ def CheckComments(request, client_pk, proj_id):
     if (current_phase.level % 2) != 0:
         # level uneven: make page only visible for SD
         if request.user.type_user == project.first_annotate:
-            return render(request, "404_syn.html")
+            return redirect("logout_syn", client_pk=client_pk)
     else:
         # level even: make page only visible for SOG
         if request.user.type_user != project.first_annotate:
-            return render(request, "404_syn.html")
+            return redirect("logout_syn", client_pk=client_pk)
 
     clausetime = time.time()
     print(f"Clauses: {clausetime - start}")
@@ -374,10 +374,10 @@ def make_ann_forms(post_list, comments, current_phase):
     return ann_forms
 
 
-@login_required
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def MyReplies(request, client_pk, pk, **kwargs):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -385,21 +385,21 @@ def MyReplies(request, client_pk, pk, **kwargs):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     context = {}
 
     project = get_object_or_404(Project, pk=pk)
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
    
     if project.frozenLevel == 0:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     commentphase = project.phase.first()
 
     if request.user not in project.permitted.all():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     bijlages = []
 
@@ -511,10 +511,10 @@ def MyReplies(request, client_pk, pk, **kwargs):
     return render(request, "MyReplies.html", context)
 
 
-@login_required
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def MyRepliesDelete(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -522,17 +522,17 @@ def MyRepliesDelete(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.user not in project.permitted.all():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if project.frozenLevel == 0:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
     
     commentphase = project.phase.first()
 
@@ -565,10 +565,10 @@ def MyRepliesDelete(request, client_pk, pk):
     return render(request, "MyRepliesDelete.html", context)
 
 
-@login_required
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def DeleteReply(request, client_pk, pk, reply_id):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -576,18 +576,18 @@ def DeleteReply(request, client_pk, pk, reply_id):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     # check if project exists
     project = get_object_or_404(Project, id=pk)
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if project.frozenLevel == 0:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.user not in project.permitted.all():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     # check if user is authorized to project
     if request.user.type_user != "B":
@@ -637,10 +637,10 @@ def DeleteReply(request, client_pk, pk, reply_id):
     return render(request, "MyRepliesDeleteReply.html", context)
 
 
-@login_required
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def AddReplyAttachment(request, client_pk, pk, reply_id):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -648,17 +648,17 @@ def AddReplyAttachment(request, client_pk, pk, reply_id):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if project.frozenLevel == 0:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.user not in project.permitted.all():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     commentphase = project.phase.first()
 
@@ -670,7 +670,7 @@ def AddReplyAttachment(request, client_pk, pk, reply_id):
     page_obj = paginator.get_page(page_number)
 
     if reply.gebruiker != request.user:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.method == "POST":
         form = forms.BijlageToReplyForm(request.POST, request.FILES)
@@ -703,10 +703,10 @@ def AddReplyAttachment(request, client_pk, pk, reply_id):
     return render(request, "MyRepliesAddAttachment.html", context)
 
 
-@login_required
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def DeleteReplyAttachment(request, client_pk, pk, reply_id):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -714,16 +714,16 @@ def DeleteReplyAttachment(request, client_pk, pk, reply_id):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     # check if project exists
     project = get_object_or_404(Project, pk=pk)
 
     if project.frozenLevel == 0:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.user not in project.permitted.all():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     # check if user is authorized to project
     if request.user.type_user != "B":

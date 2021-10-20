@@ -25,15 +25,19 @@
 				<th>
 					Logo
 				</th>
+				<th>&nbsp;</th>
 			</tr>
 		</thead>
 		<tbody>
       {% for klant in klanten %}
-			<tr>
+			<tr hx-target="this" hx-swap="outerHTML">
 				<td>{{ klant.naam }}</td>
 				<td>{{ klant.abbonement }}</td>
-				<td hx-get="{% url 'getbeheerderklant' klant.id %}" hx-trigger="load"></td>
-				<td hx-get="{% url 'logoklantdetail' klant.id %}" hx-trigger="load"></td>
+				<td hx-get="{% url 'getbeheerderklant' klant.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></td>
+				<td hx-get="{% url 'logoklantdetail' klant.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></td>
+				<td><button class="ui icon basic red button"
+				hx-post="{% url 'klantverwijderen' klant.id %}"
+          hx-confirm="Weet u het zeker?"><i class="icon trash"></i></button></td>
 			</tr>
       {% endfor %}
 		</tbody>

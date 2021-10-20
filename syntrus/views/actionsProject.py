@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
 
 from app import models
 from project.models import BijlageToAnnotation, Project, PVEItemAnnotation, Beleggers
@@ -14,10 +15,10 @@ from utils import createBijlageZip, writePdf
 from syntrus.views.utils import GetAWSURL
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def ViewProjectOverview(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -25,7 +26,7 @@ def ViewProjectOverview(request, client_pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     projects = request.user.projectspermitted.filter(belegger__id=client_pk)
 
@@ -50,10 +51,10 @@ def ViewProjectOverview(request, client_pk):
     return render(request, "MyProjecten_syn.html", context)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def ViewProject(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -61,15 +62,15 @@ def ViewProject(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if not request.user.projectspermitted.filter(id=pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, id=pk)
 
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
         
     medewerkers = [medewerker.username for medewerker in project.permitted.all()]
     derden = [medewerker.username for medewerker in project.permitted.all() if medewerker.type_user == "SD"]
@@ -114,10 +115,10 @@ def ViewProject(request, client_pk, pk):
     return render(request, "ProjectPagina_syn.html", context)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def KiesPVE(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -125,17 +126,17 @@ def KiesPVE(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB", "SOG"]
 
     if request.user.type_user not in allowed_users:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
 
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
         
     form = forms.PVEVersieKeuzeForm(request.POST or None)
     form.fields["pve_versie"].queryset = models.PVEVersie.objects.filter(belegger=client, public=True)
@@ -153,10 +154,10 @@ def KiesPVE(request, client_pk, pk):
     context["project"] = project
     return render(request, "kiespve.html", context)
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def ConnectPVE(request, client_pk, pk, versie_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -164,23 +165,23 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB", "SOG"]
 
     if request.user.type_user not in allowed_users:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
 
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
         
     # we get the active version of the pve based on what is active right now
     versie = models.PVEVersie.objects.filter(id=versie_pk).first()
 
     if project.pveconnected:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.method == "POST":
         form = forms.PVEParameterForm(request.POST)
@@ -317,10 +318,10 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
     return render(request, "ConnectPVE_syn.html", context)
 
 
-@login_required
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def download_pve_overview(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -328,7 +329,7 @@ def download_pve_overview(request, client_pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     projects = client.project.all().filter(
         Q(permitted__username__iregex=r"\y{0}\y".format(request.user.username))
@@ -342,10 +343,10 @@ def download_pve_overview(request, client_pk):
     return render(request, "downloadPveOverview_syn.html", context)
 
 
-@login_required
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def download_pve(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -353,7 +354,7 @@ def download_pve(request, client_pk, pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != "B":
         if not Project.objects.filter(
@@ -364,7 +365,7 @@ def download_pve(request, client_pk, pk):
 
     project = get_object_or_404(Project, id=pk)
     if project.belegger != client:
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     versie = project.pve_versie
 

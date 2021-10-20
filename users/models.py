@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from users.managers import CustomUserManager
 
 class Organisatie(models.Model):
-    naam = models.CharField(max_length=500)
+    naam = models.CharField(max_length=500, null=True)
     klantenorganisatie = models.ForeignKey("project.Beleggers", on_delete=models.CASCADE, null=True, blank=True, related_name="organisatie")
     gebruikers = models.ManyToManyField(
         "users.CustomUser", default=None, related_name="in_organisatie"

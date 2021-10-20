@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 
 from app import models
 from project.models import Project, PVEItemAnnotation, Beleggers, BeheerdersUitnodiging
@@ -18,7 +19,7 @@ from django.utils import timezone
 
 def LoginView(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -74,7 +75,7 @@ def LoginView(request, client_pk):
 
 def BeheerdersAcceptUitnodiging(request, client_pk, key):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -82,7 +83,7 @@ def BeheerdersAcceptUitnodiging(request, client_pk, key):
         logo_url = GetAWSURL(client)
 
     if not key or not BeheerdersUitnodiging.objects.filter(key=key):
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     invitation = BeheerdersUitnodiging.objects.filter(key=key).first()
 
@@ -140,19 +141,18 @@ def BeheerdersAcceptUitnodiging(request, client_pk, key):
     context["logo_url"] = logo_url
     return render(request, "acceptBeheerderInvite.html", context)
 
-@login_required(login_url="login_syn")
 def LogoutView(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     logout(request)
     return redirect("login_syn", client_pk=client_pk)
 
 
-@login_required
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def DashboardView(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -160,7 +160,7 @@ def DashboardView(request, client_pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     context = {}
     context["client_pk"] = client_pk
@@ -204,17 +204,17 @@ def DashboardView(request, client_pk):
         return render(request, "dashboardDerde_syn.html", context)
 
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def FAQView(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     faqquery = FAQ.objects.all()
     if request.user.type_user == "SB":
@@ -231,10 +231,10 @@ def FAQView(request, client_pk):
     context["logo_url"] = logo_url    
     return render(request, "FAQ_syn.html", context)
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def KiesPVEGenerate(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -242,10 +242,10 @@ def KiesPVEGenerate(request, client_pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.user is not client.beheerder and request.user.type_user != "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     form = forms.PVEVersieKeuzeForm(request.POST or None)
     form.fields["pve_versie"].queryset = models.PVEVersie.objects.filter(belegger=client, public=True)
@@ -261,10 +261,10 @@ def KiesPVEGenerate(request, client_pk):
     context["logo_url"] = logo_url
     return render(request, "kiespvegenereer.html", context)
 
-@login_required(login_url="login_syn")
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
 def GeneratePVEView(request, client_pk, versie_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
 
@@ -273,13 +273,13 @@ def GeneratePVEView(request, client_pk, versie_pk):
         logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.user is not client.beheerder and request.user.type_user != "B":
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
 
     if not models.PVEVersie.objects.filter(pk=versie_pk).exists():
-        return render(request, "404_syn.html")
+        return redirect("logout_syn", client_pk=client_pk)
     else:
         versie = models.PVEVersie.objects.filter(pk=versie_pk).first()
 
