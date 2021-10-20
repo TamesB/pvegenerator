@@ -22,6 +22,7 @@ from utils import writeExcel
 from users.models import CustomUser
 from . import forms, models
 import secrets
+from django.utils import timezone
 
 def LoginPageView(request):
     # cant see lander page if already logged in
@@ -195,10 +196,9 @@ def BeheerderKlantForm(request, client_pk):
                 messages.warning(request, "Beheerder succesvol aangewezen!")
             else:
                 if form.cleaned_data["email"]:
-                    invitation = BeheerdersUitnodiging()
                     expiry_length = 10
                     expire_date = timezone.now() + timezone.timedelta(expiry_length)
-                    invitation.expires = expire_date
+                    invitation = BeheerdersUitnodiging.objects.create(expires=expire_date)
                     invitation.key = secrets.token_urlsafe(30)
                     invitation.invitee = form.cleaned_data["email"]
                     invitation.klantenorganisatie = klant
@@ -349,7 +349,7 @@ def AddPvEVersie(request, belegger_pk):
 
                 # keuzematrix
                 bwsrt = [i for i in kopie_versie.bouwsoort.all()]
-                tpobj = [i for i in kopie_versie.type_object.all()]
+                tpobj = [i for i in kopie_versie.typeobject.all()]
                 dlgrp = [i for i in kopie_versie.doelgroep.all()]
                 old_bwsrt = [i.id for i in bwsrt]
                 old_tpobj = [i.id for i in tpobj]
@@ -403,7 +403,7 @@ def AddPvEVersie(request, belegger_pk):
 
                 # map the old to new model ids for new foreignkey references
                 new_bwsrt = [i for i in new_versie_obj.bouwsoort.all()]
-                new_tpobj = [i for i in new_versie_obj.type_object.all()]
+                new_tpobj = [i for i in new_versie_obj.typeobject.all()]
                 new_dlgrp = [i for i in new_versie_obj.doelgroep.all()]
 
                 bwsrt_map = {}
@@ -551,9 +551,10 @@ def DeactivateVersie(request, versie_pk):
 @staff_member_required(login_url="/404")
 def PVEBewerkOverview(request, versie_pk):
     pve_versie = models.PVEVersie.objects.get(id=versie_pk)
-
+    client = pve_versie.belegger
     context = {}
     context["pve_versie"] = pve_versie
+    context["client_pk"] = client.id
     return render(request, "PVEBewerkOverview.html", context)
 
 

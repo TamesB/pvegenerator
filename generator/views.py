@@ -7,7 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
-
+from syntrus.views.utils import GetAWSURL
+from project.models import Beleggers
 from app import models
 from utils import createBijlageZip, writeDiffPdf, writePdf
 
@@ -16,8 +17,10 @@ from . import forms
 
 # Create your views here.
 @staff_member_required
-def GeneratePVEView(request, versie_pk):
+def GeneratePVEView(request, client_pk, versie_pk):
     pve_versie = models.PVEVersie.objects.get(id=versie_pk)
+    client = Beleggers.objects.get(id=client_pk)
+    logo_url = GetAWSURL(client)
 
     if request.method == "POST":
 
@@ -226,7 +229,7 @@ def GeneratePVEView(request, versie_pk):
             reactiebijlagen = {}
 
             versie_naam = pve_versie.versie
-            pdfmaker = writePdf.PDFMaker(versie_naam)
+            pdfmaker = writePdf.PDFMaker(versie_naam, logo_url)
             pdfmaker.makepdf(
                 filename,
                 basic_PVE,
@@ -261,6 +264,8 @@ def GeneratePVEView(request, versie_pk):
             context["itemsPVE"] = basic_PVE
             context["filename"] = filename
             context["zipFilename"] = zipFilename
+            context["client_pk"] = client_pk
+            context["logo_url"] = logo_url
             return render(request, "PVEResult.html", context)
         else:
             messages.warning(request, "Vul de verplichte keuzes in.")
@@ -299,6 +304,9 @@ def GeneratePVEView(request, versie_pk):
     context = {}
     context["form"] = form
     context["versie_pk"] = versie_pk
+    context["client_pk"] = client_pk
+    context["logo_url"] = logo_url
+
     return render(request, "GeneratePVE.html", context)
 
 

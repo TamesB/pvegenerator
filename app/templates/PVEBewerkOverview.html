@@ -10,7 +10,7 @@
 <div class="ui divider"></div>
 <div>
 <h2 class="ui header">Programma van Eisen</h2>
-	<a href="{% url 'generate' pve_versie.id %}"><button class="ui basic button"><i class="icon download"></i>Genereer voorbeeld PvE</button></a><br><br>
+	<a href="{% url 'generate' client_pk pve_versie.id %}"><button class="ui basic button"><i class="icon download"></i>Genereer voorbeeld PvE</button></a><br><br>
 	<a href="{% url 'compare' pve_versie.id %}"><button class="ui basic button"><i class="icon download"></i>Genereer afwijkingenlijst</button></a><br><br>
 	<a href="{% url 'hoofdstukview' pve_versie.id %}"><button class="ui basic button"><i class="icon edit"></i>Bewerk Programma van Eisen</button></a><br><br>
 	<a href="{% url 'kiesparametersview' pve_versie.id %}"><button class="ui basic button"><i class="icon edit"></i>Bewerk Keuzematrix</button></a>
