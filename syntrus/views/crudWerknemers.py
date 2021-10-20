@@ -25,7 +25,9 @@ def ManageWerknemers(request, client_pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -51,7 +53,9 @@ def AddAccount(request, client_pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -164,7 +168,9 @@ def AcceptInvite(request, client_pk, key):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -252,7 +258,9 @@ def InviteUsersToProject(request, client_pk, pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")

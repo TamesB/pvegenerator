@@ -27,6 +27,7 @@ urlpatterns = [
         name="pvebewerkoverview",
     ),
     path("addpveversie/<int:belegger_pk>", views.AddPvEVersie, name="addpveversie"),
+    path("deletepveversie/<int:belegger_pk>/<int:versie_pk>", views.DeletePVEVersie, name="deletepveversie"),
     path("makeactive/<int:versie_pk>", views.ActivateVersie, name="maakactief"),
     path("makeinactive/<int:versie_pk>", views.DeactivateVersie, name="maakinactief"),
     path("addbelegger", views.AddBelegger, name="addbelegger"),

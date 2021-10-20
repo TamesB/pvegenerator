@@ -30,7 +30,7 @@
     </thead>
     <tbody>
       {% if queryset %} {% for item in queryset.all %}
-      <tr>
+      <tr hx-target="this" hx-swap="outerHTML">
         <td>
           <a href="{% url 'pvebewerkoverview' item.id %}"
             >Versie {{ item.versie }}</a
@@ -58,6 +58,9 @@
               value="Activeer"
             />
             {% endif %}
+					  <span><button hx-post="{% url 'deletepveversie' item.belegger.id item.id %}"
+          hx-confirm="Weet je het zeker?"
+          class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
           </div>
         </td>
       </tr>

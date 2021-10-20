@@ -21,7 +21,9 @@ def AddCommentOverview(request, client_pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -44,7 +46,9 @@ def MyComments(request, client_pk, pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -184,7 +188,9 @@ def MyCommentsDelete(request, client_pk, pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -245,7 +251,9 @@ def deleteAnnotationPve(request, client_pk, project_id, ann_id):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -327,7 +335,9 @@ def AddAnnotationAttachment(request, client_pk, projid, annid):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -384,7 +394,9 @@ def VerwijderAnnotationAttachment(request, client_pk, projid, annid):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -463,7 +475,9 @@ def AllComments(request, client_pk, pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -513,7 +527,9 @@ def AddComment(request, client_pk, pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")

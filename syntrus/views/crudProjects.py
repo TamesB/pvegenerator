@@ -17,7 +17,9 @@ def ManageProjects(request, client_pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -32,7 +34,8 @@ def ManageProjects(request, client_pk):
     old_projecten = []
 
     for project in projecten:
-        if not project.pveconnected or not project.projectmanager:
+        stakeholders = project.organisaties.all()
+        if not project.pveconnected or not project.projectmanager or len(stakeholders) == 0:
             new_projecten.append(project)
         else:
             old_projecten.append(project)
@@ -52,7 +55,9 @@ def AddProject(request, client_pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -72,20 +77,20 @@ def AddProject(request, client_pk):
             project.belegger = client
             project.first_annotate = form.cleaned_data["first_annotate"]
             
-            #geolocator = Nominatim(user_agent="tamesbpvegenerator")
-            #if (
-            #    "city"
-            #    in geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}")
-            #    .raw["address"]
-            #    .keys()
-            #):
-            #    project.plaatsnamen = geolocator.reverse(
-            #        f"{project.plaats.y}, {project.plaats.x}"
-            #    ).raw["address"]["city"]
-            #else:
-            #    project.plaatsnamen = geolocator.reverse(
-            #        f"{project.plaats.y}, {project.plaats.x}"
-            #    ).raw["address"]["town"]
+            geolocator = Nominatim(user_agent="tamesbpvegenerator")
+            if (
+                "city"
+                in geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}")
+                .raw["address"]
+                .keys()
+            ):
+                project.plaatsnamen = geolocator.reverse(
+                    f"{project.plaats.y}, {project.plaats.x}"
+                ).raw["address"]["city"]
+            else:
+                project.plaatsnamen = geolocator.reverse(
+                    f"{project.plaats.y}, {project.plaats.x}"
+                ).raw["address"]["town"]
             project.plaatsnamen = "Amsterdam"
             project.save()
             messages.warning(request, f"Project {project.naam} aangemaakt.")
@@ -131,7 +136,9 @@ def GetProjectManagerOfProject(request, client_pk, pk):
 @login_required(login_url="login_syn")
 def AddProjectManagerToProject(request, client_pk, pk):
     client = Beleggers.objects.get(id=client_pk)
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
     project = Project.objects.get(id=pk)
     form = forms.AddProjectmanagerToProjectForm(request.POST or None)
     form.fields["projectmanager"].queryset = CustomUser.objects.filter(type_user="SOG", klantenorganisatie=client)
@@ -181,7 +188,9 @@ def GetOrganisatieToProject(request, client_pk, pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -209,7 +218,9 @@ def AddOrganisatieToProject(request, client_pk, pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -278,7 +289,9 @@ def SOGAddDerdenToProj(request, client_pk, pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")

@@ -17,7 +17,9 @@ def ManageOrganisaties(request, client_pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -41,7 +43,9 @@ def AddOrganisatie(request, client_pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -81,7 +85,9 @@ def DeleteOrganisatie(request, client_pk, pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -112,7 +118,9 @@ def AddUserOrganisatie(request, client_pk, pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -183,7 +191,9 @@ def GetUsersInOrganisatie(request, client_pk, pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")

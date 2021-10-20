@@ -20,7 +20,9 @@ def ViewProjectOverview(request, client_pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -54,7 +56,9 @@ def ViewProject(request, client_pk, pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -116,7 +120,9 @@ def KiesPVE(request, client_pk, pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -153,7 +159,9 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -315,7 +323,9 @@ def download_pve_overview(request, client_pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -338,7 +348,9 @@ def download_pve(request, client_pk, pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")

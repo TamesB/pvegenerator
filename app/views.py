@@ -14,13 +14,14 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.core.mail import send_mail
 
 from syntrus.views.utils import GetAWSURL
 from project.models import Beleggers, Project, BeheerdersUitnodiging
 from utils import writeExcel
 from users.models import CustomUser
 from . import forms, models
-
+import secrets
 
 def LoginPageView(request):
     # cant see lander page if already logged in
@@ -200,7 +201,7 @@ def BeheerderKlantForm(request, client_pk):
                     invitation.expires = expire_date
                     invitation.key = secrets.token_urlsafe(30)
                     invitation.invitee = form.cleaned_data["email"]
-                    invitation.klantenorganisatie = new_klant
+                    invitation.klantenorganisatie = klant
                     invitation.save()
 
                     send_mail(
@@ -222,6 +223,14 @@ def BeheerderKlantForm(request, client_pk):
             messages.warning(request, "Vul de verplichte velden in.")
 
     return render(request, "partials/beheerderklantform.html", context)
+
+@staff_member_required(login_url="/404")
+def DeletePVEVersie(request, belegger_pk, versie_pk):
+    versie = models.PVEVersie.objects.get(belegger__id=belegger_pk, id=versie_pk)
+    naam = versie.versie
+    versie.delete()
+    messages.warning(request, f"Versie: {naam} succesvol verwijderd.")
+    return HttpResponse("")
 
 @staff_member_required(login_url="/404")
 def KlantToevoegen(request):

@@ -20,7 +20,9 @@ def LoginView(request, client_pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     # cant see lander page if already logged in
     if request.user:
@@ -74,7 +76,9 @@ def BeheerdersAcceptUitnodiging(request, client_pk, key):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if not key or not BeheerdersUitnodiging.objects.filter(key=key):
         return render(request, "404_syn.html")
@@ -150,7 +154,9 @@ def DashboardView(request, client_pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
@@ -203,8 +209,9 @@ def FAQView(request, client_pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
-
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
 
@@ -229,14 +236,14 @@ def KiesPVEGenerate(request, client_pk):
         return render(request, "404_syn.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
 
-    allowed_users = ["B", "SB", "SOG"]
-
-    if request.user.type_user not in allowed_users:
+    if request.user is not client.beheerder and request.user.type_user != "B":
         return render(request, "404_syn.html")
 
     form = forms.PVEVersieKeuzeForm(request.POST or None)
@@ -260,14 +267,14 @@ def GeneratePVEView(request, client_pk, versie_pk):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
 
-    logo_url = GetAWSURL(client)
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
 
     if request.user.klantenorganisatie is not client and request.user.type_user == "B":
         return render(request, "404_syn.html")
 
-    allowed_users = ["B", "SB"]
-
-    if request.user.type_user not in allowed_users:
+    if request.user is not client.beheerder and request.user.type_user != "B":
         return render(request, "404_syn.html")
 
     if not models.PVEVersie.objects.filter(pk=versie_pk).exists():
