@@ -34,7 +34,7 @@ class LoginForm(forms.Form):
 
 
 class KiesParameterForm(forms.Form):
-    parameter = forms.CharField(label="", max_length=100)
+    parameter = forms.CharField(label="Parameter:", max_length=100)
 
 class LogoKlantForm(ModelForm):
     class Meta: 

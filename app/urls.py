@@ -159,6 +159,11 @@ urlpatterns = [
         name="kiesparameterform",
     ),
     path(
+        "kiesparameters/<int:versie_pk>/<int:type>/addform",
+        views.addkiesparameterform,
+        name="addkiesparameterform",
+    ),
+    path(
         "kiesparameters/<int:versie_pk>/<int:type>/<int:parameter_id>/get",
         views.kiesparameterdetail,
         name="kiesparameterdetail",

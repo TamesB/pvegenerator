@@ -5,12 +5,21 @@
 {% block main %}
 
 <span hx-target="this" hx-swap="outerHTML">
-{% if parameter.parameter %}
+
+          <div class="d-inline" style="float: left">
+				  <span>{% if parameter.parameter %}
 <p style="float: left;">{{ parameter.parameter }} </p>
 <button hx-get="{% url 'kiesparameterform' versie_pk type parameter.id %}" class="ui icon basic button"><i class="icon edit"></i></button>
 {% else %}
 <button hx-get="{% url 'kiesparameterform' versie_pk type parameter.id %}" class="ui icon basic button"><i class="icon plus"></i></button>
-{% endif %}
+{% endif %}</span></div>
+          <div class="d-inline" style="float: right">
+            <span><button hx-post="{% url 'kiesparameterdelete' versie_pk 1 parameter.id %}"
+            hx-confirm="Weet je het zeker?"
+            class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
+
+          </div>
+
 </span>
 
 {% endblock %}

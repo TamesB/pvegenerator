@@ -16,10 +16,9 @@
           Bouwsoorten
           <div class="d-inline" style="float: right">
             <span class="float right"
-              ><a href="{% url 'addkiesparameter' versie_pk 1 %}"
-                ><button class="ui icon green button">
-                  <i class="icon plus"></i></button></a
-            ></span>
+              ><button hx-target="#addparameter" hx-swap="innerHTML" hx-get="{% url 'addkiesparameterform' versie_pk 1 %}" class="ui icon green button">
+                  <i class="icon plus"></i></button>
+            </span>
           </div>
         </th>
       </tr>
@@ -28,17 +27,11 @@
       {% for parameter in bouwsoorten %}
       <tr hx-target="this" hx-swap="outerHTML">
         <td>
-          <div class="d-inline" style="float: left">
-				  <span hx-get="{% url 'kiesparameterdetail' versie_pk 1 parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></span></div>
-          <div class="d-inline" style="float: right">
-            <span><button hx-post="{% url 'kiesparameterdelete' versie_pk 1 parameter.id %}"
-            hx-confirm="Weet je het zeker?"
-            class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
-
-          </div>
+          <span hx-get="{% url 'kiesparameterdetail' versie_pk 1 parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></span>
         </td>
       </tr>
       {% endfor %}
+      <tr id="addparameter"></tr>
     </tbody>
   </table>
   {% else %}
@@ -71,13 +64,7 @@
         {% for parameter in typeObjecten %}
         <tr hx-target="this" hx-swap="outerHTML">
           <td>
-          <div class="d-inline" style="float: left">
-				  <span hx-get="{% url 'kiesparameterdetail' versie_pk 2 parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></span></div>
-          <div class="d-inline" style="float: right">
-          <span><button hx-post="{% url 'kiesparameterdelete' versie_pk 2 parameter.id %}"
-          hx-confirm="Weet je het zeker?"
-          class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
-            </div>
+          <span hx-get="{% url 'kiesparameterdetail' versie_pk 2 parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></span>
           </td>
         </tr>
         {% endfor %}
@@ -113,14 +100,7 @@
           {% for parameter in doelgroepen %}
           <tr hx-target="this" hx-swap="outerHTML">
             <td>
-          <div class="d-inline" style="float: left">
-				  <span hx-get="{% url 'kiesparameterdetail' versie_pk 3 parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></span></div>
-          <div class="d-inline" style="float: right">
-          <span><button hx-post="{% url 'kiesparameterdelete' versie_pk 3 parameter.id %}"
-          hx-confirm="Weet je het zeker?"
-          class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
-
-              </div>
+          <span hx-get="{% url 'kiesparameterdetail' versie_pk 3 parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></span>
             </td>
           </tr>
           {% endfor %}

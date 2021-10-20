@@ -169,14 +169,14 @@ def LogoKlantForm(request, client_pk):
 def GetBeheerderKlant(request, client_pk):
     klant = Beleggers.objects.get(id=client_pk)
 
-    in_progress = False
+    invitation = None
     if BeheerdersUitnodiging.objects.filter(klantenorganisatie=klant):
-        in_progress = True
+        invitation = BeheerdersUitnodiging.objects.filter(klantenorganisatie=klant).first()
 
     context = {}
     context["klant"] = klant
     context["client_pk"] = client_pk
-    context["in_progress"] = in_progress
+    context["invitation"] = invitation
     return render(request, "partials/getbeheerderklant.html", context)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
@@ -1330,7 +1330,41 @@ def addkiesparameterView(request, versie_pk, type_id):
     context["versie_pk"] = versie_pk
     return render(request, "addkiesparameter.html", context)
 
+@staff_member_required(login_url=reverse_lazy("logout"))
+def addkiesparameterform(request, versie_pk, type):
+    type = int(type)
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+    form = forms.KiesParameterForm(request.POST or None)
 
+    if request.method == "POST":
+        # check validity
+        if form.is_valid():
+
+            # If type_id not in available ones
+            if type != 1 and type != 2 and type != 3:
+                raise Http404("404")
+
+            if type == 1:  # Bouwsoort
+                item = models.Bouwsoort()
+
+            if type == 2:  # Type Object
+                item = models.TypeObject()
+
+            if type == 3:  # Doelgroep
+                item = models.Doelgroep()
+
+            item.parameter = form.cleaned_data["parameter"]
+            item.versie = versie
+            item.save()
+
+            return redirect("kiesparameterdetail", versie_pk=versie_pk, type=type, parameter_id=item.pk)
+
+
+    context = {}
+    context["form"] = form
+    context["type"] = type
+    context["versie_pk"] = versie_pk
+    return render(request, "partials/addkiesparameterform.html", context)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def kiesparameterform(request, versie_pk, type, parameter_id):
