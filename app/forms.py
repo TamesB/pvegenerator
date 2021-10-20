@@ -36,13 +36,36 @@ class LoginForm(forms.Form):
 class KiesParameterForm(forms.Form):
     parameter = forms.CharField(label="Naam", max_length=100)
 
+class LogoKlantForm(ModelForm):
+    class Meta: 
+        model = Beleggers
+        fields = ("logo",)
+        labels = {"logo": ""}
 
+class BeheerderKlantForm(ModelForm):
+    beheerder = forms.ModelChoiceField(queryset=CustomUser.objects.none(), required=True)
+    email = forms.EmailField(required=False, label="Of E-mail")
+    class Meta: 
+        model = Beleggers
+        fields = ("beheerder",)
+        labels = {"beheerder": ""}
+
+        widgets = {
+            "beheerder": forms.Select(attrs={"class": "ui dropdown"})
+        }
 class BeleggerForm(ModelForm):
     email = forms.EmailField(required=False)
     beheerder = forms.ModelChoiceField(queryset=CustomUser.objects.none(), required=False)
+
+    widgets = {
+        "beheerder": forms.Select(
+            attrs={"class": "ui dropdown"}
+        ),
+    }
+
     class Meta:
         model = Beleggers
-        fields = ("naam", "abbonement", "beheerder", "logo")
+        fields = ("naam", "abbonement", "logo")
         labels = {
             "naam": "Naam:",
             "abbonement": "Abbonement Type:",

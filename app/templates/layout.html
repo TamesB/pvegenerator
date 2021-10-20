@@ -40,6 +40,7 @@
             <span class="float center">© 2021 Copyright <a href="mailto:info@tboon.nl">Tames Boon</a></span>
         </div>
       </footer>
+              <script src="https://unpkg.com/htmx.org@1.5.0"></script>
       <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
       <script src="{% static 'semantic.min.js' %}"></script>
       <script type="text/javascript" src="{% static 'Semantic-UI-Alert.js' %}"></script>
@@ -59,6 +60,11 @@
         };
         {% endfor %}
       </script>
+    <script>
+      document.body.addEventListener("htmx:configRequest", (event) => {
+        event.detail.headers["X-CSRFToken"] = "{{ csrf_token }}";
+      });
+    </script>
             {% block scripts %}{% endblock %}
     </body>
 </html>

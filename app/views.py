@@ -15,6 +15,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
+from syntrus.views.utils import GetAWSURL
 from project.models import Beleggers, Project, BeheerdersUitnodiging
 from utils import writeExcel
 from users.models import CustomUser
@@ -104,9 +105,123 @@ def DashboardView(request):
 
 @staff_member_required(login_url="/404")
 def KlantOverzicht(request):
+    logo_urls = {}
+    klanten = Beleggers.objects.all()
+    for klant in klanten:
+        if klant.logo:
+            logo_urls[klant.id] = GetAWSURL(klant)
+
     context = {}
-    context["klanten"] = Beleggers.objects.all()
+    context["klanten"] = klanten
+    context["logo_urls"] = logo_urls
     return render(request, 'klantenOverzicht.html', context)
+
+@staff_member_required(login_url="/404")
+def GetLogo(request, client_pk):
+    klant = Beleggers.objects.get(id=client_pk)
+        
+    logo_urls = {}
+    klanten = Beleggers.objects.all()
+    for klantu in klanten:
+        if klantu.logo:
+            logo_urls[klantu.id] = GetAWSURL(klantu)
+
+    context = {}
+    context["klant"] = klant
+    context["client_pk"] = client_pk
+    context["logo_urls"] = logo_urls
+    return render(request, "partials/getlogoklant.html", context)
+
+@staff_member_required(login_url="/404")
+def LogoKlantForm(request, client_pk):
+    klant = Beleggers.objects.get(id=client_pk)
+
+    logo_urls = {}
+    klanten = Beleggers.objects.all()
+    for klantu in klanten:
+        if klantu.logo:
+            logo_urls[klantu.id] = GetAWSURL(klantu)
+
+    form = forms.LogoKlantForm(request.POST or None)
+    if klant.logo:
+        form.fields["logo"].initial = klant.logo
+
+    context = {}
+    context["client_pk"] = client_pk
+    context["form"] = form
+    context["klant"] = klant
+    context["logo_urls"] = logo_urls
+
+    if request.method == "POST" or request.method == "PUT":
+        if form.is_valid():
+            form.save()
+            messages.warning(request, "Klantlogo succesvol geupload!")
+            return render(request, "partials/getlogoklant.html", context)
+        else:
+            messages.warning(request, "Vul de verplichte velden in.")
+
+    return render(request, "partials/logoklantform.html", context)
+    
+@staff_member_required(login_url="/404")
+def GetBeheerderKlant(request, client_pk):
+    klant = Beleggers.objects.get(id=client_pk)
+
+    context = {}
+    context["klant"] = klant
+    context["client_pk"] = client_pk
+    return render(request, "partials/getbeheerderklant.html", context)
+
+@staff_member_required(login_url="/404")
+def BeheerderKlantForm(request, client_pk):
+    klant = Beleggers.objects.get(id=client_pk)
+
+    form = forms.BeheerderKlantForm(request.POST or None)
+    form.fields["beheerder"].queryset = CustomUser.objects.filter(type_user="SB")
+
+    if klant.beheerder:
+        form.fields["beheerder"].initial = klant.beheerder
+
+    context = {}
+    context["client_pk"] = client_pk
+    context["form"] = form
+    context["klant"] = klant
+
+    if request.method == "POST" or request.method == "PUT":
+        if form.is_valid():
+            if not form.cleaned_data["email"]:
+                klant.beheerder = form.cleaned_data["beheerder"]
+                klant.save()
+                messages.warning(request, "Beheerder succesvol aangewezen!")
+            else:
+                if form.cleaned_data["email"]:
+                    invitation = BeheerdersUitnodiging()
+                    expiry_length = 10
+                    expire_date = timezone.now() + timezone.timedelta(expiry_length)
+                    invitation.expires = expire_date
+                    invitation.key = secrets.token_urlsafe(30)
+                    invitation.invitee = form.cleaned_data["email"]
+                    invitation.klantenorganisatie = new_klant
+                    invitation.save()
+
+                    send_mail(
+                        f"Programma van Eisen Tool - Uitnodiging als beheerder voor uw website",
+                        f"""Beste, 
+                        
+                        Uw subwebsite is gereed. Maak een wachtwoord aan via de uitnodigingslink 
+                        
+                        Uitnodigingslink: https://pvegenerator.net/pvetool/{new_klant.id}/accept/{invitation.key}
+                        """,
+                        "admin@pvegenerator.net",
+                        form.cleaned_data["email"],
+                        fail_silently=False,
+                    )
+                    messages.warning(request, "Uitnodigings Email verstuurd! De beheerder is aangewezen aan deze klant zodra de uitnodiging is geaccepteerd en het account is aangemaakt.")
+
+            return render(request, "partials/getbeheerderklant.html", context)
+        else:
+            messages.warning(request, "Vul de verplichte velden in.")
+
+    return render(request, "partials/beheerderklantform.html", context)
 
 @staff_member_required(login_url="/404")
 def KlantToevoegen(request):
@@ -152,7 +267,7 @@ def KlantToevoegen(request):
             return redirect("klantoverzicht")
         
     context = {}
-    context["form"] = forms.BeleggerForm()
+    context["form"] = form
     return render(request, 'klantToevoegen.html', context)
     
 @staff_member_required(login_url="/404")

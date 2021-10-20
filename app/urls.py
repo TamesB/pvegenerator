@@ -10,6 +10,10 @@ urlpatterns = [
     path("dashboard", views.DashboardView, name="dashboard"),
     path("klanten", views.KlantOverzicht, name="klantoverzicht"),
     path("klanten/add", views.KlantToevoegen, name="klanttoevoegen"),
+    path("klanten/logo/<int:client_pk>", views.GetLogo, name="logoklantdetail"),
+    path("klanten/logo/<int:client_pk>/add", views.LogoKlantForm, name="logoklantform"),
+    path("klanten/beheerder/<int:client_pk>", views.GetBeheerderKlant, name="getbeheerderklant"),
+    path("klanten/beheerder/<int:client_pk>/add", views.BeheerderKlantForm, name="beheerderklantform"),
     path("logout", views.LogoutView, name="logout"),
 
     path(
