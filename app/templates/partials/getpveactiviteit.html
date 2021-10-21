@@ -1,0 +1,19 @@
+{% block main %}  
+<span hx-target="this" hx-swap="outerHTML">
+{% if versie.public %}
+<button
+hx-post="{% url 'maakinactief' versie.id %}"
+    class="ui basic red button d-inline"
+    type="button"
+    >Deactiveer</button>
+{% else %}
+<button
+hx-post="{% url 'maakactief' versie.id %}"
+    class="ui basic green button d-inline"
+    type="button">Activeer</button>
+{% endif %}
+{% endblock %}
+</span>
+{% block scripts %}
+{% include "partials/messages_beheer.html" %}
+{% endblock %}

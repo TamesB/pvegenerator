@@ -1,10 +1,9 @@
 {% extends "partials/_base.html" %}
 
-{% load filename %}
-
 {% block main %}
-
-<span hx-target="this" hx-swap="outerHTML">
+<div hx-target="this" hx-swap="innerHTML">
+<tr>
+<td>
 
           <div class="d-inline" style="float: left">
 				  <span>{% if parameter.parameter %}
@@ -20,6 +19,11 @@
 
           </div>
 
-</span>
+</td>
+</tr>
+</div>
+{% endblock %}
 
+{% block scripts %}
+{% include "partials/messages_beheer.html" %}
 {% endblock %}

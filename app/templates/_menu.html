@@ -1,16 +1,17 @@
-{% load static %} {% load semanticui %}
+i{% load static %} {% load semanticui %}
 <div
-  class="ui inverted labeled icon left vertical visible sidebar menu"
+  class="menu_left ui inverted labeled icon left vertical visible sidebar menu"
   style=""
   id="menu"
 >
-  <a class="item" href="{% url 'dashboard' %}"> Dashboard </a>
-  <a class="item" href="{% url 'klantoverzicht' %}"> Klantenoverzicht </a>
-  <a class="item" href="{% url 'klanttoevoegen' %}"> + Klant toevoegen </a>
-  <a class="item" href="{% url 'beleggerversieoverview' %}"> Bewerk PvE's </a>
-  <a class="item" href="{% url 'allprojects' %}"> Projecten </a>
-  <a class="item" href="{% url 'projectheatmap' %}"> Project Heatmap </a>
-  <a class="item" href="{% url 'logout' %}"> Log Uit </a>
+  <a class="logo"><img style="margin-top: 2vh; margin-bottom: 2vh;" src="{% static 'logo.png' %}"></img> </a>
+  <a class="item" href="{% url 'dashboard' %}"><span><i class="desktop icon small"></i> Dashboard </span></a>
+  <a class="item" href="{% url 'klantoverzicht' %}"><span><i class="address card outline icon"></i> Klantenoverzicht </span></a>
+  <a class="item" href="{% url 'klanttoevoegen' %}"><span><i class="user plus icon"></i> Klant toevoegen </span></a>
+  <a class="item" href="{% url 'beleggerversieoverview' %}"><span><i class="edit outline icon"></i> Bewerk PvE's </span></a>
+  <a class="item" href="{% url 'allprojects' %}"><span><i class="map marker alternate icon"></i> Projecten </span></a>
+  <a class="item" href="{% url 'projectheatmap' %}"><span><i class="map outline icon"></i> Project Heatmap </span></a>
+  <a class="item" href="{% url 'logout' %}"><span><i class="power off icon"></i> Log Uit </span></a>
 </div>
 
 <script></script>

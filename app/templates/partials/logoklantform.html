@@ -5,8 +5,12 @@
     {% csrf_token %}
         {{ form }}
         <button hx-get="{% url 'logoklantdetail' klant.id %}" style="float: left;" class="ui basic button">Terug</button>
-        <button hx-post="{% url 'logoklantform' klant.id %}" type="submit" class="ui icon green button"><i class="icon plus"></i></button>
+        <button hx-post="{% url 'logoklantform' klant.id %}" type="submit" class="ui icon green button"><i class="check icon"></i></button>
     </form>  
 
 
+{% endblock %}
+
+{% block scripts %}
+{% include "partials/messages_beheer.html" %}
 {% endblock %}

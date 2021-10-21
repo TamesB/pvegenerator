@@ -16,7 +16,7 @@
           Bouwsoorten
           <div class="d-inline" style="float: right">
             <span class="float right"
-              ><button hx-target="#addparameter" hx-swap="innerHTML" hx-get="{% url 'addkiesparameterform' versie_pk 1 %}" class="ui icon green button">
+              ><button hx-target="#addparameter" hx-swap="beforeend" hx-get="{% url 'addkiesparameterform' versie_pk 1 %}" class="ui icon green button">
                   <i class="icon plus"></i></button>
             </span>
           </div>
@@ -25,10 +25,7 @@
     </thead>
     <tbody>
       {% for parameter in bouwsoorten %}
-      <tr hx-target="this" hx-swap="outerHTML">
-        <td>
-          <span hx-get="{% url 'kiesparameterdetail' versie_pk 1 parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></span>
-        </td>
+      <tr hx-get="{% url 'kiesparameterdetail' versie_pk 1 parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load">
       </tr>
       {% endfor %}
       <tr id="addparameter"></tr>
@@ -50,24 +47,22 @@
         <tr>
           <th>
             Type Objecten
-            <div class="d-inline" style="float: right">
-              <span class="float right"
-                ><a href="{% url 'addkiesparameter' versie_pk 2 %}"
-                  ><button class="ui icon green button">
-                    <i class="icon plus"></i></button></a
-              ></span>
-            </div>
+          <div class="d-inline" style="float: right">
+            <span class="float right"
+              ><button hx-target="#addparameter" hx-swap="beforeend" hx-get="{% url 'addkiesparameterform' versie_pk 2 %}" class="ui icon green button">
+                  <i class="icon plus"></i></button>
+            </span>
+          </div>
           </th>
         </tr>
       </thead>
       <tbody>
         {% for parameter in typeObjecten %}
-        <tr hx-target="this" hx-swap="outerHTML">
-          <td>
-          <span hx-get="{% url 'kiesparameterdetail' versie_pk 2 parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></span>
-          </td>
-        </tr>
-        {% endfor %}
+      <tr hx-get="{% url 'kiesparameterdetail' versie_pk 2 parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load">
+      </tr>
+          {% endfor %}
+                <tr id="addparameter"></tr>
+
       </tbody>
     </table>
     {% else %}
@@ -86,24 +81,22 @@
           <tr>
             <th>
               Doelgroepen
-              <div class="d-inline" style="float: right">
-                <span class="float right"
-                  ><a href="{% url 'addkiesparameter' versie_pk 3 %}"
-                    ><button class="ui icon green button">
-                      <i class="icon plus"></i></button></a
-                ></span>
-              </div>
+          <div class="d-inline" style="float: right">
+            <span class="float right"
+              ><button hx-target="#addparameter" hx-swap="beforeend" hx-get="{% url 'addkiesparameterform' versie_pk 3 %}" class="ui icon green button">
+                  <i class="icon plus"></i></button>
+            </span>
+          </div>
             </th>
           </tr>
         </thead>
         <tbody>
           {% for parameter in doelgroepen %}
-          <tr hx-target="this" hx-swap="outerHTML">
-            <td>
-          <span hx-get="{% url 'kiesparameterdetail' versie_pk 3 parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></span>
-            </td>
-          </tr>
+      <tr hx-get="{% url 'kiesparameterdetail' versie_pk 3 parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load">
+      </tr>
           {% endfor %}
+                <tr id="addparameter"></tr>
+
         </tbody>
       </table>
       {% else %}

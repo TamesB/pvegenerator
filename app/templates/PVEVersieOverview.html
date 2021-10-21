@@ -16,59 +16,28 @@
         <th>
           {{ key.naam }}
           <!-- Beleggernaam -->
-          <div class="d-inline" style="float: right">
-            <span class="float right"
-              ><a href="{% url 'addpveversie' key.id %}"
-                ><button class="ui icon green button">
-                  <i class="icon plus"></i>Versie
-                </button></a
-              ></span
-            >
-          </div>
         </th>
       </tr>
     </thead>
     <tbody>
       {% if queryset %} {% for item in queryset.all %}
-      <tr hx-target="this" hx-swap="outerHTML">
-        <td>
-          <a href="{% url 'pvebewerkoverview' item.id %}"
-            >Versie {{ item.versie }}</a
-          >
-          &nbsp;
-          <div class="d-inline" style="float: right">
-            <input
-              class="ui primary button d-inline"
-              onclick="window.location.href='{% url 'pvebewerkoverview' item.id %}';"
-              type="button"
-              value="Open"
-            />
-          {% if item.public %}
-            <input
-              class="ui basic red button d-inline"
-              onclick="window.location.href='{% url 'maakinactief' item.id %}';"
-              type="button"
-              value="Deactiveer"
-            />
-            {% else %}
-            <input
-              class="ui basic green button d-inline"
-              onclick="window.location.href='{% url 'maakactief' item.id %}';"
-              type="button"
-              value="Activeer"
-            />
-            {% endif %}
-					  <span><button hx-post="{% url 'deletepveversie' item.belegger.id item.id %}"
-          hx-confirm="Weet je het zeker?"
-          class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
-          </div>
+      <tr>
+        <td id="pveversieline-{{ item.id }}">
+          <div hx-get="{% url 'getpveversie' item.id %}" hx-target="this" hx-swap="outerHTML" hx-trigger="load"></div>
         </td>
       </tr>
-      {% endfor %} {% else %}
+      {% endfor %} 
+      {% else %}
       <tr>
         <td>Nog geen PvE versies.</td>
       </tr>
       {% endif %}
+      <tr id="newline" hx-target="this" hx-swap="innerHTML"></tr>
+      <tr>
+      <td>
+      <button hx-get="{% url 'addpveversieform' key.id %}" hx-target="#newline" class="ui green button">Voeg versie toe</button>
+      </td>
+      </tr>
     </tbody>
   </table>
   {% endfor %}

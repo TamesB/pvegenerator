@@ -1,0 +1,27 @@
+ 
+ {% block main %}
+ <div>
+          <a href="{% url 'pvebewerkoverview' item.id %}"
+            >Versie {{ item.versie }}</a
+          >
+          &nbsp;
+          <div class="d-inline" style="float: right">
+            <input
+              class="ui primary button d-inline"
+              onclick="window.location.href='{% url 'pvebewerkoverview' item.id %}';"
+              type="button"
+              value="Open"
+            />
+            <div class="d-inline" hx-get="{% url 'getpveactiviteit' item.id %}" hx-trigger="load delay:1s" hx-swap="outerHTML"></div>
+					  <span><button hx-post="{% url 'deletepveversie' item.belegger.id item.id %}"
+                      hx-target="#pveversieline-{{ item.id }}"
+                      hx-swap="innerHTML"
+          hx-prompt="Vul 'VERWIJDEREN' in om versie {{ item.versie }} te verwijderen."
+          class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
+        </div>
+        </div>
+{% endblock %}
+
+{% block scripts %}
+{% include "partials/messages_beheer.html" %}
+{% endblock %}

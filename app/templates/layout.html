@@ -14,29 +14,14 @@
         <title>PvE Generator</title>
     </head>
     <body>
-    <div class="ui equal width grid" style="height: 100%">
-    <div class="menu_left two wide column">
+    <div style="height: 100%;">
     {% include '_menu.html' %}
-    </div>
-      <div id="main" class="ui raised very padded text container segment">
-        <article>
-          {% if messages %}
-            <div class="ui info floating message">
-              <i class="close icon"></i>
-                <div class="header">
-                  Info
-                </div>
-                  <ul class="list">
-                    {% for message in messages %}
-                      <li>{{ message }}</li>
-                    {% endfor %}
-                  </ul>
-            </div>
-            {% endif %}
+      <div id="main">
             {% block main %}{% endblock %}
-          </article>
-        </div>
+      </div>
+      </div>
               <script src="https://unpkg.com/htmx.org@1.5.0"></script>
+              <script src="https://unpkg.com/hyperscript.org@0.8.2"></script>
       <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
       <script src="{% static 'semantic.min.js' %}"></script>
       <script type="text/javascript" src="{% static 'Semantic-UI-Alert.js' %}"></script>

@@ -223,9 +223,26 @@ def BeheerderKlantForm(request, client_pk):
 def DeletePVEVersie(request, belegger_pk, versie_pk):
     versie = models.PVEVersie.objects.get(belegger__id=belegger_pk, id=versie_pk)
     naam = versie.versie
-    versie.delete()
-    messages.warning(request, f"Versie: {naam} succesvol verwijderd.")
-    return HttpResponse("")
+    context = {}
+    context["versie"] = versie
+    context["versie_pk"] = versie_pk
+
+    if request.headers["HX-Prompt"] == "VERWIJDEREN":
+        versie.delete()
+        messages.warning(request, f"Versie: {naam} succesvol verwijderd.")
+        return HttpResponse("")
+    else:
+        messages.warning(request, f"Onjuiste invulling. Probeer het opnieuw.")
+        return redirect("getpveversie", versie_pk=versie_pk)
+
+@staff_member_required(login_url=reverse_lazy("logout"))
+def PVEVersieDetail(request, versie_pk):
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+
+    context = {}
+    context["item"] = versie
+    context["versie_pk"] = versie_pk
+    return render(request, "partials/getpveversie.html", context)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def KlantToevoegen(request):
@@ -319,16 +336,8 @@ def AddPvEVersie(request, belegger_pk):
         if form.is_valid():
             kopie_versie = form.cleaned_data["kopie_versie"]
             new_versie = form.cleaned_data["versie"]
-            form.save()
-            
-            # if first version. set as active version of the belegger
-            if models.PVEVersie.objects.filter(belegger=belegger).count() == 1:
-                actieve_versie = models.ActieveVersie()
-                actieve_versie.belegger = belegger
-                actieve_versie.versie = models.PVEVersie.objects.all().first()
-                actieve_versie.save()
-            
-            
+            form.save()            
+            new_versie_obj = models.PVEVersie.objects.filter(versie=new_versie).first()
             # maak kopie van andere versie, voeg nieuw toe.
             if kopie_versie:
                 # items
@@ -500,23 +509,21 @@ def AddPvEVersie(request, belegger_pk):
                     i.items.clear()
                     i.items.add(*j)
 
-            return redirect("beleggerversieoverview")
-
-
-    # View below modal
-    beleggers = Beleggers.objects.all()
-
-    BeleggerVersieQuerySet = {}
-
-    for belegger in beleggers:
-        BeleggerVersieQuerySet[belegger] = belegger.versie
+            return redirect("getpveversie", versie_pk=new_versie_obj.id)
 
     context = {}
-    context["BeleggerVersieQuerySet"] = BeleggerVersieQuerySet
-    context["beleggers"] = beleggers
     context["form"] = form
-    context["belegger"] = belegger
-    return render(request, "addPvEVersie.html", context)
+    context["key"] = belegger_pk
+    return render(request, "partials/addpveversieform.html", context)
+
+@staff_member_required(login_url=reverse_lazy("logout"))
+def VersieActiviteit(request, versie_pk):
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+    versie_pk = versie.id
+    context = {}
+    context["versie"] = versie
+    context["versie_pk"] = versie_pk
+    return render(request, "partials/getpveactiviteit.html", context)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def ActivateVersie(request, versie_pk):
@@ -524,7 +531,7 @@ def ActivateVersie(request, versie_pk):
     versie.public = True
     versie.save()
     messages.warning(request, f"Versie geactiveerd: {versie}")
-    return redirect("beleggerversieoverview")
+    return redirect("getpveactiviteit", versie_pk=versie_pk)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def DeactivateVersie(request, versie_pk):
@@ -532,7 +539,7 @@ def DeactivateVersie(request, versie_pk):
     versie.public = False
     versie.save()
     messages.warning(request, f"Versie gedeactiveerd: {versie}")
-    return redirect("beleggerversieoverview")
+    return redirect("getpveactiviteit", versie_pk=versie_pk)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def PVEBewerkOverview(request, versie_pk):

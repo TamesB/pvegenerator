@@ -1,0 +1,21 @@
+{% extends "partials/_base.html" %}
+
+{% block main %}
+<div hx-target="this" hx-swap="innerHTML">
+    <div id="modal" _="on closeModal add .closing then wait for animationend then remove me">
+        <div class="modal-underlay" _="on click trigger closeModal"></div>
+        <div class="modal-content">
+        <form class="ui form" method="POST" hx-encoding='multipart/form-data' enctype="multipart/form-data">
+        {% csrf_token %}
+            <span><div style="float: left">{{ form }}</div>
+            <div><button hx-post="{% url 'addpveversieform' key %}" type="submit" class="ui icon green button"><i class="check icon"></i></button></div></span>
+        </form>  
+            <button class="ui basic button" _="on click trigger closeModal">Terug</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% include "partials/messages_beheer.html" %}
+{% endblock %}
