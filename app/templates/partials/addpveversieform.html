@@ -7,10 +7,11 @@
         <div class="modal-content">
         <form class="ui form" method="POST" hx-encoding='multipart/form-data' enctype="multipart/form-data">
         {% csrf_token %}
-            <span><div style="float: left">{{ form }}</div>
-            <div><button hx-post="{% url 'addpveversieform' key %}" type="submit" class="ui icon green button"><i class="check icon"></i></button></div></span>
+            <div>{{ form }}</div>
+            <div style="float:left; margin-top 2vh;"><div class="ui basic button" _="on click trigger closeModal">Terug</div></div>
+
+            <div style="float:right; margin-top 2vh;"><button hx-post="{% url 'addpveversieform' key %}" type="submit" class="ui icon green button"><i class="check icon"></i></button></div>
         </form>  
-            <button class="ui basic button" _="on click trigger closeModal">Terug</button>
         </div>
     </div>
 </div>

@@ -12,7 +12,7 @@
               type="button"
               value="Open"
             />
-            <div class="d-inline" hx-get="{% url 'getpveactiviteit' item.id %}" hx-trigger="load delay:1s" hx-swap="outerHTML"></div>
+            <div class="d-inline" hx-get="{% url 'getpveactiviteit' item.id %}" hx-trigger="load" hx-swap="outerHTML"></div>
 					  <span><button hx-post="{% url 'deletepveversie' item.belegger.id item.id %}"
                       hx-target="#pveversieline-{{ item.id }}"
                       hx-swap="innerHTML"
