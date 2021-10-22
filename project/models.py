@@ -2,7 +2,10 @@ from django.contrib.gis.db import models as gismodels
 from django.db import models
 
 from users.models import CustomUser
-
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+import inspect
+import app.models as appmodels
 class Abbonement(models.Model):
     soort = models.CharField(max_length=255, blank=True, null=True)
 
@@ -195,3 +198,35 @@ class BijlageToAnnotation(models.Model):
     ann = models.ForeignKey(PVEItemAnnotation, on_delete=models.CASCADE, default=None, related_name="bijlageobject")
     bijlage = models.FileField(blank=True, null=True, upload_to="OpmerkingBijlages/")
     naam = models.CharField(max_length=100, blank=True, null=True)
+
+@receiver(pre_save, sender=Beleggers)
+def on_change(sender, instance: Beleggers, **kwargs):
+
+    for frame_record in inspect.stack():
+        if frame_record[3] == 'get_response':
+            request = frame_record[0].f_locals['request']
+            break
+        else:
+            request = None
+
+    # sender is the object being saved
+    activity = appmodels.Activity()
+    activity.activity_type = "K"
+    activity.schuldige = request.user
+    activity.save()
+    
+    if instance.id is None: # new object will be created
+        activity.update = f"Nieuwe klant aangemaakt: { instance.naam }."
+    else:
+        previous = Beleggers.objects.get(id=instance.id)
+        if previous.naam != instance.naam: # field will be updated
+            activity.update = f"Klantnaam { previous.naam } veranderd naar { instance.naam }."
+        if previous.beheerder != instance.beheerder: # field will be updated
+            activity.update = f"Beheerder van { instance.naam } veranderd naar { instance.beheerder }."
+        if previous.logo != instance.logo: # field will be updated
+            activity.update = f"Logo veranderd van klant { instance.naam }."
+        if previous.abonnement != instance.abonnement: # field will be updated
+            activity.update = f"Abonnement veranderd van klant { instance.naam }."
+
+    
+    activity.save()

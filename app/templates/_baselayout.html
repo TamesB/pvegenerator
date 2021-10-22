@@ -1,4 +1,14 @@
+{% load semanticui %}
+{% load static %}
+{% load filename %}
+
 {% block head %}
+        <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'main_styles.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'Semantic-UI-Alert.css' %}">
+
 {% endblock %}
 
 {% block main %}
@@ -8,4 +18,11 @@
 
 
 {% block scripts %}
+              <script src="https://unpkg.com/htmx.org@1.5.0"></script>
+              <script src="https://unpkg.com/hyperscript.org@0.8.2"></script>
+      <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
+      <script src="{% static 'semantic.min.js' %}"></script>
+      <script type="text/javascript" src="{% static 'Semantic-UI-Alert.js' %}"></script>
+      <script src="{% static 'scripts.js' %}"></script>
+
 {% endblock %}
