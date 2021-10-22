@@ -45,6 +45,18 @@
           transform: translateY(4px);
 }
 
+.ui.visible.sidebar {
+  visibility: visible;
+  min-width: 15vw;
+}
+
+@media screen and (max-width: 900px) {
+  .ui.visible.sidebar {
+    visibility: hidden;
+    width: 0vw;
+  }
+}
+
 * {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;

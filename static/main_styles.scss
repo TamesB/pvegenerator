@@ -41,6 +41,18 @@ $medium: 900px;
 
 }
 
+.ui.visible.sidebar {
+    visibility: visible;
+    min-width: 15vw;
+}
+
+@media screen and (max-width: $medium) {
+    .ui.visible.sidebar {
+        visibility: hidden;
+        width: 0vw;
+    }
+}
+
 * {
 box-sizing: border-box;
 }
@@ -58,7 +70,6 @@ body {
         margin-left: 4vw;
     }
 }
-
 .card {
     .leaflet-container { /* all maps */
         width: 100%;
