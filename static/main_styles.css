@@ -45,18 +45,6 @@
           transform: translateY(4px);
 }
 
-.menu_left {
-  display: block;
-  min-width: 15vw;
-}
-
-@media screen and (max-width: 900px) {
-  .menu_left {
-    display: none;
-    width: 0vw;
-  }
-}
-
 * {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -71,6 +59,12 @@ body {
   margin-left: 19vw;
   margin-right: 4vw;
   margin-top: 5vh;
+}
+
+@media screen and (max-width: 900px) {
+  #main {
+    margin-left: 4vw;
+  }
 }
 
 .card .leaflet-container {
@@ -88,6 +82,10 @@ body {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+}
+
+.dashboard-boxes .dashboard-box {
+  margin-bottom: 2vh;
 }
 
 #login-box {

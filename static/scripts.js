@@ -31,3 +31,12 @@ $(document).ready(function(){
     
      $('.item[data-value=""]').remove();
 });
+var win = $(this); //this = window
+if (win.width()< 900) { $('#menu').removeClass('visible'); }
+if (win.width()> 900) { $('#menu').addClass('visible'); }
+
+ $(window).on('resize', function(){
+  var win = $(this); //this = window
+  if (win.width()< 900) { $('#menu').removeClass('visible'); }
+  if (win.width()> 900) { $('#menu').addClass('visible'); }
+});

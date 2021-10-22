@@ -41,18 +41,6 @@ $medium: 900px;
 
 }
 
-.menu_left {
-    display: block;
-    min-width: 15vw;
-}
-
-@media screen and (max-width: $medium) {
-    .menu_left {
-        display: none;
-        width: 0vw;
-    }
-}
-
 * {
 box-sizing: border-box;
 }
@@ -64,6 +52,11 @@ body {
     margin-left: 19vw;
     margin-right: 4vw;
     margin-top: 5vh;
+}
+@media screen and (max-width: $medium) {
+    #main {
+        margin-left: 4vw;
+    }
 }
 
 .card {
@@ -77,6 +70,10 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+
+    .dashboard-box {
+        margin-bottom: 2vh;
+    }
 }
 
 #login-box {
