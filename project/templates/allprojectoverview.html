@@ -18,12 +18,24 @@
 {% endblock %}
 
 {% block scripts %}
+<style>
+img.huechange { filter: hue-rotate(120deg); }
+</style>
 <script type="text/javascript">
 function map_init(map, options) {
     map.setView([52.37, 4.895], 7);
 
 	{% for project in projects %}
-	marker = new L.marker(["{{ project.plaats.y }}", "{{ project.plaats.x }}"]).bindPopup("<h3><b><a href='{% url 'projectview' project.id %}'>{{ project.naam }}</a></h3></b>").addTo(map);
+	marker = new L.marker(["{{ project.plaats.y }}", "{{ project.plaats.x }}"]).bindPopup(`
+    <h3><b><a href='{% url 'projectview' project.id %}'>{{ project.naam }}</a></b></h3>
+    <p>Klant: <i>{{ project.belegger }}</i></p>
+    <p>Aangemaakt op: <i>{{ project.datum_aangemaakt }}</i></p>
+    {% if project.projectmanager %}<p>Projectmanager: <i>{{ project.projectmanager }}</i></p>{% else %}<p>Projectmanager: <i>Geen</i></p>{% endif %}
+    <p>Contractstatus: <i>{{ project.statuscontract }}</i></p>
+    
+    `).addTo(map);
+    // marker._icon.classList.add("huechange");
+
 	{% endfor %}
 }
 </script>

@@ -5,26 +5,120 @@
 {% load filename %}
 
 {% block main %}
-
+<div class="greeting">
 <h1 class="ui header">Admin Dashboard</h1>
 <i>{{ greeting }}, {{ request.user.username }}.</i>
-<div class="ui divider"></div>
-<div>
-<h2 class="ui header">Klantbeheer</h2>
-	<a href="{% url 'klanttoevoegen' %}"><button class="ui basic button"><i class="icon plus"></i>Klant Toevoegen</button></a>
-	<a href="{% url 'klantoverzicht' %}"><button class="ui basic button"><i class="icon edit"></i>Klanten Overzicht</button></a>
+</div>
 <div class="ui divider"></div>
 
-<h2 class="ui header">Programma van Eisen</h2>
-	<a href="{% url 'beleggerversieoverview' %}"><button class="ui basic button"><i class="icon edit"></i>Bewerk PvE's</button></a>
-<div class="ui divider"></div>
-<h2 class="ui header">Projecten</h2>
-	<a href="{% url 'allprojects' %}"><button class="ui basic button"><i class="icon edit"></i>Projecten overview</button></a><br><br>
-<div class="ui divider"></div>
+<div class="dashboard-boxes">
+<div class="dashboard-box">
+<div class="ui card">
+  <div class="content">
+    <div class="header">Klantbeheer</div>
+  </div>
+  <div class="content">
+    <h4 class="ui sub header">Activiteit</h4>
+    <div class="ui small feed">
+	{% if klant_activiteiten %}
+	{% for activiteit in klant_activiteiten %}
+      <div class="event">
+        <div class="content">
+          <div class="summary">
+			{{ activiteit.schuldige }}: {{ activiteit.update }} Datum: {{ activiteit.datum }}.
+          </div>
+        </div>
+      </div>
+	  {% endfor %}
+	  {% else %}
+      <div class="event">
+        <div class="content">
+          <div class="summary">
+		  Geen activiteit.
+          </div>
+        </div>
+      </div>
+	  {% endif %}
+    </div>
+  </div>
+  <div class="extra content">
+  	<span><a style="float:left;" hx-get="{% url 'klanttoevoegen' %}" hx-target="#main" hx-swap="innerHTML"><button class="ui basic button"><i class="user plus icon"></i>Klant Toevoegen</button></a>
+	<a style="float:right;" hx-get="{% url 'klantoverzicht' %}" hx-target="#main" hx-swap="innerHTML"><button class="ui basic button"><i class="address card outline icon"></i>Klanten Overzicht</button></a></span>
+  </div>
+</div>
+</div>
 
-<h2 class="ui header">Analyse</h2>
-	<a href="{% url 'projectheatmap' %}"><button class="ui basic button"><i class="icon edit"></i>Project Heatmap</button></a><br><br>
-<div class="ui divider"></div>
+<div class="dashboard-box">
+<div class="ui card">
+  <div class="content">
+    <div class="header">Programma van Eisen</div>
+  </div>
+  <div class="content">
+    <h4 class="ui sub header">Activiteit</h4>
+    <div class="ui small feed">
+	{% if pve_activiteiten %}
+	{% for activiteit in pve_activiteiten %}
+      <div class="event">
+        <div class="content">
+          <div class="summary">
+			{{ activiteit.schuldige }}: {{ activiteit.update }} Datum: {{ activiteit.datum }}.
+          </div>
+        </div>
+      </div>
+	  {% endfor %}
+	  {% else %}
+      <div class="event">
+        <div class="content">
+          <div class="summary">
+		  Geen activiteit.
+          </div>
+        </div>
+      </div>
+	  {% endif %}
+    </div>
+  </div>
+  <div class="extra content">
+  	<span><a style="float:left;" hx-get="{% url 'beleggerversieoverview' %}" hx-target="#main" hx-swap="innerHTML"><button class="ui basic button"><i class="icon edit"></i>Bewerk PvE's</button></a>
+	</span>
+  </div>
+</div>
+</div>
+
+<div class="dashboard-box">
+<div class="ui card">
+  <div class="content">
+    <div class="header">Projecten</div>
+  </div>
+  <div class="content">
+    <h4 class="ui sub header">Activiteit</h4>
+    <div class="ui small feed">
+	{% if project_activiteiten %}
+	{% for activiteit in project_activiteiten %}
+      <div class="event">
+        <div class="content">
+          <div class="summary">
+			{{ activiteit.schuldige }}: {{ activiteit.update }} Datum: {{ activiteit.datum }}.
+          </div>
+        </div>
+      </div>
+	  {% endfor %}
+	  {% else %}
+      <div class="event">
+        <div class="content">
+          <div class="summary">
+		  Geen activiteit.
+          </div>
+        </div>
+      </div>
+	  {% endif %}
+    </div>
+  </div>
+  <div class="extra content">
+  	<span><a style="float:left;" hx-get="{% url 'allprojects' %}" hx-target="#main" hx-swap="innerHTML"><button class="ui basic button"><i class="map marker alternate icon"></i>Projecten overview</button></a>
+	<a style="float:right;" hx-get="{% url 'projectheatmap' %}" hx-target="#main" hx-swap="innerHTML"><button class="ui basic button"><i class="map outline icon"></i>Project heatmap</button></a></span>
+  </div>
+</div>
+</div>
 
 <!-- Manually generate pve -->
 <!-- Edit PvE workbook and keuzeparameters -->

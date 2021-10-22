@@ -92,14 +92,30 @@ def DashboardView(request):
     context = {}
     context["greeting"] = greeting
 
-    if request.user.type_user == "B":
-        return render(request, "adminDashboard.html", context)
+    pve_activiteiten = models.Activity.objects.filter(activity_type="PvE")[0:5]
+    project_activiteiten = models.Activity.objects.filter(activity_type="P")[0:5]
+    klant_activiteiten = models.Activity.objects.filter(activity_type="K")[0:5]
+
+    context["project_activiteiten"] = project_activiteiten
+    context["klant_activiteiten"] = klant_activiteiten
+    context["pve_activiteiten"] = pve_activiteiten
+
+    if pve_activiteiten.count() > 5:
+        context["pve_activiteiten"] = pve_activiteiten[0:4]
+    if klant_activiteiten.count() > 5:
+        context["klant_activiteiten"] = klant_activiteiten[0:4]
+    if project_activiteiten.count() > 5:
+        context["project_activiteiten"] = project_activiteiten[0:4]
 
     if Project.objects.filter(permitted__username__contains=request.user.username):
         projects = Project.objects.filter(
             permitted__username__contains=request.user.username
         )
         context["projects"] = projects
+
+    if request.user.type_user == "B":
+        return render(request, "adminDashboard.html", context)
+
 
     return render(request, "dashboard.html", context)
 

@@ -4,12 +4,17 @@
     <head>
         <meta name="viewport" content="initial-scale=1, width=device-width">
         {% load static %}
+        {% load leaflet_tags %}
         {{ form.media }}
         <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
         <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'main_styles.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'Semantic-UI-Alert.css' %}">
+        {% leaflet_css %}
+        {% leaflet_js %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+
         {% block head %}{% endblock %}
         <title>PvE Generator</title>
     </head>

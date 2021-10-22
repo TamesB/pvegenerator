@@ -78,7 +78,6 @@ class Project(models.Model):
         default=None,
         related_name="project",
         blank=True,
-        null=True,
     )
     projectmanager = models.ForeignKey(
         "users.CustomUser",

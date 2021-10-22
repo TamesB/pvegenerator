@@ -11,10 +11,13 @@ from .models import (
     PVEParagraaf,
     PVEVersie,
     TypeObject,
-    ItemBijlages
+    ItemBijlages,
+    Activity
 )
 
 # Register your models here.
+admin.site.register(Activity)
+
 admin.site.register(PVEVersie)
 admin.site.register(ActieveVersie)
 admin.site.register(Bouwsoort)

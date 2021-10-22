@@ -66,6 +66,19 @@ body {
     margin-top: 5vh;
 }
 
+.card {
+    .leaflet-container { /* all maps */
+        width: 100%;
+        height: 60vh;
+        }        
+}
+
+.dashboard-boxes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
 #login-box {
     display: flex;
     margin: 15em 15em 15em 15em;
