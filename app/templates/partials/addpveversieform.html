@@ -7,9 +7,10 @@
         <div class="modal-content">
         <form class="ui form" method="POST" hx-encoding='multipart/form-data' enctype="multipart/form-data">
         {% csrf_token %}
+        <h2 class="ui header">Voeg versie toe aan {{ belegger.naam }}</h2>
             <div>{{ form }}</div>
+            <div class="ui divider"></div>
             <div style="float:left; margin-top 2vh;"><div class="ui basic button" _="on click trigger closeModal">Terug</div></div>
-
             <div style="float:right; margin-top 2vh;"><button hx-post="{% url 'addpveversieform' key %}" type="submit" class="ui icon green button"><i class="check icon"></i></button></div>
         </form>  
         </div>

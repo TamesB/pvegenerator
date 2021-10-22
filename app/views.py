@@ -514,6 +514,7 @@ def AddPvEVersie(request, belegger_pk):
     context = {}
     context["form"] = form
     context["key"] = belegger_pk
+    context["belegger"] = belegger
     return render(request, "partials/addpveversieform.html", context)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
