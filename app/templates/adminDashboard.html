@@ -114,8 +114,8 @@
     </div>
   </div>
   <div class="extra content">
-  	<span><a style="float:left;" hx-get="{% url 'allprojects' %}" hx-target="#main" hx-swap="innerHTML"><button class="ui basic button"><i class="map marker alternate icon"></i>Projecten overview</button></a>
-	<a style="float:right;" hx-get="{% url 'projectheatmap' %}" hx-target="#main" hx-swap="innerHTML"><button class="ui basic button"><i class="map outline icon"></i>Project heatmap</button></a></span>
+  	<span><a style="float:left;" href="{% url 'allprojects' %}"><button class="ui basic button"><i class="map marker alternate icon"></i>Projecten overview</button></a>
+	<a style="float:right;" href="{% url 'projectheatmap' %}"><button class="ui basic button"><i class="map outline icon"></i>Project heatmap</button></a></span>
   </div>
 </div>
 </div>
