@@ -24,6 +24,10 @@
       <div id="main">
             {% block main %}{% endblock %}
       </div>
+      <div id="pageloader" class="ui inverted dimmer">
+    <div class="ui text loader">Loading</div>
+  </div>
+
       </div>
               <script src="https://unpkg.com/htmx.org@1.5.0"></script>
               <script src="https://unpkg.com/hyperscript.org@0.8.2"></script>
@@ -51,6 +55,19 @@
         event.detail.headers["X-CSRFToken"] = "{{ csrf_token }}";
       });
     </script>
+<script>
+   document.body.addEventListener('htmx:load', function(evt) {
+        var element = document.getElementById("pageloader");
+            element.classList.remove("active");
+
+   });
+
+   document.body.addEventListener('htmx:beforeRequest', function(evt) {
+        var element = document.getElementById("pageloader");
+            element.classList.add("active");
+
+   });
+   </script>
             {% block scripts %}{% endblock %}
     </body>
 </html>
