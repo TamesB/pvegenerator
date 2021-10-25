@@ -9,4 +9,14 @@
     {% render_form form %}
     <button type="submit" class="ui primary button" value="generate">Genereer</button>
 </form>
+
+<script>
+     $('.ui.dropdown') 
+        .dropdown();
+     
+     $('select.dropdown')
+       .dropdown();
+
+            $('.item[data-value=""]').remove();
+</script>
 {% endblock %}
