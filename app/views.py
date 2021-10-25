@@ -131,9 +131,14 @@ def KlantOverzicht(request):
 def KlantVerwijderen(request, client_pk):
     klant = Beleggers.objects.get(id=client_pk)
     naam = klant.naam
-    klant.delete()
-    messages.warning(request, f"Klant: {naam} succesvol verwijderd!")
-    return HttpResponse("")
+
+    if request.headers["HX-Prompt"] == "VERWIJDEREN":
+        klant.delete()
+        messages.warning(request, f"Klant: {naam} succesvol verwijderd!")
+        return HttpResponse("")
+    else:
+        messages.warning(request, f"Onjuiste invulling. Probeer het opnieuw.")
+        return redirect("klantoverzicht")
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def GetLogo(request, client_pk):
@@ -1471,6 +1476,7 @@ def kiesparameterdetail(request, versie_pk, type, parameter_id):
     
 @staff_member_required(login_url=reverse_lazy("logout"))
 def deletekiesparameterView(request, versie_pk, type_id, item_id):
+
     type_id = int(type_id)
     item_id = int(item_id)
     versie_pk = int(versie_pk)
@@ -1500,12 +1506,14 @@ def deletekiesparameterView(request, versie_pk, type_id, item_id):
         item = versie.doelgroep.filter(id=item_id).first()
 
     parameter = item.parameter
-    item.delete()
 
-    messages.warning(request, f"Parameter: {parameter} verwijderd.")
-
-    return HttpResponse("")
-
+    if request.headers["HX-Prompt"] == "VERWIJDEREN":
+        item.delete()
+        messages.warning(request, f"Parameter: {parameter} verwijderd.")
+        return HttpResponse("")
+    else:
+        messages.warning(request, f"Onjuiste invulling. Probeer het opnieuw.")
+        return redirect("kiesparametersview", versie_pk=versie_pk)
 
 #bijlagesView
 #bijlageDetail

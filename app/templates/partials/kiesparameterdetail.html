@@ -14,7 +14,7 @@
 {% endif %}</span></div>
           <div class="d-inline" style="float: right">
             <span><button hx-post="{% url 'kiesparameterdelete' versie_pk 1 parameter.id %}"
-            hx-confirm="Weet je het zeker?"
+          hx-prompt="Vul 'VERWIJDEREN' in om kiesparameter {{ parameter.parameter }} te verwijderen."
             class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
 
           </div>

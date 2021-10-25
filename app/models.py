@@ -150,6 +150,9 @@ class Activity(models.Model):
     def __str__(self):
         return f"{self.activity_type}: {self.update}. Datum: {self.datum}"
 
+    class Meta:
+        ordering = ['-datum']
+
 @receiver(pre_save, sender=PVEVersie)
 def on_change(sender, instance: PVEVersie, **kwargs):
 

@@ -2,9 +2,9 @@
 
 
 {% load filename %}
-
+{% load i18n %}
 {% block main %}
-
+{% language 'nl' %}
 <div hx-target="this" hx-swap="outerHTML">
 {% if logo_url %}
 <img style="max-width: 10vw;" src="{{ logo_url }}"></img>
@@ -13,7 +13,7 @@
 <button hx-get="{% url 'logoklantform' klant.id %}" class="ui icon basic button"><i class="icon plus"></i></button>
 {% endif %}
 </div>
-
+{% endlanguage %}
 {% endblock %}
 
 {% block scripts %}

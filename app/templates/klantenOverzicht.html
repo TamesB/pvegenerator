@@ -1,4 +1,5 @@
-{% extends "_baselayout.html" %} {% load semanticui %} {% block main %}
+{% extends "_baselayout.html" %} {% load i18n %} {% load semanticui %} {% block main %}
+{% language 'nl' %}
 <div class="ui big breadcrumb">
   <a class="section" href="{% url 'dashboard' %}">Dashboard</a>
   <i class="right chevron icon divider"></i>
@@ -37,7 +38,7 @@
 				<td hx-get="{% url 'logoklantdetail' klant.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></td>
 				<td><button class="ui icon basic red button"
 				hx-post="{% url 'klantverwijderen' klant.id %}"
-          hx-confirm="Weet u het zeker?"><i class="icon trash"></i></button></td>
+                    hx-prompt="Vul 'VERWIJDEREN' in om klant {{ klant.naam }} te verwijderen."><i class="icon trash"></i></button></td>
 			</tr>
       {% endfor %}
 		</tbody>
@@ -46,7 +47,7 @@
 
 {% else %}
 <p>Geen klanten! <input class="ui primary button d-inline" onclick="window.location.href='{% url 'klanttoevoegen' %}';" type="button" value="Voeg er een toe"></p>{% endif %}
-
+{% endlanguage %}
 {% block modal %}{% endblock %}
 
 {% endblock %}
