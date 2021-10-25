@@ -25,7 +25,10 @@ def CheckComments(request, client_pk, proj_id):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
         return redirect("logout_syn", client_pk=client_pk)
 
     start = time.time()
@@ -384,7 +387,10 @@ def MyReplies(request, client_pk, pk, **kwargs):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
         return redirect("logout_syn", client_pk=client_pk)
 
     context = {}
@@ -521,7 +527,10 @@ def MyRepliesDelete(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
@@ -575,7 +584,10 @@ def DeleteReply(request, client_pk, pk, reply_id):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
         return redirect("logout_syn", client_pk=client_pk)
 
     # check if project exists
@@ -647,7 +659,10 @@ def AddReplyAttachment(request, client_pk, pk, reply_id):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
@@ -713,7 +728,10 @@ def DeleteReplyAttachment(request, client_pk, pk, reply_id):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
         return redirect("logout_syn", client_pk=client_pk)
 
     # check if project exists

@@ -22,7 +22,10 @@ def ManageProjects(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
         return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]
@@ -60,7 +63,10 @@ def AddProject(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
         return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]
@@ -193,7 +199,10 @@ def GetOrganisatieToProject(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
         return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]
@@ -223,7 +232,10 @@ def AddOrganisatieToProject(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
         return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]
@@ -294,7 +306,10 @@ def SOGAddDerdenToProj(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
         return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["SOG"]
