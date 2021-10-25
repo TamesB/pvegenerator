@@ -3,7 +3,7 @@
 {% load semanticui %}
 {% load static %}
 {% load leaflet_tags %}
-
+{% load i18n %}
 {% block menu %}
 {% include 'MenuTypes.html' %}
 {% endblock %}
@@ -15,6 +15,7 @@
 {% endblock %}
 
 {% block main %}
+{% language 'nl' %}
 <div class="ui breadcrumb" style="margin-bottom:3vh;">
   <a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
   <i class="right chevron icon divider"></i>
@@ -243,6 +244,7 @@
 
 
 </div>
+{% endlanguage %}
 {% endblock %}
 
 {% block scripts %}

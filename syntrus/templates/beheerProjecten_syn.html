@@ -3,6 +3,7 @@
 {% load semanticui %}
 {% load static %}
 {% load custom_tags %}
+{% load i18n %}
 
 {% block menu %}
 {% include 'MenuTypes.html' %}
@@ -45,7 +46,9 @@
             {% for project in new_projecten %}
         <tr class="table_content">
           <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
+          {% language 'nl' %}
           <td><p>{{ project.datum_recent_verandering }}</p></td>
+          {% endlanguage %}
           <td><p>{{ project.plaatsnamen }}</p></td>
           <td><p>{{ project.vhe }}</p></td>
           <td><p>{{ project.statuscontract }}</p></td>
@@ -94,7 +97,9 @@
           {% for project in old_projecten %}
       <tr class="table_content">
         <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
+                  {% language 'nl' %}
         <td><p>{{ project.datum_recent_verandering }}</p></td>
+        {% endlanguage %}
         <td><p>{{ project.plaatsnamen }}</p></td>
         <td><p>{{ project.vhe }}</p></td>
         <td><p>{{ project.statuscontract }}</p></td>

@@ -3,7 +3,7 @@
 {% load semanticui %}
 {% load static %}
 {% load custom_tags %}
-
+{% load i18n %}
 {% block menu %}
 {% include 'MenuTypes.html' %}
 {% endblock %}
@@ -25,7 +25,7 @@
 <input type="submit" class="submit_button" onClick="javascript:location.href='{% url 'sendreplies_syn' client_pk project.id %}';" value="Stuur door >"></input>
 <a href="{% url 'myreplies_syn' client_pk project.id %}"><button class="ui blue button"><i class="icon check"></i>Gereed</button></a></p></div>
 
-
+{% language 'nl' %}
 <div class="opmerkingtable_wrapper">
 <table>
   <tr class="table_head">
@@ -71,7 +71,7 @@
         {% endif %}
     </span>
 </div>
-
+{% endlanguage %}
 {% endblock %}
 {% block modal %}
 {% endblock %}

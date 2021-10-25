@@ -3,6 +3,7 @@
 {% load semanticui %}
 
 {% load filename %}
+{% load i18n %}
 
 {% block main %}
 <div class="greeting">
@@ -25,8 +26,10 @@
       <div class="event">
         <div class="content">
           <div class="summary">
-			{{ activiteit.schuldige }}: {{ activiteit.update }} Datum: {{ activiteit.datum }}.
-          </div>
+          {% language 'nl' %}
+			{{ activiteit.schuldige }}: {{ activiteit.update }} <br><i>Datum: {{ activiteit.datum }}</i>
+      {% endlanguage %}
+         </div>
         </div>
       </div>
 	  {% endfor %}
@@ -61,8 +64,10 @@
       <div class="event">
         <div class="content">
           <div class="summary">
-			{{ activiteit.schuldige }}: {{ activiteit.update }} Datum: {{ activiteit.datum }}.
-          </div>
+          {% language 'nl' %}
+			{{ activiteit.schuldige }}: {{ activiteit.update }} <br><i>Datum: {{ activiteit.datum }}</i>
+      {% endlanguage %}
+              </div>
         </div>
       </div>
 	  {% endfor %}
@@ -97,7 +102,9 @@
       <div class="event">
         <div class="content">
           <div class="summary">
-			{{ activiteit.schuldige }}: {{ activiteit.update }} Datum: {{ activiteit.datum }}.
+          {% language 'nl' %}
+			{{ activiteit.schuldige }}: {{ activiteit.update }} <br><i>Datum: {{ activiteit.datum }}</i>
+      {% endlanguage %}
           </div>
         </div>
       </div>

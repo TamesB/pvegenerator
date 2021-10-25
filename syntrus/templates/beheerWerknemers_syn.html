@@ -3,7 +3,7 @@
 {% load semanticui %}
 {% load static %}
 {% load custom_tags %}
-
+{% load i18n %}
 {% block menu %}
 {% include 'MenuTypes.html' %}
 {% endblock %}
@@ -33,6 +33,7 @@
         </tr>
         {% if werknemers %}
             {% for werknemer in werknemers %}
+                      {% language 'nl' %}
         <tr class="table_content">
           <td><p>{{ werknemer.username }} (<a onclick="copyToClipboard()" id="emailClip">{{ werknemer.email }}</a>)</p></td>
           <td><p>{{ werknemer.last_visit }}</p></td>
@@ -40,6 +41,7 @@
           <td><p>{% if werknemer.organisatie %}{{ werknemer.organisatie }}{% else %}<i>Geen</i>{% endif %}</p></td>
           <td><p>{% if werknemer.organisatie.projecten.all %}{% for project in werknemer.organisatie.projecten.all %}{{ project }}, {% endfor %}{% else %}<i>Geen</i>{% endif %}</p></td>
           <td><p><a href="#"><button class="ui icon basic button"><i class="icon edit"></i></button></a></p></td>
+          {% endlanguage %}
         </tr>
         {% endfor %}
         {% else %}
