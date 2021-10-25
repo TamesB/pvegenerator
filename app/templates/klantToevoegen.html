@@ -3,7 +3,7 @@
 {% load semanticui %}
 
 {% block main %}
-<input type="button" class="ui primary button d-inline" onclick="window.location.href='{% url 'klantoverzicht' %}';" value="< Terug" />
+<button class="ui primary button d-inline" hx-get="{% url 'klantoverzicht' %}" hx-target="#main" hx-swap="innerHTML">< Terug</button>
 
 <h1 class="ui header">Maak klant aan</h1>
 

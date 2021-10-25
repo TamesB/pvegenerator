@@ -5,7 +5,7 @@
 {% load filename %}
 
 {% block main %}
-<input type="button" class="ui primary button d-inline" onclick="javascript:window.location='{% url 'beleggerversieoverview' %}'" value="< Versie Overview" />
+<button class="ui primary button d-inline" hx-get="{% url 'beleggerversieoverview' %}" hx-target="#main" hx-swap="innerHTML">< Versie Overview</button>
 <h1 class="ui header">PvE van {{ pve_versie.belegger.naam }}; Versie {{ pve_versie.versie }}</h1>
 <div class="ui divider"></div>
 <div>
