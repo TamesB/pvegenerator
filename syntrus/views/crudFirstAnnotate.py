@@ -25,7 +25,7 @@ def AddCommentOverview(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     context = {}
@@ -50,7 +50,7 @@ def MyComments(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     context = {}
@@ -192,7 +192,7 @@ def MyCommentsDelete(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
@@ -255,7 +255,7 @@ def deleteAnnotationPve(request, client_pk, project_id, ann_id):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     # check if project exists
@@ -339,7 +339,7 @@ def AddAnnotationAttachment(request, client_pk, projid, annid):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=projid)
@@ -398,7 +398,7 @@ def VerwijderAnnotationAttachment(request, client_pk, projid, annid):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     # check if project exists
@@ -479,7 +479,7 @@ def AllComments(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     context = {}
@@ -531,7 +531,7 @@ def AddComment(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     context = {}

@@ -158,8 +158,7 @@ def DashboardView(request, client_pk):
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
-
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     context = {}
@@ -213,7 +212,7 @@ def FAQView(request, client_pk):
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     faqquery = FAQ.objects.all()
@@ -241,10 +240,10 @@ def KiesPVEGenerate(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
-    if request.user is not client.beheerder and request.user.type_user != "B":
+    if request.user.id is not client.beheerder.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     form = forms.PVEVersieKeuzeForm(request.POST or None)
@@ -272,10 +271,10 @@ def GeneratePVEView(request, client_pk, versie_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
-    if request.user is not client.beheerder and request.user.type_user != "B":
+    if request.user.id is not client.beheerder.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     if not models.PVEVersie.objects.filter(pk=versie_pk).exists():

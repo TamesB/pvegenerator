@@ -30,7 +30,7 @@ def ManageWerknemers(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]
@@ -58,7 +58,7 @@ def AddAccount(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB", "SOG"]
@@ -173,7 +173,7 @@ def AcceptInvite(request, client_pk, key):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     if not key or not Invitation.objects.filter(key=key):
@@ -263,7 +263,7 @@ def InviteUsersToProject(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB"]

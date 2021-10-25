@@ -25,7 +25,7 @@ def ViewProjectOverview(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     projects = request.user.projectspermitted.filter(belegger__id=client_pk)
@@ -61,7 +61,7 @@ def ViewProject(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     if not request.user.projectspermitted.filter(id=pk).exists():
@@ -125,7 +125,7 @@ def KiesPVE(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB", "SOG"]
@@ -164,7 +164,7 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     allowed_users = ["B", "SB", "SOG"]
@@ -328,7 +328,7 @@ def download_pve_overview(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     projects = client.project.all().filter(
@@ -353,7 +353,7 @@ def download_pve(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != "B":

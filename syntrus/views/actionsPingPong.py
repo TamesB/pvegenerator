@@ -21,7 +21,7 @@ def FirstFreeze(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
@@ -133,7 +133,7 @@ def SendReplies(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
@@ -283,7 +283,7 @@ def FinalFreeze(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie is not client and request.user.type_user == "B":
+    if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, id=pk)
