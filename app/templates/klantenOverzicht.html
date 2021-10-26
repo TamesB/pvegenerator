@@ -1,7 +1,7 @@
 {% extends "_baselayout.html" %} {% load i18n %} {% load semanticui %} {% block main %}
 {% language 'nl' %}
 <div class="ui big breadcrumb">
-  <a class="section" href="{% url 'dashboard' %}">Dashboard</a>
+  <a class="section" hx-get="{% url 'dashboard' %}" hx-target="body" hx-swap="innerHTML">Dashboard</a>
   <i class="right chevron icon divider"></i>
   <a class="active section">Klanten</a>
 </div>

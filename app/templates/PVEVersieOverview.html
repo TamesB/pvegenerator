@@ -1,10 +1,8 @@
 {% extends "_baselayout.html" %} {% load semanticui %} {% block main %}
-<input
-  type="button"
+<button
   class="ui primary button d-inline"
-  onclick="javascript:window.location='{% url 'dashboard' %}'"
-  value="< Dashboard"
-/>
+  hx-get="{% url 'dashboard' %}" hx-target="body" hx-swap="innerHTML"
+  >< Dashboard</button>
 <h1 class="ui header center aligned">PvE versie overview</h1>
 {% if beleggers %}
 <br /><br />

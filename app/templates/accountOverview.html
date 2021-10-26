@@ -1,6 +1,9 @@
 {% extends "layout.html" %} {% load semanticui %} {% block main %}
 <h1 class="ui header center aligned">Gebruikers</h1>
-<a href="{% url 'dashboard' %}"><input type="button" class="ui primary button d-inline" value="< Dashboard" /></a>
+<button
+  class="ui primary button d-inline"
+  hx-get="{% url 'dashboard' %}" hx-target="body" hx-swap="innerHTML"
+  >< Dashboard</button>
 <div class="d-inline" style="float: right;">
 <span class="float right"><a href="{% url 'acccreate' %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
 </div>

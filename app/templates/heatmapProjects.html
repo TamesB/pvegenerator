@@ -9,7 +9,10 @@
 {% endblock %}
 {% block main %}
 
-<a href="{% url 'dashboard' %}"><input type="button" class="ui primary button d-inline" value="< Dashboard" /></a>
+<button
+  class="ui primary button d-inline"
+  hx-get="{% url 'dashboard' %}" hx-target="body" hx-swap="innerHTML"
+  >< Dashboard</button>
 <h1 class="ui header center aligned">Heatmap Projecten</h1>
 
 <div class="card">

@@ -1,5 +1,8 @@
 {% extends "layout.html" %} {% load semanticui %} {% block main %}
-<input type="button" class="ui primary button d-inline" onclick="javascript:window.location='{% url 'dashboard' %}'" value="< Dashboard" />
+<button
+  class="ui primary button d-inline"
+  hx-get="{% url 'dashboard' %}" hx-target="body" hx-swap="innerHTML"
+  >< Dashboard</button>
 <h1 class="ui header center aligned">Actieve PvE versies</h1>
 {% if actieve_versies %}
 <br><br>

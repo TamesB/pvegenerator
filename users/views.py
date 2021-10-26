@@ -85,7 +85,7 @@ def ForgotPassword(request, client_pk):
     logo_url = GetAWSURL(client)
 
     if request.user.is_authenticated:
-        raise Http404("404_syn.html")
+        return redirect("dashboard_syn", client_pk=client_pk)
 
     if request.method == "POST":
         # get user entered form
@@ -159,12 +159,13 @@ def ResetPassword(request, client_pk, key):
     logo_url = GetAWSURL(client)
 
     if not models.ForgotPassInvite.objects.filter(key=key):
-        raise Http404("404_syn.html")
+        return redirect("login_syn", client_pk=client_pk)
 
     invitation = models.ForgotPassInvite.objects.get(key=key)
     if timezone.now() > invitation.expires:
         invitation.delete()
-        raise Http404("404_syn.html")
+        messages.warning("Uitnodiging verlopen.")
+        return redirect("login_syn", client_pk=client_pk)
 
     if request.method == "POST":
         form = forms.ResetPassForm(request.POST)

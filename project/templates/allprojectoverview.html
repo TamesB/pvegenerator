@@ -1,13 +1,15 @@
 {% extends "layout.html" %} 
 {% load semanticui %} 
 {% load leaflet_tags %}
+{% load l10n %}
+
 {% block head %}
 {% leaflet_css %}
 {% leaflet_js %}
 {% endblock %}
 
 {% block main %}
-<a href="{% url 'dashboard' %}"><input type="button" class="ui primary button d-inline" value="< Dashboard" /></a>
+<a hx-get="{% url 'dashboard' %}" hx-target="body" hx-swap="innerHTML"><input type="button" class="ui primary button d-inline" value="< Dashboard" /></a>
 <h1 class="ui header center aligned">Projecten</h1>
 <br><br>
 <div class="card">
@@ -26,7 +28,7 @@ function map_init(map, options) {
     map.setView([52.37, 4.895], 7);
 
 	{% for project in projects %}
-	marker = new L.marker(["{{ project.plaats.y }}", "{{ project.plaats.x }}"]).bindPopup(`
+	marker = new L.marker([{{ project.plaats.y|unlocalize }}, {{ project.plaats.x|unlocalize }}]).bindPopup(`
     <h3><b><a href='{% url 'projectview' project.id %}'>{{ project.naam }}</a></b></h3>
     <p>Klant: <i>{{ project.belegger }}</i></p>
     <p>Aangemaakt op: <i>{{ project.datum_aangemaakt }}</i></p>
