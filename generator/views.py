@@ -306,6 +306,7 @@ def GeneratePVEView(request, client_pk, versie_pk):
     context = {}
     context["form"] = form
     context["versie_pk"] = versie_pk
+    context["versie"] = models.PVEVersie.objects.get(pk=versie_pk)
     context["client_pk"] = client_pk
     context["logo_url"] = logo_url
 
@@ -347,102 +348,138 @@ def download_bijlagen(request, zipFilename):
     return resp
 
 
-@staff_member_required
-def compareView(request, versie_pk):
-    context = {}
-    context["versie_pk"] = versie_pk
-    return render(request, "compare.html", context)
-
 
 @staff_member_required
-def compareFormView(request, versie_pk, pk):
-    pk = int(pk)
+def compareFormView(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
     client = Beleggers.objects.get(id=versie.belegger.id)
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
 
+    form = forms.CompareForm(request.POST or None)
+    form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(
+        versie__id=versie_pk
+    ).all()
+    form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(
+        versie__id=versie_pk
+    ).all()
+
+    form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(
+        versie__id=versie_pk
+    ).all()
+    form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(
+        versie__id=versie_pk
+    ).all()
+
+    form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(
+        versie__id=versie_pk
+    ).all()
+    form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(
+        versie__id=versie_pk
+    ).all()
+
     context = {}
-    context["pk"] = pk
     context["logo_url"] = logo_url
     context["versie_pk"] = versie_pk
-    
+    context["versie"] = models.PVEVersie.objects.get(pk=versie_pk)
+    context["form"] = form
+
     if request.method == "POST":
-        if pk == 1:
-            # get user entered form
-            form = forms.CompareFormBouwsoort(request.POST)
-            form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(
-                versie__id=versie_pk
-            ).all()
-            form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(
-                versie__id=versie_pk
-            ).all()
-
-        if pk == 2:
-            form = forms.CompareFormTypeObject(request.POST)
-            form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(
-                versie__id=versie_pk
-            ).all()
-            form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(
-                versie__id=versie_pk
-            ).all()
-
-        if pk == 3:
-            form = forms.CompareFormDoelgroep(request.POST)
-            form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(
-                versie__id=versie_pk
-            ).all()
-            form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(
-                versie__id=versie_pk
-            ).all()
 
         # check validity
         if form.is_valid():
             parameters = []
 
-            if pk == 1:
-                (keuze1, keuze2) = (
-                    form.cleaned_data["Bouwsoort1"],
-                    form.cleaned_data["Bouwsoort2"],
-                )
-                PvE1 = models.PVEItem.objects.filter(
-                    versie__id=versie_pk, Bouwsoort__parameter__contains=keuze1
-                )
-                PvE2 = models.PVEItem.objects.filter(
-                    versie__id=versie_pk, Bouwsoort__parameter__contains=keuze2
-                )
+            (Bouwsoort1, Bouwsoort2, TypeObject1, TypeObject2, Doelgroep1, Doelgroep2) = (
+                form.cleaned_data["Bouwsoort1"],
+                form.cleaned_data["Bouwsoort2"],
+                form.cleaned_data["TypeObject1"],
+                form.cleaned_data["TypeObject2"],
+                form.cleaned_data["Doelgroep1"],
+                form.cleaned_data["Doelgroep2"],
+            )
+            print(form.cleaned_data["Bouwsoort1"], form.cleaned_data["Bouwsoort2"])
+            titel = ""
 
-            if pk == 2:
-                (keuze1, keuze2) = (
-                    form.cleaned_data["TypeObject1"],
-                    form.cleaned_data["TypeObject2"],
-                )
-                PvE1 = models.PVEItem.objects.filter(
-                    versie__id=versie_pk, TypeObject__parameter__contains=keuze1
-                )
-                PvE2 = models.PVEItem.objects.filter(
-                    versie__id=versie_pk, TypeObject__parameter__contains=keuze2
-                )
+            eerste_pve = None
+            eerste_count = 0
 
-            if pk == 3:
-                (keuze1, keuze2) = (
-                    form.cleaned_data["Doelgroep1"],
-                    form.cleaned_data["Doelgroep2"],
-                )
-                PvE1 = models.PVEItem.objects.filter(
-                    versie__id=versie_pk, Doelgroep__parameter__contains=keuze1
-                )
-                PvE2 = models.PVEItem.objects.filter(
-                    versie__id=versie_pk, Doelgroep__parameter__contains=keuze2
-                )
+            if Bouwsoort1:
+                eerste_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, Bouwsoort__parameter__contains=Bouwsoort1)
+                titel += f"{Bouwsoort1} "
+                eerste_count += 1
+            if TypeObject1:
+                if eerste_pve:
+                    eerste_pve.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, TypeObject__parameter__contains=TypeObject1))
+                else:
+                    eerste_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, TypeObject__parameter__contains=TypeObject1)
+                titel += f"{TypeObject1} "
+                eerste_count += 1
+            if Doelgroep1:
+                if eerste_pve:
+                    eerste_pve.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep1))
+                else:
+                    eerste_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep1)
+                titel += f"{Doelgroep1} "
+                eerste_count += 1
 
-            afwijkingen = PvE1.difference(PvE2)
-            afwijkingen = afwijkingen.order_by("id")
+            print(eerste_pve)
+            tweede_pve = None
+            titel += "t.o.v. "
+            tweede_count = 0
 
-            # make pdf
+            if Bouwsoort2:
+                tweede_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, Bouwsoort__parameter__contains=Bouwsoort2)
+                titel += f"{Bouwsoort2} "
+                tweede_count += 1
+            if TypeObject2:
+                if tweede_pve:
+                    tweede_pve.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, TypeObject__parameter__contains=TypeObject2))
+                else:
+                    tweede_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, TypeObject__parameter__contains=TypeObject2)
+                titel += f"{TypeObject2} "
+                tweede_count += 1
+            if Doelgroep2:
+                if tweede_pve:
+                    tweede_pve.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep2))
+                else:
+                    tweede_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep2)
+                titel += f"{Doelgroep2} "
+                tweede_count += 1
+
+            titel = titel[:-1]
+            if eerste_pve and tweede_pve:
+                afwijkingen = eerste_pve.difference(tweede_pve)
+            elif eerste_pve and not tweede_pve:
+                afwijkingen = eerste_pve
+
+                titel = ""
+                if Bouwsoort1:
+                    titel += f"{Bouwsoort1}, "
+                if TypeObject1:
+                    titel += f"{TypeObject1}, "
+                if Doelgroep1:
+                    titel += f"{Doelgroep1}"
+
+            elif tweede_pve and not eerste_pve:
+                afwijkingen = tweede_pve
+
+                titel = ""
+                if Bouwsoort2:
+                    titel += f"{Bouwsoort2}, "
+                if TypeObject2:
+                    titel += f"{TypeObject2}, "
+                if Doelgroep2:
+                    titel += f"{Doelgroep2}"
+            else:
+                afwijkingen = None
+            
             if afwijkingen:
-                parameters += f"{keuze1} t.o.v. {keuze2}"
+                afwijkingen = afwijkingen.order_by("id")
+
+                # make pdf
+                parameters += titel
 
                 date = datetime.datetime.now()
                 filename = "AFWIJKINGEN-%s%s%s%s%s%s" % (
@@ -459,37 +496,29 @@ def compareFormView(request, versie_pk, pk):
                 pdfmaker.makepdf(filename, afwijkingen, versie_pk, parameters)
                 context["filename"] = filename
 
+                # get bijlagen
+                bijlagen_models = models.ItemBijlages.objects.all()
+                bijlagen = []
+
+                for bijlage_model in bijlagen_models:
+                    for item in bijlage_model.items.all():
+                        if item in afwijkingen:
+                            bijlagen.append(bijlage_model)
+
+                bijlagen = list(set(bijlagen))
+
+                if bijlagen:
+                    zipmaker = createBijlageZip.ZipMaker()
+                    zipmaker.makeZip(zipFilename, filename, bijlagen)
+                else:
+                    zipFilename = False
+
+                context["zipFilename"] = zipFilename
+
             context["afwijkingen"] = afwijkingen
             return render(request, "compareResults.html", context)
 
     # if get method, just render the empty form
-    if pk == 1:
-        form = forms.CompareFormBouwsoort()
-        form.fields["Bouwsoort1"].queryset = models.Bouwsoort.objects.filter(
-            versie__id=versie_pk
-        ).all()
-        form.fields["Bouwsoort2"].queryset = models.Bouwsoort.objects.filter(
-            versie__id=versie_pk
-        ).all()
 
-    if pk == 2:
-        form = forms.CompareFormTypeObject()
-        form.fields["TypeObject1"].queryset = models.TypeObject.objects.filter(
-            versie__id=versie_pk
-        ).all()
-        form.fields["TypeObject2"].queryset = models.TypeObject.objects.filter(
-            versie__id=versie_pk
-        ).all()
-
-    if pk == 3:
-        form = forms.CompareFormDoelgroep()
-        form.fields["Doelgroep1"].queryset = models.Doelgroep.objects.filter(
-            versie__id=versie_pk
-        ).all()
-        form.fields["Doelgroep2"].queryset = models.Doelgroep.objects.filter(
-            versie__id=versie_pk
-        ).all()
-
-    context["form"] = form
     context["logo_url"] = logo_url
     return render(request, "compareForm.html", context)

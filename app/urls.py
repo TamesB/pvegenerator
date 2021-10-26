@@ -58,16 +58,6 @@ urlpatterns = [
         "parameters/<int:versie_pk>", views.PVEHoofdstukListView, name="hoofdstukview"
     ),
     path(
-        "parameters/<int:versie_pk>/edit",
-        views.PVEHoofdstukListViewEdit,
-        name="hoofdstukviewedit",
-    ),
-    path(
-        "parameters/<int:versie_pk>/delete",
-        views.PVEHoofdstukListViewDelete,
-        name="hoofdstukviewdelete",
-    ),
-    path(
         "parameters/<int:versie_pk>/addchapter",
         views.PVEaddhoofdstukView,
         name="addchapter",
@@ -88,16 +78,6 @@ urlpatterns = [
         name="viewParagraaf",
     ),
     path(
-        "parameters/<int:versie_pk>/<int:pk>/edit",
-        views.paragraaflistViewEdit,
-        name="viewParagraafEdit",
-    ),
-    path(
-        "parameters/<int:versie_pk>/<int:pk>/delete",
-        views.paragraaflistViewDelete,
-        name="viewParagraafDelete",
-    ),
-    path(
         "parameters/<int:versie_pk>/<int:pk>/addparagraph",
         views.PVEaddparagraafView,
         name="addparagraph",
@@ -116,16 +96,6 @@ urlpatterns = [
         "parameters/<int:versie_pk>/<int:chapter_id>/<int:paragraph_id>",
         views.itemListView,
         name="itemlistview",
-    ),
-    path(
-        "parameters/<int:versie_pk>/<int:chapter_id>/<int:paragraph_id>/edit",
-        views.itemListViewEdit,
-        name="itemlistviewedit",
-    ),
-    path(
-        "parameters/<int:versie_pk>/<int:chapter_id>/<int:paragraph_id>/delete",
-        views.itemListViewDelete,
-        name="itemlistviewdelete",
     ),
     path(
         "parameters/<int:versie_pk>/<int:chapter_id>/<int:paragraph_id>/add",

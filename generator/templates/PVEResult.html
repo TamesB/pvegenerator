@@ -3,7 +3,7 @@
 {% load semanticui %}
 
 {% block main %}
-<input type="button" class="ui primary button d-inline" onclick="window.location.href='javascript:history.back()';" value="< Terug" />
+<input type="button" class="ui primary button d-inline" onclick="window.location.href='javascript:history.back()';" value="< Overview {{ versie.belegger }}: {{ versie.versie }}" />
     <h1 class="ui header">Programma van Eisen</h1>
     {% if itemsPVE %}
     <p><span><a href="{% url 'download' filename %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>Open als PDF</button></a></span></p>

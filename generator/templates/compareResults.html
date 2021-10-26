@@ -3,11 +3,14 @@
 {% load semanticui %}
 
 {% block main %}
-<input type="button" class="ui primary button d-inline" onclick="javascript:window.location='{% url 'compareform' versie_pk pk %}'" value="< Terug" />
+<input type="button" class="ui primary button d-inline" onclick="javascript:window.location='{% url 'compare' versie_pk %}'" value="< Vergelijkingsformulier" />
     <h1 class="ui header">Afwijkingen lijst</h1>
     {% if afwijkingen %}
     <p><span><a href="{% url 'download' filename %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>Open als PDF</button></a></span></p>
-    
+    {% if zipFilename %}
+    <p><span><a href="{% url 'downloadbijlagen' zipFilename %}"><button class="ui basic button"><i class="icon download"></i>Download PvE + Bijlagen (.zip)</button></a></span></p>
+    {% endif %}
+
 <div>
 	<table class="ui fixed multiple line blue table">
 		<thead>

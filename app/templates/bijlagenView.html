@@ -1,6 +1,6 @@
 {% extends "layout.html" %} {% load semanticui %} {% block main %}
 <div class="ui big breadcrumb">
-  <a class="section" href="{% url 'pvebewerkoverview' versie_pk %}">Overview</a>
+  <a class="section" href="{% url 'pvebewerkoverview' versie_pk %}">Overview {{ versie.belegger }}: {{ versie.versie }}</a>
   <i class="right chevron icon divider"></i>
   <a class="active section">Bijlagen</a>
 </div>

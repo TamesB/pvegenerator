@@ -580,6 +580,7 @@ def PVEHoofdstukListView(request, versie_pk):
     context = {}
     context["hoofdstukken"] = hoofdstukken
     context["versie_pk"] = versie_pk
+    context["versie"] = versie
     return render(request, "PVEListHfst.html", context)
 
 
@@ -607,26 +608,6 @@ def DownloadWorksheet(request, versie_pk):
 
 
 @staff_member_required(login_url=reverse_lazy("logout"))
-def PVEHoofdstukListViewEdit(request, versie_pk):
-    versie = models.PVEVersie.objects.get(id=versie_pk)
-    hoofdstukken = versie.hoofdstuk.all()
-    context = {}
-    context["hoofdstukken"] = hoofdstukken
-    context["versie_pk"] = versie_pk
-    return render(request, "PVEListHfstEdit.html", context)
-
-
-@staff_member_required(login_url=reverse_lazy("logout"))
-def PVEHoofdstukListViewDelete(request, versie_pk):
-    versie = models.PVEVersie.objects.get(id=versie_pk)
-    hoofdstukken = versie.hoofdstuk.all()
-    context = {}
-    context["hoofdstukken"] = hoofdstukken
-    context["versie_pk"] = versie_pk
-    return render(request, "PVEListHfstDelete.html", context)
-
-
-@staff_member_required(login_url=reverse_lazy("logout"))
 def PVEaddhoofdstukView(request, versie_pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)
     form = forms.ChapterForm(request.POST or None)
@@ -645,6 +626,7 @@ def PVEaddhoofdstukView(request, versie_pk):
     context = {}
     context["hoofdstukken"] = hoofdstukken
     context["versie_pk"] = versie_pk
+    context["versie"] = versie
     context["form"] = form
     return render(request, "addchapterform.html", context)
 
@@ -676,6 +658,7 @@ def PVEedithoofdstukView(request, versie_pk, pk):
     context["hoofdstukken"] = hoofdstukken
     context["hoofdstuk"] = hoofdstuk
     context["versie_pk"] = versie_pk
+    context["versie"] = versie
     context["pk"] = pk
     context["form"] = form
     return render(request, "changechapterform.html", context)
@@ -706,6 +689,7 @@ def paragraaflistView(request, versie_pk, pk):
     context["paragraven"] = hoofdstuk.paragraaf.all()
     context["sectie"] = hoofdstuk
     context["versie_pk"] = versie_pk
+    context["versie"] = versie
     return render(request, "PVEParagraphList.html", context)
 
 
@@ -735,6 +719,7 @@ def paragraaflistViewEdit(request, versie_pk, pk):
     context["sectie"] = hoofdstuk
     context["id"] = pk
     context["versie_pk"] = versie_pk
+    context["versie"] = versie
     return render(request, "PVEParagraphListEdit.html", context)
 
 
@@ -764,6 +749,7 @@ def paragraaflistViewDelete(request, versie_pk, pk):
     context["sectie"] = hoofdstuk
     context["id"] = pk
     context["versie_pk"] = versie_pk
+    context["versie"] = versie
     return render(request, "PVEParagraphListDelete.html", context)
 
 
@@ -807,6 +793,7 @@ def PVEaddparagraafView(request, versie_pk, pk):
     context["sectie"] = hoofdstuk
     context["form"] = form
     context["versie_pk"] = versie_pk
+    context["versie"] = versie
     return render(request, "addparagraphform.html", context)
 
 
@@ -862,6 +849,7 @@ def PVEeditparagraafView(request, versie_pk, pk):
     context["id"] = hoofdstuk.id
     context["form"] = form
     context["versie_pk"] = versie_pk
+    context["versie"] = versie
     return render(request, "changeparagraphform.html", context)
 
 
@@ -906,111 +894,8 @@ def itemListView(request, versie_pk, chapter_id, paragraph_id):
     context["paragraaf_id"] = paragraph_id
     context["hoofdstuk_id"] = chapter_id
     context["versie_pk"] = versie_pk
+    context["versie"] = versie
     return render(request, "PVEItemList.html", context)
-
-
-@staff_member_required(login_url=reverse_lazy("logout"))
-def itemListViewEdit(request, versie_pk, chapter_id, paragraph_id):
-    paragraph_id = int(paragraph_id)
-    chapter_id = int(chapter_id)
-    versie = models.PVEVersie.objects.get(id=versie_pk)
-
-    # Chapter_id doesnt exist
-    if not versie.hoofdstuk.filter(id=chapter_id).exists():
-        raise Http404("404")
-
-    hoofdstuk = versie.hoofdstuk.get(id=chapter_id)
-
-    # if no paragraph given but there are paragraphs in this chapter
-    if paragraph_id == 0:
-        if models.PVEParagraaf.objects.filter(
-            versie__id=versie_pk, hoofdstuk__id=chapter_id
-        ).exists():
-            raise Http404("404")
-
-    # if paragraphs arent connected to this chapter
-    if paragraph_id != 0:
-        if not models.PVEParagraaf.objects.filter(
-            versie__id=versie_pk, hoofdstuk__id=chapter_id
-        ).filter(id=paragraph_id):
-            raise Http404("404")
-
-        paragraaf = models.PVEParagraaf.objects.filter(
-            versie__id=versie_pk, id=paragraph_id
-        ).first()
-
-    context = {}
-
-    # item niet in een paragraaf: haal ze van een hoofdstuk
-    if paragraph_id == 0:
-        context["queryset"] = models.PVEItem.objects.filter(
-            versie__id=versie_pk, hoofdstuk__id=chapter_id
-        )
-        context["hoofdstuk"] = hoofdstuk
-    else:
-        context["queryset"] = models.PVEItem.objects.filter(
-            versie__id=versie_pk, hoofdstuk__id=chapter_id
-        ).filter(versie__id=versie_pk, paragraaf__id=paragraph_id)
-        context["paragraaf"] = paragraaf
-        context["hoofdstuk"] = hoofdstuk
-
-    context["paragraaf_id"] = paragraph_id
-    context["hoofdstuk_id"] = chapter_id
-    context["versie_pk"] = versie_pk
-    return render(request, "PVEItemListEdit.html", context)
-
-
-@staff_member_required(login_url=reverse_lazy("logout"))
-def itemListViewDelete(request, versie_pk, chapter_id, paragraph_id):
-    paragraph_id = int(paragraph_id)
-    chapter_id = int(chapter_id)
-
-    # Chapter_id doesnt exist
-    if not models.PVEHoofdstuk.objects.filter(versie__id=versie_pk, id=chapter_id):
-        raise Http404("404")
-
-    hoofdstuk = models.PVEHoofdstuk.objects.filter(
-        versie__id=versie_pk, id=chapter_id
-    ).first()
-
-    # if no paragraph given but there are paragraphs in this chapter
-    if paragraph_id == 0:
-        if models.PVEParagraaf.objects.filter(
-            versie__id=versie_pk, hoofdstuk__id=chapter_id
-        ).exists():
-            raise Http404("404")
-
-    # if paragraphs arent connected to this chapter
-    if paragraph_id != 0:
-        if not models.PVEParagraaf.objects.filter(
-            versie__id=versie_pk, hoofdstuk__id=chapter_id
-        ).filter(id=paragraph_id):
-            raise Http404("404")
-
-        paragraaf = models.PVEParagraaf.objects.filter(
-            versie__id=versie_pk, id=paragraph_id
-        ).first()
-
-    context = {}
-
-    # item niet in een paragraaf: haal ze van een hoofdstuk
-    if paragraph_id == 0:
-        context["queryset"] = models.PVEItem.objects.filter(
-            versie__id=versie_pk, hoofdstuk__id=chapter_id
-        )
-        context["hoofdstuk"] = hoofdstuk
-    else:
-        context["queryset"] = models.PVEItem.objects.filter(
-            versie__id=versie_pk, hoofdstuk__id=chapter_id
-        ).filter(versie__id=versie_pk, paragraaf__id=paragraph_id)
-        context["paragraaf"] = paragraaf
-        context["hoofdstuk"] = hoofdstuk
-
-    context["paragraaf_id"] = paragraph_id
-    context["hoofdstuk_id"] = chapter_id
-    context["versie_pk"] = versie_pk
-    return render(request, "PVEItemListDelete.html", context)
-
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def viewItemView(request, versie_pk, pk):
@@ -1049,6 +934,7 @@ def viewItemView(request, versie_pk, pk):
 
     context["hoofdstuk_id"] = PVEItem.hoofdstuk.id
     context["versie_pk"] = versie_pk
+    context["versie"] = models.PVEVersie.objects.get(id=versie_pk)
     return render(request, "PVEItemView.html", context)
 
 
@@ -1154,6 +1040,7 @@ def editItemView(request, versie_pk, pk):
     context["form"] = form
     context["id"] = pk
     context["versie_pk"] = versie_pk
+    context["versie"] = models.PVEVersie.objects.get(id=versie_pk)
     return render(request, "PVEItemEdit.html", context)
 
 
@@ -1228,6 +1115,7 @@ def addItemView(request, versie_pk, chapter_id, paragraph_id):
     context["chapter_id"] = chapter_id
     context["paragraph_id"] = int(paragraph_id)
     context["versie_pk"] = versie_pk
+    context["versie"] = models.PVEVersie.objects.get(id=versie_pk)
     return render(request, "PVEAddItem.html", context)
 
 
@@ -1249,7 +1137,7 @@ def deleteItemView(request, versie_pk, pk):
     if not paragraaf:
         return HttpResponseRedirect(
             reverse(
-                "viewParagraafDelete",
+                "viewParagraaf",
                 args=(
                     versie_pk,
                     hoofdstuk.id,
@@ -1258,7 +1146,7 @@ def deleteItemView(request, versie_pk, pk):
         )
 
     return HttpResponseRedirect(
-        reverse("itemlistviewdelete", args=(versie_pk, hoofdstuk.id, paragraaf.id))
+        reverse("itemlistview", args=(versie_pk, hoofdstuk.id, paragraaf.id))
     )
 
 
@@ -1311,6 +1199,7 @@ def kiesparametersView(request, versie_pk):
     context["typeObjecten"] = versie.typeobject.all()
     context["doelgroepen"] = versie.doelgroep.all()
     context["versie_pk"] = versie_pk
+    context["versie"] = versie
     return render(request, "kiesparameters.html", context)
 
 
@@ -1356,6 +1245,7 @@ def addkiesparameterView(request, versie_pk, type_id):
     context["typeObjecten"] = versie.typeobject.all()
     context["doelgroepen"] = versie.doelgroep.all()
     context["versie_pk"] = versie_pk
+    context["versie"] = versie
     return render(request, "addkiesparameter.html", context)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
@@ -1392,6 +1282,7 @@ def addkiesparameterform(request, versie_pk, type):
     context["form"] = form
     context["type"] = type
     context["versie_pk"] = versie_pk
+    context["versie"] = versie
     return render(request, "partials/addkiesparameterform.html", context)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
@@ -1426,6 +1317,7 @@ def kiesparameterform(request, versie_pk, type, parameter_id):
     context = {}
     context["form"] = form
     context["versie_pk"] = versie_pk
+    context["versie"] = versie
     context["type"] = type
     context["parameter_id"] = parameter_id
     context["parameter"] = parameter
@@ -1469,6 +1361,7 @@ def kiesparameterdetail(request, versie_pk, type, parameter_id):
 
     context = {}
     context["versie_pk"] = versie_pk
+    context["versie"] = versie
     context["type"] = type
     context["parameter_id"] = parameter_id
     context["parameter"] = parameter
@@ -1526,6 +1419,7 @@ def bijlagenView(request, versie_pk):
     context = {}
     context["bijlagen"] = models.ItemBijlages.objects.filter(versie__id=versie_pk)
     context["versie_pk"] = versie_pk
+    context["versie"] = models.PVEVersie.objects.get(pk=versie_pk)
     return render(request, "bijlagenView.html", context)
 
 
@@ -1541,6 +1435,7 @@ def bijlageDetail(request, versie_pk, pk):
     context["bijlagen"] = bijlagen
     context["items"] = items
     context["versie_pk"] = versie_pk
+    context["versie"] = models.PVEVersie.objects.get(pk=versie_pk)
     return render(request, "bijlageDetail.html", context)
 
 
@@ -1571,6 +1466,7 @@ def bijlageAdd(request, versie_pk):
 
     context = {}
     context["versie_pk"] = versie_pk
+    context["versie"] = models.PVEVersie.objects.get(pk=versie_pk)
     context["form"] = form
     return render(request, "bijlageAdd.html", context)
 
@@ -1606,6 +1502,7 @@ def bijlageEdit(request, versie_pk, pk):
 
     context = {}
     context["versie_pk"] = versie_pk
+    context["versie"] = models.PVEVersie.objects.get(pk=versie_pk)
     context["form"] = form
     context["bijlage"] = bijlage
     return render(request, "bijlageEdit.html", context)

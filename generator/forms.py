@@ -161,88 +161,75 @@ class SpecificPVEParameterForm(ModelForm):
             "JamesConcept": "James Concept",
         }
 
-
-class CompareFormBouwsoort(forms.Form):
+class CompareForm(forms.Form):
     Bouwsoort1 = forms.ModelChoiceField(
-        queryset=Bouwsoort.objects.none(), label="Bouwsoort"
+        queryset=Bouwsoort.objects.none(), label="Eerste Bouwsoort"
     )
     Bouwsoort2 = forms.ModelChoiceField(
-        queryset=Bouwsoort.objects.none(), label="Bouwsoort"
+        queryset=Bouwsoort.objects.none(), label="Tweede Bouwsoort"
     )
 
+    TypeObject1 = forms.ModelChoiceField(
+        queryset=TypeObject.objects.none(), label="Eerste Type Object"
+    )
+    TypeObject2 = forms.ModelChoiceField(
+        queryset=TypeObject.objects.none(), label="Tweede Type Object"
+    )
+
+    Doelgroep1 = forms.ModelChoiceField(
+        queryset=Doelgroep.objects.none(), label="Eerste Doelgroep"
+    )
+    Doelgroep2 = forms.ModelChoiceField(
+        queryset=Doelgroep.objects.none(), label="Tweede Doelgroep"
+    )
+
+    widgets = {
+        "Bouwsoort1": forms.Select(attrs={"class": "ui dropdown"}),
+        "Bouwsoort2": forms.Select(
+            attrs={"class": "ui dropdown"},
+        ),
+        "TypeObject1": forms.Select(
+            attrs={"class": "ui dropdown"},
+        ),
+        "TypeObject2": forms.Select(
+            attrs={"class": "ui dropdown"},
+        ),
+        "Doelgroep1": forms.Select(
+            attrs={"class": "ui dropdown"},
+        ),
+        "Doelgroep2": forms.Select(
+            attrs={"class": "ui dropdown"},
+        ),
+    }
+
     class Meta:
-        model = PVEItem
-        fields = ("Bouwsoort1", "Bouwsoort2")
-        labels = {
-            "Bouwsoort1": "Bouwsoort 1",
-            "Bouwsoort2": "Bouwsoort 2",
-        }
 
         layout = [
-            ("Text", '<h2 class="ui dividing header">Afwijkingenlijst twee bouwsoorten</h2>'),
-            ("Text", '<i>Let op het verschil tussen de volgorde van de parameters. Appartement 0-50 m2 t.o.v. Grondgebonden Woning geeft een ander resultaat dan Grondgebonden Woning t.o.v. Appartement 0-50 m2. Namelijk, welke wel in de eerste parameter voorkomt maar niet in de tweede.</i>'),
+            ("Text", """<h2 class="ui dividing header">Afwijkingenlijst twee Programma van Eisen</h2>"""),
+            ("Text", """<p>Vergelijk hier twee soorten Programma van Eisen. Geen veld is verplicht. Let op de volgorde van de parameters; 
+            transformatie t.o.v. nieuwbouw geeft andere resultaten dan nieuwbouw t.o.v. transformatie. Namelijk, welke regels wél in de eerste voorkomen maar niét in de tweede.</p>"""),
+            ("Text", """<i>Tip: U kunt bij het eerste PvE één parameter kiezen om simpelweg de regels van deze parameter te laten zien.</i>"""),
+            ("Text", """<h3 class="ui dividing header">Eerste PvE</h3>"""),
             (
                 "Two Fields",
                 ("Field", "Bouwsoort1"),
-                ("Field", "Bouwsoort2"),
-            ),
-        ]
-
-
-class CompareFormTypeObject(forms.Form):
-    TypeObject1 = forms.ModelChoiceField(
-        queryset=TypeObject.objects.none(), label="Type Object"
-    )
-    TypeObject2 = forms.ModelChoiceField(
-        queryset=TypeObject.objects.none(), label="Type Object"
-    )
-
-    class Meta:
-        model = PVEItem
-        fields = ("TypeObject1", "TypeObject2")
-        labels = {
-            "TypeObject1": "Type Object 1",
-            "TypeObject2": "Type Object 2",
-        }
-
-        layout = [
-            (
-                "Text",
-                '<h2 class="ui dividing header">Afwijkingenlijst twee type objecten</h2>',
-            ),
-            ("Text", '<i>Let op het verschil tussen de volgorde van de parameters. Appartement 0-50 m2 t.o.v. Grondgebonden Woning geeft een ander resultaat dan Grondgebonden Woning t.o.v. Appartement 0-50 m2. Namelijk, welke wel in de eerste parameter voorkomt maar niet in de tweede.</i>'),
-
-            (
-                "Two Fields",
                 ("Field", "TypeObject1"),
-                ("Field", "TypeObject2"),
+                ("Field", "Doelgroep1"),
             ),
-        ]
-
-
-class CompareFormDoelgroep(forms.Form):
-    Doelgroep1 = forms.ModelChoiceField(
-        queryset=Doelgroep.objects.none(), label="Doelgroep"
-    )
-    Doelgroep2 = forms.ModelChoiceField(
-        queryset=Doelgroep.objects.none(), label="Doelgroep"
-    )
-
-    class Meta:
-        model = PVEItem
-        fields = ("Doelgroep1", "Doelgroep2")
-        labels = {
-            "Doelgroep1": "Doelgroep 1",
-            "Doelgroep2": "Doelgroep 2",
-        }
-
-        layout = [
-            ("Text", '<h2 class="ui dividing header">Afwijkingenlijst twee doelgroepen</h2>'),
-            ("Text", '<i>Let op het verschil tussen de volgorde van de parameters. Appartement 0-50 m2 t.o.v. Grondgebonden Woning geeft een ander resultaat dan Grondgebonden Woning t.o.v. Appartement 0-50 m2. Namelijk, welke wel in de eerste parameter voorkomt maar niet in de tweede.</i>'),
-
+            ("Text", """<h3 class="ui dividing header">Tweede PvE</h3>"""),
             (
                 "Two Fields",
-                ("Field", "Doelgroep1"),
+                ("Field", "Bouwsoort2"),
+                ("Field", "TypeObject2"),
                 ("Field", "Doelgroep2"),
             ),
         ]
+
+    def __init__(self, *args, **kwargs):
+        super(CompareForm, self).__init__(*args, **kwargs)
+        self.fields["Bouwsoort1"].required = False
+        self.fields["Bouwsoort2"].required = False
+        self.fields["TypeObject1"].required = False
+        self.fields["TypeObject2"].required = False
+        self.fields["Doelgroep1"].required = False
+        self.fields["Doelgroep2"].required = False

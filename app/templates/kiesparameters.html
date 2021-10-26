@@ -3,7 +3,7 @@
   type="button"
   class="ui primary button d-inline"
   onclick="javascript:window.location='{% url 'pvebewerkoverview' versie_pk %}'"
-  value="< PvE Overview"
+  value="< Overview {{ versie.belegger}}: {{ versie.versie }}"
 />
 <h1 class="ui header center aligned">Bewerk Keuzematrix</h1>
 {% if bouwsoorten %}
