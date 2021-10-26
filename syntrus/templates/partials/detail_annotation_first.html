@@ -1,0 +1,10 @@
+{% block main %}
+<div>
+{% if opmerking.kostenverschil %}
+    <p>Aanvulling: {{ opmerking.kostenverschil }}</p>
+    <button class="ui basic button"><i class="icon edit"></i>Bewerk aanvulling</button>
+{% else %}
+    <button class="ui basic button"><i class="icon plus"></i>Aanvulling</button>
+{% endif %}
+</div>
+{% endblock %}

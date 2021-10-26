@@ -109,7 +109,6 @@ def MyComments(request, client_pk, pk):
         annotation_post = request.POST.getlist("annotation")
         status_post = request.POST.getlist("status")
         kostenConsequenties_post = request.POST.getlist("kostenConsequenties")
-        print(item_id_post, annotation_post, status_post, kostenConsequenties_post)
 
     i = 0
     for comment in page_obj:
@@ -129,7 +128,6 @@ def MyComments(request, client_pk, pk):
         )
 
         ann_forms.append(form)
-
         form_item_ids.append(comment.item.id)
         i += 1
 
@@ -541,9 +539,10 @@ def AllComments(request, client_pk, pk):
     context["logo_url"] = logo_url
     return render(request, "AllCommentsOfProject_syn.html", context)
 
-
 @login_required(login_url=reverse_lazy("login_syn", args={1,}))
-def AddComment(request, client_pk, pk):
+def AddCommentTijdelijk(request, client_pk, pk):
+    context = {}
+
     if not Beleggers.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
@@ -558,7 +557,314 @@ def AddComment(request, client_pk, pk):
     else:
         return redirect("logout_syn", client_pk=client_pk)
 
+
+    project = get_object_or_404(Project, pk=pk)
+    if project.belegger != client:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user.type_user != project.first_annotate:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if project.frozenLevel > 0:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if not project.item.exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user not in project.permitted.all():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    items = project.item.select_related("hoofdstuk").select_related("paragraaf").all()
+    hoofdstukken = {}
+
+    for item in items:
+        if item.hoofdstuk not in hoofdstukken:
+            if item.paragraaf:
+                hoofdstukken[item.hoofdstuk] = True
+            else:
+                hoofdstukken[item.hoofdstuk] = False
+
+    annotations = {}
+
+    for annotation in project.annotation.select_related("item").select_related("status"):
+        annotations[annotation.item] = annotation
+
+    aantal_opmerkingen_gedaan = len(annotations.keys())
+
+    if aantal_opmerkingen_gedaan < items.count():
+        progress = "niet_klaar"
+    else:
+        progress = "klaar"
+
+    context["items"] = items
+    context["progress"] = progress
+    context["aantal_opmerkingen_gedaan"] = aantal_opmerkingen_gedaan
+    context["hoofdstukken"] = hoofdstukken
+    context["project"] = project
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
+    return render(request, "plusOpmerkingTijdelijk.html", context)
+
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
+def GetParagravenFirstAnnotate(request, client_pk, pk, hoofdstuk_pk):
     context = {}
+
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
+        return redirect("logout_syn", client_pk=client_pk)
+
+
+    project = get_object_or_404(Project, pk=pk)
+    if project.belegger != client:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user.type_user != project.first_annotate:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if project.frozenLevel > 0:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if not project.item.exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user not in project.permitted.all():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    items = project.item.select_related("hoofdstuk").select_related("paragraaf").filter(hoofdstuk__id=hoofdstuk_pk).all()
+    paragraven = []
+
+    for item in items:
+        if item.paragraaf not in paragraven:
+            paragraven.append(item.paragraaf)
+
+    context["items"] = items
+    context["paragraven"] = paragraven
+    context["project"] = project
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
+    return render(request, "partials/paragravenpartial.html", context)
+
+
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
+def GetItemsFirstAnnotate(request, client_pk, pk, hoofdstuk_pk, paragraaf_id):
+    context = {}
+
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
+        return redirect("logout_syn", client_pk=client_pk)
+
+
+    project = get_object_or_404(Project, pk=pk)
+    if project.belegger != client:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user.type_user != project.first_annotate:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if project.frozenLevel > 0:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if not project.item.exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user not in project.permitted.all():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if paragraaf_id == 0:
+        pve_items = project.item.select_related("hoofdstuk").select_related("paragraaf").filter(hoofdstuk__id=hoofdstuk_pk).all()
+    else:
+        pve_items = project.item.select_related("hoofdstuk").select_related("paragraaf").filter(hoofdstuk__id=hoofdstuk_pk, paragraaf__id=paragraaf_id).all()
+    print(pve_items)
+    annotations = {}
+
+    for annotation in project.annotation.select_related("item").select_related("status"):
+        annotations[annotation.item] = annotation
+
+    itembijlages = [_ for _ in project.pve_versie.itembijlage.prefetch_related("items")]
+    items_has_bijlages = [item.items.all() for item in itembijlages]
+
+
+    items = []
+
+    for item in pve_items:
+        bijlage = None
+
+        if item in items_has_bijlages:
+            bijlage = item.itembijlage.first()
+        
+        items.append([item, bijlage])
+
+    context["items"] = items
+    context["project"] = project
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
+    return render(request, "partials/itempartial.html", context)
+
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
+def DetailStatusFirst(request, client_pk, project_pk, item_pk):
+    context = {}
+
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
+        return redirect("logout_syn", client_pk=client_pk)
+
+
+    project = get_object_or_404(Project, pk=project_pk)
+    if project.belegger != client:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user.type_user != project.first_annotate:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if project.frozenLevel > 0:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if not project.item.exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user not in project.permitted.all():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    context["project"] = project
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
+    return render(request, "partials/detail_status_first.html", context)
+
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
+def DetailAnnotationFirst(request, client_pk, project_pk, item_pk):
+    context = {}
+
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
+        return redirect("logout_syn", client_pk=client_pk)
+
+
+    project = get_object_or_404(Project, pk=project_pk)
+    if project.belegger != client:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user.type_user != project.first_annotate:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if project.frozenLevel > 0:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if not project.item.exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user not in project.permitted.all():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    context["project"] = project
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
+    return render(request, "partials/detail_annotation_first.html", context)
+
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
+def DetailKostenverschilFirst(request, client_pk, project_pk, item_pk):
+    context = {}
+
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
+        return redirect("logout_syn", client_pk=client_pk)
+
+
+    project = get_object_or_404(Project, pk=project_pk)
+    if project.belegger != client:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user.type_user != project.first_annotate:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if project.frozenLevel > 0:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if not project.item.exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user not in project.permitted.all():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    context["project"] = project
+    context["client_pk"] = client_pk
+    context["client"] = client
+    context["logo_url"] = logo_url
+    return render(request, "partials/detail_kostenverschil_first.html", context)
+
+
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
+def AddComment(request, client_pk, pk):
+    context = {}
+
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
+
+    if request.user.klantenorganisatie:
+        if request.user.klantenorganisatie.id != client.id and request.user.type_user != "B":
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
+        return redirect("logout_syn", client_pk=client_pk)
+
 
     project = get_object_or_404(Project, pk=pk)
     if project.belegger != client:
@@ -598,6 +904,7 @@ def AddComment(request, client_pk, pk):
         kostenConsequenties_post = request.POST.getlist("kostenConsequenties")
 
     i = 0
+
     for item in items:
         opmerking = None
         bijlage = None
@@ -641,10 +948,7 @@ def AddComment(request, client_pk, pk):
 
         i += 1
 
-        total_context = [item, None, bijlage, form]
-
-        if opmerking:
-            total_context = [item, opmerking, bijlage, form]
+        total_context = [item, opmerking, bijlage, form]
 
         # create ordered items
         if item.paragraaf:

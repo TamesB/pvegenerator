@@ -1,0 +1,10 @@
+{% block main %}
+{% if opmerking.status %}
+    <div class="status_added" id="status-{{ item.id }}">
+    <p>Status: {{ opmerking.status }}</p>
+    <button class="ui basic button"><i class="icon edit"></i>Bewerk Status</button>
+{% else %}
+    <div class="status_not_added" id="status-{{ item.id }}">
+    <button class="ui basic button"><i class="icon plus"></i>Status</button>
+{% endif %}
+{% endblock %}

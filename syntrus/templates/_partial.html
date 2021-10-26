@@ -2,11 +2,8 @@
 {% load semanticui %}
 {% load static %}
 {% load filename %}
-<div id="main">
-    <div class="layerOneInner">
-        {% block main %}{% endblock %}
-    </div>
-</div>
+
+{% block main %}{% endblock %}
 
 {% block scripts %}
 {% include 'partials/messages.html' %}
