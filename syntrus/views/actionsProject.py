@@ -433,7 +433,8 @@ def download_pve(request, client_pk, pk):
             kostenverschil += opmerking.kostenConsequenties
         if opmerking.bijlage:
             bijlage = BijlageToAnnotation.objects.get(ann=opmerking)
-            bijlagen[opmerking.item.id] = bijlage
+            if bijlage.bijlage:
+                bijlagen[opmerking.item.id] = bijlage
 
     replies = (
         CommentReply.objects.select_related("gebruiker")
@@ -452,7 +453,9 @@ def download_pve(request, client_pk, pk):
 
         if reply.bijlage:
             bijlage = BijlageToReply.objects.get(reply=reply)
-            reactiebijlagen[reply.id] = bijlage
+
+            if bijlage.bijlage:
+                reactiebijlagen[reply.id] = bijlage
 
     geaccepteerde_regels_ids = []
 
@@ -500,12 +503,14 @@ def download_pve(request, client_pk, pk):
     if BijlageToAnnotation.objects.filter(ann__project=project).exists():
         bijlagen_ann = BijlageToAnnotation.objects.filter(ann__project=project)
         for item in bijlagen_ann:
-            bijlagen.append(item)
+            if item.bijlage:
+                bijlagen.append(item)
 
     if BijlageToReply.objects.filter(reply__onComment__project=project).exists():
         replybijlagen = BijlageToReply.objects.filter(reply__onComment__project=project)
         for bijlage in replybijlagen:
-            bijlagen.append(bijlage)
+            if bijlage.bijlage:
+                bijlagen.append(bijlage)
 
     if bijlagen:
         zipmaker = createBijlageZip.ZipMaker()

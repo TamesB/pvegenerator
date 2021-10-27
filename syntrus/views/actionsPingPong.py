@@ -55,9 +55,9 @@ def FirstFreeze(request, client_pk, pk):
                 changed_items_ids = [comment.item.id for comment in changed_comments]
                 unchanged_items = project.item.exclude(id__in=changed_items_ids)
                 # add all initially changed comments to it
-                for comment in changed_comments:
-                    frozencomments.comments.add(comment)
+                frozencomments.comments.add(*changed_comments)
 
+                comment_list = []
                 # create todo pveannotations for ignored items, change to bulk_create for optimization
                 for item in unchanged_items:
                     comment = PVEItemAnnotation()
@@ -66,8 +66,9 @@ def FirstFreeze(request, client_pk, pk):
                     comment.gebruiker = request.user
                     comment.init_accepted = True
                     comment.save()
-
-                    frozencomments.todo_comments.add(comment)
+                    comment_list.append(comment)
+                
+                frozencomments.todo_comments.add(*comment_list)
 
                 frozencomments.project = project
                 frozencomments.level = 1
@@ -117,7 +118,7 @@ def FirstFreeze(request, client_pk, pk):
             messages.warning(request, "Vul de verplichte velden in.")
 
     context = {}
-    context["form"] = FirstFreezeForm(request.POST)
+    context["form"] = FirstFreezeForm()
     context["pk"] = pk
     context["project"] = project
     context["client_pk"] = client_pk
