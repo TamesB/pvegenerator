@@ -1,10 +1,12 @@
 {% block main %}
-<span>
-{% if opmerking.kostenverschil %}
-    <p>Kostenverschil: {{ opmerking.kostenverschil }}</p>
-    <button class="ui basic button"><i class="icon edit"></i>Bewerk kostenverschil</button>
+<span hx-target="this" hx-swap="outerHTML">
+{% if annotation.kostenConsequenties %}
+    <p>Kostenverschil: €{{ annotation.kostenConsequenties }}</p>
+    <button hx-get="{% url 'addkostenverschilfirst' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon edit"></i>Bewerk kostenverschil</button>
 {% else %}
-    <button class="ui basic button"><i class="icon plus"></i>Kostenverschil</button>
+    <button hx-get="{% url 'addkostenverschilfirst' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon plus"></i>Kostenverschil</button>
 {% endif %}
 </span>
+{% endblock %}{% block scripts %}
+{% include 'partials/messages.html' %}
 {% endblock %}

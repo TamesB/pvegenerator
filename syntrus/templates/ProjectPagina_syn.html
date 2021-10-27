@@ -4,6 +4,7 @@
 {% load static %}
 {% load leaflet_tags %}
 {% load i18n %}
+{% load l10n %}
 {% block menu %}
 {% include 'MenuTypes.html' %}
 {% endblock %}
@@ -251,8 +252,8 @@
   <script>
 function map_init(map, options) {
     // get point lat and lon
-    var lon = "{{ project.plaats.x }}";
-    var lat = "{{ project.plaats.y }}";
+    var lon = {{ project.plaats.x|unlocalize }};
+    var lat = {{ project.plaats.y|unlocalize }};
     // zoom to point & add it to map
     map.setView([lat, lon], 12);
     var point = L.marker([lat, lon]).addTo(map);

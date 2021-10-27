@@ -230,7 +230,24 @@ class BijlageToAnnotationForm(ModelForm):
         }
         widgets = {"ann": forms.HiddenInput()}
 
+class FirstAnnotationForm(forms.Form):
+    annotation = forms.CharField(label="annotation", required=True, widget=forms.Textarea)
 
+class FirstKostenverschilForm(forms.Form):
+    kostenverschil = forms.DecimalField(
+        label="Kosten Consequenties", required=True
+    )
+
+class FirstStatusForm(forms.Form):
+    status = CachedModelChoiceField(
+        objects=lambda: CommentStatus.objects.all()
+    )
+
+class FirstBijlageForm(ModelForm):
+    class Meta:
+        model = BijlageToAnnotation
+        fields = ("bijlage", "ann",)
+        labels = {"bijlage": "", "ann": ""}
 class AddOrganisatieForm(forms.Form):
     naam = forms.CharField(max_length=100)
 
@@ -378,6 +395,7 @@ class CommentReplyForm(forms.Form):
         self.fields["status"].required = False
         self.fields["accept"].widget = forms.Select(attrs = {'onChange' : f"toggleShowInput({comm_id}, this);", "class":"select_accept", "id": f"id_accept_{comm_id}"})
         self.fields["accept"].choices = self.CHOICES
+
 
 class BijlageToReplyForm(ModelForm):
     class Meta:

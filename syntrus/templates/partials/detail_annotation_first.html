@@ -1,10 +1,22 @@
+{% load static %}
 {% block main %}
-<div>
-{% if opmerking.kostenverschil %}
-    <p>Aanvulling: {{ opmerking.kostenverschil }}</p>
-    <button class="ui basic button"><i class="icon edit"></i>Bewerk aanvulling</button>
+<span hx-target="this" hx-swap="outerHTML">
+{% if annotation.annotation %}
+    <span><p>Aanvulling: {{ annotation.annotation }} 
+    {% if bijlage %}
+    <a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project_pk annotation.id %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img>Bijlage</a>
+    {% endif %}</p></span>
+
+    <button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon edit"></i>Bewerk aanvulling</button>
+    {% if not bijlage %}
+    <button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation.id %}" class="ui basic button"><i class="icon plus"></i>Upload Bijlage</button>
+    {% else %}
+    <button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation.id %}" class="ui basic button"><i class="icon edit"></i>Bewerk Bijlage</button>
+    {% endif %}
 {% else %}
-    <button class="ui basic button"><i class="icon plus"></i>Aanvulling</button>
+    <button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon plus"></i>Aanvulling</button>
 {% endif %}
-</div>
+</span>
+{% endblock %}{% block scripts %}
+{% include 'partials/messages.html' %}
 {% endblock %}

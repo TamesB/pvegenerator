@@ -1,0 +1,19 @@
+{% extends "_partial.html" %}
+
+
+{% block main %}
+    <form hx-target="this" hx-swap="outerHTML" class="ui form" method="POST" hx-encoding='multipart/form-data' enctype="multipart/form-data">
+    {% csrf_token %}
+        <div>
+        <p><label for="{{ form.bijlage.id_for_label }}">Upload Bijlage:</label></p>
+        <p class="formbox">{{ form.bijlage }}</p>
+        <p class="formbox" hidden>{{ form.ann }}</p>
+        </div>
+        <button hx-get="{% url 'detailfirstannotation' client_pk project_pk item_pk %}" style="float: left;" class="ui basic button">Terug</button>
+        <button hx-post="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation_pk %}" type="submit" class="ui icon green button"><i class="icon plus"></i></button>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+{% include 'partials/messages.html' %}
+{% endblock %}

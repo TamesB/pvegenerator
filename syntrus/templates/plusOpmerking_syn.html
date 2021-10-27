@@ -21,101 +21,21 @@
   <div class="active section">Eerste statusaanwijzing</div>
 </div>
 
-<form class="opmerking_form" action="{% url 'plusopmerking_syn' client_pk project.id %}" method="POST" enctype="multipart/form-data">
-{% csrf_token %}
-
-<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Eerste statusaanwijzing / Aanvullingen op regels<input type="submit" class="submit_button" value="Opslaan >"></input></p></div>
+<div class="opmerking_form">
+<div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Eerste statusaanwijzing / Aanvullingen op regels<input type="submit" class="submit_button" onClick="javascript:location.href='{% url 'firstfreeze_syn' client_pk project.id %}';" value="Stuur door >"></input></p></div>
 <div style="height:6vh;"></div>
 
-{% if items %}
+{% if hoofdstukken.items %}
 <div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>Groen = status is al opgeslagen. Geel = u heeft net een wijziging gemaakt. Rood = nog geen status aangegeven.</p></span></popup-notify></div></div>
 <div class="item_opmerking_list">
 
-{% for hoofdstuk, one_deep in hoofdstuk_ordered_items.items %}
-    <button type="button" class="hoofdstuk"><p>{{ hoofdstuk.hoofdstuk }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></p></button>
-    <div class="hoofdstuk_content">
-    {% if one_deep.items %}
-        {% for paragraaf, items in one_deep.items %}
-            <button type="button" class="paragraaf"><p>{{ paragraaf.paragraaf }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></p></button>
-            <div class="paragraaf_content">
-                {% for item in items %}
-                  {% with regel=item|index:0 %}
-                  {% with opmerking=item|index:1 %}
-                  {% with bijlage=item|index:2 %}
-                  {% with form=item|index:3 %}
-                    <div class="item_content">
-                      <div class="text_left">
-                        <p style="font-style:italic;">
-                          {{ regel }}{% if bijlage %} 
-                          Bijlage: <a href="{% url 'downloadbijlage' client_pk regel.id %}" target="_blank">
-                          <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img>
-                          </a>
-                          {% endif %}
-                        </p>
-                        <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}" hidden>
-                        <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold"><p>Aanvulling (optioneel):</p></label>
-                        <p class="formbox">{{ form.annotation }}</p>
-                      </div>
-                    {% if opmerking.status %}
-                      <div class="status_added" id="status-{{ regel.id }}">
-                      <p>Status: {{ opmerking.status }}</p>
-                      <div><label for="{{ form.status.id_for_label }}"><p>Bewerk Status:</p></label>
-                      {{ form.status }}</div>
-                    {% else %}
-                      <div class="status_not_added" id="status-{{ regel.id }}">
-                      <div><label for="{{ form.status.id_for_label }}"><p>Status:</p></label>
-                      {{ form.status }}</div>
-                    {% endif %}
-                      <div><label for="{{ form.kostenConsequenties.id_for_label }}"><p>Kostenverschil (optioneel):</p></label>
-                      {{ form.kostenConsequenties }}</div>               
-                    </div>
-                  </div>
-                  {% endwith %}
-                  {% endwith %}
-                  {% endwith %}
-                  {% endwith %}
-                {% endfor %}
-            </div>
-        {% endfor %}
-    {% else %}
-        {% for item in one_deep %}
-          {% with regel=item|index:0 %}
-          {% with opmerking=item|index:1 %}
-          {% with bijlage=item|index:2 %}
-          {% with form=item|index:3 %}
-          <div class="item_content">
-            <div class="text_left">
-              <p style="font-style:italic;">
-                {{ regel }}{% if bijlage %} 
-                Bijlage: <a href="{% url 'downloadbijlage' client_pk regel.id %}" target="_blank">
-                <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img>
-                </a>
-                {% endif %}
-              </p>
-              <input class="item-id" name="item_id" type="number" value="{{ form.item_id.value }}" hidden>
-              <label for="{{ form.annotation.id_for_label }}" style="font-weight: bold"><p>Aanvulling (optioneel):</p></label>
-              <p class="formbox">{{ form.annotation }}</p>
-            </div>
-          {% if opmerking.status %}
-            <div class="status_added" id="status-{{ regel.id }}">
-            <p>Status: {{ opmerking.status }}</p>
-            <div><label for="{{ form.status.id_for_label }}"><p>Bewerk Status:</p></label>
-            {{ form.status }}</div>
-          {% else %}
-            <div class="status_not_added" id="status-{{ regel.id }}">
-            <div><label for="{{ form.status.id_for_label }}"><p>Status:</p></label>
-            {{ form.status }}</div>
-          {% endif %}
-            <div><label for="{{ form.kostenConsequenties.id_for_label }}"><p>Kostenverschil (optioneel):</p></label>
-            {{ form.kostenConsequenties }}</div>               
-          </div>
-        </div>
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endfor %}  
-    {% endif %}
+{% for key, value in hoofdstukken.items %}
+{% if value %}
+    <button type="button" hx-get="{% url 'getparagravenfirstannotate' client_pk project.id key.id %}" hx-target="#hoofdstuk_content-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click" class="hoofdstuk"><p>{{ key.hoofdstuk }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></p></button>
+{% else %}
+    <button type="button" hx-get="{% url 'getitemsfirstannotate' client_pk project.id key.id 0 %}" hx-target="#hoofdstuk_content-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click" class="hoofdstuk"><p>{{ key.hoofdstuk }} <img class="arrow-down" src="{% static 'syntrus/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'syntrus/svg/ArrowUp.svg' %}"></img></p></button>
+{% endif %}
+    <div class="hoofdstuk_content" id="hoofdstuk_content-{{ key.id }}">
     </div>
 {% endfor %}
 </div>
@@ -123,7 +43,7 @@
 {% else %}
 <p>Nog geen PVE gekoppeld aan dit project.</p>
 {% endif %}
-</form>
+</div>
 {% endblock %}
 
 {% block scripts %}

@@ -29,7 +29,7 @@ def FirstFreeze(request, client_pk, pk):
 
     project = get_object_or_404(Project, pk=pk)
 
-    if client != project.belegger:
+    if project.belegger != client:
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:

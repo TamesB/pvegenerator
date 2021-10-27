@@ -177,7 +177,6 @@ def LogoKlantForm(request, client_pk):
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
             form.save()
-            print(form.cleaned_data["logo"])
             messages.warning(request, "Klantlogo succesvol geupload!")
             return redirect("logoklantdetail", client_pk=client_pk)
         else:

@@ -29,9 +29,10 @@
             <p class="description">Stuur uw eerste statusaanwijzing en afwijkingen door aan de stakeholders om het PvE verder op te merken. Regels waar nog geen status/opmerking aan is toegevoegd worden genoteerd als TODO voor de andere stakeholder.</p>
         <form action="{% url 'firstfreeze_syn' client_pk pk %}" method="post">
             {% csrf_token %}
-            <label class="formtitle" for="{{ form.confirm.id_for_label }}">Vink aan voor bevestiging.</label>
+            <p>
+            <label class="formtitle" for="{{ form.confirm.id_for_label }}">Vink aan voor bevestiging.</label></p>
             <p class="formbox">{{ form.confirm }}</p>
-            <input type="submit" class="button" value="Stuur door">
+            <div><input type="submit" class="button" value="Stuur door"></div>
         </form>    
     </div>
 </div>

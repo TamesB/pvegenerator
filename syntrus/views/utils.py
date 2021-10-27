@@ -12,7 +12,7 @@ from syntrus.models import BijlageToReply
 
 
 @login_required(login_url="login_syn")
-def DownloadAnnotationAttachment(request, projid, annid):
+def DownloadAnnotationAttachment(request, client_pk, projid, annid):
     access_key = settings.AWS_ACCESS_KEY_ID
     secret_key = settings.AWS_SECRET_ACCESS_KEY
     bucket_name = settings.AWS_STORAGE_BUCKET_NAME
@@ -73,7 +73,7 @@ def GetAWSURL(client):
 
 
 @login_required
-def DownloadReplyAttachment(request, pk, reply_id):
+def DownloadReplyAttachment(request, client_pk, pk, reply_id):
     access_key = settings.AWS_ACCESS_KEY_ID
     secret_key = settings.AWS_SECRET_ACCESS_KEY
     bucket_name = settings.AWS_STORAGE_BUCKET_NAME

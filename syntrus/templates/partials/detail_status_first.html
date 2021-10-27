@@ -1,10 +1,14 @@
 {% block main %}
-{% if opmerking.status %}
+<span hx-target="this" hx-swap="outerHTML">
+{% if annotation.status %}
     <div class="status_added" id="status-{{ item.id }}">
-    <p>Status: {{ opmerking.status }}</p>
-    <button class="ui basic button"><i class="icon edit"></i>Bewerk Status</button>
+    <p>Status: {{ annotation.status }}</p>
+    <button hx-get="{% url 'addstatusfirst' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon edit"></i>Bewerk Status</button>
 {% else %}
     <div class="status_not_added" id="status-{{ item.id }}">
-    <button class="ui basic button"><i class="icon plus"></i>Status</button>
+    <button hx-get="{% url 'addstatusfirst' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon plus"></i>Status</button>
 {% endif %}
+</span>
+{% endblock %}{% block scripts %}
+{% include 'partials/messages.html' %}
 {% endblock %}

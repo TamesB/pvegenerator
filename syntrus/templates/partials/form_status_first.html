@@ -4,9 +4,15 @@
 {% block main %}
     <form hx-target="this" hx-swap="outerHTML" class="ui form" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-        {{ form }}
-        <button hx-get="{% url 'detailfirststatus' client_pk project.id regel.id %}" style="float: left;" class="ui basic button">Terug</button>
-        <button hx-post="{% url 'addstatusfirst' client_pk project.id regel.id %}" type="submit" class="ui icon green button"><i class="icon plus"></i></button>
+        <div>
+        <label for="{{ form.status.id_for_label }}">Status:</label>
+        <p class="formbox">{{ form.status }}</p>
+        </div>
+        <button hx-get="{% url 'detailfirststatus' client_pk project_pk item_pk %}" style="float: left;" class="ui basic button">Terug</button>
+        <button hx-post="{% url 'addstatusfirst' client_pk project_pk item_pk %}" type="submit" class="ui icon green button"><i class="icon plus"></i></button>
     </form>
 {% endblock %}
 
+{% block scripts %}
+{% include 'partials/messages.html' %}
+{% endblock %}
