@@ -5,12 +5,13 @@
     <form hx-target="this" hx-swap="outerHTML" class="ui form" method="POST" hx-encoding='multipart/form-data' enctype="multipart/form-data">
     {% csrf_token %}
         <div>
-        <p><label for="{{ form.bijlage.id_for_label }}">Upload Bijlage:</label></p>
-        <p class="formbox">{{ form.bijlage }}</p>
-        <p class="formbox" hidden>{{ form.ann }}</p>
+        <p><label for="{{ form.bijlage.id_for_label }}"><b>Upload bijlage:</b></label><p>
+        <p class="first_annotate_formbox">{{ form.bijlage }}</p>
+        <p class="first_annotate_formbox" hidden>{{ form.ann }}</p>
         </div>
-        <button hx-get="{% url 'detailfirstannotation' client_pk project_pk item_pk %}" style="float: left;" class="ui basic button">Terug</button>
-        <button hx-post="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation_pk %}" type="submit" class="ui icon green button"><i class="icon plus"></i></button>
+        <button hx-get="{% url 'detailfirstannotation' client_pk project_pk item_pk %}" style="float: left;" class="ui basic icon button"><i class="icon undo alternate"></i></button>
+        <span style="float:right;"><button hx-post="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation_pk %}" type="submit" class="ui icon green button"><i class="check icon"></i></button>
+        </span>
     </form>
 {% endblock %}
 

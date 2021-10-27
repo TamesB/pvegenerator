@@ -2,14 +2,16 @@
 
 
 {% block main %}
-    <form hx-target="this" hx-swap="outerHTML" class="ui form" method="POST" enctype="multipart/form-data">
+    <form hx-target="this" hx-swap="outerHTML" class="ui form" method="POST" enctype="multipart/form-data" class="midwidth_form"> 
     {% csrf_token %}
         <div>
-        <label for="{{ form.kostenverschil.id_for_label }}">Kostenverschil:</label>
-        <p class="formbox">{{ form.kostenverschil }}</p>
+        <p><label for="{{ form.kostenverschil.id_for_label }}"><b>Kostenverschil:</b></label><p>
+        <p class="first_annotate_formbox">{{ form.kostenverschil }}</p>
+<button hx-get="{% url 'detailfirstkostenverschil' client_pk project_pk item_pk %}" style="float: left;" class="ui basic icon button"><i class="icon undo alternate"></i></button>
+        <span style="float:right;"><button hx-post="{% url 'addkostenverschilfirst' client_pk project_pk item_pk %}" type="submit" class="ui icon green button"><i class="icon check"></i></button>
+        </p>
+        </span>
         </div>
-        <button hx-get="{% url 'detailfirstkostenverschil' client_pk project_pk item_pk %}" style="float: left;" class="ui basic button">Terug</button>
-        <button hx-post="{% url 'addkostenverschilfirst' client_pk project_pk item_pk %}" type="submit" class="ui icon green button"><i class="icon plus"></i></button>
     </form>
 {% endblock %}
 

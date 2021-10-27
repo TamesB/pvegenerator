@@ -2,8 +2,8 @@
 <span hx-target="this" hx-swap="outerHTML">
 {% if annotation.status %}
     <div class="status_added" id="status-{{ item.id }}">
-    <p>Status: {{ annotation.status }}</p>
-    <button hx-get="{% url 'addstatusfirst' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon edit"></i>Bewerk Status</button>
+    <p>Status: {{ annotation.status }}
+    <span><button hx-get="{% url 'addstatusfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i class="icon edit"></i></button></span></p>
 {% else %}
     <div class="status_not_added" id="status-{{ item.id }}">
     <button hx-get="{% url 'addstatusfirst' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon plus"></i>Status</button>

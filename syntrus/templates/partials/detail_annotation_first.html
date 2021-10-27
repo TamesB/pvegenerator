@@ -2,16 +2,20 @@
 {% block main %}
 <span hx-target="this" hx-swap="outerHTML">
 {% if annotation.annotation %}
-    <span><p>Aanvulling: {{ annotation.annotation }} 
+    <span><p><b>Aanvulling:</b> {{ annotation.annotation }} <span><button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic icon button">
+    <i class="icon edit"></i></button></span></p></span>
+    <p>
     {% if bijlage %}
-    <a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project_pk annotation.id %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img>Bijlage</a>
-    {% endif %}</p></span>
+    <span><a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project_pk annotation.id %}" target="_blank"><b>Bijlage:  </b><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
+    </span>
+    {% endif %}
 
-    <button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon edit"></i>Bewerk aanvulling</button>
     {% if not bijlage %}
     <button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation.id %}" class="ui basic button"><i class="icon plus"></i>Upload Bijlage</button>
     {% else %}
-    <button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation.id %}" class="ui basic button"><i class="icon edit"></i>Bewerk Bijlage</button>
+    <span><button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation.id %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
+
+    </p>
     {% endif %}
 {% else %}
     <button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon plus"></i>Aanvulling</button>

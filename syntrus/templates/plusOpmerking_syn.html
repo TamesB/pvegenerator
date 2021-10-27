@@ -23,7 +23,7 @@
 
 <div class="opmerking_form">
 <div class="general_title"><img src="{% static 'syntrus/img/accountsderden.png'%}" class="title_img"></img><p>Eerste statusaanwijzing / Aanvullingen op regels<input type="submit" class="submit_button" onClick="javascript:location.href='{% url 'firstfreeze_syn' client_pk project.id %}';" value="Stuur door >"></input></p></div>
-<div style="height:6vh;"></div>
+<div style="height:1vh;"></div>
 
 {% if hoofdstukken.items %}
 <div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>Groen = status is al opgeslagen. Geel = u heeft net een wijziging gemaakt. Rood = nog geen status aangegeven.</p></span></popup-notify></div></div>
