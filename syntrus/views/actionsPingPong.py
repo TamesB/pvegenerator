@@ -75,7 +75,7 @@ def FirstFreeze(request, client_pk, pk):
                         f"""{ request.user } heeft de initiele statussen van de PvE-regels ingevuld en nodigt u uit deze te checken voor het project { project } van { project.belegger.naam }.
                         
                         Klik op de link om rechtstreeks de statussen langs te gaan.
-                        Link: https://pvegenerator.net/pvetool/project/{project.id}/check
+                        Link: https://pvegenerator.net/pvetool/{project.belegger.id}/project/{project.id}/check
                         """,
                         "admin@pvegenerator.net",
                         filteredDerden,
@@ -93,7 +93,7 @@ def FirstFreeze(request, client_pk, pk):
                         f"""{ request.user } heeft de initiele statussen van de PvE-regels ingevuld en nodigt u uit deze te checken voor het project { project } van { project.belegger.naam }.
                         
                         Klik op de link om rechtstreeks de statussen langs te gaan.
-                        Link: https://pvegenerator.net/pvetool/project/{project.id}/check
+                        Link: https://pvegenerator.net/pvetool/{project.belegger.id}/project/{project.id}/check
                         """,
                         "admin@pvegenerator.net",
                         [f"{projectmanager.email}"],
@@ -228,7 +228,7 @@ def SendReplies(request, client_pk, pk):
                         f"""U heeft reactie ontvangen van de opmerkingen van de projectmanager voor project {project}
                         
                         Klik op de link om rechtstreeks de statussen langs te gaan.
-                        Link: https://pvegenerator.net/pvetool/project/{project.id}/check
+                        Link: https://pvegenerator.net/pvetool/{project.belegger.id}/project/{project.id}/check
                         """,
                         "admin@pvegenerator.net",
                         filteredDerden,
@@ -246,7 +246,7 @@ def SendReplies(request, client_pk, pk):
                         f"""U heeft reactie ontvangen van de opmerkingen van de derde partijen voor project {project}
                         
                         Klik op de link om rechtstreeks de opmerkingen te checken.
-                        Link: https://pvegenerator.net/pvetool/project/{project.id}/check
+                        Link: https://pvegenerator.net/pvetool/{project.belegger.id}/project/{project.id}/check
                         """,
                         "admin@pvegenerator.net",
                         [f"{projectmanager.email}"],
@@ -325,7 +325,7 @@ def FinalFreeze(request, client_pk, pk):
                 f"""Alle regels in het project {project} zijn akkoord mee gegaan en de projectmanager heeft het project afgesloten.
                 
                 Klik op de link om het PvE met alle opmerkingen en bijlages te downloaden.
-                Link: https://pvegenerator.net/pvetool/project/{project.id}/pve
+                Link: https://pvegenerator.net/pvetool/{project.belegger.id}/project/{project.id}/pve
                 """,
                 "admin@pvegenerator.net",
                 filteredDerden,
@@ -338,7 +338,7 @@ def FinalFreeze(request, client_pk, pk):
                 f"""Alle regels in het project {project} zijn akkoord mee gegaan en de projectmanager heeft het project afgesloten.
                 
                 Klik op de link om het PvE met alle opmerkingen en bijlages te downloaden.
-                Link: https://pvegenerator.net/pvetool/project/{project.id}/pve
+                Link: https://pvegenerator.net/pvetool/{project.belegger.id}/project/{project.id}/pve
                 """,
                 "admin@pvegenerator.net",
                 [f"{projectmanager.email}"],
