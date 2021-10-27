@@ -51,28 +51,20 @@ def FirstFreeze(request, client_pk, pk):
                 frozencomments.save()
                 changed_comments = project.annotation.select_related("item").all()
 
-
                 changed_items_ids = [comment.item.id for comment in changed_comments]
                 unchanged_items = project.item.exclude(id__in=changed_items_ids)
                 # add all initially changed comments to it
                 frozencomments.comments.add(*changed_comments)
 
-                comment_list = []
-                # create todo pveannotations for ignored items, change to bulk_create for optimization
-                for item in unchanged_items:
-                    comment = PVEItemAnnotation()
-                    comment.project = project
-                    comment.item = item
-                    comment.gebruiker = request.user
-                    comment.init_accepted = True
-                    comment.save()
-                    comment_list.append(comment)
+                comment_list = [PVEItemAnnotation(project=project, item=item, gebruiker=request.user, init_accepted=True) for item in unchanged_items]
                 
+                PVEItemAnnotation.objects.bulk_create(comment_list)
                 frozencomments.todo_comments.add(*comment_list)
 
                 frozencomments.project = project
                 frozencomments.level = 1
                 frozencomments.save()
+
                 if project.first_annotate == "SOG":
                     allprojectusers = project.permitted.all()
                     filteredDerden = [
@@ -110,7 +102,7 @@ def FirstFreeze(request, client_pk, pk):
 
                     messages.warning(
                         request,
-                        f"Uitnodiging voor opmerkingen checken verstuurd naar de projectmanager {projectmanager.naam} via email.",
+                        f"Uitnodiging voor opmerkingen checken verstuurd naar de projectmanager {projectmanager.username} via email.",
                     )
 
                 return redirect("viewproject_syn", client_pk=client_pk, pk=project.id)

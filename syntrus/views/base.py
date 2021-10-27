@@ -8,7 +8,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 
 from app import models
-from project.models import Project, PVEItemAnnotation, Beleggers, BeheerdersUitnodiging
+from project.models import Project, PVEItemAnnotation, Beleggers, BeheerdersUitnodiging, BijlageToAnnotation
 from syntrus import forms
 from syntrus.models import FAQ
 from utils import createBijlageZip, writePdf, pve_csv_extract
