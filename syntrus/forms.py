@@ -231,7 +231,7 @@ class BijlageToAnnotationForm(ModelForm):
         widgets = {"ann": forms.HiddenInput()}
 
 class FirstAnnotationForm(forms.Form):
-    annotation = forms.CharField(label="annotation", required=True, widget=forms.Textarea)
+    annotation = forms.CharField(label="annotation", required=True, widget=forms.Textarea(attrs={'rows':3, 'cols':10}))
 
 class FirstKostenverschilForm(forms.Form):
     kostenverschil = forms.DecimalField(
