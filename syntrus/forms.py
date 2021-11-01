@@ -248,6 +248,14 @@ class FirstBijlageForm(ModelForm):
         model = BijlageToAnnotation
         fields = ("bijlage", "ann",)
         labels = {"bijlage": "", "ann": ""}
+
+class PongBijlageForm(ModelForm):
+    class Meta:
+        model = BijlageToReply
+        fields = ("bijlage", "reply",)
+        labels = {"bijlage": "", "reply": ""}
+
+
 class AddOrganisatieForm(forms.Form):
     naam = forms.CharField(max_length=100)
 

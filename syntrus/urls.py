@@ -126,7 +126,21 @@ urlpatterns = [
     path("<int:client_pk>/project/<int:pk>/firstfreeze", actionsPingPong.FirstFreeze, name="firstfreeze_syn"),
 
     # Ping pong process
-    path("<int:client_pk>/project/<int:proj_id>/check", crudPingPong.CheckComments, name="commentscheck_syn"),
+    path("<int:client_pk>/project/<int:proj_id>/check", crudPingPong.CheckComments_temp, name="commentscheck_syn"),
+    path("<int:client_pk>/getparagravenpingpong/<int:pk>/<int:hoofdstuk_pk>/<int:type>/<int:accept>", crudPingPong.GetParagravenPingPong, name="getparagravenpingpong"),
+    path("<int:client_pk>/getitemspingpong/<int:pk>/<int:hoofdstuk_pk>/<int:paragraaf_id>/<int:type>/<int:accept>", crudPingPong.GetItemsPingPong, name="getitemspingpong"),
+    path("<int:client_pk>/detailitempong/<int:project_pk>/<int:item_pk>", crudPingPong.DetailItemPong, name="detailitempong"),
+    path("<int:client_pk>/detailpongstatus/<int:project_pk>/<int:item_pk>", crudPingPong.DetailStatusPong, name="detailpongstatus"),
+    path("<int:client_pk>/toggleaccept/<int:project_pk>/<int:item_pk>", crudPingPong.DetailAcceptPong, name="detailpongaccept"),
+    path("<int:client_pk>/acceptitempong/<int:project_pk>/<int:item_pk>", crudPingPong.AcceptItemPong, name="acceptitempong"),
+    path("<int:client_pk>/nonacceptitempong/<int:project_pk>/<int:item_pk>", crudPingPong.NonAcceptItemPong, name="nonacceptitempong"),
+    path("<int:client_pk>/detailpongreply/<int:project_pk>/<int:item_pk>", crudPingPong.DetailReplyPong, name="detailpongreply"),
+    path("<int:client_pk>/detailpongkostenverschil/<int:project_pk>/<int:item_pk>", crudPingPong.DetailKostenverschilPong, name="detailpongkostenverschil"),
+    path("<int:client_pk>/addstatuspong/<int:project_pk>/<int:item_pk>", crudPingPong.AddStatusPong, name="addstatuspong"),
+    path("<int:client_pk>/addreplypong/<int:project_pk>/<int:item_pk>", crudPingPong.AddReplyPong, name="addreplypong"),
+    path("<int:client_pk>/addkostenverschilpong/<int:project_pk>/<int:item_pk>", crudPingPong.AddKostenverschilPong, name="addkostenverschilpong"),
+    path("<int:client_pk>/addbijlagepong/<int:project_pk>/<int:item_pk>/<int:annotation_pk>", crudPingPong.AddBijlagePong, name="addbijlagepong"),
+
     # CRUD of replies and attachments to replies
     path("<int:client_pk>/project/<int:pk>/replies/my", crudPingPong.MyReplies, name="myreplies_syn"),
     path(

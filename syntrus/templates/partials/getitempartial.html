@@ -1,0 +1,34 @@
+{% extends '_partial.html' %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+{% load cache %}
+{% block main %}
+
+<p style="font-style:italic;">
+{{ item.inhoud }}
+
+{% if annotation.annotation %}
+    <span><p><b>Aanvulling:</b> {{ annotation.annotation }}</p></span>
+{% endif %}
+
+{% if annotationbijlage.bijlage %}
+<span><a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project_pk annotation.id %}" target="_blank"><b>Bijlage:  </b><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
+</span>
+{% endif %}
+
+{% for reply in replies %}
+{% if reply.comment %}
+<span><p><b>Opmerking laag {{ reply.commentphase.level }}:</b> {{ reply.comment }}. </p></span>
+{% endif %}
+{% if bijlagen.reply %} 
+<span>
+<p>Bijlage: <a href="{% url 'downloadreplyattachment_syn' client_pk item.id %}" target="_blank">
+<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img>
+</a>. </p></span>
+{% endif %}
+
+{% endfor %}
+
+{% endblock %}

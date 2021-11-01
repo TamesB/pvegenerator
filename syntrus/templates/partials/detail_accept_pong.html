@@ -1,0 +1,26 @@
+{% block main %}  
+<span hx-target="this" hx-swap="outerHTML">
+{% if current_reply %}
+{% if current_reply.accept %}
+<button
+hx-post="{% url 'nonacceptitempong' client_pk project_pk item_pk %}"
+    class="ui basic red button d-inline"
+    type="button"
+    >Afwijzen</button>
+{% else %}
+<button
+hx-post="{% url 'acceptitempong' client_pk project_pk item_pk %}"
+    class="ui basic green button d-inline"
+    type="button">Accepteren</button>
+{% endif %}
+{% else %}
+<button
+hx-post="{% url 'acceptitempong' client_pk project_pk item_pk %}"
+    class="ui basic green button d-inline"
+    type="button">Accepteren</button>
+{% endif %}
+{% endblock %}
+</span>
+{% block scripts %}
+{% include "partials/messages.html" %}
+{% endblock %}

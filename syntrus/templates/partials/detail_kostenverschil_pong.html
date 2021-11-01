@@ -1,0 +1,20 @@
+{% block main %}
+<span hx-target="this" hx-swap="outerHTML">
+{% if last_reply.kostenConsequenties %}
+    <p><b>Kostenverschil (laag {{ last_reply.commentphase.level }}): €{{ last_reply.kostenConsequenties }}</b></p>
+{% elif annotation.kostenConsequenties %}
+    <p><b>Kostenverschil: €{{ annotation.kostenConsequenties }}</b></p>
+{% endif %}
+
+{% if not current_reply.accept %}
+{% if current_reply.kostenConsequenties %}
+    <b>Voorgestelde Kostenverschil: €{{ current_reply.kostenConsequenties }}
+    <span><button hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk %}" class="ui basic icon button"><i class="icon edit"></i></button></span></b>
+{% else %}
+    <p><button hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon plus"></i>Kostenverschilverandering</button></p>
+{% endif %}
+{% endif %}
+</span>
+{% endblock %}{% block scripts %}
+{% include 'partials/messages.html' %}
+{% endblock %}

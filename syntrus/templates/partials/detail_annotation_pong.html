@@ -1,0 +1,28 @@
+{% load static %}
+{% block main %}
+<span hx-target="this" hx-swap="outerHTML">
+{% if not current_reply.accept %}
+{% if current_reply.comment %}
+    <span><p><b>Uw reactie:</b> {{ current_reply.comment }} <span><button hx-get="{% url 'addreplypong' client_pk project_pk item_pk %}" class="ui basic icon button">
+    <i class="icon edit"></i></button></span></p></span>
+    <p>
+    {% if bijlage.bijlage %}
+    <span><a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project_pk current_reply.id %}" target="_blank"><b>Bijlage:  </b><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
+    </span>
+    {% endif %}
+
+    {% if not bijlage.bijlage %}
+    <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id %}" class="ui basic button"><i class="icon plus"></i>Upload Bijlage</button>
+    {% else %}
+    <span><button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
+
+    </p>
+    {% endif %}
+{% else %}
+    <button hx-get="{% url 'addreplypong' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon plus"></i>Reactie</button>
+{% endif %}
+{% endif %}
+</span>
+{% endblock %}{% block scripts %}
+{% include 'partials/messages.html' %}
+{% endblock %}
