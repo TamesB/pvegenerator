@@ -1223,12 +1223,13 @@ html {
             }
 
             .item_content {
-              display: flex;
-              font-size: 1.5vh;
-              padding-top: 0.5vh;
-              padding-bottom: 0.5vh;
-              justify-content: space-between;
-
+              .item_deeper {
+                display: flex;
+                font-size: 1.5vh;
+                padding-top: 0.5vh;
+                padding-bottom: 0.5vh;
+                justify-content: space-between;
+  
               .text_left {
                 padding-left: 4vw;
                 flex: 0 0 60%;
@@ -1256,6 +1257,7 @@ html {
                 color: red;
                 font-weight: 700;
               }
+            }
             }
             .item_content:nth-child(even) {
               background-color: white;

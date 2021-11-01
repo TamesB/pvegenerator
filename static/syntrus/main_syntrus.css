@@ -1357,7 +1357,7 @@ html {
   display: block;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content {
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1369,7 +1369,7 @@ html {
           justify-content: space-between;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .text_left {
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .text_left {
   padding-left: 4vw;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 60%;
@@ -1378,7 +1378,7 @@ html {
   overflow: auto;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .text_right {
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .text_right {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 40%;
           flex: 0 0 40%;
@@ -1398,7 +1398,7 @@ html {
           align-items: center;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .status_added {
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .status_added {
   padding-top: 1vh;
   -webkit-box-flex: 1;
       -ms-flex: 1;
@@ -1407,7 +1407,7 @@ html {
   font-weight: 700;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .status_not_added {
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .status_not_added {
   padding-top: 1vh;
   -webkit-box-flex: 1;
       -ms-flex: 1;
