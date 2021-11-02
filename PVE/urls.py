@@ -16,7 +16,7 @@ urlpatterns = [
     path("beheer/generator/", include("generator.urls")),
     path("beheer/users/", include("users.urls")),
     path("admin/", admin.site.urls),
-    path("pvetool/", include("syntrus.urls")),
+    path("pvetool/", include("pvetool.urls")),
 ]
 
 if settings.DEBUG:

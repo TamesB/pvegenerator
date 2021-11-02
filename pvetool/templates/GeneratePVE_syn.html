@@ -1,0 +1,75 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+{% block menu %}
+{% include 'MenuTypes.html' %}
+{% endblock %}
+
+{% block main %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Genereer PvE</div>
+</div>
+
+<div class="general_title"><img src="{% static 'pvetool/img/genereer.png'%}" class="title_img"></img><p>Genereer PVE (Versie: {{ versie.versie }})</p></div>
+<div class="generator_form">
+    <form action="{% url 'generate_syn' client_pk versie_pk %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="parameter_container">
+        <div class="parameter_item">
+            <label for="{{ form.TypeObject1.id_for_label }}">Bouwsoort</label>
+            <p class="formbox">{{ form.Bouwsoort1 }}</p>
+            <label for="{{ form.Bouwsoort1.id_for_label }}">Type Object</label>
+            <p class="formbox">{{ form.TypeObject1 }}</p>
+            <label for="{{ form.Doelgroep1.id_for_label }}">Doelgroep</label>
+            <p class="formbox">{{ form.Doelgroep1 }}</p>
+            <p class="under_text">Hoofd<popup-notify><span slot="message">Het hoofdobject van het project, alleen de bouwsoort is vereist, de rest is optioneel.</span></popup-notify></p>
+        </div>        
+        <div class="parameter_item">
+            <label for="{{ form.TypeObject2.id_for_label }}">Bouwsoort</label>
+            <p class="formbox">{{ form.Bouwsoort2 }}</p>
+            <label for="{{ form.Bouwsoort2.id_for_label }}">Type Object</label>
+            <p class="formbox">{{ form.TypeObject2 }}</p>
+            <label for="{{ form.Doelgroep2.id_for_label }}">Doelgroep</label>
+            <p class="formbox">{{ form.Doelgroep2 }}</p>
+            <p class="under_text">Sub<popup-notify><span slot="message">Mits er meer soorten objecten in het project zijn. Beide sub objecten zijn optioneel.</span></popup-notify></p>
+        </div>        
+        <div class="parameter_item">
+            <label for="{{ form.TypeObject3.id_for_label }}">Bouwsoort</label>
+            <p class="formbox">{{ form.Bouwsoort3 }}</p>
+            <label for="{{ form.Bouwsoort3.id_for_label }}">Type Object</label>
+            <p class="formbox">{{ form.TypeObject3 }}</p>
+            <label for="{{ form.Doelgroep3.id_for_label }}">Doelgroep</label>
+            <p class="formbox">{{ form.Doelgroep3 }}</p>
+            <p class="under_text">Sub</p>
+        </div>
+    </div>
+    <div class="specific_items"><p>Specifieke Regels<popup-notify><span slot="message">Extra specifieke regels die bij objecten horen (zit er een AED bij het object? Zijn het smarthomes?)</span></popup-notify></p></div>
+    <div class="specific_item_list">
+        <ul>
+            <li>{{ form.Smarthome }}<label for="{{ form.Smarthome.id_for_label }}"><p>Smarthome</p></label></li>
+            <li>{{ form.AED }}<label for="{{ form.AED.id_for_label }}"><p>AED</p></label></li>
+            <li>{{ form.EntreeUpgrade }}<label for="{{ form.EntreeUpgrade.id_for_label }}"><p>Entree Upgrade</p></label></li>
+            <li>{{ form.Pakketdient }}<label for="{{ form.Pakketdient.id_for_label }}"><p>Pakketdienst</p></label></li>
+            <li>{{ form.JamesConcept }}<label for="{{ form.JamesConcept.id_for_label }}"><p>James Concept</p></label></li>
+        </ul>
+    </div>
+    <input type="submit" value="Genereer" class="genereer_button" id="genereer_button">
+
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function(){
+    $("#genereer_button").onClick(function(){
+    $("#spinner").modal({backdrop: "static"});
+  });
+}
+</script>
+{% endblock %}

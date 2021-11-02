@@ -20,9 +20,9 @@ class Migration(migrations.Migration):
             field=models.CharField(
                 choices=[
                     ("B", "Beheerder"),
-                    ("SB", "Syntrus Beheerder"),
-                    ("SOG", "Syntrus Projectmanager"),
-                    ("SD", "Syntrus Derden"),
+                    ("SB", "PVETool Beheerder"),
+                    ("SOG", "PVETool Projectmanager"),
+                    ("SD", "PVETool Derden"),
                 ],
                 default="SD",
                 max_length=3,

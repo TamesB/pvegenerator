@@ -16,7 +16,7 @@ class PDFMaker:
     def __init__(self, versienaam):
         self.date = datetime.datetime.now()
 
-        self.bedrijfsnaam = "Syntrus"
+        self.bedrijfsnaam = "PVETool"
 
         self.defaultPageSize = letter
         self.PAGE_HEIGHT = self.defaultPageSize[1]

@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
-from syntrus.views.utils import GetAWSURL
+from pvetool.views.utils import GetAWSURL
 from project.models import Beleggers
 from app import models
 from utils import createBijlageZip, writeDiffPdf, writePdf

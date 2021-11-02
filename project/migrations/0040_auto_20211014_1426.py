@@ -8,7 +8,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('syntrus', '0016_bijlagetoreply_naam'),
+        ('pvetool', '0016_bijlagetoreply_naam'),
         ('users', '0019_forgotpassinvite'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('app', '0019_auto_20211014_1426'),
@@ -93,7 +93,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='pveitemannotation',
             name='status',
-            field=models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='annotation', to='syntrus.commentstatus'),
+            field=models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='annotation', to='pvetool.commentstatus'),
         ),
         migrations.AddField(
             model_name='beleggers',

@@ -1,0 +1,13 @@
+{% extends "_partial.html" %}
+
+{% block main %}
+
+<div hx-target="this" hx-swap="outerHTML">
+{% if project.pveconnected %}
+<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="img" src="{% static 'pvetool/img/download.png' %}"></img></a>
+{% else %}
+<button hx-get="{% url 'kiespveversie' client_pk project.id %}" class="ui icon basic button"><i class="icon plus"></i>Verbind PvE</button>
+{% endif %}
+</div>
+
+{% endblock %}

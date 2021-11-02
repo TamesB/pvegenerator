@@ -8,7 +8,7 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 
 from project.models import Project, Beleggers
-from syntrus.views.utils import GetAWSURL
+from pvetool.views.utils import GetAWSURL
 from . import forms, models
 
 
@@ -126,7 +126,7 @@ def ForgotPassword(request, client_pk):
             invitation.save()
 
             send_mail(
-                f"Syntrus Projecten - Wachtwoord Reset",
+                f"PVETool Projecten - Wachtwoord Reset",
                 f"""U heeft aangevraagd uw wachtwoord te resetten. Klik op de link om uw wachtwoord opnieuw in te stellen.
                 
                 Link: https://pvegenerator.net/beheer/users/passreset/{invitation.key}

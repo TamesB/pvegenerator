@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("syntrus", "0006_commentstatus"),
+        ("pvetool", "0006_commentstatus"),
         ("project", "0018_auto_20201005_1922"),
     ]
 
@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 default=None,
                 on_delete=django.db.models.deletion.CASCADE,
-                to="syntrus.CommentStatus",
+                to="pvetool.CommentStatus",
             ),
         ),
     ]

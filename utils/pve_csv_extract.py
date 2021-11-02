@@ -3,7 +3,7 @@ from app import models
 from project.models import Beleggers
 
 #ADD THIS CODE IN A VIEW AND RUN IT TO ADD A VERSION OF PVE FROM THE PVE.CSV
-#WILL ADD ALL LINES OF PVE.CSV OF BELEGGER SYNTRUS
+#WILL ADD ALL LINES OF PVE.CSV OF BELEGGER PVETool
 #CAUTION: IF THE VERSION ALREADY EXISTS IT WILL GET OVERWRITTEN
 #
 #versie = "ADD_VERSION_NAME_HERE"
@@ -55,7 +55,7 @@ class ExtractPVE:
         else:
             versie_obj = models.PVEVersie()
             versie_obj.versie = versie
-            versie_obj.belegger = Beleggers.objects.filter(naam="Syntrus").first()
+            versie_obj.belegger = Beleggers.objects.filter(naam="PVETool").first()
             versie_obj.save()
             self.versie = versie_obj
 

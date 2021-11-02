@@ -1,0 +1,82 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+{% block menu %}
+{% include 'MenuTypes.html' %}
+{% endblock %}
+
+{% block main %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+<a class="section" href="{% url 'manageprojecten_syn' client_pk %}">Projecten</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Start Project</div>
+</div>
+
+<div class="general_title"><img src="{% static 'pvetool/img/plusproject.png'%}" class="title_img"></img><p>Start project</p></div>
+<div class="invite-container">
+    <div class="box">
+        <p class="description">Voeg de basisinformatie toe aan uw nieuwe project.</p>
+        <form action="{% url 'plusproject_syn' client_pk %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label class="formtitle" for="{{ form.naam.id_for_label }}"><p>Projectnaam:</p></label>
+            <p class="formbox">{{ form.naam }}</p>
+            <label class="formtitle" for="{{ form.nummer.id_for_label }}"><p>Projectnummer:</p></label>
+            <p class="formbox">{{ form.nummer }}</p>
+            <label class="formtitle" for="{{ form.vhe.id_for_label }}"><p>Aantal Verhuureenheden:</p></label>
+            <p class="formbox">{{ form.vhe }}</p>        
+            <label class="formtitle" for="{{ form.pensioenfonds.id_for_label }}"><p>Pensioenfonds:</p></label>
+            <p class="formbox">{{ form.pensioenfonds }}</p>
+            <label class="formtitle" for="{{ form.statuscontract.id_for_label }}"><p>Contractstatus:</p></label>
+            <p class="formbox">{{ form.statuscontract }}</p>
+            <label class="formtitle" for="{{ form.first_annotate.id_for_label }}"><p>Eerste statusaanwijzing naar:</p></label>
+            <p class="formbox">{{ form.first_annotate }}</p>
+            <label class="formtitle" for="{{ form.plaats.id_for_label }}"><p>Locatie (klik de plaats aan op de kaart):</p></label>
+            <p class="location-box">{{ form.plaats }}</p>
+            <input type="submit" class="button" value="Maak project aan">
+        </form>    
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize the map and assign it to a variable for later use
+    var map = L.map('map', {
+        // Set latitude and longitude of the map center (required)
+        center: [52.37, 4.895],
+        // Set the initial zoom level, values 0-18, where 0 is most zoomed-out (required)
+        zoom: 7
+    });
+
+    L.control.scale().addTo(map);
+
+    // Create a Tile Layer and add it to the map
+    //var tiles = new L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.png').addTo(map);
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var searchControl = new L.esri.Controls.Geosearch().addTo(map);
+
+    var results = new L.LayerGroup().addTo(map);
+
+    searchControl.on('results', function(data){
+        results.clearLayers();
+        for (var i = data.results.length - 1; i >= 0; i--) {
+        results.addLayer(L.marker(data.results[i].latlng));
+        }
+    });
+
+    setTimeout(function(){$('.pointer').fadeOut('slow');},3400);
+
+$(document).ready(function(){
+    $('[value=""]').remove();
+});
+
+</script>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+{% block menu %}
+{% include 'MenuTypes.html' %}
+{% endblock %}
+
+{% block main %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Mijn Projecten</div>
+</div>
+{% language 'nl' %}
+<div class="opmerking_project_list">
+    <div class="general_title"><img src="{% static 'pvetool/img/accountsderden.png'%}" class="title_img"></img><p>Bekijk mijn projecten</p></div>
+    <input type="text" class="searchable_table_input" id="myInput" onkeyup="searchableLookup()" placeholder="Zoek op project.." title="Typ een project in">
+<div class="base_info_table">
+  <table id="myTable">
+      <tbody>
+        <tr class="table_title">
+          <th><p>Project</p></th>
+          <th><p>Checklist Status</p></th>
+          <th><p>Laatst veranderd</p></th>
+        </tr>
+        {% if projects %}
+        {% for project in projects %}
+        <tr class="table_content">
+          <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
+          <td><p>
+          {% if project.frozenLevel == 0 %}
+            {% if derden_toegevoegd|index:forloop.counter0 %}
+              {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
+                <a href="{% url 'plusopmerking_syn' client_pk project.id %}"><button class="ui basic button">Eerste statusaanwijzing<i class="right arrow icon"></i></button></a>
+              {% else %}
+                <i>Eerste statusaanwijzing</i>
+              {% endif %}
+            {% else %}
+              {% if request.user.type_user == "SOG" %}
+                <a href="{% url 'sogaddderden' client_pk project.id %}"><button class="ui basic button">Voeg derden toe<i class="right arrow icon"></i></button></a>
+              {% else %}
+                <i>Nog geen derden</i>
+              {% endif %}
+            {% endif %}
+
+          {% else %}
+            {% if request.user.type_user != first_annotate|index:forloop.counter0 %}
+              {% if not project.frozenLevel|divisibleby:2 %}
+                <a href="{% url 'commentscheck_syn' client_pk project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>
+              {% else %}
+                <i>Beurt van andere partij</i>
+              {% endif %}
+            {% else %}
+              {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
+                {% if project.frozenLevel|divisibleby:2 %}
+                  <a href="{% url 'commentscheck_syn' client_pk project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>
+                {% else %}
+                  <i>Beurt van andere partij</i>
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% endif %}
+          </p></td> 
+          <td><p>{{ project.datum_recent_verandering }}</p></td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr class="table_content">
+          <td><p>Nog geen projecten van u.</p></td>
+          <td><p>&nbsp;</p></td>
+          <td><p>&nbsp;</p></td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+</div>
+</div>
+{% endlanguage %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+$('th').click(function(){
+    var table = $(this).parents('table').eq(0)
+    var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+    this.asc = !this.asc
+    if (!this.asc){rows = rows.reverse()}
+    for (var i = 0; i < rows.length; i++){table.append(rows[i])}
+})
+function comparer(index) {
+    return function(a, b) {
+        var valA = getCellValue(a, index), valB = getCellValue(b, index)
+        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+    }
+}
+function getCellValue(row, index){ return $(row).children('td').eq(index).text() }
+
+function searchableLookup() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+
+</script>
+{% endblock %}

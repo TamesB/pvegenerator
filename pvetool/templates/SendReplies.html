@@ -1,0 +1,37 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+{% block menu %}
+{% include 'MenuTypes.html' %}
+{% endblock %}
+
+{% block main %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewprojectoverview_syn' client_pk %}">Mijn Projecten</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewproject_syn' client_pk project.id %}">Project: {{ project.naam }}</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'commentscheck_syn' client_pk project.id %}">Checklist</a>
+  <i class="right chevron icon divider"></i>  
+  <div class="active section">Doorsturen</div>
+</div>
+
+<div class="general_title"><img src="{% static 'pvetool/img/accountsderden.png' %}" class="title_img"></img><p>Doorsturen</p></div>
+<div class="invite-container">
+    <div class="box">
+            <p class="description">Stuur uw reacties en afwijkingen door. Regels waar geen wijziging aan is toegevoegd worden genoteerd als geaccepteerd, of als TODO als er nog geen originele status is aan toegevoegd.</p>
+        <form action="{% url 'sendreplies_syn' client_pk pk %}" method="post">
+            {% csrf_token %}
+            <p><label class="formtitle" for="{{ form.confirm.id_for_label }}">Vink aan voor bevestiging.</label></p>
+            <p class="formbox">{{ form.confirm }}</p>
+            <div><input type="submit" class="button" value="Stuur door"></div>
+        </form>    
+    </div>
+</div>
+
+{% endblock %}

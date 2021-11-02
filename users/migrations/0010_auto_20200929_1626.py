@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
             model_name="invitation",
             name="rang",
             field=models.CharField(
-                choices=[("SOG", "Syntrus Projectmanager"), ("SD", "Derde")],
+                choices=[("SOG", "PVETool Projectmanager"), ("SD", "Derde")],
                 default="SD",
                 max_length=3,
             ),

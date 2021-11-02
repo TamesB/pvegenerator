@@ -1,0 +1,117 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+{% block menu %}
+{% include 'MenuTypes.html' %}
+{% endblock %}
+
+{% block main %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Werknemers</div>
+</div>
+
+<div class="opmerking_project_list">
+    <div class="general_title"><img src="{% static 'pvetool/img/accountsderden.png'%}" class="title_img"></img><p>Werknemers <a href="{% url 'plusaccount_syn' client_pk %}"><button class="ui icon green button"><i class="icon plus"></i>Nodig uit</button></a></p> </div>
+<input type="text" class="searchable_table_input" id="myInput" onkeyup="searchableLookup()" placeholder="Zoek op werknemer.." title="Typ een werknemer in">
+
+
+<div class="base_info_table">
+  <table id="myTable">
+    <tbody>
+        <tr class="table_title">
+          <th><p>Naam (E-mail)</p></th>
+          <th><p>Laatst gezien</p></th>
+          <th><p>Rang</p></th>
+          <th><p>Stakeholder</p></th>
+          <th><p>Projecten</p></th>
+          <th><p>Acties</p></th>
+        </tr>
+        {% if werknemers %}
+            {% for werknemer in werknemers %}
+                      {% language 'nl' %}
+        <tr class="table_content">
+          <td><p>{{ werknemer.username }} (<a onclick="copyToClipboard()" id="emailClip">{{ werknemer.email }}</a>)</p></td>
+          <td><p>{{ werknemer.last_visit }}</p></td>
+          <td><p>{% if werknemer.type_user == "SD"%}Derde{% endif %}{% if werknemer.type_user == "SOG"%}{{ client.naam }} Projectmanager{% endif %}</p></td>
+          <td><p>{% if werknemer.organisatie %}{{ werknemer.organisatie }}{% else %}<i>Geen</i>{% endif %}</p></td>
+          <td><p>{% if werknemer.organisatie.projecten.all %}{% for project in werknemer.organisatie.projecten.all %}{{ project }}, {% endfor %}{% else %}<i>Geen</i>{% endif %}</p></td>
+          <td><p><a href="#"><button class="ui icon basic button"><i class="icon edit"></i></button></a></p></td>
+          {% endlanguage %}
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+          <td><p>
+          <i>Nog geen werknemers toegevoegd.</i>
+          </p></td>
+        </tr>
+        {% endif %}
+        <tr>
+            <td><p>
+            </p></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</div>
+{% endblock %}
+{% block modal %}
+{% endblock %}
+{% block scripts %}
+<script>
+$('th').click(function(){
+    var table = $(this).parents('table').eq(0)
+    var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+    this.asc = !this.asc
+    if (!this.asc){rows = rows.reverse()}
+    for (var i = 0; i < rows.length; i++){table.append(rows[i])}
+})
+function comparer(index) {
+    return function(a, b) {
+        var valA = getCellValue(a, index), valB = getCellValue(b, index)
+        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+    }
+}
+function getCellValue(row, index){ return $(row).children('td').eq(index).text() }
+
+function searchableLookup() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+
+function copyToClipboard() {
+  /* Get the text field */
+  var copyText = document.getElementById("emailClip");
+
+  /* Select the text field */
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+  /* Copy the text inside the text field */
+  document.execCommand("copy");
+
+  /* Alert the copied text */
+  alert("Tekst gekopieerd: " + copyText.value);
+}
+</script>
+{% endblock %}

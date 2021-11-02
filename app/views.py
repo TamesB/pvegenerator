@@ -15,7 +15,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.core.mail import send_mail
-from syntrus.views.utils import GetAWSURL
+from pvetool.views.utils import GetAWSURL
 from project.models import Beleggers, Project, BeheerdersUitnodiging
 from utils import writeExcel
 from users.models import CustomUser

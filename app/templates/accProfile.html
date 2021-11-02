@@ -9,11 +9,11 @@
 <h1 class="ui header">Gebruiker: {{ user.username }}</h1>
 <h4 class="ui header">Rang:                         
                         {% if user.type_user == 'SD' %}
-                            Syntrus Derde
+                            pvetool Derde
                         {% elif user.type_user == 'SOG' %}
-                            Syntrus Projectmanager
+                            pvetool Projectmanager
                         {% elif user.type_user == 'SB' %}
-                            Syntrus Beheerder
+                            pvetool Beheerder
 						{% else %}
 							Beheerder
                         {% endif %}

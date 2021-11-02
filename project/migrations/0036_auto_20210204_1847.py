@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("syntrus", "0011_commentreply_accept"),
+        ("pvetool", "0011_commentreply_accept"),
         ("project", "0035_pveitemannotation_init_accepted"),
     ]
 
@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 default=None,
                 null=True,
                 on_delete=django.db.models.deletion.CASCADE,
-                to="syntrus.CommentStatus",
+                to="pvetool.CommentStatus",
             ),
         ),
     ]

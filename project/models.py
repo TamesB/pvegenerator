@@ -176,7 +176,7 @@ class PVEItemAnnotation(models.Model):
     item = models.ForeignKey("app.PVEItem", on_delete=models.CASCADE, default=None, related_name="annotation")
     annotation = models.TextField(max_length=1000, default=None, null=True)
     status = models.ForeignKey(
-        "syntrus.CommentStatus", on_delete=models.CASCADE, default=None, null=True, related_name="annotation"
+        "pvetool.CommentStatus", on_delete=models.CASCADE, default=None, null=True, related_name="annotation"
     )
     gebruiker = models.ForeignKey(
         "users.CustomUser", on_delete=models.CASCADE, default=None, null=True, related_name="annotation"

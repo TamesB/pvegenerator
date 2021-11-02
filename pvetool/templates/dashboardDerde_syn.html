@@ -1,0 +1,197 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+{% block menu %}
+{% include 'MenuTypes.html' %}
+{% endblock %}
+
+{% block main %}
+<div class="profile_box">
+  <div class="profile_content">
+  <div class="profile_left"><img class="round-profile" src="{% static 'pvetool/svg/anonprofile.svg' %}"></img></div>
+  <div class="profile_right">
+  <table>
+    <tr>
+      <td><p class="profile-title">Naam:</p></td>
+      <td><p>{{ request.user }}</p></td>
+    </tr>
+    <tr>
+      <td><p class="profile-title">Stakeholder:</p></td>
+      <td><p>{% if request.user.organisatie %}{{ request.user.organisatie }}{% else %}<i>Geen</i>{% endif %}</p></td>
+    </tr>
+  </table>
+  </div>
+  </div>
+  <div class="profile_bottom">
+    <p>Medewerker</p>
+  </div>
+</div>
+
+<div class="flex-container">
+  <div class="flex-item tooltip" onClick="tooltip.pop(this, '#download_pve_menu', {position:0, cssClass:'no-padding'})">
+    <img class="flex-img" src="{% static 'pvetool/img/download.png' %}"></img>
+    <p>Download PVE</p>
+  </div>
+  <div class="flex-item" onClick="tooltip.pop(this, '#add_opmerking_menu', {position:0, cssClass:'no-padding'})">
+    <img class="flex-img" src="{% static 'pvetool/img/opmerking.png' %}"></img>
+    <p>To Do Checklist</p>
+  </div>
+</div>
+
+<div class="base_info_table">
+  <table id="myTable">
+      <tbody>
+        <tr class="table_title">
+          <th><p>Projectnummer</p></th>
+          <th><p>Projectnaam</p></th>
+          <th><p>Locatie</p></th>
+          <th><p>Aantal VHE</p></th>
+          <th><p>Fase</p></th>
+          <th><p>Projectmanager</p></th>
+          <th><p>Checklist</p></th>
+          <th><p>Download</p></th>
+        </tr>
+        {% if projects %}
+        {% for project in projects %}
+        <tr class="table_content">
+          <td><p>{{ project.nummer }}</p></td>
+      <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
+          <td><p>{{ project.plaatsnamen }}</p></td>
+          <td><p>{{ project.vhe }}</p></td>
+          <td><p>{{ project.statuscontract }}</p></td>
+          <td><p>{% if project.projectmanager %}{{ project.projectmanager }}{% else %}<i>Geen Projectmanager</i>{% endif %}</p></td>
+          <td><p>
+          {% if project.frozenLevel == 0 %}
+            {% if derden_toegevoegd|index:forloop.counter0 %}
+              {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
+                <a href="{% url 'plusopmerking_syn' client_pk project.id %}"><button class="ui basic button">Eerste statusaanwijzing<i class="right arrow icon"></i></button></a>
+              {% else %}
+                <i>Eerste statusaanwijzing</i>
+              {% endif %}
+            {% else %}
+              {% if request.user.type_user == "SOG" %}
+                <a href="{% url 'sogaddderden' client_pk project.id %}"><button class="ui basic button">Voeg derden toe<i class="right arrow icon"></i></button></a>
+              {% else %}
+                <i>Nog geen derden</i>
+              {% endif %}
+            {% endif %}
+
+          {% else %}
+            {% if request.user.type_user != first_annotate|index:forloop.counter0 %}
+              {% if not project.frozenLevel|divisibleby:2 %}
+                <a href="{% url 'commentscheck_syn' client_pk project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>
+              {% else %}
+                <i>Beurt van andere partij</i>
+              {% endif %}
+            {% else %}
+              {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
+                {% if project.frozenLevel|divisibleby:2 %}
+                  <a href="{% url 'commentscheck_syn' client_pk project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>
+                {% else %}
+                  <i>Beurt van andere partij</i>
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% endif %}
+          </p></td> 
+          <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img src="{% static 'pvetool/img/download.png' %}"></img></a>{% else %}Nog geen PvE{% endif %}</p></td>
+        </tr>
+        {% endfor %}
+      {% else %}
+      <tr class="table_content">
+      <td><p>Nog geen projecten van u.</p></td>
+      <td><p>&nbsp;</p></td>
+      <td><p>&nbsp;</p></td>
+      <td><p>&nbsp;</p></td>
+      <td><p>&nbsp;</p></td>
+      <td><p>&nbsp;</p></td>
+      <td><p>&nbsp;</p></td>
+      <td><p>&nbsp;</p></td>
+      </tr>
+      {% endif %}
+      </tbody>
+  </table>
+</div>
+
+<div style="display:none; font-family: 'Montserrat'; font-size: 1vh;" class="popup_wrapper">
+<div id="download_pve_menu" class="download_pve_menu">
+      <table class="pop-up-table">
+        <thead>
+          <tr>
+            <th><p>Project</p></th>
+            <th><p>Download</p></th>
+          </tr>
+        </thead>
+        <tbody>
+        {% if projects %}
+        {% for project in projects %}
+          <tr>
+            <td><p>{{ project.naam }}</p></td>
+            <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="dimg" style="align-self: right; max-height: 2vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>{% else %}Niet beschikbaar{% endif %}</p></td>
+          </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+          <td><p>Nog geen projecten van u.</p></td>
+          <td><p>&nbsp;</p></td>
+        </tr>
+        {% endif %}
+        </tbody>
+      </table>
+</div>
+</div>
+
+<div style="display:none; font-family: 'Montserrat'; font-size: 1vh;" class="popup_wrapper">
+<div id="add_opmerking_menu" class="add_opmerking_menu">
+    <table class="pop_up_table">
+      <thead>
+        <tr class="table_title">
+          <th><p>Project</p></th>
+          <th><p>Checklist</p></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if projects %}
+            {% for project in projects %}
+            {% if derden_toegevoegd|index:forloop.counter0 %}
+                                    {% if project.frozenLevel == 0 %}
+                                    {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
+        <tr class="table_content">
+          <td><p>{{ project.naam }}</p></td>
+          <td class="link"><a href="{% url 'plusopmerking_syn' client_pk project.id %}"><img style="max-height: 2vh;" src="{% static 'pvetool/img/plus.png' %}"></img></a></p></td>
+        </tr>
+        {% endif %}
+                {% else %}
+                {% if not project.frozenLevel|divisibleby:2 %}
+                                    {% if request.user.type_user != first_annotate|index:forloop.counter0 %}
+        <tr class="table_content">
+          <td><p>{{ project.naam }}</p></td>
+          <td class="link"><a href="{% url 'commentscheck_syn' client_pk project.id %}"><img style="max-height: 2vh;" src="{% static 'pvetool/img/plus.png' %}"></img></a></p></td>
+        </tr>
+        {% endif %}
+        {% else %}
+                                    {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
+        <tr class="table_content">
+          <td><p>{{ project.naam }}</p></td>
+          <td class="link"><a href="{% url 'commentscheck_syn' client_pk project.id %}"><img style="max-height: 2vh;" src="{% static 'pvetool/img/plus.png' %}"></img></a></p></td>
+        </tr>
+        {% endif %}
+        {% endif %}
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+        
+        {% else %}
+        <tr class="table_content">
+          <td><p>Nog geen projecten van u.</p></td>
+          <td><p>&nbsp;</p></td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+</div>
+</div>
+
+{% endblock %}

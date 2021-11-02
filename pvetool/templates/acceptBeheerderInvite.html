@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="nl">
+    <head>
+        <meta name="viewport" content="initial-scale=1, width=device-width">
+        {% load static %}
+        {{ form.media }}
+        <script src="https://unpkg.com/htmx.org@1.5.0"></script>
+        <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+        <link rel="shortcut icon" type="image/png" href="{% static 'pvetool/favicon.ico' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'pvetool/main_pvetool.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'Semantic-UI-Alert.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'pvetool/w3.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'pvetool/tooltip.css' %}">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+              {% block head %}{% endblock %}
+              {% block topscripts %}{% endblock %}
+        <title>PvE Tool</title>
+    </head>
+    <body>
+        <div id="main">
+            <div class="layerOneInner">
+                <div class="header">
+
+                    <img src="{{ logo_url }}" class="logo_bg"></a>
+
+                    <ul class="menu_right">
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'logout_syn' client_pk %}">Afmelden</a></li>
+                        <li><a href="{% url 'dashboard_syn' client_pk %}">Ingelogd als {{ request.user }}</a></li>
+                    {% else %}
+                        <li><a href="#">&nbsp;</a></li>
+                    {% endif %}
+                    </ul>
+                </div>
+                <div class="article">
+                <div class="loader" style="display: none;"></div>
+                <div class="article_content">
+                <div class="invite-container">
+    <div class="box">
+        <p class="title">Uitnodiging voor de PvE Tool</p>
+        <p class="description">Maak uw wachtwoord aan, en u wordt als beheerder doorverwezen naar uw subwebsite. Vanaf daar kan u werknemers uitnodigen en projecten starten.</p>
+    <form action="{% url 'acceptuitnodigingbeheerder' client_pk key %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+            <label for="{{ form.password1.id_for_label }}">Wachtwoord:</label>
+            <p class="formbox">{{ form.password1 }}</p></div>
+       <div>     <label for="{{ form.password2.id_for_label }}">Herhaal wachtwoord:</label>
+            <p class="formbox">{{ form.password2 }}</p></div>
+            <input type="submit" class="button" value="Registreer">
+        </form>    
+    </div>
+</div>
+                {% block modal %}{% endblock %}
+                </div>
+                </div> 
+            </div>
+        </div>
+        <script src="https://unpkg.com/htmx.org@1.5.0"></script>
+        <script src="{% static 'semantic.min.js' %}"></script>  
+      <script type="text/javascript" src="{% static 'Semantic-UI-Alert.js' %}"></script>
+        <script src="{% static 'pvetool/main_pvetool.js' %}"></script>
+        <script src="{% static 'pvetool/fadeArticle.js' %}"></script>
+        <script src="{% static 'pvetool/tooltip.js' %}"></script>
+      <script>
+        {% for message in messages %}
+          $(document).ready(function() {
+          $.uiAlert({
+          textHead: 'Info', // header
+          text: '{{ message }}', // Text
+          bgcolor: '#55a9ee', // background-color
+          textcolor: '#fff', // color
+          position: 'bottom-left',// position . top And bottom ||  left / center / right
+          icon: 'info circle', // icon in semantic-UI
+          time: 8, // time
+            })
+          });
+        {% endfor %}
+      </script>
+    <script>
+      document.body.addEventListener("htmx:configRequest", (event) => {
+        event.detail.headers["X-CSRFToken"] = "{{ csrf_token }}";
+      });
+    </script>
+        {% block scripts %}{% endblock %}
+    </body>
+</html>
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+{% block main %}
+
+
+{% endblock %}

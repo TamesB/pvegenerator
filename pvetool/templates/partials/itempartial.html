@@ -1,0 +1,32 @@
+
+{% extends '_partial.html' %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+{% load cache %}
+{% block main %}
+{% for item in items %}
+    {% with regel=item|index:0 %}
+    {% with bijlage=item|index:1 %}
+        <div class="item_content" id="item_content-{{ regel.hoofdstuk.id }}-{{ regel.id }}">
+            <div class="text_left">
+                <p style="font-style:italic;">
+                {{ regel }}{% if bijlage %} 
+                Bijlage: <a href="{% url 'downloadbijlage' client_pk item.id %}" target="_blank">
+                <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img>
+                </a>
+                {% endif %}
+                </p>
+
+                <div hx-get="{% url 'detailfirstannotation' client_pk project.id regel.id %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></div>
+            </div>
+            <div class="text_right">
+            <span hx-get="{% url 'detailfirststatus' client_pk project.id regel.id %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
+            <span hx-get="{% url 'detailfirstkostenverschil' client_pk project.id regel.id %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
+            </div>
+        </div>
+    {% endwith %}
+    {% endwith %}
+{% endfor %}  
+{% endblock %}
