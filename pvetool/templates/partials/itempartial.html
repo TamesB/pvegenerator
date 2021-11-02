@@ -10,6 +10,7 @@
     {% with regel=item|index:0 %}
     {% with bijlage=item|index:1 %}
         <div class="item_content" id="item_content-{{ regel.hoofdstuk.id }}-{{ regel.id }}">
+        <div class="item_deeper">
             <div class="text_left">
                 <p style="font-style:italic;">
                 {{ regel }}{% if bijlage %} 
@@ -25,6 +26,7 @@
             <span hx-get="{% url 'detailfirststatus' client_pk project.id regel.id %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
             <span hx-get="{% url 'detailfirstkostenverschil' client_pk project.id regel.id %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
             </div>
+        </div>
         </div>
     {% endwith %}
     {% endwith %}
