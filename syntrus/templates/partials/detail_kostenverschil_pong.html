@@ -8,7 +8,7 @@
 
 {% if not current_reply.accept %}
 {% if current_reply.kostenConsequenties %}
-    <b>Voorgestelde Kostenverschil: €{{ current_reply.kostenConsequenties }}
+    <b>Uw voorgestelde kostenverschil: €{{ current_reply.kostenConsequenties }}
     <span><button hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk %}" class="ui basic icon button"><i class="icon edit"></i></button></span></b>
 {% else %}
     <p><button hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon plus"></i>Kostenverschilverandering</button></p>

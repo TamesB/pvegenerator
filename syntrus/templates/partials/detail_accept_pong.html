@@ -2,9 +2,14 @@
 <div class="item_deeper" hx-target="this" hx-swap="outerHTML">
             <div class="text_left">
                 <div hx-get="{% url 'detailitempong' client_pk project_pk item_pk %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></div>
-                {% if current_reply.accept == false %}
+                {% if current_reply %}
+                {% if current_reply.accept is False %}
                 <div hx-get="{% url 'detailpongreply' client_pk project_pk item_pk %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></div>
                 {% endif %}
+                {% else %}
+                <div hx-get="{% url 'detailpongreply' client_pk project_pk item_pk %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></div>
+                {% endif %}
+
             </div>
             <div class="text_right">
 {% if current_reply %}
@@ -25,11 +30,17 @@ hx-post="{% url 'acceptitempong' client_pk project_pk item_pk %}"
 hx-post="{% url 'acceptitempong' client_pk project_pk item_pk %}"
     class="ui basic green button d-inline"
     type="button">Accepteren</button>
-{% endif %}
-            {% if current_reply.accept == false %}
+{% endif %} 
+<!-- if false (somehow has to be like this) -->
+{% if current_reply %}
+            {% if current_reply.accept is False %}
             <span hx-get="{% url 'detailpongstatus' client_pk project_pk item_pk %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
             <span hx-get="{% url 'detailpongkostenverschil' client_pk project_pk item_pk %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
             {% endif %}
+{% else %}
+            <span hx-get="{% url 'detailpongstatus' client_pk project_pk item_pk %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
+            <span hx-get="{% url 'detailpongkostenverschil' client_pk project_pk item_pk %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
+{% endif %}
             </div>
 </div>
 

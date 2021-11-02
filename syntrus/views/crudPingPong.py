@@ -1149,6 +1149,8 @@ def DetailItemPong(request, client_pk, project_pk, item_pk):
     context["bijlagen"] = bijlagen
     context["annotation"] = annotation
     context["annotationbijlage"] = annotationbijlage
+    context["client_pk"] = client_pk
+    context["project_pk"] = project_pk
     return render(request, "partials/getitempartial.html", context)
 
 @login_required(login_url=reverse_lazy("login_syn", args={1,}))
@@ -1492,13 +1494,14 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk):
 
     if BijlageToReply.objects.filter(reply__id=annotation_pk).exists():
         bijlagemodel = BijlageToReply.objects.filter(reply__id=annotation_pk).first()
-        form = forms.PongBijlageForm(request.POST or None, instance=bijlagemodel)
+        form = forms.PongBijlageForm(request.POST or None, request.FILES or None, instance=bijlagemodel)
     else:
-        form = forms.PongBijlageForm(request.POST or None, initial={'reply': reply})
+        form = forms.PongBijlageForm(request.POST or None, request.FILES or None, initial={'reply': reply})
 
-
+    
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
+            print(form.cleaned_data['bijlage'])
             form.save()
             messages.warning(request, "Bijlage toegevoegd!")
             return redirect("detailpongreply", client_pk=client_pk, project_pk=project_pk, item_pk=item_pk)
