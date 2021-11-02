@@ -1086,11 +1086,12 @@ def GetItemsPingPong(request, client_pk, pk, hoofdstuk_pk, paragraaf_id, type, a
     context["items"] = items
     context["project"] = project
     context["client_pk"] = client_pk
+    context["type"] = type
     context["accept"] = accept
     return render(request, "partials/itempartialpong.html", context)
 
 @login_required(login_url=reverse_lazy("login_syn", args={1,}))
-def DetailItemPong(request, client_pk, project_pk, item_pk):
+def DetailItemPong(request, client_pk, project_pk, item_pk, type):
     context = {}
 
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -1150,11 +1151,12 @@ def DetailItemPong(request, client_pk, project_pk, item_pk):
     context["annotation"] = annotation
     context["annotationbijlage"] = annotationbijlage
     context["client_pk"] = client_pk
+    context["type"] = type
     context["project_pk"] = project_pk
     return render(request, "partials/getitempartial.html", context)
 
 @login_required(login_url=reverse_lazy("login_syn", args={1,}))
-def DetailStatusPong(request, client_pk, project_pk, item_pk):
+def DetailStatusPong(request, client_pk, project_pk, item_pk, type):
     context = {}
 
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -1206,10 +1208,11 @@ def DetailStatusPong(request, client_pk, project_pk, item_pk):
     context["annotation"] = annotation
     context["current_reply"] = current_reply
     context["status_reply"] = status_reply
+    context["type"] = type
     return render(request, "partials/detail_status_pong.html", context)
 
 @login_required(login_url=reverse_lazy("login_syn", args={1,}))
-def DetailReplyPong(request, client_pk, project_pk, item_pk):
+def DetailReplyPong(request, client_pk, project_pk, item_pk, type):
     context = {}
 
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -1253,10 +1256,11 @@ def DetailReplyPong(request, client_pk, project_pk, item_pk):
     context["reply"] = reply
     context["current_reply"] = reply
     context["bijlage"] = bijlage
+    context["type"] = type
     return render(request, "partials/detail_annotation_pong.html", context)
 
 @login_required(login_url=reverse_lazy("login_syn", args={1,}))
-def DetailKostenverschilPong(request, client_pk, project_pk, item_pk):
+def DetailKostenverschilPong(request, client_pk, project_pk, item_pk, type):
     context = {}
 
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -1308,10 +1312,11 @@ def DetailKostenverschilPong(request, client_pk, project_pk, item_pk):
     context["annotation"] = annotation
     context["current_reply"] = current_reply
     context["last_reply"] = last_reply
+    context["type"] = type
     return render(request, "partials/detail_kostenverschil_pong.html", context)
 
 @login_required(login_url=reverse_lazy("login_syn", args={1,}))
-def DetailAcceptPong(request, client_pk, project_pk, item_pk):
+def DetailAcceptPong(request, client_pk, project_pk, item_pk, type):
     context = {}
 
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -1354,10 +1359,11 @@ def DetailAcceptPong(request, client_pk, project_pk, item_pk):
     context["item_pk"] = item_pk
     context["current_reply"] = current_reply
     context["annotation"] = annotation
+    context["type"] = type
     return render(request, "partials/detail_accept_pong.html", context)
 
 @login_required(login_url=reverse_lazy("login_syn", args={1,}))
-def AcceptItemPong(request, client_pk, project_pk, item_pk):
+def AcceptItemPong(request, client_pk, project_pk, item_pk, type):
     context = {}
 
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -1404,10 +1410,11 @@ def AcceptItemPong(request, client_pk, project_pk, item_pk):
     context["item_pk"] = item_pk
     context["current_reply"] = current_reply
     context["annotation"] = annotation
+    context["type"] = type
     return render(request, "partials/detail_accept_pong.html", context)
 
 @login_required(login_url=reverse_lazy("login_syn", args={1,}))
-def NonAcceptItemPong(request, client_pk, project_pk, item_pk):
+def NonAcceptItemPong(request, client_pk, project_pk, item_pk, type):
     context = {}
 
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -1454,10 +1461,11 @@ def NonAcceptItemPong(request, client_pk, project_pk, item_pk):
     context["item_pk"] = item_pk
     context["current_reply"] = current_reply
     context["annotation"] = annotation
+    context["type"] = type
     return render(request, "partials/detail_accept_pong.html", context)
 
 @login_required(login_url=reverse_lazy("login_syn", args={1,}))
-def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk):
+def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type):
     context = {}
 
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -1504,7 +1512,7 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk):
             print(form.cleaned_data['bijlage'])
             form.save()
             messages.warning(request, "Bijlage toegevoegd!")
-            return redirect("detailpongreply", client_pk=client_pk, project_pk=project_pk, item_pk=item_pk)
+            return redirect("detailpongreply", client_pk=client_pk, project_pk=project_pk, item_pk=item_pk, type=type)
 
         messages.warning(request, "Fout met bijlage toevoegen. Probeer het opnieuw.")
 
@@ -1518,7 +1526,7 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk):
 
 
 @login_required(login_url=reverse_lazy("login_syn", args={1,}))
-def AddStatusPong(request, client_pk, project_pk, item_pk):
+def AddStatusPong(request, client_pk, project_pk, item_pk, type):
     context = {}
 
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -1572,7 +1580,7 @@ def AddStatusPong(request, client_pk, project_pk, item_pk):
                 reply.save()
 
             messages.warning(request, "Status toegevoegd!")
-            return redirect("detailpongstatus", client_pk=client_pk, project_pk=project_pk, item_pk=item_pk)
+            return redirect("detailpongstatus", client_pk=client_pk, project_pk=project_pk, item_pk=item_pk, type=type)
 
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
@@ -1581,7 +1589,7 @@ def AddStatusPong(request, client_pk, project_pk, item_pk):
     return render(request, "partials/form_status_pong.html", context)
 
 @login_required(login_url=reverse_lazy("login_syn", args={1,}))
-def AddKostenverschilPong(request, client_pk, project_pk, item_pk):
+def AddKostenverschilPong(request, client_pk, project_pk, item_pk, type):
     context = {}
 
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -1635,7 +1643,7 @@ def AddKostenverschilPong(request, client_pk, project_pk, item_pk):
                 reply.save()
 
             messages.warning(request, "Kostenverschil toegevoegd!")
-            return redirect("detailpongkostenverschil", client_pk=client_pk, project_pk=project_pk, item_pk=item_pk)
+            return redirect("detailpongkostenverschil", client_pk=client_pk, project_pk=project_pk, item_pk=item_pk, type=type)
 
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
@@ -1644,7 +1652,7 @@ def AddKostenverschilPong(request, client_pk, project_pk, item_pk):
     return render(request, "partials/form_kostenverschil_pong.html", context)
 
 @login_required(login_url=reverse_lazy("login_syn", args={1,}))
-def AddReplyPong(request, client_pk, project_pk, item_pk):
+def AddReplyPong(request, client_pk, project_pk, item_pk, type):
     context = {}
 
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -1698,10 +1706,11 @@ def AddReplyPong(request, client_pk, project_pk, item_pk):
                 reply.save()
 
             messages.warning(request, "Opmerking toegevoegd!")
-            return redirect("detailpongreply", client_pk=client_pk, project_pk=project_pk, item_pk=item_pk)
+            return redirect("detailpongreply", client_pk=client_pk, project_pk=project_pk, item_pk=item_pk, type=type)
 
     context["form"] = form
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
     context["item_pk"] = item_pk
+    context["type"] = type
     return render(request, "partials/form_annotation_pong.html", context)

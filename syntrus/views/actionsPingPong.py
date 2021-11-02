@@ -160,10 +160,11 @@ def SendReplies(request, client_pk, pk):
 
                 commentphase = (
                     FrozenComments.objects.filter(project=project)
+                    .prefetch_related("accepted_comments")
                     .order_by("-level")
                     .first()
                 )
-
+                current_accepted_comments_ids = [comment.id for comment in commentphase.accepted_comments.all()]
                 # create a new phase with 1 higher level
                 new_phase = FrozenComments()
                 new_phase.level = commentphase.level + 1
@@ -183,9 +184,9 @@ def SendReplies(request, client_pk, pk):
                 )
 
                 for comment in comments:
-                    if comment.accept:
+                    if comment.accept == True:
                         accepted_comment_ids.append(comment.onComment.id)
-                    else:
+                    if comment.accept == False:
                         non_accepted_comments_ids.append(comment.onComment.id)
 
                     # change original comments status if reply has it
@@ -204,12 +205,15 @@ def SendReplies(request, client_pk, pk):
 
                     total_comments_ids.append(comment.onComment.id)
 
-                # for the rest of the items without reply, if no status it is todo, if it has a status its automatically accepted
+                # for the rest of the items without reply, if no status it is todo, if it has a status it doesnt change tabs
                 non_reacted_comments = project.annotation.select_related("status").exclude(id__in=total_comments_ids)
 
                 for comment in non_reacted_comments:
-                    if not comment.status:
-                        todo_comment_ids.append(comment.id)
+                    if comment.id not in current_accepted_comments_ids:
+                        if not comment.status:
+                            todo_comment_ids.append(comment.id)
+                        else:
+                            non_accepted_comments_ids.append(comment.id)
                     else:
                         accepted_comment_ids.append(comment.id)
 
