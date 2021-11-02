@@ -1490,7 +1490,7 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk):
     if PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).exists():
         annotation = PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).first()
 
-    reply = CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk).first()
+    reply = CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk, commentphase=current_phase).first()
 
     if BijlageToReply.objects.filter(reply__id=annotation_pk).exists():
         bijlagemodel = BijlageToReply.objects.filter(reply__id=annotation_pk).first()
@@ -1552,8 +1552,8 @@ def AddStatusPong(request, client_pk, project_pk, item_pk):
         annotation = PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).first()
 
     reply = None
-    if CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk).exists():
-        reply = CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk).first()
+    if CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk, commentphase=current_phase).exists():
+        reply = CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk, commentphase=current_phase).first()
         form = forms.FirstStatusForm(request.POST or None, initial={'status': reply.status})
     else:
         form = forms.FirstStatusForm(request.POST or None)
@@ -1615,8 +1615,8 @@ def AddKostenverschilPong(request, client_pk, project_pk, item_pk):
         annotation = PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).first()
 
     reply = None
-    if CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk).exists():
-        reply = CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk).first()
+    if CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk, commentphase=current_phase).exists():
+        reply = CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk, commentphase=current_phase).first()
         form = forms.FirstKostenverschilForm(request.POST or None, initial={'kostenverschil': reply.kostenConsequenties})
     else:
         form = forms.FirstKostenverschilForm(request.POST or None)
@@ -1678,8 +1678,8 @@ def AddReplyPong(request, client_pk, project_pk, item_pk):
         annotation = PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).first()
 
     reply = None
-    if CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk).exists():
-        reply = CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk).first()
+    if CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk, commentphase=current_phase).exists():
+        reply = CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk, commentphase=current_phase).first()
         form = forms.FirstAnnotationForm(request.POST or None, initial={'annotation': reply.comment})
     else:
         form = forms.FirstAnnotationForm(request.POST or None)
