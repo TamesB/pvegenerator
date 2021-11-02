@@ -23,7 +23,7 @@
 
 <div class="opmerking_form">
 
-<div class="general_title"><img src="{% static 'pvetool/img/accountsderden.png'%}" class="title_img"></img><p>Checklist (Huidige laag: {{ commentphase.level }}) (Huidig kostenverschil: &#8364;{{ totale_kosten }})<input type="submit" class="submit_button" onClick="javascript:location.href='{% url 'sendreplies_syn' client_pk project.id %}';" value="Stuur door >"></input>
+<div class="general_title"><img src="{% static 'pvetool/img/accountsderden.png'%}" class="title_img"></img><p>Checklist (Huidige reactielaag: {{ commentphase.level }}) (Huidig kostenverschil: &#8364;{{ totale_kosten }})<input type="submit" class="submit_button" onClick="javascript:location.href='{% url 'sendreplies_syn' client_pk project.id %}';" value="Stuur door >"></input>
 </p></div>
 
 <div class="ui top attached tabular menu">
