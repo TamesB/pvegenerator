@@ -550,3 +550,137 @@ def AddAnnotationFirst(request, client_pk, project_pk, item_pk):
     context["project_pk"] = project_pk
     context["item_pk"] = item_pk
     return render(request, "partials/form_annotation_first.html", context)
+
+@login_required(login_url=reverse_lazy("login_syn",  args={1,},))
+def DeleteKostenverschilFirst(request, client_pk, project_pk, item_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    project = get_object_or_404(Project, pk=project_pk)
+    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user.type_user != project.first_annotate:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if project.frozenLevel > 0:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if not project.item.exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    annotation = None
+    if PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).exists():
+        annotation = PVEItemAnnotation.objects.filter(
+            project=project, item__id=item_pk
+        ).first()
+
+    if annotation:
+        annotation.kostenConsequenties = None
+        annotation.save()
+        messages.warning(request, "Kostenverschil verwijderd.")
+        return redirect(
+            "detailfirstkostenverschil",
+            client_pk=client_pk,
+            project_pk=project_pk,
+            item_pk=item_pk,
+        )
+
+    messages.warning(request, "Fout met kostenverschil verwijderen. Probeer het nog eens.")
+    return redirect(
+        "detailfirstkostenverschil",
+        client_pk=client_pk,
+        project_pk=project_pk,
+        item_pk=item_pk,
+    )
+
+@login_required(login_url=reverse_lazy("login_syn",  args={1,},))
+def DeleteAnnotationFirst(request, client_pk, project_pk, item_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    project = get_object_or_404(Project, pk=project_pk)
+    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user.type_user != project.first_annotate:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if project.frozenLevel > 0:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if not project.item.exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    annotation = None
+    if PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).exists():
+        annotation = PVEItemAnnotation.objects.filter(
+            project=project, item__id=item_pk
+        ).first()
+
+    if annotation:
+        annotation.annotation = None
+        annotation.save()
+
+        if annotation.bijlageobject.exists():
+            bijlage = annotation.bijlageobject.first()
+            bijlage.delete()
+            
+        messages.warning(request, "Aanvulling verwijderd. Als u een bijlage heb toegevoegd, is deze ook verwijderd.")
+        return redirect(
+            "detailfirstannotation",
+            client_pk=client_pk,
+            project_pk=project_pk,
+            item_pk=item_pk,
+        )
+
+    messages.warning(request, "Fout met aanvulling verwijderen. Probeer het nog eens.")
+    return redirect(
+        "detailfirstannotation",
+        client_pk=client_pk,
+        project_pk=project_pk,
+        item_pk=item_pk,
+    )
+
+@login_required(login_url=reverse_lazy("login_syn",  args={1,},))
+def DeleteStatusFirst(request, client_pk, project_pk, item_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    project = get_object_or_404(Project, pk=project_pk)
+    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user.type_user != project.first_annotate:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if project.frozenLevel > 0:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if not project.item.exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    annotation = None
+    if PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).exists():
+        annotation = PVEItemAnnotation.objects.filter(
+            project=project, item__id=item_pk
+        ).first()
+
+    if annotation:
+        annotation.status = None
+        annotation.save()
+        messages.warning(request, "Status verwijderd.")
+        return redirect(
+            "detailfirststatus",
+            client_pk=client_pk,
+            project_pk=project_pk,
+            item_pk=item_pk,
+        )
+
+    messages.warning(request, "Fout met status verwijderen. Probeer het nog eens.")
+    return redirect(
+        "detailfirststatus",
+        client_pk=client_pk,
+        project_pk=project_pk,
+        item_pk=item_pk,
+    )

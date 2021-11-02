@@ -3,7 +3,8 @@
 {% if annotation.status %}
     <div class="status_added" id="status-{{ item.id }}">
     <p>Status: {{ annotation.status }}
-    <span><button hx-get="{% url 'addstatusfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i class="icon edit"></i></button></span></p>
+    <span><button hx-get="{% url 'addstatusfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
+        <span><a hx-delete="{% url 'deletestatusfirst' client_pk project_pk item_pk %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></p>
 {% else %}
     <div class="status_not_added" id="status-{{ item.id }}">
     <button hx-get="{% url 'addstatusfirst' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon plus"></i>Status</button>

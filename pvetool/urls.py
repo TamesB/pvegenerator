@@ -95,6 +95,9 @@ urlpatterns = [
     path("<int:client_pk>/addstatusfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.AddStatusFirst, name="addstatusfirst"),
     path("<int:client_pk>/addannotationfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.AddAnnotationFirst, name="addannotationfirst"),
     path("<int:client_pk>/addkostenverschilfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.AddKostenverschilFirst, name="addkostenverschilfirst"),
+    path("<int:client_pk>/deletestatusfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DeleteStatusFirst, name="deletestatusfirst"),
+    path("<int:client_pk>/deleteannotationfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DeleteAnnotationFirst, name="deleteannotationfirst"),
+    path("<int:client_pk>/deletekostenverschilfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DeleteKostenverschilFirst, name="deletekostenverschilfirst"),
     path("<int:client_pk>/addbijlagefirst/<int:project_pk>/<int:item_pk>/<int:annotation_pk>", crudFirstAnnotate.AddBijlageFirst, name="addbijlagefirst"),
     path(
         "<int:client_pk>/project/<int:projid>/comment/my/<int:annid>/dl",

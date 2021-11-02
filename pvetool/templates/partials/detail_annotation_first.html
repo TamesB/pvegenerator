@@ -3,7 +3,8 @@
 <span hx-target="this" hx-swap="outerHTML">
 {% if annotation.annotation %}
     <span><p><b>Aanvulling:</b> {{ annotation.annotation }} <span><button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic icon button">
-    <i class="icon edit"></i></button></span></p></span>
+    <i class="icon edit"></i></button></span>
+        <span><a hx-delete="{% url 'deleteannotationfirst' client_pk project_pk item_pk %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></p></span>
     <p>
     {% if bijlage.bijlage %}
     <span><a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project_pk annotation.id %}" target="_blank"><b>Bijlage:  </b><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
