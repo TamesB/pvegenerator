@@ -10,13 +10,17 @@
     <div class="status_not_added" id="status-{{ item.id }}">
 {% endif %}
 
-{% if not current_reply.accept %}
+{% if current_reply %}
+{% if current_reply.accept is False %}
 {% if current_reply.status %}
     <p>Uw voorgestelde status: {{ current_reply.status }}
     <span><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk %}" class="ui basic icon button"><i class="icon edit"></i></button></span></p>
 {% else %}
     <p><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon plus"></i>Statusverandering</button></p>
 {% endif %}
+{% endif %}
+{% else %}
+    <p><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon plus"></i>Statusverandering</button></p>
 {% endif %}
 </span>
 {% endblock %}{% block scripts %}

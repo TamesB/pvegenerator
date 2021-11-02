@@ -32,15 +32,8 @@ hx-post="{% url 'acceptitempong' client_pk project_pk item_pk %}"
     type="button">Accepteren</button>
 {% endif %} 
 <!-- if false (somehow has to be like this) -->
-{% if current_reply %}
-            {% if current_reply.accept is False %}
             <span hx-get="{% url 'detailpongstatus' client_pk project_pk item_pk %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
             <span hx-get="{% url 'detailpongkostenverschil' client_pk project_pk item_pk %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
-            {% endif %}
-{% else %}
-            <span hx-get="{% url 'detailpongstatus' client_pk project_pk item_pk %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
-            <span hx-get="{% url 'detailpongkostenverschil' client_pk project_pk item_pk %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
-{% endif %}
             </div>
 </div>
 
