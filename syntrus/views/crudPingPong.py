@@ -1414,10 +1414,8 @@ def AcceptItemPong(request, client_pk, project_pk, item_pk, type):
             current_reply.kostenConsequenties = None
         if current_reply.status:
             current_reply.status = None
-            
-        current_reply.save()
 
-        
+        current_reply.save()
     else:
         current_reply = CommentReply.objects.create(commentphase=current_phase, gebruiker=request.user, onComment=annotation, accept=True)
         current_reply.save()
@@ -1734,3 +1732,143 @@ def AddReplyPong(request, client_pk, project_pk, item_pk, type):
     context["item_pk"] = item_pk
     context["type"] = type
     return render(request, "partials/form_annotation_pong.html", context)
+
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
+def DeleteStatusPong(request, client_pk, project_pk, item_pk, type):
+    context = {}
+
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    project = get_object_or_404(Project, pk=project_pk)
+    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if project.frozenLevel == 0:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if not project.item.exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    # get the highest ID of the frozencomments phases; the current phase
+    current_phase = project.phase.first()
+
+    # uneven level = turn of SD, even level = turn of SOG
+    if (current_phase.level % 2) != 0:
+        # level uneven: make page only visible for SD
+        if request.user.type_user == project.first_annotate:
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
+        # level even: make page only visible for SOG
+        if request.user.type_user != project.first_annotate:
+            return redirect("logout_syn", client_pk=client_pk)
+
+    annotation = None
+    if PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).exists():
+        annotation = PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).first()
+
+    reply = None
+    if CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk, commentphase=current_phase).exists():
+        reply = CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk, commentphase=current_phase).first()
+        reply.status = None
+        reply.save()
+        messages.warning(request, "Status verwijderd.")
+        return redirect("detailpongstatus", client_pk=client_pk, project_pk=project_pk, item_pk=item_pk, type=type)
+
+    messages.warning(request, "Fout met status verwijderen.")
+    return redirect("detailpongstatus", client_pk=client_pk, project_pk=project_pk, item_pk=item_pk, type=type)
+
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
+def DeleteReplyPong(request, client_pk, project_pk, item_pk, type):
+    context = {}
+
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    project = get_object_or_404(Project, pk=project_pk)
+    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if project.frozenLevel == 0:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if not project.item.exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    # get the highest ID of the frozencomments phases; the current phase
+    current_phase = project.phase.first()
+
+    # uneven level = turn of SD, even level = turn of SOG
+    if (current_phase.level % 2) != 0:
+        # level uneven: make page only visible for SD
+        if request.user.type_user == project.first_annotate:
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
+        # level even: make page only visible for SOG
+        if request.user.type_user != project.first_annotate:
+            return redirect("logout_syn", client_pk=client_pk)
+
+    annotation = None
+    if PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).exists():
+        annotation = PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).first()
+
+    reply = None
+    if CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk, commentphase=current_phase).exists():
+        reply = CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk, commentphase=current_phase).first()
+        reply.comment = None
+        reply.save()
+
+        if BijlageToReply.objects.filter(reply__id=reply.id).exists():
+            bijlage = BijlageToReply.objects.get(reply__id=reply.id)
+            bijlage.delete()
+
+        messages.warning(request, "Opmerking verwijderd, als u een bijlage had geupload is deze ook verwijderd.")
+        return redirect("detailpongreply", client_pk=client_pk, project_pk=project_pk, item_pk=item_pk, type=type)
+
+    messages.warning(request, "Fout met opmerking verwijderen.")
+    return redirect("detailpongreply", client_pk=client_pk, project_pk=project_pk, item_pk=item_pk, type=type)
+
+@login_required(login_url=reverse_lazy("login_syn", args={1,}))
+def DeleteKostenverschilPong(request, client_pk, project_pk, item_pk, type):
+    context = {}
+
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    project = get_object_or_404(Project, pk=project_pk)
+    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if project.frozenLevel == 0:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if not project.item.exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    # get the highest ID of the frozencomments phases; the current phase
+    current_phase = project.phase.first()
+
+    # uneven level = turn of SD, even level = turn of SOG
+    if (current_phase.level % 2) != 0:
+        # level uneven: make page only visible for SD
+        if request.user.type_user == project.first_annotate:
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
+        # level even: make page only visible for SOG
+        if request.user.type_user != project.first_annotate:
+            return redirect("logout_syn", client_pk=client_pk)
+
+    annotation = None
+    if PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).exists():
+        annotation = PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).first()
+
+    reply = None
+    if CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk, commentphase=current_phase).exists():
+        reply = CommentReply.objects.filter(onComment__id=annotation.id, onComment__item__id=item_pk, commentphase=current_phase).first()
+        reply.kostenConsequenties = None
+        reply.save()
+        messages.warning(request, "Kostenverschil verwijderd.")
+        return redirect("detailpongkostenverschil", client_pk=client_pk, project_pk=project_pk, item_pk=item_pk, type=type)
+
+    messages.warning(request, "Fout met kostenverschil verwijderen.")
+    return redirect("detailpongkostenverschil", client_pk=client_pk, project_pk=project_pk, item_pk=item_pk, type=type)

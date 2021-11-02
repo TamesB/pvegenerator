@@ -10,7 +10,8 @@
 {% if current_reply.accept is False %}
 {% if current_reply.kostenConsequenties %}
     <b>Uw voorgestelde kostenverschil: €{{ current_reply.kostenConsequenties }}
-    <span><button hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}" class="ui basic icon button"><i class="icon edit"></i></button></span></b>
+    <span><button hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
+        <span><a hx-delete="{% url 'deletekostenverschilpong' client_pk project_pk item_pk type %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></b>
 {% else %}
     <p><button hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon plus"></i>Kostenverschilverandering</button></p>
 {% endif %}

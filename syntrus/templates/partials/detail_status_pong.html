@@ -14,7 +14,8 @@
 {% if current_reply.accept is False %}
 {% if current_reply.status %}
     <p>Uw voorgestelde status: {{ current_reply.status }}
-    <span><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic icon button"><i class="icon edit"></i></button></span></p>
+    <span><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
+        <span><a hx-delete="{% url 'deletestatuspong' client_pk project_pk item_pk type %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></p>
 {% else %}
     <p><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon plus"></i>Statusverandering</button></p>
 {% endif %}
