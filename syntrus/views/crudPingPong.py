@@ -1399,8 +1399,25 @@ def AcceptItemPong(request, client_pk, project_pk, item_pk, type):
     current_reply = None
     if CommentReply.objects.filter(onComment__id=annotation.id, commentphase=current_phase).exists():
         current_reply = CommentReply.objects.get(onComment__id=annotation.id, commentphase=current_phase)
-        current_reply.accept=True
+        current_reply.accept = True
+
+        # remove all comments/statuschange/costs/attachment of the current person who accepted the rule
+        # they have accepted the previous comments/statuses after all
+        if current_reply.comment:
+            current_reply.comment = None
+
+        if current_reply.bijlage:
+            current_reply.bijlage = None
+            bijlageobject = current_reply.bijlagetoreply.first()
+            bijlageobject.delete()
+        if current_reply.kostenConsequenties:
+            current_reply.kostenConsequenties = None
+        if current_reply.status:
+            current_reply.status = None
+            
         current_reply.save()
+
+        
     else:
         current_reply = CommentReply.objects.create(commentphase=current_phase, gebruiker=request.user, onComment=annotation, accept=True)
         current_reply.save()
@@ -1450,7 +1467,7 @@ def NonAcceptItemPong(request, client_pk, project_pk, item_pk, type):
     current_reply = None
     if CommentReply.objects.filter(onComment__id=annotation.id, commentphase=current_phase).exists():
         current_reply = CommentReply.objects.get(onComment__id=annotation.id, commentphase=current_phase)
-        current_reply.accept=False
+        current_reply.accept = False
         current_reply.save()
     else:
         current_reply = CommentReply.objects.create(commentphase=current_phase, gebruiker=request.user, onComment=annotation, accept=False)
