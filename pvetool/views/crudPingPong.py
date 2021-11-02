@@ -314,9 +314,9 @@ def DetailItemPong(request, client_pk, project_pk, item_pk, type):
     replies = None
     bijlagen = {}
 
-    if CommentReply.objects.filter(onComment__item__id=item.id).exists():
+    if CommentReply.objects.filter(onComment__item__id=item.id, commentphase__project__id=current_phase.project.id).exists():
         replies = CommentReply.objects.filter(
-            Q(onComment__item__id=item_pk) & ~Q(commentphase=current_phase)
+            Q(onComment__item__id=item_pk) & ~Q(commentphase=current_phase) & Q(commentphase__project__id=current_phase.project.id)
         ).order_by("id")
 
         for reply in replies:
@@ -366,9 +366,9 @@ def DetailStatusPong(request, client_pk, project_pk, item_pk, type):
 
     # find last changed status
     status_reply = None
-    if CommentReply.objects.filter(onComment__id=annotation.id).exists():
+    if CommentReply.objects.filter(onComment__id=annotation.id, commentphase__project__id=current_phase.project.id).exists():
         replies = CommentReply.objects.filter(
-            Q(onComment__id=annotation.id) & ~Q(commentphase=current_phase)
+            Q(onComment__id=annotation.id) & ~Q(commentphase=current_phase) & Q(commentphase__project__id=current_phase.project.id)
         ).order_by("id")
 
         for reply in replies:
@@ -454,9 +454,9 @@ def DetailKostenverschilPong(request, client_pk, project_pk, item_pk, type):
 
     # find last changed status
     last_reply = None
-    if CommentReply.objects.filter(onComment__item__id=item_pk).exists():
+    if CommentReply.objects.filter(onComment__item__id=item_pk, commentphase__project__id=current_phase.project.id).exists():
         replies = CommentReply.objects.filter(
-            Q(onComment__item__id=item_pk) & ~Q(commentphase=current_phase)
+            Q(onComment__item__id=item_pk) & ~Q(commentphase=current_phase) & Q(commentphase__project__id=current_phase.project.id)
         ).order_by("id")
 
         for reply in replies:
@@ -645,7 +645,6 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type)
 
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
-            print(form.cleaned_data["bijlage"])
             form.save()
             messages.warning(request, "Bijlage toegevoegd!")
             return redirect(
