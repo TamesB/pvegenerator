@@ -1520,6 +1520,7 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type)
     context["project_pk"] = project_pk
     context["annotation_pk"] = annotation_pk
     context["item_pk"] = item_pk
+    context["type"] = type
     context["form"] = form
     context["annotation"] = annotation
     return render(request, "partials/form_bijlage_pong.html", context)
@@ -1585,6 +1586,7 @@ def AddStatusPong(request, client_pk, project_pk, item_pk, type):
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
     context["item_pk"] = item_pk
+    context["type"] = type
     context["form"] = form
     return render(request, "partials/form_status_pong.html", context)
 
@@ -1649,6 +1651,7 @@ def AddKostenverschilPong(request, client_pk, project_pk, item_pk, type):
     context["project_pk"] = project_pk
     context["item_pk"] = item_pk
     context["form"] = form
+    context["type"] = type
     return render(request, "partials/form_kostenverschil_pong.html", context)
 
 @login_required(login_url=reverse_lazy("login_syn", args={1,}))
