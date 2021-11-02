@@ -313,7 +313,7 @@ def AddOrganisatieToProject(request, client_pk, pk):
                     fail_silently=False,
                 )
 
-            return redirect("getprojectpartijen", client_pk=client_pk)
+            return redirect("getprojectpartijen", client_pk=client_pk, pk=pk)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 

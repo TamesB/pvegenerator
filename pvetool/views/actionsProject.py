@@ -373,9 +373,8 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
             basic_PVE = basic_PVE.order_by("id")
 
             # add the project to all the pve items, quicken?
-            for item in basic_PVE:
-                item.projects.add(project)
-
+            project.item.add(*basic_PVE)
+            
             # succesfully connected, save the project
             project.pveconnected = True
 
