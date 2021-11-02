@@ -67,7 +67,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_htmx",
-    'django_rename_app',
     "leaflet",
     "django.contrib.gis",
     "app",

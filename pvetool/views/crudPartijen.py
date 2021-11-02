@@ -188,7 +188,7 @@ def AddUserOrganisatie(request, client_pk, pk):
             organisatie.save()
 
             send_mail(
-                f"PVETool Projecten - Toegevoegd aan organisatie {organisatie.naam}",
+                f"{ client.naam } Projecten - Toegevoegd aan organisatie {organisatie.naam}",
                 f"""{ request.user } heeft u toegevoegd aan de organisatie {organisatie.naam}.
                 
                 Een organisatie kan toegevoegd worden aan projecten en werknemers krijgen dan automatisch toegang tot deze projecten.
