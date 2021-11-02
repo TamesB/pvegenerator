@@ -8,7 +8,7 @@
     <i class="icon edit"></i></button></span></p></span>
     <p>
     {% if bijlage.bijlage %}
-    <span><a href="{% url 'downloadreplyattachment_syn' client_pk project_pk current_reply.id type %}" target="_blank"><b>Uw Bijlage:  </b><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
+    <span><a href="{% url 'downloadreplyattachment_syn' client_pk project_pk current_reply.id %}" target="_blank"><b>Uw Bijlage:  </b><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'syntrus/img/download.png' %}"></img></a>
     </span>
     {% endif %}
 
