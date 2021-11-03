@@ -138,7 +138,7 @@ def KlantVerwijderen(request, client_pk):
         return HttpResponse("")
     else:
         messages.warning(request, f"Onjuiste invulling. Probeer het opnieuw.")
-        return redirect("klantoverzicht")
+        return HttpResponse("")
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def GetLogo(request, client_pk):
@@ -1411,6 +1411,12 @@ def kiesparametermodaladd(request, versie_pk, type):
     if type != 1 and type != 2 and type != 3:
         raise Http404("404")
 
+    if type == 1:
+        naam = "Bouwsoort"
+    if type == 2:
+        naam = "Type Object"
+    if type == 3:
+        naam = "Doelgroep"
     form = forms.KiesParameterForm(request.POST or None)
 
     context = {}
@@ -1419,6 +1425,7 @@ def kiesparametermodaladd(request, versie_pk, type):
     context["versie"] = versie
     context["type"] = type
     context["type_id"] = type
+    context["naam"] = naam
 
     if request.method == "POST":
         if form.is_valid():
