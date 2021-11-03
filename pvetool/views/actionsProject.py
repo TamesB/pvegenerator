@@ -287,6 +287,8 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
                 .select_related("paragraaf")
                 .all()
             )
+            
+            project.Bouwsoort1 = Bouwsoort1
 
             if Bouwsoort2:
                 basic_PVE = basic_PVE.union(
@@ -294,48 +296,63 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
                     .select_related("paragraaf")
                     .all()
                 )
+                project.bouwsoort2 = Bouwsoort2
             if Bouwsoort3:
                 basic_PVE = basic_PVE.union(
                     Bouwsoort3.item.select_related("hoofdstuk")
                     .select_related("paragraaf")
                     .all()
                 )
+                project.bouwsoort3 = Bouwsoort3
+
             if TypeObject1:
                 basic_PVE = basic_PVE.union(
                     TypeObject1.item.select_related("hoofdstuk")
                     .select_related("paragraaf")
                     .all()
                 )
+                project.typeObject1 = TypeObject1
+
             if TypeObject2:
                 basic_PVE = basic_PVE.union(
                     TypeObject2.item.select_related("hoofdstuk")
                     .select_related("paragraaf")
                     .all()
                 )
+                project.typeObject2 = TypeObject2
+
             if TypeObject3:
                 basic_PVE = basic_PVE.union(
                     TypeObject3.item.select_related("hoofdstuk")
                     .select_related("paragraaf")
                     .all()
                 )
+                project.typeObject3 = TypeObject3
+
             if Doelgroep1:
                 basic_PVE = basic_PVE.union(
                     Doelgroep1.item.select_related("hoofdstuk")
                     .select_related("paragraaf")
                     .all()
                 )
+                project.doelgroep1 = Doelgroep1
+
             if Doelgroep2:
                 basic_PVE = basic_PVE.union(
                     Doelgroep2.item.select_related("hoofdstuk")
                     .select_related("paragraaf")
                     .all()
                 )
+                project.doelgroep2 = Doelgroep2
+
             if Doelgroep3:
                 basic_PVE = basic_PVE.union(
                     Doelgroep3.item.select_related("hoofdstuk")
                     .select_related("paragraaf")
                     .all()
                 )
+                project.doelgroep3 = Doelgroep3
+
 
             # If line is extra (AED, Smarthome, Entree Upgrade); Always include
             # if box checked
@@ -345,36 +362,45 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
                     .select_related("hoofdstuk")
                     .filter(AED=True)
                 )
+                project.AED = True
             if Smarthome:
                 basic_PVE = basic_PVE.union(
                     versie.item.select_related("paragraaf")
                     .select_related("hoofdstuk")
                     .filter(Smarthome=True)
                 )
+                project.Smarthome = True
+
             if EntreeUpgrade:
                 basic_PVE = basic_PVE.union(
                     versie.item.select_related("paragraaf")
                     .select_related("hoofdstuk")
                     .filter(EntreeUpgrade=True)
                 )
+                project.EntreeUpgrade = True
+
             if Pakketdient:
                 basic_PVE = basic_PVE.union(
                     versie.item.select_related("paragraaf")
                     .select_related("hoofdstuk")
                     .filter(Pakketdient=True)
                 )
+                project.Pakketdient = True
+
             if JamesConcept:
                 basic_PVE = basic_PVE.union(
                     versie.item.select_related("paragraaf")
                     .select_related("hoofdstuk")
                     .filter(JamesConcept=True)
                 )
+                project.JamesConcept = True
+
 
             basic_PVE = basic_PVE.order_by("id")
 
             # add the project to all the pve items, quicken?
             project.item.add(*basic_PVE)
-            
+
             # succesfully connected, save the project
             project.pveconnected = True
 
@@ -621,4 +647,4 @@ def download_pve(request, client_pk, pk):
     context["client_pk"] = client_pk
     context["client"] = client
     context["logo_url"] = logo_url
-    return render(request, "PVEResult_syn.html", context)
+    return render(request, "partials/pveresult_project.html", context)

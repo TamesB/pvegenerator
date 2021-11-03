@@ -1,0 +1,14 @@
+{% block main %}
+{% if itemsPVE %}
+<div class="inner_actie">
+<a href="{% url 'download' filename %}" target="_blank">
+<button class="ui basic icon button"><i class="icon download"></i></button></a>
+{% if zipFilename %}
+<a href="{% url 'downloadbijlagen' zipFilename %}" target="_blank">
+<button class="ui basic button"><p>+ Bijlagen (.zip)</p></button></a>
+{% endif %}
+{% else %}
+<p>Geen regels.</p>
+{% endif %}
+</div>
+{% endblock %}

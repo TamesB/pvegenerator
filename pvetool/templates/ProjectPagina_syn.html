@@ -150,9 +150,11 @@
     <div class="acties_title"><p>Acties</p></div>
     <div class="acties">
     {% if project.pveconnected %}
-      <div class="actie_item" onClick="javascript:location.href='{% url 'download_pve_syn' client_pk project.id %}'">
+      <div class="actie_item">
+      <div class="inner_actie" hx-swap="outerHTML" hx-target="this" hx-get="{% url 'download_pve_syn' client_pk project.id %}">
         <img class="actie-img" src="{% static 'pvetool/img/download.png' %}"></img>
         <p class="subtext">PvE</p>
+      </div>
       </div>
       {% else %}
       {% if request.user.type_user == "SB" or request.user.type_user == "B" %}

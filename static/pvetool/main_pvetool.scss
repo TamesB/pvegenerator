@@ -1507,19 +1507,16 @@ html {
               display: flex;
               justify-content: space-between;
               flex-wrap: wrap;
-              padding-top: 3vh;
+              padding-top: 2vh;
               padding-left: 2vw;
               padding-right: 2vw;
               padding-bottom: 2vh;
-
+              height: 90%;
               .actie_item {
-                display: flex;
-                flex-wrap: wrap;
-                flex-direction: column;
                 cursor: pointer;
-                height: 30%;
-                min-height: 30%;
-                max-height: 30%;
+                height: 100%;
+                min-height: 80%;
+                max-height: 80%;
                 width: 30%;
                 min-width: 100px;
                 max-width: 23%;
@@ -1528,13 +1525,17 @@ html {
                 -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
                 -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
                 box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
 
                 img {
                   justify-self: center;
                   float: center;
                   display: flex;
                   max-width: 100%;
-                  width: 100%;
+                  width: 80%;
                   border-radius: 1.6vh;
                 }
 
@@ -1542,7 +1543,49 @@ html {
                   margin-top: 0.5vh;
                   justify-self: center;
                   font-weight: bold;
-                  font-size: 2vh;
+                  font-size: 1.5vh;
+                  display: block;
+                }
+                @media screen and (max-width: 1500px) {
+                  .subtext {
+                    display: none;
+                  }
+                }
+                .inner_actie {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+
+                img {
+                  justify-self: center;
+                  float: center;
+                  display: flex;
+                  max-width: 100%;
+                  width: 80%;
+                  border-radius: 1.6vh;
+                }
+
+                a {
+                button {
+                  height: 100%;
+                  width: 100%;
+
+                  p {
+                    font-size: 1vh;
+                    font-family: "Montserrat";
+                  }
+
+                }
+              }
+
+                .subtext {
+                  margin-top: 0.5vh;
+                  justify-self: center;
+                  font-weight: bold;
+                  font-size: 1.5vh;
                   display: block;
                 }
 
@@ -1551,6 +1594,8 @@ html {
                     display: none;
                   }
                 }
+
+              }
               }
 
               .actie_item:hover {
@@ -1569,12 +1614,9 @@ html {
               }
 
               .opacity_disabled {
-                display: flex;
-                flex-wrap: wrap;
-                flex-direction: column;
-                height: 30%;
-                min-height: 30%;
-                max-height: 30%;
+                height: 100%;
+                min-height: 80%;
+                max-height: 80%;
                 width: 30%;
                 min-width: 100px;
                 max-width: 23%;
@@ -1583,14 +1625,17 @@ html {
                 -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
                 -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
                 box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
                 opacity: 0.7;
-
                 img {
                   justify-self: center;
                   float: center;
                   display: flex;
                   max-width: 100%;
-                  width: 100%;
+                  width: 80%;
                   border-radius: 1.6vh;
                 }
 
@@ -1598,10 +1643,9 @@ html {
                   margin-top: 0.5vh;
                   justify-self: center;
                   font-weight: bold;
-                  font-size: 2vh;
+                  font-size: 1.5vh;
                   display: block;
                 }
-
                 @media screen and (max-width: 1500px) {
                   .subtext {
                     display: none;
