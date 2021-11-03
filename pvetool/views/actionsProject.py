@@ -647,4 +647,8 @@ def download_pve(request, client_pk, pk):
     context["client_pk"] = client_pk
     context["client"] = client
     context["logo_url"] = logo_url
-    return render(request, "partials/pveresult_project.html", context)
+
+    if request.HTMX:
+        return render(request, "partials/pveresult_project.html", context)
+    else:
+        return render(request, "PVEResult_syn.html", context)
