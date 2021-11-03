@@ -9,28 +9,11 @@
 {% if bouwsoorten %}
 <br /><br />
 <div>
-  <table class="ui fixed multiple line blue table">
-    <thead>
-      <tr>
-        <th>
-          Bouwsoorten
-          <div class="d-inline" style="float: right">
-            <span class="float right"
-              ><button hx-target="#addparameter" hx-swap="beforeend" hx-get="{% url 'addkiesparameterform' versie_pk 1 %}" class="ui icon green button">
-                  <i class="icon plus"></i></button>
-            </span>
-          </div>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for parameter in bouwsoorten %}
-      <tr hx-get="{% url 'kiesparameterdetail' versie_pk 1 parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load">
-      </tr>
-      {% endfor %}
-      <tr id="addparameter"></tr>
-    </tbody>
-  </table>
+  <table hx-get="{% url 'kiesparametertable' versie_pk 1 %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load" id="parameter-table-1"></table>
+
+  <div id="newline-{{ 1 }}" hx-target="this" hx-swap="innerHTML"></div>
+<button hx-get="{% url 'kiesparametermodaladd' versie_pk 1 %}" hx-target="#newline-{{ 1 }}" class="ui green button">Voeg parameter toe</button>
+<div class="ui divider"></div>
   {% else %}
   <p>
     Nog geen bouwsoorten!
@@ -42,29 +25,11 @@
   </p>
   {% endif %} {% if typeObjecten %}
   <div>
-    <table class="ui fixed multiple line blue table">
-      <thead>
-        <tr>
-          <th>
-            Type Objecten
-          <div class="d-inline" style="float: right">
-            <span class="float right"
-              ><button hx-target="#addparameter" hx-swap="beforeend" hx-get="{% url 'addkiesparameterform' versie_pk 2 %}" class="ui icon green button">
-                  <i class="icon plus"></i></button>
-            </span>
-          </div>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for parameter in typeObjecten %}
-      <tr hx-get="{% url 'kiesparameterdetail' versie_pk 2 parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load">
-      </tr>
-          {% endfor %}
-                <tr id="addparameter"></tr>
+  <table hx-get="{% url 'kiesparametertable' versie_pk 2 %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load" id="parameter-table-2"></table>
+  <div id="newline-{{ 2 }}" hx-target="this" hx-swap="innerHTML"></div>
+<button hx-get="{% url 'kiesparametermodaladd' versie_pk 2 %}" hx-target="#newline-{{ 1 }}" class="ui green button">Voeg parameter toe</button>
+<div class="ui divider"></div>
 
-      </tbody>
-    </table>
     {% else %}
     <p>
       Nog geen type objecten!
@@ -76,29 +41,11 @@
     </p>
     {% endif %} {% if doelgroepen %}
     <div>
-      <table class="ui fixed multiple line blue table">
-        <thead>
-          <tr>
-            <th>
-              Doelgroepen
-          <div class="d-inline" style="float: right">
-            <span class="float right"
-              ><button hx-target="#addparameter" hx-swap="beforeend" hx-get="{% url 'addkiesparameterform' versie_pk 3 %}" class="ui icon green button">
-                  <i class="icon plus"></i></button>
-            </span>
-          </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for parameter in doelgroepen %}
-      <tr hx-get="{% url 'kiesparameterdetail' versie_pk 3 parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load">
-      </tr>
-          {% endfor %}
-                <tr id="addparameter"></tr>
+  <table hx-get="{% url 'kiesparametertable' versie_pk 3 %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load" id="parameter-table-3"></table>
+  <div id="newline-{{ 3 }}" hx-target="this" hx-swap="innerHTML"></div>
+<button hx-get="{% url 'kiesparametermodaladd' versie_pk 3 %}" hx-target="#newline-{{ 1 }}" class="ui green button">Voeg parameter toe</button>
+<div class="ui divider"></div>
 
-        </tbody>
-      </table>
       {% else %}
       <p>
         Nog geen doelgroepen!

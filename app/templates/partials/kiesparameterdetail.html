@@ -1,27 +1,19 @@
 {% extends "partials/_base.html" %}
 
 {% block main %}
-<div hx-target="this" hx-swap="innerHTML">
-<tr>
-<td>
-
           <div class="d-inline" style="float: left">
 				  <span>{% if parameter.parameter %}
 <p style="float: left;">{{ parameter.parameter }} </p>
-<button hx-get="{% url 'kiesparameterform' versie_pk type parameter.id %}" class="ui icon basic button"><i class="icon edit"></i></button>
+<button hx-get="{% url 'kiesparameterform' versie_pk type parameter.id %}" hx-target="closest td" class="ui icon basic button"><i class="icon edit"></i></button>
 {% else %}
-<button hx-get="{% url 'kiesparameterform' versie_pk type parameter.id %}" class="ui icon basic button"><i class="icon plus"></i></button>
+<button hx-get="{% url 'kiesparameterform' versie_pk type parameter.id %}" hx-target="closest td" class="ui icon basic button"><i class="icon plus"></i></button>
 {% endif %}</span></div>
           <div class="d-inline" style="float: right">
-            <span><button hx-post="{% url 'kiesparameterdelete' versie_pk 1 parameter.id %}"
+            <span><button hx-post="{% url 'kiesparameterdelete' versie_pk type_id parameter.id %}"
           hx-prompt="Vul 'VERWIJDEREN' in om kiesparameter {{ parameter.parameter }} te verwijderen."
+          hx-target="closest tr"
             class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
-
           </div>
-
-</td>
-</tr>
-</div>
 {% endblock %}
 
 {% block scripts %}

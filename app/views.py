@@ -1364,8 +1364,85 @@ def kiesparameterdetail(request, versie_pk, type, parameter_id):
     context["type"] = type
     context["parameter_id"] = parameter_id
     context["parameter"] = parameter
+    context["type_id"] = type
     return render(request, "partials/kiesparameterdetail.html", context)
-    
+
+@staff_member_required(login_url=reverse_lazy("logout"))
+def kiesparametertable(request, versie_pk, type):
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+
+    if type != 1 and type != 2 and type != 3:
+        raise Http404("404")
+
+    if type == 1:  # Bouwsoort
+        if not versie.bouwsoort.all():
+            raise Http404("404")
+
+        parameters = versie.bouwsoort.all()
+        parameter_naam = "Bouwsoorten"
+
+    if type == 2:  # Type Object
+        if not versie.typeobject.all():
+            raise Http404("404")
+
+        parameters = versie.typeobject.all()
+        parameter_naam = "Type Objecten"
+
+    if type == 3:  # Doelgroep
+        if not versie.doelgroep.all():
+            raise Http404("404")
+
+        parameters = versie.doelgroep.all()
+
+        parameter_naam = "Doelgroepen"
+
+    context = {}
+    context["versie_pk"] = versie_pk
+    context["versie"] = versie
+    context["parameters"] = parameters
+    context["type_id"] = type
+    context["parameter_naam"] = parameter_naam
+    return render(request, "partials/kiesparametertable.html", context)
+
+@staff_member_required(login_url=reverse_lazy("logout"))
+def kiesparametermodaladd(request, versie_pk, type):
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+
+    if type != 1 and type != 2 and type != 3:
+        raise Http404("404")
+
+    form = forms.KiesParameterForm(request.POST or None)
+
+    context = {}
+    context["form"] = form
+    context["versie_pk"] = versie_pk
+    context["versie"] = versie
+    context["type"] = type
+    context["type_id"] = type
+
+    if request.method == "POST":
+        if form.is_valid():
+            # If type_id not in available ones
+            if type != 1 and type != 2 and type != 3:
+                raise Http404("404")
+
+            if type == 1:  # Bouwsoort
+                item = models.Bouwsoort()
+
+            if type == 2:  # Type Object
+                item = models.TypeObject()
+
+            if type == 3:  # Doelgroep
+                item = models.Doelgroep()
+
+            item.parameter = form.cleaned_data["parameter"]
+            item.versie = versie
+            item.save()
+
+            return redirect("kiesparametertable", versie_pk=versie_pk, type=type)
+
+    return render(request, "partials/addkiesparameterform.html", context)
+
 @staff_member_required(login_url=reverse_lazy("logout"))
 def deletekiesparameterView(request, versie_pk, type_id, item_id):
 

@@ -1,0 +1,22 @@
+{% extends "partials/_base.html" %}
+
+{% block main %}
+<table class="ui fixed multiple line blue table" hx-target="this" hx-swap="outerHTML" id="parameter-table-{{ type_id }}">
+<thead>
+    <tr>
+    <th>
+        {{ parameter_naam }}
+    </th>
+    </tr>
+</thead>
+
+<tbody>
+    {% for parameter in parameters %}
+        <tr><td hx-get="{% url 'kiesparameterdetail' versie_pk type_id parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></td>
+        </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+{% block modal %}{% endblock %} 
+{% endblock %}

@@ -652,3 +652,4 @@ def download_pve(request, client_pk, pk):
         return render(request, "partials/pveresult_project.html", context)
     else:
         return render(request, "PVEResult_syn.html", context)
+        

@@ -67,6 +67,11 @@
             element.classList.add("active");
 
    });
+   document.body.addEventListener('htmx:afterRequest', function(evt) {
+        var element = document.getElementById("pageloader");
+            element.classList.remove("active");
+
+   });
    </script>
             {% block scripts %}{% endblock %}
     </body>

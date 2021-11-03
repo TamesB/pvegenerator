@@ -2,14 +2,19 @@
 
 {% block main %}
 <div hx-target="this" hx-swap="innerHTML">
-<tr><td>
-    <form class="ui form" method="POST" hx-encoding='multipart/form-data' enctype="multipart/form-data">
-    {% csrf_token %}
-        <span><div style="float: left">{{ form }}</div>
-        <div><button hx-post="{% url 'addkiesparameterform' versie_pk type %}" type="submit" class="ui icon green button"><i class="check icon"></i></button></div></span>
-    </form>  
-</td>
-</tr>
+    <div id="modal" _="on closeModal add .closing then wait for animationend then remove me">
+        <div class="modal-underlay" _="on click trigger closeModal"></div>
+        <div class="modal-content">
+        <form class="ui form" method="POST" hx-encoding='multipart/form-data' enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2 class="ui header">Voeg parameter toe aan {{ type_naam }}</h2>
+            <div>{{ form }}</div>
+            <div class="ui divider"></div>
+            <div style="float:left; margin-top 2vh;"><div class="ui basic button" _="on click trigger closeModal">Terug</div></div>
+            <div style="float:right; margin-top 2vh;"><button hx-post="{% url 'kiesparametermodaladd' versie_pk type_id %}" hx-target="#parameter-table-{{ type_id }}" type="submit" _="on click trigger closeModal" class="ui icon green button"><i class="check icon"></i></button></div>
+        </form>  
+        </div>
+    </div>
 </div>
 {% endblock %}
 
