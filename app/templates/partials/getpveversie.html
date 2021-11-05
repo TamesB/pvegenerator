@@ -14,8 +14,8 @@
             />
             <div class="d-inline" hx-get="{% url 'getpveactiviteit' item.id %}" hx-trigger="load" hx-swap="outerHTML"></div>
 					  <span><button hx-post="{% url 'deletepveversie' item.belegger.id item.id %}"
-                      hx-target="#pveversieline-{{ item.id }}"
-                      hx-swap="innerHTML"
+                      hx-target="closest tr"
+                      hx-swap="outerHTML"
           hx-prompt="Vul 'VERWIJDEREN' in om versie {{ item.versie }} te verwijderen."
           class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
         </div>

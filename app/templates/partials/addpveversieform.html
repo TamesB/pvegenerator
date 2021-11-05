@@ -11,7 +11,7 @@
             <div>{{ form }}</div>
             <div class="ui divider"></div>
             <div style="float:left; margin-top 2vh;"><div class="ui basic button" _="on click trigger closeModal">Terug</div></div>
-            <div style="float:right; margin-top 2vh;"><button hx-post="{% url 'addpveversieform' key %}" type="submit" class="ui icon green button"><i class="check icon"></i></button></div>
+            <div style="float:right; margin-top 2vh;"><button hx-post="{% url 'addpveversieform' key %}" hx-target="#versietable-{{ key }}" type="submit" _="on click trigger closeModal" class="ui icon green button"><i class="check icon"></i></button></div>
         </form>  
         </div>
     </div>

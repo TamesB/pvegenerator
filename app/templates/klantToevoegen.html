@@ -10,7 +10,7 @@
 <form class="ui form" method="POST" hx-encoding='multipart/form-data' enctype="multipart/form-data">
     {% csrf_token %}
     {% render_form form %}
-    <button hx-post="{% url 'klanttoevoegen' %}" type="submit" class="ui primary button" value="generate">Bevestig</button>
+    <button hx-post="{% url 'klanttoevoegen' %}" hx-target="#main" hx-swap="innerHTML" type="submit" class="ui primary button" value="generate">Bevestig</button>
 </form>
 
 <script>

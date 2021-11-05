@@ -1,0 +1,26 @@
+{% block main %}
+  <table class="ui fixed multiple line blue table">
+    <thead>
+      <tr>
+        <th>
+          {{ key.naam }}
+          <!-- Beleggernaam -->
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if queryset %} {% for item in queryset.all %}
+      <tr>
+        <td id="pveversieline-{{ item.id }}">
+          <div hx-get="{% url 'getpveversie' item.id %}" hx-target="this" hx-swap="outerHTML" hx-trigger="load"></div>
+        </td>
+      </tr>
+      {% endfor %} 
+      {% else %}
+      <tr>
+        <td>Nog geen PvE versies.</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+{% endblock %}

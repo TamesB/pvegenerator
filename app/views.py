@@ -529,13 +529,23 @@ def AddPvEVersie(request, belegger_pk):
                     i.items.clear()
                     i.items.add(*j)
 
-            return redirect("getpveversie", versie_pk=new_versie_obj.id)
+            return redirect("pveversietable", belegger_pk=belegger_pk)
 
     context = {}
     context["form"] = form
     context["key"] = belegger_pk
     context["belegger"] = belegger
     return render(request, "partials/addpveversieform.html", context)
+
+@staff_member_required(login_url=reverse_lazy('logout'))
+def BeleggerVersieTable(request, belegger_pk):
+    key = Beleggers.objects.get(id=belegger_pk)
+    queryset = models.PVEVersie.objects.filter(belegger__id=key.id)
+    context = {}
+    context["queryset"] = queryset
+    context["key"] = key
+    return render(request, "partials/pveversietable.html", context)
+
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def VersieActiviteit(request, versie_pk):

@@ -8,36 +8,11 @@
 <br /><br />
 <div>
   {% for key, queryset in BeleggerVersieQuerySet.items %}
-  <table class="ui fixed multiple line blue table">
-    <thead>
-      <tr>
-        <th>
-          {{ key.naam }}
-          <!-- Beleggernaam -->
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      {% if queryset %} {% for item in queryset.all %}
-      <tr>
-        <td id="pveversieline-{{ item.id }}">
-          <div hx-get="{% url 'getpveversie' item.id %}" hx-target="this" hx-swap="outerHTML" hx-trigger="load"></div>
-        </td>
-      </tr>
-      {% endfor %} 
-      {% else %}
-      <tr>
-        <td>Nog geen PvE versies.</td>
-      </tr>
-      {% endif %}
-      <tr id="newline" hx-target="this" hx-swap="innerHTML"></tr>
-      <tr>
-      <td>
-      <button hx-get="{% url 'addpveversieform' key.id %}" hx-target="#newline" class="ui green button">Voeg versie toe</button>
-      </td>
-      </tr>
-    </tbody>
-  </table>
+  <div id="versietable-{{ key.id }}" hx-swap="innerHTML" hx-trigger="load" hx-get="{% url 'pveversietable' key.id %}"></div>
+  <div id="newline-{{ key.id }}"></div>
+  <br>
+  <button hx-get="{% url 'addpveversieform' key.id %}" hx-target="#newline-{{ key.id }}" class="ui green button">Voeg versie toe</button>
+  <div class="ui divider"></div>
   {% endfor %}
   {% else %}
   {% endif %} {% block modal %}{% endblock %} {% endblock %}

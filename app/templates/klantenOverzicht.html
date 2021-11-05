@@ -38,7 +38,8 @@
 				<td hx-get="{% url 'logoklantdetail' klant.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></td>
 				<td><button class="ui icon basic red button"
 				hx-post="{% url 'klantverwijderen' klant.id %}"
-                    hx-prompt="Vul 'VERWIJDEREN' in om klant {{ klant.naam }} te verwijderen."><i class="icon trash"></i></button></td>
+                    hx-prompt="Vul 'VERWIJDEREN' in om klant {{ klant.naam }} te verwijderen."
+					hx-target="closest tr"><i class="icon trash"></i></button></td>
 			</tr>
       {% endfor %}
 		</tbody>
