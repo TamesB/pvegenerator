@@ -252,8 +252,8 @@ def DeletePVEVersie(request, belegger_pk, versie_pk):
         messages.warning(request, f"Versie: {naam} succesvol verwijderd.")
         return HttpResponse("")
     else:
-        messages.warning(request, f"Onjuiste invulling. Probeer het opnieuw.")
-        return redirect("getpveversie", versie_pk=versie_pk)
+        messages.warning(request, f"Onjuiste invulling. Ververs de pagina en probeer het opnieuw.")
+        return HttpResponse("")
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def PVEVersieDetail(request, versie_pk):

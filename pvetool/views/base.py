@@ -132,7 +132,7 @@ def BeheerdersAcceptUitnodiging(request, client_pk, key):
                     request,
                     f"Account aangemaakt met gebruikersnaam: {user.username}. Uw logingegevens zijn naar u gemaild.",
                 )
-                return redirect("dashboard_syn")
+                return redirect("dashboard_syn", client_pk=client_pk)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
