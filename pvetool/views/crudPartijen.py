@@ -11,7 +11,7 @@ from pvetool.views.utils import GetAWSURL
 from users.models import CustomUser
 from django.db.models import Q
 from django.urls import reverse_lazy
-
+from project.models import Project
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def ManageOrganisaties(request, client_pk):
@@ -255,3 +255,75 @@ def GetUsersInOrganisatie(request, client_pk, pk):
     context["client"] = client
     context["logo_url"] = logo_url
     return render(request, "partials/organisatie_detail.html", context)
+
+def OrganisatieRemoveFromProject(request, client_pk, organisatie_pk, project_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+
+    if request.user.klantenorganisatie:
+        if (
+            request.user.klantenorganisatie.id != client.id
+            and request.user.type_user != "B"
+        ):
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    allowed_users = ["B", "SB"]
+
+    if request.user.type_user not in allowed_users:
+        return redirect("logout_syn", client_pk=client_pk)
+    if not Organisatie.objects.filter(id=organisatie_pk):
+        return redirect("logout_syn", client_pk=client_pk)
+
+    stakeholder = Organisatie.objects.get(id=organisatie_pk)
+    project = Project.objects.get(id=project_pk)
+
+    if project in stakeholder.projecten.all():
+        stakeholder.projecten.remove(project)
+
+    if stakeholder in project.organisaties.all():
+        project.organisaties.remove(stakeholder)
+
+    messages.warning(request, f"Project { project.naam } verwijderd uit stakeholder { stakeholder.naam }")
+    return HttpResponse("")
+
+def GebruikerRemoveFromOrganisatie(request, client_pk, organisatie_pk, gebruiker_pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+
+    if request.user.klantenorganisatie:
+        if (
+            request.user.klantenorganisatie.id != client.id
+            and request.user.type_user != "B"
+        ):
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    allowed_users = ["B", "SB"]
+
+    if request.user.type_user not in allowed_users:
+        return redirect("logout_syn", client_pk=client_pk)
+    if not CustomUser.objects.filter(id=gebruiker_pk):
+        return redirect("logout_syn", client_pk=client_pk)
+
+    stakeholder = Organisatie.objects.get(id=organisatie_pk)
+    gebruiker = CustomUser.objects.get(id=gebruiker_pk)
+
+    if gebruiker.klantenorganisatie.id != client.id:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if gebruiker in stakeholder.gebruikers.all():
+        stakeholder.gebruikers.remove(gebruiker)
+
+    if stakeholder == gebruiker.organisatie:
+        gebruiker.organisatie = None
+        gebruiker.save()
+
+    messages.warning(request, f"Gebruiker { gebruiker.username } verwijderd uit stakeholder { stakeholder.naam }")
+    return HttpResponse("")

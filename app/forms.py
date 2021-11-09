@@ -89,6 +89,13 @@ class PVEVersieForm(ModelForm):
         }
         widgets = {"belegger": forms.HiddenInput()}
 
+class PVEVersieNameForm(ModelForm):
+    class Meta:
+        model = PVEVersie
+        fields = ("versie",)
+        labels = {
+            "versie": "",
+        }
 
 class bijlageEditForm(forms.Form):
     bijlage = forms.FileField(required=False, label="Bijlage")

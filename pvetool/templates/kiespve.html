@@ -20,13 +20,17 @@
 <div class="general_title"><img src="{% static 'pvetool/img/plusproject.png'%}" class="title_img"></img><p>Programma van Eisen</p></div>
 <div class="invite-container">
     <div class="box">
+    {% if qs %}
         <p class="description">Kies de PvE versie die u wil verbinden aan het project.</p>
         <form action="{% url 'kiespveversie' client_pk pk %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <label class="formtitle" for="{{ form.pve_versie.id_for_label }}"><p>Versie:</p></label>
             <p class="formbox">{{ form.pve_versie }}</p>
             <input type="submit" class="button" value="Volgende >">
-        </form>    
+        </form>
+    {% else %}   
+          <p class="description">Er zijn nog geen actieve PvE versies voor uw organisatie. Neem contact op met de systeembeheerder.</p> 
+      {% endif %}
     </div>
 </div>
 {% endblock %}

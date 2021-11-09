@@ -21,7 +21,7 @@
 
 <div class="base_info_table">
   <table id="myTable">
-<tbody>        
+<tbody>
 <tr class="table_title">
           <th><p>Stakeholder</p></th>
           <th><p>Projecten</p></th>
@@ -32,10 +32,16 @@
             {% for organisatie in organisaties %}
         <tr class="table_content" hx-target="this" hx-swap="outerHTML">
           <td><p>{{ organisatie.naam }}</p></td>
-          <td><p>{% if organisatie.projecten.all %}{% for project in organisatie.projecten.all %}{{ project }}, {% endfor %}{% else %}<i>Geen</i>{% endif %}</p></td>
+          <td><p>{% if organisatie.projecten.all %}{% for project in organisatie.projecten.all %}<span>{{ project }} <a hx-post="{% url 'organisatieremovefromproject' client_pk organisatie.id project.id %}" hx-confirm="Weet u het zeker?" hx-target="closest span" hx-swap="outerHTML"><i class="icon times"></i></a>,</span>{% endfor %}{% else %}<i>Geen</i>{% endif %}</p></td>
         <td>
         <p>{% include 'partials/organisatie_detail.html' %}</p></td>
-          <td><p><button hx-post="{% url 'deleteorganisatie_syn' client_pk organisatie.id %}" class="ui icon basic red button"><i class="icon delete"></i></button></p></td>
+        <td>
+              <span><button hx-post="{% url 'deleteorganisatie_syn' client_pk organisatie.id %}"
+                      hx-target="closest tr"
+                      hx-swap="outerHTML"
+          hx-prompt="Vul 'VERWIJDEREN' in om stakeholder {{ organisatie.naam }} te verwijderen."
+          class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
+              </td>
         </tr>
         {% endfor %}
         {% else %}

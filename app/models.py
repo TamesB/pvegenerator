@@ -166,7 +166,8 @@ def on_change(sender, instance: PVEVersie, **kwargs):
     # sender is the object being saved
     activity = Activity()
     activity.activity_type = "PvE"
-    activity.schuldige = request.user
+    if not request.user.is_anonymous:
+        activity.schuldige = request.user
     activity.save()
     
     if instance.id is None: # new object will be created

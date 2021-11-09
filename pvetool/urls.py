@@ -43,6 +43,16 @@ urlpatterns = [
         crudPartijen.DeleteOrganisatie,
         name="deleteorganisatie_syn",
     ),
+    path(
+        "<int:client_pk>/organisaties/<int:organisatie_pk>/removeproj/<int:project_pk>",
+        crudPartijen.OrganisatieRemoveFromProject,
+        name="organisatieremovefromproject",
+    ),
+    path(
+        "<int:client_pk>/organisaties/<int:organisatie_pk>/removegebruiker/<int:gebruiker_pk>",
+        crudPartijen.GebruikerRemoveFromOrganisatie,
+        name="gebruikerremovefromorganisatie",
+    ),
 
     # projectbeheer CRUD
     path("<int:client_pk>/projectbeheer", crudProjects.ManageProjects, name="manageprojecten_syn"),
@@ -64,6 +74,7 @@ urlpatterns = [
         name="projectaddpartijform",
     ),
     path("<int:client_pk>/project/addsd/<int:pk>", crudProjects.SOGAddDerdenToProj, name="sogaddderden"),
+    path("<int:client_pk>/project/delete/<int:pk>", crudProjects.DeleteProject, name="deleteproject"),
 
     # werknemers beheer "CRUD"
     path("<int:client_pk>/werknemers", crudWerknemers.ManageWerknemers, name="managewerknemers_syn"),

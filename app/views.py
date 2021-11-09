@@ -265,6 +265,34 @@ def PVEVersieDetail(request, versie_pk):
     return render(request, "partials/getpveversie.html", context)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
+def GetPveVersieDetail(request, versie_pk):
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+
+    context = {}
+    context["versie"] = versie
+    context["versie_pk"] = versie_pk
+    return render(request, "partials/pveversiedetail.html", context)
+
+@staff_member_required(login_url=reverse_lazy("logout"))
+def PveVersieEditName(request, versie_pk):
+    versie = models.PVEVersie.objects.get(id=versie_pk)
+
+    form = forms.PVEVersieNameForm(request.POST or None, instance=versie)
+
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+
+            messages.warning(request, "Naam veranderd.")
+            return redirect("getpveversiedetail", versie_pk=versie_pk)
+
+    context = {}
+    context["versie"] = versie
+    context["form"] = form
+    context["versie_pk"] = versie_pk
+    return render(request, "partials/pveversieeditname.html", context)
+
+@staff_member_required(login_url=reverse_lazy("logout"))
 def KlantToevoegen(request):
     form = forms.BeleggerForm(request.POST or None, request.FILES or None)
 

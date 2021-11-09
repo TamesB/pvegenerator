@@ -57,6 +57,14 @@
             <td>
             <p>{% include 'partials/projectpartijen_detail.html' %}</p></td>
               <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="img" src="{% static 'pvetool/img/download.png' %}"></img></a>{% else %}<a href="{% url 'kiespveversie' client_pk project.id %}"><button class="ui icon basic button"><i class="icon plus"></i>Verbind PvE</button></a>{% endif %}</p></td>
+              <td>
+              <span><button hx-post="{% url 'deleteproject' client_pk project.id %}"
+                      hx-target="closest tr"
+                      hx-swap="outerHTML"
+          hx-prompt="Vul 'VERWIJDEREN' in om project {{ project.naam }} te verwijderen."
+          class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
+
+              </td>
         </tr>
         {% endfor %}
             {% else %}
@@ -108,6 +116,15 @@
           <td>
           <p>{% include 'partials/projectpartijen_detail.html' %}</p></td>
             <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="img" src="{% static 'pvetool/img/download.png' %}"></img></a>{% else %}<a href="{% url 'kiespveversie' client_pk project.id %}"><button class="ui icon basic button"><i class="icon plus"></i>Verbind PvE</button></a>{% endif %}</p></td>
+                    <td>
+              <span><button hx-post="{% url 'deleteproject' client_pk project.id %}"
+                      hx-target="closest tr"
+                      hx-swap="outerHTML"
+          hx-prompt="Vul 'VERWIJDEREN' in om project {{ project.naam }} te verwijderen."
+          class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
+
+              </td>
+
       </tr>
       {% endfor %}
           {% else %}

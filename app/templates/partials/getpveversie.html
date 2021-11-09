@@ -1,11 +1,8 @@
  
  {% block main %}
- <div>
-          <a href="{% url 'pvebewerkoverview' item.id %}"
-            >Versie {{ item.versie }}</a
-          >
-          &nbsp;
-          <div class="d-inline" style="float: right">
+ <div style="display: flex; justify-content: space-between;">
+          <span class="d-inline" style="float: left;" hx-get="{% url 'getpveversiedetail' item.id %}" hx-trigger="load" hx-swap="outerHTML"></span>
+          <span class="d-inline" style="float: right">
             <input
               class="ui primary button d-inline"
               onclick="window.location.href='{% url 'pvebewerkoverview' item.id %}';"
@@ -18,7 +15,7 @@
                       hx-swap="outerHTML"
           hx-prompt="Vul 'VERWIJDEREN' in om versie {{ item.versie }} te verwijderen."
           class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
-        </div>
+        </span>
         </div>
 {% endblock %}
 

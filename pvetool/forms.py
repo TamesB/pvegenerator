@@ -163,10 +163,10 @@ class PlusAccountForm(ModelForm):
 
     rang = forms.ChoiceField(choices=type_choices)
     organisatie = forms.ModelChoiceField(
-        queryset=Organisatie.objects.none(), label="Organisatie (optioneel):"
+        queryset=Organisatie.objects.none(), label="Organisatie (optioneel):", required=False
     )
     project = forms.ModelChoiceField(
-        queryset=Project.objects.none(), label="Project (optioneel):"
+        queryset=Project.objects.none(), label="Project (optioneel):", required=False
     )
     class Meta:
         model = Invitation
@@ -180,7 +180,7 @@ class PlusAccountForm(ModelForm):
 
 class PlusDerdeToProjectForm(ModelForm):
     organisatie = forms.ModelChoiceField(
-        queryset=Organisatie.objects.none(), label="Organisatie (optioneel):"
+        queryset=Organisatie.objects.none(), label="Organisatie (optioneel):", required=False
     )
 
     class Meta:

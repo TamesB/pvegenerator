@@ -27,9 +27,12 @@ urlpatterns = [
         views.PVEBewerkOverview,
         name="pvebewerkoverview",
     ),
+    
     path("addpveversieform/<int:belegger_pk>", views.AddPvEVersie, name="addpveversieform"),
     path("beleggerversietable/<int:belegger_pk>", views.BeleggerVersieTable, name="pveversietable"),
     path("pveversiedetail/<int:versie_pk>", views.PVEVersieDetail, name="getpveversie"),
+    path("getpveversiedetail/<int:versie_pk>", views.GetPveVersieDetail, name="getpveversiedetail"),
+    path("pveversienaamform/<int:versie_pk>", views.PveVersieEditName, name="editpveversiename"),
     path("deletepveversie/<int:belegger_pk>/<int:versie_pk>", views.DeletePVEVersie, name="deletepveversie"),
     path("pveactiviteit/<int:versie_pk>", views.VersieActiviteit, name="getpveactiviteit"),
     path("makeactive/<int:versie_pk>", views.ActivateVersie, name="maakactief"),

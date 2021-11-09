@@ -164,9 +164,10 @@ def KiesPVE(request, client_pk, pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     form = forms.PVEVersieKeuzeForm(request.POST or None)
-    form.fields["pve_versie"].queryset = models.PVEVersie.objects.filter(
+    qs = models.PVEVersie.objects.filter(
         belegger=client, public=True
     )
+    form.fields["pve_versie"].queryset = qs
 
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
@@ -184,6 +185,7 @@ def KiesPVE(request, client_pk, pk):
     context["logo_url"] = logo_url
     context["pk"] = pk
     context["project"] = project
+    context["qs"] = qs
     return render(request, "kiespve.html", context)
 
 

@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-
+from django.db import IntegrityError
 from app import models
 from project.models import Beleggers, BeheerdersUitnodiging
 from pvetool import forms
@@ -15,11 +15,13 @@ from pvetool.views.utils import GetAWSURL
 from users.models import CustomUser
 from users.forms import AcceptInvitationForm
 from django.utils import timezone
+from django.core.mail import send_mail
+from django.http import Http404
 
 
 def LoginView(request, client_pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
-        return redirect("logout_syn", client_pk=client_pk)
+    if not Beleggers.objects.filter(pk=client_pk):
+        raise Http404("404")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
@@ -90,21 +92,32 @@ def BeheerdersAcceptUitnodiging(request, client_pk, key):
 
     if timezone.now() > invitation.expires:
         return render(request, "404verlopen_syn.html")
+    
+    form = AcceptInvitationForm(request.POST or None)
 
     if request.method == "POST":
-        form = AcceptInvitationForm(request.POST)
 
         if form.is_valid():
             # strip the email by its first part to automatically create a username
             sep = "@"
             username = invitation.invitee.split(sep, 1)[0]
-            user = CustomUser.objects.create_user(
-                username, password=form.cleaned_data["password1"]
-            )
+            after_at = invitation.invitee.split(sep, 1)[1].split(".", 1)[0]
+
+            try:
+                user = CustomUser.objects.create_user(
+                    username, password=form.cleaned_data["password1"]
+                )
+            except IntegrityError:
+                username += after_at
+                user = CustomUser.objects.create_user(
+                    username, password=form.cleaned_data["password1"]
+                )
+
             user.email = invitation.invitee
             if invitation.klantenorganisatie:
-                user.klantenorganisatie = invitation.klanteorganisatie
+                user.klantenorganisatie = invitation.klantenorganisatie
 
+            user.type_user = "SB"
             user.save()
 
             klant = invitation.klantenorganisatie
@@ -134,9 +147,8 @@ def BeheerdersAcceptUitnodiging(request, client_pk, key):
                 )
                 return redirect("dashboard_syn", client_pk=client_pk)
         else:
-            messages.warning(request, "Vul de verplichte velden in.")
+            messages.warning(request, "Wachtwoord niet veilig genoeg of komen niet overeen. Gebruik minimaal één cijfer en één speciale teken.")
 
-    form = AcceptInvitationForm()
     context = {}
     context["form"] = form
     context["key"] = key
@@ -147,9 +159,6 @@ def BeheerdersAcceptUitnodiging(request, client_pk, key):
 
 
 def LogoutView(request, client_pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
-        return redirect("logout_syn", client_pk=client_pk)
-
     logout(request)
     return redirect("login_syn", client_pk=client_pk)
 
@@ -270,9 +279,10 @@ def KiesPVEGenerate(request, client_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     form = forms.PVEVersieKeuzeForm(request.POST or None)
-    form.fields["pve_versie"].queryset = models.PVEVersie.objects.filter(
+    qs = models.PVEVersie.objects.filter(
         belegger=client, public=True
     )
+    form.fields["pve_versie"].queryset = qs
 
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
@@ -285,6 +295,7 @@ def KiesPVEGenerate(request, client_pk):
     context = {}
     context["form"] = form
     context["client_pk"] = client_pk
+    context["qs"] = qs
     context["client"] = client
     context["logo_url"] = logo_url
     return render(request, "kiespvegenereer.html", context)

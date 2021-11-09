@@ -18,6 +18,7 @@
 <div class="general_title"><img src="{% static 'pvetool/img/plusproject.png'%}" class="title_img"></img><p>Programma van Eisen Genereren</p></div>
 <div class="invite-container">
     <div class="box">
+    {% if qs %}
         <p class="description">Kies de PvE versie die u wil genereren.</p>
         <form action="{% url 'kiespvegenerate' client_pk %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
@@ -25,6 +26,10 @@
             <p class="formbox">{{ form.pve_versie }}</p>
             <input type="submit" class="button" value="Volgende >">
         </form>    
+    {% else %}   
+          <p class="description">Er zijn nog geen actieve PvE versies voor uw organisatie. Neem contact op met de systeembeheerder.</p> 
+      {% endif %}
+
     </div>
 </div>
 {% endblock %}

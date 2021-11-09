@@ -5,8 +5,9 @@
     <form hx-target="this" hx-swap="outerHTML" class="ui form" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
         {{ form }}
-        <button hx-get="{% url 'getusersorganisatie' client_pk organisatie.id %}" style="float: left;" class="ui basic button">Terug</button>
-        <button hx-post="{% url 'addusersorganisatie' client_pk organisatie.id %}" type="submit" class="ui icon green button"><i class="icon plus"></i></button>
+        <button hx-get="{% url 'getusersorganisatie' client_pk organisatie.id %}" style="float: left;" class="ui basic icon button"><i class="icon undo alternate"></i></button>
+        <button hx-post="{% url 'addusersorganisatie' client_pk organisatie.id %}" type="submit" class="ui icon green button"><i class="icon check"></i></button>
+        <a href="{% url 'plusaccount_syn' client_pk %}" style="float: right;" class="ui basic button"><i class="icon address card outline"></i>Of nodig uit</a>
 
     </form>  
 

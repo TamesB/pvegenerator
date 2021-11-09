@@ -11,6 +11,7 @@ from pvetool.forms import StartProjectForm
 from pvetool.views.utils import GetAWSURL
 from users.models import CustomUser, Organisatie
 from django.urls import reverse_lazy
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
@@ -127,7 +128,6 @@ def AddProject(request, client_pk):
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def GetProjectManagerOfProject(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
-        print("1")
         return render(request, "partials/tests_error.html")
 
     client = Beleggers.objects.filter(pk=client_pk).first()
@@ -136,18 +136,15 @@ def GetProjectManagerOfProject(request, client_pk, pk):
         request.user.klantenorganisatie.id != client.id
         and request.user.type_user != "B"
     ):
-        print("2")
         return render(request, "partials/tests_error.html")
 
     allowed_users = ["B", "SB"]
 
     if request.user.type_user not in allowed_users:
-        print("3")
         return render(request, "partials/tests_error.html")
 
     project = get_object_or_404(Project, id=pk)
     if project.belegger != client:
-        print("4")
         return render(request, "partials/tests_error.html")
 
     context = {}
@@ -155,6 +152,35 @@ def GetProjectManagerOfProject(request, client_pk, pk):
     context["client_pk"] = client_pk
     return render(request, "partials/projectmanager_detail.html", context)
 
+@login_required(login_url=reverse_lazy("login_syn", args={1,},))
+def DeleteProject(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return render(request, "partials/tests_error.html")
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+
+    if (
+        request.user.klantenorganisatie.id != client.id
+        and request.user.type_user != "B"
+    ):
+        return render(request, "partials/tests_error.html")
+
+    allowed_users = ["B", "SB"]
+
+    if request.user.type_user not in allowed_users:
+        return render(request, "partials/tests_error.html")
+
+    project = get_object_or_404(Project, id=pk)
+    if project.belegger != client:
+        return render(request, "partials/tests_error.html")
+
+    if request.headers["HX-Prompt"] == "VERWIJDEREN":
+        project.delete()
+        messages.warning(request, f"Project: {project.naam} succesvol verwijderd!")
+        return render(request, "partials/messages.html")
+    else:
+        messages.warning(request, f"Onjuiste invulling. Probeer het opnieuw.")
+        return render(request, "partials/messages.html")
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def AddProjectManagerToProject(request, client_pk, pk):

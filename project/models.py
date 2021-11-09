@@ -212,7 +212,8 @@ def on_change(sender, instance: Beleggers, **kwargs):
     # sender is the object being saved
     activity = appmodels.Activity()
     activity.activity_type = "K"
-    activity.schuldige = request.user
+    if not request.user.is_anonymous:
+        activity.schuldige = request.user
     activity.save()
     
     if instance.id is None: # new object will be created
@@ -225,7 +226,7 @@ def on_change(sender, instance: Beleggers, **kwargs):
             activity.update = f"Beheerder van { instance.naam } veranderd naar { instance.beheerder }."
         if previous.logo != instance.logo: # field will be updated
             activity.update = f"Logo veranderd van klant { instance.naam }."
-        if previous.abonnement != instance.abonnement: # field will be updated
+        if previous.abbonement != instance.abbonement: # field will be updated
             activity.update = f"Abonnement veranderd van klant { instance.naam }."
 
     

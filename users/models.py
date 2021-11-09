@@ -59,7 +59,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     type_user = models.CharField(max_length=3, choices=type_choices, default="SD")
 
     organisatie = models.ForeignKey(Organisatie, on_delete=models.SET_NULL, null=True, blank=True, related_name="user")
-    klantenorganisatie = models.ForeignKey("project.Beleggers", on_delete=models.CASCADE, null=True, blank=True, default=None, related_name="werknemer")
+    klantenorganisatie = models.ForeignKey("project.Beleggers", on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name="werknemer")
     objects = CustomUserManager()
 
     USERNAME_FIELD = "username"
