@@ -290,7 +290,7 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
                 .all()
             )
             
-            project.Bouwsoort1 = Bouwsoort1
+            project.bouwsoort1 = Bouwsoort1
 
             if Bouwsoort2:
                 basic_PVE = basic_PVE.union(
