@@ -25,9 +25,9 @@
             <p class="description">Alle PvE regels hebben een status en zijn geaccepteerd. Bevestig dat u het ping-pong proces wil bevriezen en het PvE wil finaliseren. Iedereen van het project krijgt een e-mail met een link naar het downloaden van het Programma van Eisen met alle opmerkingen en bijlagen per regel.</p>
         <form action="{% url 'finalfreeze_syn' client_pk pk %}" method="post">
             {% csrf_token %}
-            <label class="formtitle" for="{{ form.confirm.id_for_label }}">Vink aan voor bevestiging.</label>
+            <p><label class="formtitle" for="{{ form.confirm.id_for_label }}">Vink aan voor bevestiging.</label></p>
             <p class="formbox">{{ form.confirm }}</p>
-            <input type="submit" class="button" value="Stuur door">
+            <p><input type="submit" class="button" value="Stuur door"></p>
         </form>    
     </div>
 </div>
