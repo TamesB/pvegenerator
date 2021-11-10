@@ -22,3 +22,7 @@ def previous_one(indexable, i):
         return indexable[i - 1]
     except IndexError:
         return int("0")
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)

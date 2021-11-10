@@ -93,11 +93,17 @@ def AddComment(request, client_pk, pk):
                 hoofdstukken[item.hoofdstuk] = False
 
     annotations = {}
+    annotations_hfst = {}
 
-    for annotation in project.annotation.select_related("item").select_related(
+    for annotation in project.annotation.select_related("item").select_related("item__hoofdstuk").select_related(
         "status"
     ):
         annotations[annotation.item] = annotation
+
+        if annotation.item.hoofdstuk.id in annotations_hfst.keys():
+            annotations_hfst[annotation.item.hoofdstuk.id] += 1
+        else:
+            annotations_hfst[annotation.item.hoofdstuk.id] = 1
 
     aantal_opmerkingen_gedaan = len(annotations.keys())
 
@@ -110,6 +116,7 @@ def AddComment(request, client_pk, pk):
     context["progress"] = progress
     context["aantal_opmerkingen_gedaan"] = aantal_opmerkingen_gedaan
     context["hoofdstukken"] = hoofdstukken
+    context["annotations_hfst"] = annotations_hfst
     context["project"] = project
     context["client_pk"] = client_pk
     context["client"] = client

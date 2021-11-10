@@ -90,6 +90,8 @@ def BeheerdersAcceptUitnodiging(request, client_pk, key):
 
     invitation = BeheerdersUitnodiging.objects.filter(key=key).first()
 
+    
+
     if timezone.now() > invitation.expires:
         return render(request, "404verlopen_syn.html")
     

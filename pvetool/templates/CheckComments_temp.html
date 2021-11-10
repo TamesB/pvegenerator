@@ -38,9 +38,15 @@
 <div class="item_opmerking_list">
 {% for key, value in hoofdstukken_todo.items %}
 {% if value %}
-    <button type="button" hx-get="{% url 'getparagravenpingpong' client_pk project.id key.id 0 0 %}" hx-target="#hoofdstuk_content-0-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk"><p>{{ key.hoofdstuk }} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
+    <button type="button" hx-get="{% url 'getparagravenpingpong' client_pk project.id key.id 0 0 %}" 
+    hx-target="#hoofdstuk_content-0-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk">
+    <p>{{ key.hoofdstuk }} {% if hoofdstuk_to_reply|get_item:key.id %}<i><span>({{ hoofdstuk_to_reply|get_item:key.id }} reacties)</i></span>{% endif %}<img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img>
+    <img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
 {% else %}
-    <button type="button" hx-get="{% url 'getitemspingpong' client_pk project.id key.id 0 0 0 %}" hx-target="#hoofdstuk_content-0-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk"><p>{{ key.hoofdstuk }} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
+    <button type="button" hx-get="{% url 'getitemspingpong' client_pk project.id key.id 0 0 0 %}" 
+    hx-target="#hoofdstuk_content-0-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk">
+    <p>{{ key.hoofdstuk }} {% if hoofdstuk_to_reply|get_item:key.id %}<i><span>({{ hoofdstuk_to_reply|get_item:key.id }} reacties)</i></span>{% endif %}<img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img>
+    <img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
 {% endif %}
     <div class="hoofdstuk_content" id="hoofdstuk_content-0-{{ key.id }}">
     </div>
@@ -57,9 +63,11 @@
 <div class="item_opmerking_list">
 {% for key, value in hoofdstukken_non_accept.items %}
 {% if value %}
-    <button type="button" hx-get="{% url 'getparagravenpingpong' client_pk project.id key.id 1 1 %}" hx-target="#hoofdstuk_content-1-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk"><p>{{ key.hoofdstuk }} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
+    <button type="button" hx-get="{% url 'getparagravenpingpong' client_pk project.id key.id 1 1 %}" 
+    hx-target="#hoofdstuk_content-1-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk"><p>{{ key.hoofdstuk }} {% if hoofdstuk_to_reply|get_item:key.id %}<i><span>({{ hoofdstuk_to_reply|get_item:key.id }} reacties)</i></span>{% endif %} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
 {% else %}
-    <button type="button" hx-get="{% url 'getitemspingpong' client_pk project.id key.id 0 1 1 %}" hx-target="#hoofdstuk_content-1-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk"><p>{{ key.hoofdstuk }} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
+    <button type="button" hx-get="{% url 'getitemspingpong' client_pk project.id key.id 0 1 1 %}" 
+    hx-target="#hoofdstuk_content-1-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk"><p>{{ key.hoofdstuk }} {% if hoofdstuk_to_reply|get_item:key.id %}<i><span>({{ hoofdstuk_to_reply|get_item:key.id }} reacties)</i></span>{% endif %} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
 {% endif %}
     <div class="hoofdstuk_content" id="hoofdstuk_content-1-{{ key.id }}">
     </div>
@@ -77,9 +85,13 @@
 
 {% for key, value in hoofdstukken_accept.items %}
 {% if value %}
-    <button type="button" hx-get="{% url 'getparagravenpingpong' client_pk project.id key.id 2 1 %}" hx-target="#hoofdstuk_content-2-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk"><p>{{ key.hoofdstuk }} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
+    <button type="button" hx-get="{% url 'getparagravenpingpong' client_pk project.id key.id 2 1 %}" 
+    hx-target="#hoofdstuk_content-2-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk">
+    <p>{{ key.hoofdstuk }} {% if hoofdstuk_to_reply|get_item:key.id %}<i><span>({{ hoofdstuk_to_reply|get_item:key.id }} reacties)</i></span>{% endif %} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
 {% else %}
-    <button type="button" hx-get="{% url 'getitemspingpong' client_pk project.id key.id 0 2 1 %}" hx-target="#hoofdstuk_content-2-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk"><p>{{ key.hoofdstuk }} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
+    <button type="button" hx-get="{% url 'getitemspingpong' client_pk project.id key.id 0 2 1 %}" 
+    hx-target="#hoofdstuk_content-2-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk">
+    <p>{{ key.hoofdstuk }} {% if hoofdstuk_to_reply|get_item:key.id %}<i><span>({{ hoofdstuk_to_reply|get_item:key.id }} reacties)</i></span>{% endif %} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
 {% endif %}
     <div class="hoofdstuk_content" id="hoofdstuk_content-2-{{ key.id }}">
     </div>

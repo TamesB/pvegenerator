@@ -133,7 +133,7 @@ def FirstFreeze(request, client_pk, pk):
 def SendReplies(request, client_pk, pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
-
+        
     client = Beleggers.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:

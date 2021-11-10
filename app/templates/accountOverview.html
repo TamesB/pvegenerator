@@ -1,47 +1,68 @@
-{% extends "layout.html" %} {% load semanticui %} {% block main %}
+{% extends "_baselayout.html" %} {% load semanticui %} {% block main %}
 <h1 class="ui header center aligned">Gebruikers</h1>
 <button
   class="ui primary button d-inline"
   hx-get="{% url 'dashboard' %}" hx-target="body" hx-swap="innerHTML"
   >< Dashboard</button>
 <div class="d-inline" style="float: right;">
-<span class="float right"><a href="{% url 'acccreate' %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
+<span class="float right"><a href="#"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
 </div>
 <br><br>
-{% if users %}
-<div>
+{% if klanten %}
+{% for klant in klanten %}
 	<table class="ui fixed multiple line blue table">
 		<thead>
 			<tr>
 				<th>
-					Gebruikersnaam
+					{{ klant }}
 				</th>
 				<th>
 					Rang
 				</th>
+				<th>Stakeholder</th>
+				<th>Projecten</th>
+				<th>
+					&nbsp;
+				</th>
 			</tr>
 		</thead>
 		<tbody>
-				{% for user in users %}
+		{% if klant.werknemer.all %}
+				{% for user in klant.werknemer.all %}
 				<tr>
                     <td> 
-					<a href="{% url 'accprofile' user.id %}">{{ user.username }}</a> &nbsp; 
+					<a href="#">{{ user.username }}</a> &nbsp; 
                     </td>
                     <td> 
                         {% if user.type_user == 'SD' %}
-                            pvetool Derde
+                            PVETool Derde
                         {% elif user.type_user == 'SOG' %}
-                            pvetool Projectmanager
+                            PVETool Projectmanager
                         {% elif user.type_user == 'SB' %}
-                            pvetool Beheerder
+                            PVETool Beheerder
 						{% else %}
 							Beheerder
                         {% endif %}
                     </td>
+					<td>{% if user.organisatie %}{{ user.organisatie }}{% else %}&nbsp;{% endif %}</td>
+					<td>{% if user.projectspermitted.all %}{% for project in user.projectspermitted.all %}{{ project.naam }}, {% endfor %}{% else %}&nbsp;{% endif %}</td>
+					<td>
+					<span><button hx-post="#"
+						hx-prompt="Vul 'VERWIJDEREN' in om de gebruiker {{ user.username }} te verwijderen."
+						hx-target="closest tr"
+						class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
+					</td>
 				</tr>
 				{% endfor %}
+
+		{% else %}
+		<tr>
+			<td><i>Nog geen gebruikers</i></td>
+		</tr>
+		{% endif %}
 		</tbody>
 	</table>
+{% endfor %}
 {% else %}
 <p>Nog geen gebruikers (?)</p>
 {% endif %}

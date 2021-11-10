@@ -1646,3 +1646,10 @@ def projectHeatmap(request):
     data = [[project.plaats.y, project.plaats.x, 1000] for project in projects]
     context["data"] = data
     return render(request, "heatmapProjects.html", context)
+
+@staff_member_required(login_url=reverse_lazy("logout"))
+def AccountOverview(request):
+    klanten = Beleggers.objects.all()
+    context = {}
+    context["klanten"] = klanten
+    return render(request, "accountOverview.html", context)

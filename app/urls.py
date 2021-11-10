@@ -166,4 +166,5 @@ urlpatterns = [
         name="kiesparameterdelete",
     ),
     path("heatmap", views.projectHeatmap, name="projectheatmap"),
+    path("accounts", views.AccountOverview, name="accountoverview"),
 ]

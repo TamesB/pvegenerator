@@ -115,9 +115,21 @@ def CheckComments(request, client_pk, proj_id):
     hoofdstukken_accept = make_hoofdstukken(accepted_comments)
     hoofdstukken_todo = make_hoofdstukken(todo_comments)
 
+    hoofdstuk_to_reply = {}
+
+    replies = current_phase.reply.select_related("onComment__item__hoofdstuk").all()
+
+    for reply in replies:
+        hoofdstuk_id = reply.onComment.item.hoofdstuk.id
+        if hoofdstuk_id in hoofdstuk_to_reply:
+            hoofdstuk_to_reply[hoofdstuk_id] += 1
+        else:
+            hoofdstuk_to_reply[hoofdstuk_id] = 1
+
     context["hoofdstukken_non_accept"] = hoofdstukken_non_accept
     context["hoofdstukken_accept"] = hoofdstukken_accept
     context["hoofdstukken_todo"] = hoofdstukken_todo
+    context["hoofdstuk_to_reply"] = hoofdstuk_to_reply
     context["project"] = project
     context["client_pk"] = client_pk
     context["client"] = client

@@ -123,7 +123,7 @@ def ViewProject(request, client_pk, pk):
         if frozencomments_total == frozencomments_accepted:
             freeze_ready = True
 
-        context["freeze_ready"] = freeze_ready
+        context["freeze_ready"] = True
 
     context["project"] = project
     context["medewerkers"] = medewerkers
