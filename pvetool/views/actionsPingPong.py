@@ -372,7 +372,7 @@ def FinalFreeze(request, client_pk, pk):
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
-    context = []
+    context = {}
     context["form"] = FirstFreezeForm()
     context["pk"] = project.id
     context["project"] = project
