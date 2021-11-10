@@ -127,7 +127,7 @@ def FirstFreeze(request, client_pk, pk):
     context["client"] = client
     context["logo_url"] = logo_url
     return render(request, "FirstFreeze.html", context)
-
+    
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def SendReplies(request, client_pk, pk):
@@ -329,6 +329,8 @@ def FinalFreeze(request, client_pk, pk):
 
     commentphase = project.phase.all()
 
+    # test if all comments accepted
+
     if request.method == "POST":
         form = FirstFreezeForm(request.POST)
 
@@ -371,6 +373,8 @@ def FinalFreeze(request, client_pk, pk):
             )
         else:
             messages.warning(request, "Vul de verplichte velden in.")
+
+        return redirect("viewproject_syn", client_pk=client_pk, pk=pk)
 
     context = {}
     context["form"] = FirstFreezeForm()

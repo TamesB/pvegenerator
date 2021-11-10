@@ -192,7 +192,7 @@ def AddUserOrganisatie(request, client_pk, pk):
                 f"""{ request.user } heeft u toegevoegd aan de organisatie {organisatie.naam}.
                 
                 Een organisatie kan toegevoegd worden aan projecten en werknemers krijgen dan automatisch toegang tot deze projecten.
-                U kunt uw huidige projecten bekijken bij https://pvegenerator.net/pvetool/projects""",
+                U kunt uw huidige projecten bekijken bij https://pvegenerator.net/pvetool/{client.id}/projects""",
                 "admin@pvegenerator.net",
                 [f"{werknemer.email}"],
                 fail_silently=False,
