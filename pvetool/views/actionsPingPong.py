@@ -329,10 +329,6 @@ def FinalFreeze(request, client_pk, pk):
 
     commentphase = project.phase.all()
 
-    # check if the current commentphase has everything accepted
-    if commentphase.todo_comments:
-        raise Http404("404")
-
     if request.method == "POST":
         form = FirstFreezeForm(request.POST)
 
