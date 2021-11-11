@@ -6,20 +6,35 @@
     <i class="icon edit"></i></button></span>
         <span><a hx-delete="{% url 'deleteannotationfirst' client_pk project_pk item_pk %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></p></span>
     <p>
+    {% if bijlagen %}
+    <span><b>Bijlage(n):</b>
+    {% for bijlage in bijlagen %}
     {% if bijlage.bijlage %}
-    <span><a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project_pk annotation.id %}" target="_blank"><b>Bijlage:  </b><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
+    <a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project_pk annotation.id bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
+    <span><button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation.id bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
+
+    {% endif %}
+    {% endfor %}
     </span>
     {% endif %}
-
-    {% if not bijlage.bijlage %}
-    <button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation.id %}" class="ui basic button"><i class="icon plus"></i>Upload Bijlage</button>
-    {% else %}
-    <span><button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation.id %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
-
+    <button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation.id 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button>
     </p>
-    {% endif %}
 {% else %}
     <button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon plus"></i>Aanvulling</button>
+    {% if bijlagen %}
+    <span><b>Bijlage(n):</b>
+    {% for bijlage in bijlagen %}
+    {% if bijlage.bijlage %}
+    <a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project_pk 0 bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
+    <span><button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk 0 bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
+
+    {% endif %}
+    {% endfor %}
+    </span>
+    {% endif %}
+    <button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk 0 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button>
+    </p>
+
 {% endif %}
 </span>
 {% endblock %}{% block scripts %}

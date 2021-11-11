@@ -115,21 +115,41 @@ def CheckComments(request, client_pk, proj_id):
     hoofdstukken_accept = make_hoofdstukken(accepted_comments)
     hoofdstukken_todo = make_hoofdstukken(todo_comments)
 
-    hoofdstuk_to_reply = {}
+    non_accepted_hfst_replies = {}
+    accepted_hfst_replies = {}
+    todo_hfst_replies = {}
 
-    replies = current_phase.reply.select_related("onComment__item__hoofdstuk").all()
+    non_accepted_replies = current_phase.reply.select_related("onComment__item__hoofdstuk").filter(onComment__in=non_accepted_comments)
+    accepted_replies = current_phase.reply.select_related("onComment__item__hoofdstuk").filter(onComment__in=accepted_comments)
+    todo_replies = current_phase.reply.select_related("onComment__item__hoofdstuk").filter(onComment__in=todo_comments)
 
-    for reply in replies:
-        hoofdstuk_id = reply.onComment.item.hoofdstuk.id
-        if hoofdstuk_id in hoofdstuk_to_reply:
-            hoofdstuk_to_reply[hoofdstuk_id] += 1
+    for reply in non_accepted_replies:
+        hoofdstuk = reply.onComment.item.hoofdstuk.id
+        if hoofdstuk in non_accepted_hfst_replies:
+            non_accepted_hfst_replies[hoofdstuk] += 1
         else:
-            hoofdstuk_to_reply[hoofdstuk_id] = 1
+            non_accepted_hfst_replies[hoofdstuk] = 1
+            
+    for reply in accepted_replies:
+        hoofdstuk = reply.onComment.item.hoofdstuk.id
+        if hoofdstuk in accepted_hfst_replies:
+            accepted_hfst_replies[hoofdstuk] += 1
+        else:
+            accepted_hfst_replies[hoofdstuk] = 1
+            
+    for reply in todo_replies:
+        hoofdstuk = reply.onComment.item.hoofdstuk.id
+        if hoofdstuk in todo_hfst_replies:
+            todo_hfst_replies[hoofdstuk] += 1
+        else:
+            todo_hfst_replies[hoofdstuk] = 1
 
     context["hoofdstukken_non_accept"] = hoofdstukken_non_accept
     context["hoofdstukken_accept"] = hoofdstukken_accept
     context["hoofdstukken_todo"] = hoofdstukken_todo
-    context["hoofdstuk_to_reply"] = hoofdstuk_to_reply
+    context["non_accepted_hfst_replies"] = non_accepted_hfst_replies
+    context["accepted_hfst_replies"] = accepted_hfst_replies
+    context["todo_hfst_replies"] = todo_hfst_replies
     context["project"] = project
     context["client_pk"] = client_pk
     context["client"] = client
@@ -332,7 +352,8 @@ def DetailItemPong(request, client_pk, project_pk, item_pk, type):
 
         for reply in replies:
             if reply.bijlagetoreply.exists():
-                bijlagen[reply] = reply.bijlagetoreply.first()
+                bijlagen[reply] = reply.bijlagetoreply.all()
+                
 
     annotation = None
     if PVEItemAnnotation.objects.filter(
@@ -342,16 +363,16 @@ def DetailItemPong(request, client_pk, project_pk, item_pk, type):
             project__id=project_pk, item__id=item.id
         ).first()
 
-        annotationbijlage = None
+        annotationbijlagen = None
         if annotation.bijlageobject.exists():
-            annotationbijlage = annotation.bijlageobject.first()
+            annotationbijlagen = annotation.bijlageobject.all()
 
     context["item"] = item
     context["itembijlage"] = itembijlage
     context["replies"] = replies
     context["bijlagen"] = bijlagen
     context["annotation"] = annotation
-    context["annotationbijlage"] = annotationbijlage
+    context["annotationbijlagen"] = annotationbijlagen
     context["client_pk"] = client_pk
     context["type"] = type
     context["project_pk"] = project_pk
@@ -416,7 +437,7 @@ def DetailReplyPong(request, client_pk, project_pk, item_pk, type):
         return redirect("logout_syn", client_pk=client_pk)
 
     reply = None
-    bijlage = None
+    bijlagen = None
 
     if CommentReply.objects.filter(
         commentphase=current_phase, onComment__item__id=item_pk
@@ -426,14 +447,14 @@ def DetailReplyPong(request, client_pk, project_pk, item_pk, type):
         ).first()
 
         if reply.bijlagetoreply.exists():
-            bijlage = reply.bijlagetoreply.first()
+            bijlagen = reply.bijlagetoreply.all()
 
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
     context["item_pk"] = item_pk
     context["reply"] = reply
     context["current_reply"] = reply
-    context["bijlage"] = bijlage
+    context["bijlagen"] = bijlagen
     context["type"] = type
     return render(request, "partials/detail_annotation_pong.html", context)
 
@@ -622,7 +643,7 @@ def NonAcceptItemPong(request, client_pk, project_pk, item_pk, type):
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
-def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type):
+def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type, new, bijlage_id):
     context = {}
 
     project, current_phase = passed_commentcheck_guardclauses(
@@ -637,15 +658,25 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type)
         annotation = PVEItemAnnotation.objects.filter(
             project=project, item__id=item_pk
         ).first()
-
-    reply = CommentReply.objects.filter(
-        onComment__id=annotation.id,
-        onComment__item__id=item_pk,
-        commentphase=current_phase,
-    ).first()
-
-    if BijlageToReply.objects.filter(reply__id=annotation_pk).exists():
-        bijlagemodel = BijlageToReply.objects.filter(reply__id=annotation_pk).first()
+        
+    # create reply only once with GET/POST request
+    if annotation_pk == 0 and not CommentReply.objects.filter(
+            onComment__id=annotation.id,
+            onComment__item__id=item_pk,
+            commentphase=current_phase,
+        ):
+        reply = CommentReply.objects.create(commentphase=current_phase, onComment=annotation, gebruiker=request.user)
+        bijlage_id = reply.id
+    else:
+        reply = CommentReply.objects.filter(
+            onComment__id=annotation.id,
+            onComment__item__id=item_pk,
+            commentphase=current_phase,
+        ).first()
+    
+    # seperate forms because we want to create a reply only once (GET)
+    if BijlageToReply.objects.filter(id=bijlage_id).exists() and new == 0 and bijlage_id != 0:
+        bijlagemodel = BijlageToReply.objects.filter(id=bijlage_id).first()
         form = forms.PongBijlageForm(
             request.POST or None, request.FILES or None, instance=bijlagemodel
         )
@@ -653,25 +684,32 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type)
         form = forms.PongBijlageForm(
             request.POST or None, request.FILES or None, initial={"reply": reply}
         )
-
+        
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
-            form.save()
-            messages.warning(request, "Bijlage toegevoegd!")
-            return redirect(
-                "detailpongreply",
-                client_pk=client_pk,
-                project_pk=project_pk,
-                item_pk=item_pk,
-                type=type,
-            )
-
-        messages.warning(request, "Fout met bijlage toevoegen. Probeer het opnieuw.")
+            if not BijlageToReply.objects.filter(naam=form.cleaned_data["naam"]).exists():
+                form.save()
+                reply.bijlage = True
+                reply.save()
+                messages.warning(request, "Bijlage toegevoegd!")
+                return redirect(
+                    "detailpongreply",
+                    client_pk=client_pk,
+                    project_pk=project_pk,
+                    item_pk=item_pk,
+                    type=type,
+                )
+            else:
+                messages.warning(request, "Bijlagenaam bestaat al in dit project. Kies een andere.")
+        else:
+            messages.warning(request, "Fout met bijlage toevoegen. Probeer het opnieuw.")
 
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
     context["annotation_pk"] = annotation_pk
+    context["new"] = new
     context["item_pk"] = item_pk
+    context["bijlage_id"] = bijlage_id
     context["type"] = type
     context["form"] = form
     context["annotation"] = annotation

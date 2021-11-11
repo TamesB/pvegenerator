@@ -278,19 +278,19 @@ def DetailAnnotationFirst(request, client_pk, project_pk, item_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     annotation = None
-    bijlage = None
+    bijlagen = None
     if PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).exists():
         annotation = PVEItemAnnotation.objects.filter(
             project=project, item__id=item_pk
         ).first()
         if annotation.bijlageobject.exists():
-            bijlage = annotation.bijlageobject.first()
+            bijlagen = annotation.bijlageobject.all()
 
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
     context["item_pk"] = item_pk
     context["annotation"] = annotation
-    context["bijlage"] = bijlage
+    context["bijlagen"] = bijlagen
     return render(request, "partials/detail_annotation_first.html", context)
 
 
@@ -328,7 +328,7 @@ def DetailKostenverschilFirst(request, client_pk, project_pk, item_pk):
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
-def AddBijlageFirst(request, client_pk, project_pk, item_pk, annotation_pk):
+def AddBijlageFirst(request, client_pk, project_pk, item_pk, annotation_pk, bijlage_id):
     context = {}
 
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -346,11 +346,16 @@ def AddBijlageFirst(request, client_pk, project_pk, item_pk, annotation_pk):
 
     if not project.item.exists():
         return redirect("logout_syn", client_pk=client_pk)
-    annotation = PVEItemAnnotation.objects.filter(id=annotation_pk).first()
+    
+    if annotation_pk != 0:
+        annotation = PVEItemAnnotation.objects.filter(id=annotation_pk).first()
+    else:
+        annotation = PVEItemAnnotation.objects.create(project=project, item=models.PVEItem.objects.get(id=item_pk), gebruiker=request.user)
+        annotation_pk = annotation.id
 
     bijlagemodel = None
-    if BijlageToAnnotation.objects.filter(ann__id=annotation_pk).exists():
-        bijlagemodel = BijlageToAnnotation.objects.filter(ann__id=annotation_pk).first()
+    if bijlage_id != 0 and annotation_pk != 0 and BijlageToAnnotation.objects.filter(id=bijlage_id, ann__id=annotation_pk).exists():
+        bijlagemodel = BijlageToAnnotation.objects.filter(id=bijlage_id, ann__id=annotation_pk).first()
         form = FirstBijlageForm(
             request.POST or None, request.FILES or None, instance=bijlagemodel
         )
@@ -361,19 +366,25 @@ def AddBijlageFirst(request, client_pk, project_pk, item_pk, annotation_pk):
 
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
-            form.save()
-            messages.warning(request, "Bijlage toegevoegd!")
-            return redirect(
-                "detailfirstannotation",
-                client_pk=client_pk,
-                project_pk=project_pk,
-                item_pk=item_pk,
-            )
-
-        messages.warning(request, "Fout met bijlage toevoegen. Probeer het opnieuw.")
+            if not BijlageToAnnotation.objects.filter(naam=form.cleaned_data["naam"]).exists(): 
+                form.save()
+                annotation.bijlage=True
+                annotation.save()
+                messages.warning(request, "Bijlage toegevoegd!")
+                return redirect(
+                    "detailfirstannotation",
+                    client_pk=client_pk,
+                    project_pk=project_pk,
+                    item_pk=item_pk,
+                )
+            else:
+                messages.warning(request, "Naam bestaat al voor een bijlage in dit project. Kies een andere.")
+        else:
+            messages.warning(request, "Fout met bijlage toevoegen. Probeer het opnieuw.")
 
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
+    context["bijlage_id"] = bijlage_id
     context["annotation_pk"] = annotation_pk
     context["item_pk"] = item_pk
     context["form"] = form

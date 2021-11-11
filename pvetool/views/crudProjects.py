@@ -110,7 +110,7 @@ def AddProject(request, client_pk):
                 project.plaatsnamen = geolocator.reverse(
                     f"{project.plaats.y}, {project.plaats.x}"
                 ).raw["address"]["town"]
-            project.plaatsnamen = "Amsterdam"
+
             project.save()
             messages.warning(request, f"Project {project.naam} aangemaakt.")
             return redirect("manageprojecten_syn", client_pk=client_pk)

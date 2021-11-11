@@ -220,15 +220,20 @@ class PVEItemAnnotationForm(forms.Form):
         self.fields["status"].required = False
 
 
-class BijlageToAnnotationForm(ModelForm):
+class BijlageToAnnotationForm(ModelForm):    
     class Meta:
         model = BijlageToAnnotation
-        fields = ("ann", "bijlage")
+        fields = ("ann", "bijlage", "naam")
         labels = {
             "ann": "Opmerking:",
             "bijlage": "Bijlage:",
+            "naam": "Bijlagenaam:"
         }
         widgets = {"ann": forms.HiddenInput()}
+        
+    def __init__(self, *args, **kwargs):
+        super(BijlageToAnnotationForm, self).__init__(*args, **kwargs)
+        self.fields["naam"].required = True
 
 class FirstAnnotationForm(forms.Form):
     annotation = forms.CharField(label="annotation", required=True, widget=forms.Textarea(attrs={'rows':3, 'cols':10}))
@@ -246,14 +251,24 @@ class FirstStatusForm(forms.Form):
 class FirstBijlageForm(ModelForm):
     class Meta:
         model = BijlageToAnnotation
-        fields = ("bijlage", "ann",)
-        labels = {"bijlage": "", "ann": ""}
+        fields = ("bijlage", "ann", "naam")
+        labels = {"bijlage": "", "ann": "", "naam": "Bijlagenaam:"}
+        widgets = {"ann": forms.HiddenInput()}
+        
+    def __init__(self, *args, **kwargs):
+        super(FirstBijlageForm, self).__init__(*args, **kwargs)
+        self.fields["naam"].required = True
 
 class PongBijlageForm(ModelForm):
     class Meta:
         model = BijlageToReply
-        fields = ("bijlage", "reply",)
-        labels = {"bijlage": "", "reply": ""}
+        fields = ("bijlage", "reply", "naam")
+        labels = {"bijlage": "", "reply": "", "naam": "Bijlagenaam:"}
+        widgets = {"reply": forms.HiddenInput()}
+        
+    def __init__(self, *args, **kwargs):
+        super(PongBijlageForm, self).__init__(*args, **kwargs)
+        self.fields["naam"].required = True
 
 
 class AddOrganisatieForm(forms.Form):

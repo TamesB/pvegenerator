@@ -12,14 +12,19 @@ from pvetool.models import BijlageToReply
 
 
 @login_required(login_url="login_syn")
-def DownloadAnnotationAttachment(request, client_pk, projid, annid):
+def DownloadAnnotationAttachment(request, client_pk, projid, annid, bijlage_id):
     access_key = settings.AWS_ACCESS_KEY_ID
     secret_key = settings.AWS_SECRET_ACCESS_KEY
     bucket_name = settings.AWS_STORAGE_BUCKET_NAME
     region = settings.AWS_S3_REGION_NAME
-    item = BijlageToAnnotation.objects.filter(
-        ann__project__id=projid, ann__id=annid
-    ).first()
+    if annid != 0:
+        item = BijlageToAnnotation.objects.filter(
+            ann__project__id=projid, ann__id=annid, id=bijlage_id
+        ).first()
+    else:
+        item = BijlageToAnnotation.objects.filter(
+            id=bijlage_id
+        ).first()
     expiration = 10000
     s3_client = boto3.client(
         "s3",
@@ -74,12 +79,12 @@ def GetAWSURL(client):
 
 
 @login_required
-def DownloadReplyAttachment(request, client_pk, pk, reply_id):
+def DownloadReplyAttachment(request, client_pk, pk, reply_id, bijlage_id):
     access_key = settings.AWS_ACCESS_KEY_ID
     secret_key = settings.AWS_SECRET_ACCESS_KEY
     bucket_name = settings.AWS_STORAGE_BUCKET_NAME
     region = settings.AWS_S3_REGION_NAME
-    item = BijlageToReply.objects.filter(reply__id=reply_id).first()
+    item = BijlageToReply.objects.filter(reply__id=reply_id, id=bijlage_id).first()
     expiration = 10000
     s3_client = boto3.client(
         "s3",

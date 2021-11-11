@@ -88,3 +88,6 @@ class BijlageToReply(models.Model):
     reply = models.ForeignKey(CommentReply, on_delete=models.CASCADE, default=None, related_name="bijlagetoreply")
     bijlage = models.FileField(blank=True, null=True, upload_to="OpmerkingBijlages/")
     naam = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.naam}"

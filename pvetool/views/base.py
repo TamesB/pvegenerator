@@ -17,7 +17,8 @@ from users.forms import AcceptInvitationForm
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.http import Http404
-
+from project.models import BijlageToAnnotation
+from pvetool.models import BijlageToReply
 
 def LoginView(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk):
@@ -167,6 +168,7 @@ def LogoutView(request, client_pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def DashboardView(request, client_pk):
+    
     if not Beleggers.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 

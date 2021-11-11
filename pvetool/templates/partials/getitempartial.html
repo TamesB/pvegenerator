@@ -13,20 +13,29 @@
     <span><p><b>Aanvulling:</b> {{ annotation.annotation }}
 {% endif %}
 
-{% if annotationbijlage.bijlage %}
-<span><a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project_pk annotation.id %}" target="_blank"><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
+{% if annotationbijlagen %}
+<span><b>Bijlage(n):</b>
+{% for bijlage in annotationbijlagen %}
+{% if bijlage.bijlage %}
+<a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project_pk annotation.id bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
+{% endif %}
+{% endfor %}
 </span>
 {% endif %}
 </p></span>
 {% for reply in replies %}
 {% if reply.comment %}
-<span><p><b>Opmerking laag {{ reply.commentphase.level }}:</b> {{ reply.comment }}. </p></span>
+<span><p><b>Opmerking (laag {{ reply.commentphase.level }}):</b> {{ reply.comment }}. </p></span>
 {% endif %}
 {% if bijlagen.reply %} 
 <span>
-<p>Bijlage: <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk bijlagen.reply.id %}" target="_blank">
-<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img>
-</a>. </p></span>
+<p><b>Bijlage(n) (laag {{ reply.commentphase.level }}):</b>
+{% for bijlage in bijlagen.reply %}
+<a href="{% url 'downloadreplyattachment_syn' client_pk project_pk bijlage.reply.id bijlage.id %}" target="_blank">
+{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img>
+</a>
+{% endfor %}
+</p></span>
 {% endif %}
 
 {% endfor %}

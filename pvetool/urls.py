@@ -109,9 +109,9 @@ urlpatterns = [
     path("<int:client_pk>/deletestatusfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DeleteStatusFirst, name="deletestatusfirst"),
     path("<int:client_pk>/deleteannotationfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DeleteAnnotationFirst, name="deleteannotationfirst"),
     path("<int:client_pk>/deletekostenverschilfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DeleteKostenverschilFirst, name="deletekostenverschilfirst"),
-    path("<int:client_pk>/addbijlagefirst/<int:project_pk>/<int:item_pk>/<int:annotation_pk>", crudFirstAnnotate.AddBijlageFirst, name="addbijlagefirst"),
+    path("<int:client_pk>/addbijlagefirst/<int:project_pk>/<int:item_pk>/<int:annotation_pk>/<int:bijlage_id>", crudFirstAnnotate.AddBijlageFirst, name="addbijlagefirst"),
     path(
-        "<int:client_pk>/project/<int:projid>/comment/my/<int:annid>/dl",
+        "<int:client_pk>/project/<int:projid>/comment/my/<int:annid>/<int:bijlage_id>/dl",
         utils.DownloadAnnotationAttachment,
         name="downloadbijlageaanopmerking_syn",
     ),
@@ -131,14 +131,14 @@ urlpatterns = [
     path("<int:client_pk>/addstatuspong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.AddStatusPong, name="addstatuspong"),
     path("<int:client_pk>/addreplypong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.AddReplyPong, name="addreplypong"),
     path("<int:client_pk>/addkostenverschilpong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.AddKostenverschilPong, name="addkostenverschilpong"),
-    path("<int:client_pk>/addbijlagepong/<int:project_pk>/<int:item_pk>/<int:annotation_pk>/<int:type>", crudPingPong.AddBijlagePong, name="addbijlagepong"),
+    path("<int:client_pk>/addbijlagepong/<int:project_pk>/<int:item_pk>/<int:annotation_pk>/<int:type>/<int:new>/<int:bijlage_id>", crudPingPong.AddBijlagePong, name="addbijlagepong"),
     path("<int:client_pk>/deletestatuspong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DeleteStatusPong, name="deletestatuspong"),
     path("<int:client_pk>/deletereplypong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DeleteReplyPong, name="deletereplypong"),
     path("<int:client_pk>/deletekostenverschilpong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DeleteKostenverschilPong, name="deletekostenverschilpong"),
 
     # CRUD of replies and attachments to replies
     path(
-        "<int:client_pk>/project/<int:pk>/replies/my/<int:reply_id>/dl",
+        "<int:client_pk>/project/<int:pk>/replies/my/<int:reply_id>/<int:bijlage_id>/dl",
         utils.DownloadReplyAttachment,
         name="downloadreplyattachment_syn",
     ),

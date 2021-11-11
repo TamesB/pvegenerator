@@ -8,24 +8,70 @@
     <i class="icon edit"></i></button></span>
         <span><a hx-delete="{% url 'deletereplypong' client_pk project_pk item_pk type %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></p></span>
     <p>
+    {% if bijlagen %}
+
+    <span><b>Uw Bijlage(n):</b>
+    {% for bijlage in bijlagen %}
     {% if bijlage.bijlage %}
-    <span><a href="{% url 'downloadreplyattachment_syn' client_pk project_pk current_reply.id %}" target="_blank"><b>Uw Bijlage:  </b><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
-    </span>
+        <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk current_reply.id bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
+    <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id type 0 bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button>
+    {% endif %}
+    {% endfor %}
+    <span><button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button></span></span>
+
     {% endif %}
 
-    {% if not bijlage.bijlage %}
-    <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id type %}" class="ui basic button"><i class="icon plus"></i>Upload Bijlage</button>
+    {% if not bijlagen %}
+    <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button>
     {% else %}
-    <span><button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id type %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
-    </p>
+    
+    <span><b>Uw Bijlage(n):</b>
+    {% for bijlage in bijlagen %}
+    {% if bijlage.bijlage %}
+        <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk current_reply.id bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
+    <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 0 bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button>
+    {% endif %}
+    {% endfor %}
+    <span><button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button></span></span>
+
     {% endif %}
 {% else %}
     <button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon plus"></i>Reactie</button>
+    {% if not bijlagen %}
+    <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button>
+    {% else %}
+
+    <span><b>Uw Bijlage(n):</b>
+    {% for bijlage in bijlagen %}
+    {% if bijlage.bijlage %}
+        <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk current_reply.id bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
+    <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 0 bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button>
+    {% endif %}
+    {% endfor %}
+    <span><button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button></span></span>
+    
+    {% endif %}
+
 {% endif %}
 {% endif %}
 {% else %}
 {% if type != 2 %}
     <button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon plus"></i>Reactie</button>
+    {% if not bijlagen %}
+    <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button>
+    {% else %}
+
+    <span><b>Uw Bijlage(n):</b>
+    {% for bijlage in bijlagen %}
+    {% if bijlage.bijlage %}
+        <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk current_reply.id bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
+    <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 0 bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button>
+    {% endif %}
+    {% endfor %}
+    <span><button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 1 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button></span></span>
+
+    {% endif %}
+
 {% endif %}
 {% endif %}
 </span>
