@@ -373,14 +373,14 @@ class PDFMaker:
                                                 reactie_str = f""
                                                 if reactie.comment:
                                                     if len(reactie_str) == 0:
-                                                        reactie_str += f"Opmerkingen: "
+                                                        reactie_str += f"Opmerking: "
                                                     reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
 
                                                 if reactie.id in reactiebijlagen.keys():
                                                     if len(reactie_str) == 0:
-                                                        reactie_str += f"Opmerkingen: "
+                                                        reactie_str += f"Opmerking: "
                                                     
-                                                    reactie_str += f"Zie bijlage(n)"
+                                                    reactie_str += f"Zie bijlage(n) "
                                                     
                                                     for bijlage in reactiebijlagen[reactie.id]:
                                                         reactie_str += f"'{bijlage.naam}', "
@@ -398,7 +398,7 @@ class PDFMaker:
                                         ):
                                             opmrk = ""
 
-                                        opmrk = opmrk
+                                        opmrk = opmrk + "<br />"
 
                                         # kleur geaccepteerde aanvullingen/opmerkingen als groen
                                         if (
@@ -452,14 +452,14 @@ class PDFMaker:
                                                 reactie_str = f""
                                                 if reactie.comment:
                                                     if len(reactie_str) == 0:
-                                                        reactie_str += f"Opmerkingen: "
+                                                        reactie_str += f"Opmerking: "
                                                     reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
 
                                                 if reactie.id in reactiebijlagen.keys():
                                                     if len(reactie_str) == 0:
-                                                        reactie_str += f"Opmerkingen: "
+                                                        reactie_str += f"Opmerking: "
                                                     
-                                                    reactie_str += f"Zie bijlage(n)"
+                                                    reactie_str += f"Zie bijlage(n) "
                                                     
                                                     for bijlage in reactiebijlagen[reactie.id]:
                                                         reactie_str += f"'{bijlage.naam}', "
@@ -477,7 +477,7 @@ class PDFMaker:
                                         ):
                                             opmrk = ""
 
-                                        opmrk = opmrk
+                                        opmrk = opmrk + "<br />"
 
                                         # kleur aanvullingen/opmerkingen als groen
                                         if (
@@ -543,12 +543,12 @@ class PDFMaker:
 
                                             if reactie.comment:
                                                 if len(reactie_str) == 0:
-                                                    reactie_str += f"Opmerkingen: "
+                                                    reactie_str += f"Opmerking: "
                                                 reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
 
                                             if reactie.id in reactiebijlagen.keys():
                                                 if len(reactie_str) == 0:
-                                                    reactie_str += f"Opmerkingen: "
+                                                    reactie_str += f"Opmerking: "
                                                 
                                                 reactie_str += f"Zie bijlage(n)"
                                                 
@@ -568,7 +568,7 @@ class PDFMaker:
                                     ):
                                         opmrk = ""
 
-                                    opmrk = opmrk
+                                    opmrk = opmrk + "<br />"
 
                                     if opmerkingen[item.id].id in accepted_comment_ids:
                                         j = Paragraph(
@@ -619,12 +619,12 @@ class PDFMaker:
                                             reactie_str = f""
                                             if reactie.comment:
                                                 if len(reactie_str) == 0:
-                                                    reactie_str += f"Opmerkingen: "
+                                                    reactie_str += f"Opmerking: "
                                                 reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
 
                                             if reactie.id in reactiebijlagen.keys():
                                                 if len(reactie_str) == 0:
-                                                    reactie_str += f"Opmerkingen: "
+                                                    reactie_str += f"Opmerking: "
                                                 
                                                 reactie_str += f"Zie bijlage(n)"
                                                 
@@ -644,7 +644,7 @@ class PDFMaker:
                                     ):
                                         opmrk = ""
 
-                                    opmrk = opmrk
+                                    opmrk = opmrk + "<br />"
 
                                     if opmerkingen[item.id].id in accepted_comment_ids:
                                         j = Paragraph(
