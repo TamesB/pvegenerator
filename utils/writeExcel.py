@@ -80,9 +80,8 @@ class ExcelMaker:
         typeobjecten_item = {item.id:[i for i in item.TypeObject.all()] for item in PVEItems}
         doelgroepen_item = {item.id:[i for i in item.Doelgroep.all()] for item in PVEItems}
 
-        paragraven_hfst = {hoofdstuk.id:[i for i in models.PVEParagraaf.objects.filter(
-                versie__id=versie_pk, hoofdstuk=hoofdstuk
-            )] for hoofdstuk in hoofdstukken}
+        paragraven = list(set([item.paragraaf for item in PVEItems if item.paragraaf]))
+        paragraven_hfst = {hoofdstuk.id:[paragraaf for paragraaf in paragraven if paragraaf.hoofdstuk and paragraaf.hoofdstuk == hoofdstuk] for hoofdstuk in hoofdstukken}
 
         for hoofdstuk in hoofdstukken:
             print(f"hoofdstuk: {hoofdstuk}")
