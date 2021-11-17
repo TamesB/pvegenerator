@@ -103,7 +103,7 @@ def ForgotPassword(request, client_pk):
                     username=username
 
                 ):
-                    return redirect("login_syn")
+                    return redirect("login_syn", client_pk=client_pk)
                 else:
                     user = models.CustomUser.objects.get(
                         username=username
@@ -112,7 +112,7 @@ def ForgotPassword(request, client_pk):
                 if not models.CustomUser.objects.filter(
                     username=form.cleaned_data["email"]
                 ):
-                    return redirect("login_syn")
+                    return redirect("login_syn", client_pk=client_pk)
                 else:
                     user = models.CustomUser.objects.get(
                         username=form.cleaned_data["email"]
@@ -129,7 +129,7 @@ def ForgotPassword(request, client_pk):
                 f"{ client.naam } Projecten - Wachtwoord Reset",
                 f"""U heeft aangevraagd uw wachtwoord te resetten. Klik op de link om uw wachtwoord opnieuw in te stellen.
                 
-                Link: https://pvegenerator.net/beheer/users/passreset/{invitation.key}
+                Link: https://pvegenerator.net/beheer/users/{client_pk}/passreset/{invitation.key}
                 
                 Deze link is 10 dagen geldig.""",
                 "admin@pvegenerator.net",
@@ -141,7 +141,7 @@ def ForgotPassword(request, client_pk):
                 request,
                 f"Er is een E-mail verstuurd gekoppeld aan dit account om het wachtwoord te veranderen. De uitnodiging zal verlopen in { expiry_length } dagen.)",
             )
-            return redirect("login_syn")
+            return redirect("login_syn", client_pk=client_pk)
 
     context = {}
     context["form"] = forms.ForgotPassForm()
@@ -177,7 +177,7 @@ def ResetPassword(request, client_pk, key):
             invitation.delete()
             messages.warning(request, f"Wachtwoord veranderd, login met uw account.")
 
-            return redirect("login_syn")
+            return redirect("login_syn", client_pk=client_pk)
 
     context = {}
     context["form"] = forms.ResetPassForm()
