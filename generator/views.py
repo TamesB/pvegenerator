@@ -10,8 +10,7 @@ from django.shortcuts import render
 from pvetool.views.utils import GetAWSURL
 from project.models import Beleggers
 from app import models
-from utils import createBijlageZip, writeDiffPdf, writePdf
-from utils import writeExcel
+from utils import createBijlageZip, writeDiffPdf, writePdf, writeExcel
 
 from . import forms
 
