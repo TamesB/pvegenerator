@@ -312,11 +312,9 @@ def AddOrganisatieToProject(request, client_pk, pk):
                 return redirect("logout_syn", client_pk=client_pk)
 
             organisatie.projecten.add(project)
-            organisatie.save()
 
             # voeg organisatie toe aan project
             project.organisaties.add(organisatie)
-            project.save()
 
             # geef alle werknemers toegang aan het project
             werknemers = organisatie.gebruikers.all()
@@ -326,7 +324,6 @@ def AddOrganisatieToProject(request, client_pk, pk):
                     return redirect("logout_syn", client_pk=client_pk)
 
                 project.permitted.add(werknemer)
-                project.save()
 
                 send_mail(
                     f"{ client.naam } Projecten - Uitnodiging voor project {project}",
@@ -390,7 +387,6 @@ def SOGAddDerdenToProj(request, client_pk, pk):
         if form.is_valid():
             permitted = form.cleaned_data["permitted"]
             project.permitted.add(*permitted)
-            project.save()
 
             if permitted:
                 gebruikers = [user for user in permitted]

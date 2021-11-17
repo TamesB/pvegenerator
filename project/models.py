@@ -234,3 +234,47 @@ def on_change(sender, instance: Beleggers, **kwargs):
 
     
     activity.save()
+
+@receiver(pre_save, sender=Project)
+def on_change(sender, instance: Project, **kwargs):
+
+    for frame_record in inspect.stack():
+        if frame_record[3] == 'get_response':
+            request = frame_record[0].f_locals['request']
+            break
+        else:
+            request = None
+
+    # sender is the object being saved
+    activity = appmodels.Activity()
+    activity.activity_type = "P"
+    if not request.user.is_anonymous:
+        activity.schuldige = request.user
+    activity.save()
+    
+    if instance.id is None: # new object will be created
+        activity.update = f"Nieuw project van klant { request.user.klantenorganisatie }: '{ instance.naam }'."
+    else:
+        previous = Project.objects.get(id=instance.id)
+        if previous.naam != instance.naam: # field will be updated
+            activity.update = f"{ previous.naam } van klant { instance.belegger }: Projectnaam veranderd naar { instance.naam }."
+        if previous.pveconnected != instance.pveconnected: # field will be updated
+            activity.update = f"{ instance.naam } van klant { instance.belegger }: PvE verbonden aan project (PvE Versie: { instance.pve_versie })."
+        if previous.fullyFrozen != instance.fullyFrozen: # field will be updated
+            activity.update = f"{ instance.naam } van klant { instance.belegger }: Opmerkingen bevroren."
+        if previous.frozenLevel < instance.frozenLevel: # field will be updated
+            activity.update = f"{ instance.naam } van klant { instance.belegger }: Opmerkingen doorgestuurd (naar opmerkingsniveau {instance.frozenLevel})."
+        if previous.projectmanager != instance.projectmanager: # field will be updated
+            activity.update = f"{ instance.naam } van klant { instance.belegger }: Projectmanager veranderd naar { instance.projectmanager }."
+            
+        if list(previous.organisaties.all()) != list(instance.organisaties.all()): # field will be updated
+            huidige_orgas = list(instance.organisaties.all())
+            previous_orgas = list(previous.organisaties.all())
+            verschil = list(set(huidige_orgas) - set(previous_orgas))
+            if not verschil:
+                negatief_verschil = list(set(previous_orgas) - set(huidige_orgas))
+                activity.update = f"{ instance.naam } van klant { instance.belegger }: Organisatie(s) verwijderd; { ', '.join(negatief_verschil) }."
+            else:
+                activity.update = f"{ instance.naam } van klant { instance.belegger }: Organisatie(s) toegevoegd; { ', '.join(verschil) }."
+
+    activity.save()

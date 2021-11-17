@@ -258,6 +258,7 @@ class FirstBijlageForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(FirstBijlageForm, self).__init__(*args, **kwargs)
         self.fields["naam"].required = True
+        self.fields["bijlage"].required = True
 
 class PongBijlageForm(ModelForm):
     class Meta:
@@ -269,6 +270,7 @@ class PongBijlageForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(PongBijlageForm, self).__init__(*args, **kwargs)
         self.fields["naam"].required = True
+        self.fields["bijlage"].required = True
 
 
 class AddOrganisatieForm(forms.Form):
