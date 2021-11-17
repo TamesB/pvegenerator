@@ -17,7 +17,6 @@ from django.urls import reverse, reverse_lazy
 from django.core.mail import send_mail
 from pvetool.views.utils import GetAWSURL
 from project.models import Beleggers, Project, BeheerdersUitnodiging
-from utils import writeExcel
 from users.models import CustomUser
 from . import forms, models
 import secrets
@@ -622,16 +621,10 @@ def PVEHoofdstukListView(request, versie_pk):
 
 
 @staff_member_required(login_url=reverse_lazy("logout"))
-def DownloadWorksheet(request, versie_pk):
+def DownloadWorksheet(request, excelFilename):
     fl_path = settings.EXPORTS_ROOT
-
-    worksheet = writeExcel.ExcelMaker()
-    filename = worksheet.linewriter(versie_pk)
-
-    filename = f"/{filename}.xlsx"
-
     try:
-        fl = open(fl_path + filename, "rb")
+        fl = open(fl_path + excelFilename, "rb")
     except OSError:
         raise Http404("404")
 
@@ -639,7 +632,7 @@ def DownloadWorksheet(request, versie_pk):
         fl,
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
-    response["Content-Disposition"] = "inline; filename=%s" % filename
+    response["Content-Disposition"] = "inline; filename=%s" % excelFilename
 
     return response
 

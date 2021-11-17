@@ -39,7 +39,7 @@ urlpatterns = [
     path("makeinactive/<int:versie_pk>", views.DeactivateVersie, name="maakinactief"),
     path("addbelegger", views.AddBelegger, name="addbelegger"),
     path(
-        "parameters/<int:versie_pk>/download",
+        "parameters/<int:excelFilename>/download",
         views.DownloadWorksheet,
         name="worksheetdownload",
     ),

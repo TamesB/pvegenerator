@@ -11,6 +11,7 @@ from pvetool.views.utils import GetAWSURL
 from project.models import Beleggers
 from app import models
 from utils import createBijlageZip, writeDiffPdf, writePdf
+from utils import writeExcel
 
 from . import forms
 
@@ -260,10 +261,16 @@ def GeneratePVEView(request, client_pk, versie_pk):
                 zipmaker.makeZip(zipFilename, filename, bijlagen)
             else:
                 zipFilename = False
+                
+            worksheet = writeExcel.ExcelMaker()
+            excelFilename = worksheet.linewriter(basic_PVE)
+
+            excelFilename = f"/{filename}.xlsx"
 
             # and render the result page
             context = {}
             context["itemsPVE"] = basic_PVE
+            context["excelFilename"] = excelFilename
             context["filename"] = filename
             context["zipFilename"] = zipFilename
             context["client_pk"] = client_pk
@@ -312,7 +319,6 @@ def GeneratePVEView(request, client_pk, versie_pk):
 
     return render(request, "GeneratePVE.html", context)
 
-
 @login_required
 def download_file(request, filename):
     fl_path = settings.EXPORTS_ROOT
@@ -328,7 +334,6 @@ def download_file(request, filename):
     response["Content-Disposition"] = "inline; filename=%s" % filename
 
     return response
-
 
 @login_required
 def download_bijlagen(request, zipFilename):

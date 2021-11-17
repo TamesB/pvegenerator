@@ -8,9 +8,12 @@ from app import models
 
 
 class ExcelMaker:
-    def linewriter(self, versie_pk):
-        PVEItems = [i for i in models.PVEItem.objects.prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk)]
+    def linewriter(self, PVEItems):
+        #hierboven versie_pk als je hele versie wil uitdraaien
+        #PVEItems = [i for i in models.PVEItem.objects.prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk)]
 
+        versie_pk = PVEItems.first().versie.id
+        
         date = datetime.datetime.now()
         filename = "PVEWORKSHEET-%s%s%s%s%s%s" % (
             date.strftime("%H"),

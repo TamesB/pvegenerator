@@ -10,6 +10,10 @@
     {% if zipFilename %}
     <p><span><a href="{% url 'downloadbijlagen' zipFilename %}"><button class="ui basic button"><i class="icon download"></i>Download PvE + Bijlagen (.zip)</button></a></span></p>
     {% endif %}
+    {% if excel %}
+    <p><span><a href="{% url 'worksheetdownload' excelFilename %}"><button class="ui basic button"><i class="icon download"></i>Download Excel PvE</button></a></span></p>
+    {% endif %}
+
     {% else %}
       <p>Geen regels met deze parameters. Bewerk de parameters of neem contact op met de systeembeheerder.</p>
       {% endif %}

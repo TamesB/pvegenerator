@@ -109,6 +109,7 @@ urlpatterns = [
     path("<int:client_pk>/deletestatusfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DeleteStatusFirst, name="deletestatusfirst"),
     path("<int:client_pk>/deleteannotationfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DeleteAnnotationFirst, name="deleteannotationfirst"),
     path("<int:client_pk>/deletekostenverschilfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DeleteKostenverschilFirst, name="deletekostenverschilfirst"),
+    path("<int:client_pk>/deletebijlagefirst/<int:project_pk>/<int:annotation_pk>/<int:pk>", crudFirstAnnotate.DeleteBijlageFirst, name="deletebijlagefirst"),
     path("<int:client_pk>/addbijlagefirst/<int:project_pk>/<int:item_pk>/<int:annotation_pk>/<int:bijlage_id>", crudFirstAnnotate.AddBijlageFirst, name="addbijlagefirst"),
     path(
         "<int:client_pk>/project/<int:projid>/comment/my/<int:annid>/<int:bijlage_id>/dl",

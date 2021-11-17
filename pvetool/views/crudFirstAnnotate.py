@@ -702,3 +702,58 @@ def DeleteStatusFirst(request, client_pk, project_pk, item_pk):
         project_pk=project_pk,
         item_pk=item_pk,
     )
+
+@login_required(login_url=reverse_lazy("login_syn",  args={1,},))
+def DeleteBijlageFirst(request, client_pk, project_pk, annotation_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    project = get_object_or_404(Project, pk=project_pk)
+    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user.type_user != project.first_annotate:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if project.frozenLevel > 0:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if not project.item.exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    bijlage = None
+    if BijlageToAnnotation.objects.filter(id=pk).exists():
+        bijlage = PVEItemAnnotation.objects.filter(
+            id=pk
+        ).first()
+    
+    annotation = None
+    if PVEItemAnnotation.objects.filter(
+            id=annotation_pk
+        ).exists():
+        annotation = PVEItemAnnotation.objects.get(
+            id=annotation_pk
+        )
+        
+    if bijlage:
+        bijlage.delete()
+        if annotation:
+            if not BijlageToAnnotation.objects.filter(ann=annotation).exists():
+                annotation.bijlage = False
+                annotation.save()
+                
+        messages.warning(request, "Bijlage verwijderd.")
+        return redirect(
+            "detailfirstannotation",
+            client_pk=client_pk,
+            project_pk=project_pk,
+            item_pk=annotation_pk,
+        )
+
+    messages.warning(request, "Fout met bijlage verwijderen. Probeer het nog eens.")
+    return redirect(
+        "detailfirstannotation",
+        client_pk=client_pk,
+        project_pk=project_pk,
+        item_pk=annotation_pk,
+    )
