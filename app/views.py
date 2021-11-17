@@ -675,7 +675,6 @@ def PVEaddhoofdstukView(request, versie_pk):
     context["form"] = form
     return render(request, "addchapterform.html", context)
 
-
 @staff_member_required(login_url=reverse_lazy("logout"))
 def PVEedithoofdstukView(request, versie_pk, pk):
     versie = models.PVEVersie.objects.get(id=versie_pk)

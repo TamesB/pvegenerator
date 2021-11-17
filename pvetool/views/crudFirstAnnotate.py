@@ -723,7 +723,7 @@ def DeleteBijlageFirst(request, client_pk, project_pk, annotation_pk, pk):
 
     bijlage = None
     if BijlageToAnnotation.objects.filter(id=pk).exists():
-        bijlage = PVEItemAnnotation.objects.filter(
+        bijlage = BijlageToAnnotation.objects.filter(
             id=pk
         ).first()
     

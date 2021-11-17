@@ -53,6 +53,7 @@ class PDFMaker:
         self.OpmerkingBoxTitelHeight = 20
         self.OpmerkingBoxHeight = -150
         self.PrePVEBoxHeight = -75
+        
         if logo_url:
             data = urlopen(logo_url).read()
             rgba = np.array(Image.open(io.BytesIO(data)))
