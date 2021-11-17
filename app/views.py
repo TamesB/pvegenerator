@@ -623,6 +623,14 @@ def PVEHoofdstukListView(request, versie_pk):
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def DownloadWorksheet(request, excelFilename):
+    # if pve version pk is used as the url (very hacky)
+    if models.PVEItem.objects.filter(versie__id=excelFilename).exists():
+        versie_pk = excelFilename
+        items = models.PVEItem.objects.filter(versie__id=versie_pk)
+        worksheet = writeExcel.ExcelMaker()
+        excelFilename = worksheet.linewriter(items)
+    
+    #otherwise just use this filename
     excelFilename = f"/{excelFilename}.xlsx"
 
     fl_path = settings.EXPORTS_ROOT
