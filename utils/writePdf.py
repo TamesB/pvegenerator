@@ -550,7 +550,7 @@ class PDFMaker:
                                                 if len(reactie_str) == 0:
                                                     reactie_str += f"Opmerking: "
                                                 
-                                                reactie_str += f"Zie bijlage(n)"
+                                                reactie_str += f"Zie bijlage(n) "
                                                 
                                                 for bijlage in reactiebijlagen[reactie.id]:
                                                     reactie_str += f"'{bijlage.naam}', "
@@ -626,7 +626,7 @@ class PDFMaker:
                                                 if len(reactie_str) == 0:
                                                     reactie_str += f"Opmerking: "
                                                 
-                                                reactie_str += f"Zie bijlage(n)"
+                                                reactie_str += f"Zie bijlage(n) "
                                                 
                                                 for bijlage in reactiebijlagen[reactie.id]:
                                                     reactie_str += f"'{bijlage.naam}', "

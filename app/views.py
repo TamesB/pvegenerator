@@ -634,7 +634,6 @@ def DownloadWorksheet(request, excelFilename):
     except ValueError:
         pass
         
-    
     #otherwise just use this filename
     excelFilename = f"/{excelFilename}.xlsx"
 
