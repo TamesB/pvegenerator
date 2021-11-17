@@ -17,6 +17,7 @@ from django.urls import reverse, reverse_lazy
 from django.core.mail import send_mail
 from pvetool.views.utils import GetAWSURL
 from project.models import Beleggers, Project, BeheerdersUitnodiging
+from utils import writeExcel
 from users.models import CustomUser
 from . import forms, models
 import secrets
@@ -622,6 +623,8 @@ def PVEHoofdstukListView(request, versie_pk):
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def DownloadWorksheet(request, excelFilename):
+    excelFilename = f"/{excelFilename}.xlsx"
+
     fl_path = settings.EXPORTS_ROOT
     try:
         fl = open(fl_path + excelFilename, "rb")

@@ -93,64 +93,64 @@ def GeneratePVEView(request, client_pk, versie_pk):
             )
 
             # Entered parameters are in the manytomany parameters of the object
-            basic_PVE = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
+            basic_PVE = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(
                 Q(versie__id=versie_pk) & Q(basisregel=True)
             )
 
             basic_PVE = basic_PVE.union(
-                models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
+                models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(
                     versie__id=versie_pk, Bouwsoort__parameter__contains=Bouwsoort1
                 )
             )
 
             if Bouwsoort2:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(
                         versie__id=versie_pk, Bouwsoort__parameter__contains=Bouwsoort2
                     )
                 )
             if Bouwsoort3:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(
                         versie__id=versie_pk, Bouwsoort__parameter__contains=Bouwsoort3
                     )
                 )
             if TypeObject1:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(
                         versie__id=versie_pk,
                         TypeObject__parameter__contains=TypeObject1,
                     )
                 )
             if TypeObject2:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(
                         versie__id=versie_pk,
                         TypeObject__parameter__contains=TypeObject2,
                     )
                 )
             if TypeObject3:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(
                         versie__id=versie_pk,
                         TypeObject__parameter__contains=TypeObject3,
                     )
                 )
             if Doelgroep1:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(
                         versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep1
                     )
                 )
             if Doelgroep2:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(
                         versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep2
                     )
                 )
             if Doelgroep3:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(
                         versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep3
                     )
                 )
@@ -159,29 +159,29 @@ def GeneratePVEView(request, client_pk, versie_pk):
             # if box checked
             if AED:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(Q(AED=True) & Q(versie__id=versie_pk))
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(Q(AED=True) & Q(versie__id=versie_pk))
                 )
             if Smarthome:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(
                         Q(Smarthome=True) & Q(versie__id=versie_pk)
                     )
                 )
             if EntreeUpgrade:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(
                         Q(EntreeUpgrade=True) & Q(versie__id=versie_pk)
                     )
                 )
             if Pakketdient:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(
                         Q(Pakketdient=True) & Q(versie__id=versie_pk)
                     )
                 )
             if JamesConcept:
                 basic_PVE = basic_PVE.union(
-                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(
+                    models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(
                         Q(JamesConcept=True) & Q(versie__id=versie_pk)
                     )
                 )
@@ -263,9 +263,6 @@ def GeneratePVEView(request, client_pk, versie_pk):
                 
             worksheet = writeExcel.ExcelMaker()
             excelFilename = worksheet.linewriter(basic_PVE)
-
-            excelFilename = f"/{filename}.xlsx"
-
             # and render the result page
             context = {}
             context["itemsPVE"] = basic_PVE
@@ -410,21 +407,21 @@ def compareFormView(request, versie_pk):
             eerste_count = 0
 
             if Bouwsoort1:
-                eerste_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, Bouwsoort__parameter__contains=Bouwsoort1)
+                eerste_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(versie__id=versie_pk, Bouwsoort__parameter__contains=Bouwsoort1)
                 titel += f"{Bouwsoort1} "
                 eerste_count += 1
             if TypeObject1:
                 if eerste_pve:
-                    eerste_pve.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, TypeObject__parameter__contains=TypeObject1))
+                    eerste_pve.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(versie__id=versie_pk, TypeObject__parameter__contains=TypeObject1))
                 else:
-                    eerste_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, TypeObject__parameter__contains=TypeObject1)
+                    eerste_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(versie__id=versie_pk, TypeObject__parameter__contains=TypeObject1)
                 titel += f"{TypeObject1} "
                 eerste_count += 1
             if Doelgroep1:
                 if eerste_pve:
-                    eerste_pve.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep1))
+                    eerste_pve.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep1))
                 else:
-                    eerste_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep1)
+                    eerste_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep1)
                 titel += f"{Doelgroep1} "
                 eerste_count += 1
 
@@ -434,21 +431,21 @@ def compareFormView(request, versie_pk):
             tweede_count = 0
 
             if Bouwsoort2:
-                tweede_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, Bouwsoort__parameter__contains=Bouwsoort2)
+                tweede_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(versie__id=versie_pk, Bouwsoort__parameter__contains=Bouwsoort2)
                 titel += f"{Bouwsoort2} "
                 tweede_count += 1
             if TypeObject2:
                 if tweede_pve:
-                    tweede_pve.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, TypeObject__parameter__contains=TypeObject2))
+                    tweede_pve.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(versie__id=versie_pk, TypeObject__parameter__contains=TypeObject2))
                 else:
-                    tweede_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, TypeObject__parameter__contains=TypeObject2)
+                    tweede_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(versie__id=versie_pk, TypeObject__parameter__contains=TypeObject2)
                 titel += f"{TypeObject2} "
                 tweede_count += 1
             if Doelgroep2:
                 if tweede_pve:
-                    tweede_pve.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep2))
+                    tweede_pve.union(models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep2))
                 else:
-                    tweede_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep2)
+                    tweede_pve = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(versie__id=versie_pk, Doelgroep__parameter__contains=Doelgroep2)
                 titel += f"{Doelgroep2} "
                 tweede_count += 1
 

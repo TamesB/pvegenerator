@@ -12,7 +12,7 @@ class ExcelMaker:
         #hierboven versie_pk als je hele versie wil uitdraaien
         #PVEItems = [i for i in models.PVEItem.objects.prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk)]
 
-        versie_pk = PVEItems.first().versie.id
+        versie_pk = PVEItems.first().versie_id
         
         date = datetime.datetime.now()
         filename = "PVEWORKSHEET-%s%s%s%s%s%s" % (
@@ -36,7 +36,7 @@ class ExcelMaker:
 
         row = 0
         column = 0
-
+        
         Bouwsoorten = [
             bouwsrt for bouwsrt in models.Bouwsoort.objects.filter(versie__id=versie_pk)
         ]
@@ -68,7 +68,7 @@ class ExcelMaker:
         row += 1
         column = 0
 
-        hoofdstukken = models.PVEHoofdstuk.objects.filter(versie__id=versie_pk).order_by("id")
+        hoofdstukken = list(set([item.hoofdstuk for item in PVEItems.order_by("id")]))
         hoofdstuknamen = [hoofdstuk.hoofdstuk for hoofdstuk in hoofdstukken]
 
         # Run door de items heen
@@ -86,7 +86,7 @@ class ExcelMaker:
 
         for hoofdstuk in hoofdstukken:
             print(f"hoofdstuk: {hoofdstuk}")
-            items = models.PVEItem.objects.select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk, hoofdstuk=hoofdstuk)
+            items = [item for item in PVEItems if item.hoofdstuk == hoofdstuk]
             worksheet.write(row, column, hoofdstuk.hoofdstuk, bold)
             row += 1
 
