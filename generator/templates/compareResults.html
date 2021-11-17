@@ -10,6 +10,9 @@
     {% if zipFilename %}
     <p><span><a href="{% url 'downloadbijlagen' zipFilename %}"><button class="ui basic button"><i class="icon download"></i>Download PvE + Bijlagen (.zip)</button></a></span></p>
     {% endif %}
+    {% if excelFilename %}
+    <p><span><a href="{% url 'worksheetdownload' excelFilename %}"><button class="ui basic button"><i class="icon download"></i>Download Excel PvE</button></a></span></p>
+    {% endif %}
 
 <div>
 	<table class="ui fixed multiple line blue table">

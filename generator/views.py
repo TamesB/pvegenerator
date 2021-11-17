@@ -515,6 +515,10 @@ def compareFormView(request, versie_pk):
                     zipFilename = False
 
                 context["zipFilename"] = zipFilename
+                
+                worksheet = writeExcel.ExcelMaker()
+                excelFilename = worksheet.linewriter(afwijkingen)
+                context["excelFilename"] = excelFilename
 
             context["afwijkingen"] = afwijkingen
             return render(request, "compareResults.html", context)
