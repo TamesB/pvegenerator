@@ -483,7 +483,7 @@ def compareFormView(request, versie_pk):
                 parameters += titel
 
                 date = datetime.datetime.now()
-                filename = "AFWIJKINGEN-%s%s%s%s%s%s" % (
+                fileExt = "%s%s%s%s%s%s" % (
                     date.strftime("%H"),
                     date.strftime("%M"),
                     date.strftime("%S"),
@@ -491,6 +491,8 @@ def compareFormView(request, versie_pk):
                     date.strftime("%m"),
                     date.strftime("%Y"),
                 )
+
+                filename = f"PVE_AFWIJKINGEN-{fileExt}"
                 
                 versie_naam = models.PVEVersie.objects.filter(id=versie_pk).first().versie
                 pdfmaker = writeDiffPdf.PDFMaker(versie_naam)
@@ -507,6 +509,7 @@ def compareFormView(request, versie_pk):
                             bijlagen.append(bijlage_model)
 
                 bijlagen = list(set(bijlagen))
+                zipFilename = f"PvE_Afwijkingen_Compleet-{fileExt}"
 
                 if bijlagen:
                     zipmaker = createBijlageZip.ZipMaker()
