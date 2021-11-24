@@ -389,7 +389,7 @@ def AddPvEVersie(request, belegger_pk):
             new_versie_obj = models.PVEVersie.objects.all().order_by("-id").first()
             # maak kopie van andere versie, voeg nieuw toe.
             if kopie_versie:
-                start = time.time()
+
                 # items
                 items = [i for i in kopie_versie.item.select_related("hoofdstuk").select_related("paragraaf").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").all()]
                 old_items = [i.id for i in items]
@@ -422,8 +422,7 @@ def AddPvEVersie(request, belegger_pk):
 
                 # make copy of all
                 new_versie_obj = models.PVEVersie.objects.all().order_by("-id").first()
-                first = time.time() - start
-                print("after first:" + str(first))
+
                 #keuzematrices#################
                 new_bwsrt = []
                 new_tpobj = []
@@ -466,9 +465,6 @@ def AddPvEVersie(request, belegger_pk):
                 for old, new in zip(old_dlgrp, new_dlgrp):
                     dlgrp_map[old] = new
                 
-                second = time.time() - first
-                print("second:" + str(second))
-
                 # hoofdstukken paragravem #################
                 new_hfst = []
 
@@ -505,9 +501,6 @@ def AddPvEVersie(request, belegger_pk):
                 # finally, make new items with the new reference keys
                 new_items = []
                 
-                rdt = time.time() - second
-                print("third:" + str(rdt))
-
                 for i in items:
                     new_item = models.PVEItem()
                     new_item.versie = new_versie_obj
@@ -527,19 +520,17 @@ def AddPvEVersie(request, belegger_pk):
 
                 models.PVEItem.objects.bulk_create(new_items)
                 new_items = [i for i in new_versie_obj.item.prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").all().order_by("id")]
-                print(new_items)
+
                 old_to_new_items = {}
                 
                 for old, new in zip(items, new_items):
                     old_to_new_items[old] = new
 
                 fourth = time.time() - rdt
-                print("fourth:" + str(fourth))
                 
                 # map foreignkeys to new objects
                 for bwsrt in bwsrt_map.values():
                     items = bwsrt.item.all()
-                    print(bwsrt)
 
                     for item in items:
                         old_to_new_items[item].Bouwsoort.add(bwsrt)
@@ -547,14 +538,12 @@ def AddPvEVersie(request, belegger_pk):
                     
                 for tpobj in tpobj_map.values():
                     items = tpobj.item.all()
-                    print(tpobj)
     
                     for item in items:
                         old_to_new_items[item].TypeObject.add(tpobj)
 
                 for dlgrp in dlgrp_map.values():
                     items = dlgrp.item.all()
-                    print(dlgrp)
 
                     for item in items:
                         old_to_new_items[item].Doelgroep.add(dlgrp)
@@ -562,8 +551,6 @@ def AddPvEVersie(request, belegger_pk):
                 items_map = {}
                 for old, new in zip(old_items, new_items):
                     items_map[old] = new
-                fifth = time.time() - fourth
-                print("fifth:" + str(fifth))
 
                 # connect the bijlagen to it
                 new_bijlagen = []
@@ -583,8 +570,6 @@ def AddPvEVersie(request, belegger_pk):
                 for i, j in zip(new_bijlagen, cur_items_obj):
                     i.items.clear()
                     i.items.add(*j)
-                last = time.time() - fifth
-                print("last:" + str(last))
 
             return redirect("pveversietable", belegger_pk=belegger_pk)
 
