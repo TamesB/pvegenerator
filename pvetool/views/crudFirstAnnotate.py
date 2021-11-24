@@ -143,20 +143,25 @@ def GetParagravenFirstAnnotate(request, client_pk, pk, hoofdstuk_pk):
 
     if not project.item.exists():
         return redirect("logout_syn", client_pk=client_pk)
+    
+    hoofdstuk = models.PVEHoofdstuk.objects.filter(pk=hoofdstuk_pk).first()
 
     items = (
         project.item.select_related("hoofdstuk")
         .select_related("paragraaf")
-        .filter(hoofdstuk__id=hoofdstuk_pk)
+        .filter(hoofdstuk=hoofdstuk)
         .all()
     )
-    paragraven = []
-
+    
+    paragraven_ids = {}
+    
     for item in items:
-        if item.paragraaf not in paragraven:
-            paragraven.append(item.paragraaf)
-
-    context["items"] = items
+        if item.paragraaf:
+            if item.paragraaf.id not in paragraven_ids.keys():
+                paragraven_ids[item.paragraaf.id] = item.paragraaf
+        
+    paragraven = [paragraaf for _, paragraaf in paragraven_ids.items()]
+    
     context["paragraven"] = paragraven
     context["project"] = project
     context["client_pk"] = client_pk
@@ -215,8 +220,6 @@ def GetItemsFirstAnnotate(request, client_pk, pk, hoofdstuk_pk, paragraaf_id):
 
         if item in items_has_bijlages:
             bijlage = item.itembijlage.first()
-
-        items.append([item, bijlage])
 
     context["items"] = items
     context["project"] = project

@@ -8,13 +8,8 @@ from django.urls import reverse, reverse_lazy
 from app import models
 from project.models import Project, PVEItemAnnotation, Beleggers
 from pvetool import forms
-from pvetool.forms import BijlageToReplyForm
 from pvetool.models import BijlageToReply, CommentReply, FrozenComments
 from pvetool.views.utils import GetAWSURL
-
-from django.core.paginator import Paginator
-import time
-
 
 # this function checks if the client exists, whether the user is authenticated to the client, project is of the client,
 # the project is not in first annotate stage, the project contains a pve,
@@ -222,11 +217,13 @@ def GetParagravenPingPong(request, client_pk, pk, hoofdstuk_pk, type, accept):
     items = [comment.item for comment in comments]
 
     paragraven = []
+    paragraven_ids = []
 
     for item in items:
-        if item.paragraaf not in paragraven:
-            paragraven.append(item.paragraaf)
-
+        if item.paragraaf.id not in paragraven_ids:
+            paragraven.appends(item.paragraaf)
+            paragraven_ids.append(item.paragraaf.id)
+    
     context["comments"] = comments
     context["items"] = items
     context["type"] = type
@@ -918,6 +915,8 @@ def DeleteStatusPong(request, client_pk, project_pk, item_pk, type):
 
     if not project:
         return redirect("logout_syn", client_pk=client_pk)
+    
+    
 
     annotation = None
     if PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).exists():

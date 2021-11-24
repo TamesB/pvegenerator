@@ -330,6 +330,16 @@ def FinalFreeze(request, client_pk, pk):
     commentphase = project.phase.all()
 
     # test if all comments accepted
+    frozencomments_accepted = commentphase.first().accepted_comments.count()
+    frozencomments_todo = commentphase.first().todo_comments.count()
+    frozencomments_total = (
+        frozencomments_todo
+        + frozencomments_accepted
+        + commentphase.first().comments.count()
+    )
+    
+    if frozencomments_accepted != frozencomments_total and frozencomments_todo == 0:
+        return redirect("logout_syn", client_pk=client_pk)
 
     if request.method == "POST":
         form = FirstFreezeForm(request.POST)
@@ -357,7 +367,9 @@ def FinalFreeze(request, client_pk, pk):
 
             send_mail(
                 f"{ project.belegger.naam } Projecten - Project {project} is bevroren, download het PvE",
-                f"""Alle regels in het project {project} zijn akkoord mee gegaan en de projectmanager heeft het project afgesloten.
+                f"""Beste { projectmanager.username },
+                
+                Alle regels in het project {project} zijn akkoord mee gegaan en de projectmanager heeft het project afgesloten.
                 
                 Klik op de link om het PvE met alle opmerkingen en bijlages te downloaden.
                 Link: https://pvegenerator.net/pvetool/{project.belegger.id}/project/{project.id}/pve
