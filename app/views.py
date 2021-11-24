@@ -500,6 +500,9 @@ def AddPvEVersie(request, belegger_pk):
 
                 # finally, make new items with the new reference keys
                 new_items = []
+                cur_TypeObject_obj = []
+                cur_Bouwsoort_obj = []
+                cur_Doelgroep_obj = []
                 
                 for i in items:
                     new_item = models.PVEItem()
@@ -521,36 +524,27 @@ def AddPvEVersie(request, belegger_pk):
                 models.PVEItem.objects.bulk_create(new_items)
                 new_items = [i for i in new_versie_obj.item.prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").all().order_by("id")]
 
-                old_to_new_items = {}
-                
-                for old, new in zip(items, new_items):
-                    old_to_new_items[old] = new
-
-                fourth = time.time() - rdt
-                
-                # map foreignkeys to new objects
-                for bwsrt in bwsrt_map.values():
-                    items = bwsrt.item.all()
-
-                    for item in items:
-                        old_to_new_items[item].Bouwsoort.add(bwsrt)
-                    
-                    
-                for tpobj in tpobj_map.values():
-                    items = tpobj.item.all()
-    
-                    for item in items:
-                        old_to_new_items[item].TypeObject.add(tpobj)
-
-                for dlgrp in dlgrp_map.values():
-                    items = dlgrp.item.all()
-
-                    for item in items:
-                        old_to_new_items[item].Doelgroep.add(dlgrp)
-
                 items_map = {}
-                for old, new in zip(old_items, new_items):
+                for old, new in zip(items, new_items):
                     items_map[old] = new
+
+                for old_bwsrt, bwsrt in bwsrt_map.items():
+                    old_bwsrt = models.Bouwsoort.objects.get(id=old_bwsrt)
+                    items = old_bwsrt.item.all()
+                    bwsrt.item.add(*items)
+                    
+                print("bouwsoortdone")
+                for old_tpobj, tpobj in tpobj_map.items():
+                    old_tpobj = models.TypeObject.objects.get(id=old_tpobj)
+                    items = old_tpobj.item.all()
+                    tpobj.item.add(*items)
+                print("typeobjectdone")
+
+                for old_dlgrp, dlgrp in dlgrp_map.items():
+                    old_dlgrp = models.Doelgroep.objects.get(id=old_dlgrp)
+                    items = old_dlgrp.item.all()
+                    dlgrp.item.add(*items)
+                print("doelgroepdone")
 
                 # connect the bijlagen to it
                 new_bijlagen = []
