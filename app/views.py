@@ -500,9 +500,9 @@ def AddPvEVersie(request, belegger_pk):
 
                 # finally, make new items with the new reference keys
                 new_items = []
-                cur_TypeObject_obj = []
-                cur_Bouwsoort_obj = []
-                cur_Doelgroep_obj = []
+                cur_TypeObject_obj = {}
+                cur_Bouwsoort_obj = {}
+                cur_Doelgroep_obj = {}
                 
                 for i in items:
                     new_item = models.PVEItem()
@@ -526,26 +526,28 @@ def AddPvEVersie(request, belegger_pk):
 
                 items_map = {}
                 for old, new in zip(items, new_items):
-                    items_map[old] = new
+                    items_map[old.id] = new
+                
+                # add parameters to all items
+                for bwsrt in old_bwsrt:
+                    bouwsoort = models.Bouwsoort.objects.get(id=bwsrt)
+                    items = list(set([items_map[item.id] for item in bouwsoort.item.all()]))
+                    bwsrt_map[bwsrt].item.set(items)
+                    bwsrt_map[bwsrt].save()
 
-                for old_bwsrt, bwsrt in bwsrt_map.items():
-                    old_bwsrt = models.Bouwsoort.objects.get(id=old_bwsrt)
-                    items = old_bwsrt.item.all()
-                    bwsrt.item.add(*items)
+                for tpobj in old_tpobj:
+                    typeobject = models.TypeObject.objects.get(id=tpobj)
+                    items = list(set([items_map[item.id] for item in typeobject.item.all()]))
+                    tpobj_map[tpobj].item.set(items)
+                    tpobj_map[tpobj].save()
                     
-                print("bouwsoortdone")
-                for old_tpobj, tpobj in tpobj_map.items():
-                    old_tpobj = models.TypeObject.objects.get(id=old_tpobj)
-                    items = old_tpobj.item.all()
-                    tpobj.item.add(*items)
-                print("typeobjectdone")
-
-                for old_dlgrp, dlgrp in dlgrp_map.items():
-                    old_dlgrp = models.Doelgroep.objects.get(id=old_dlgrp)
-                    items = old_dlgrp.item.all()
-                    dlgrp.item.add(*items)
-                print("doelgroepdone")
-
+                for dlgrp in old_dlgrp:
+                    doelgroep = models.Doelgroep.objects.get(id=dlgrp)
+                    items = list(set([items_map[item.id] for item in doelgroep.item.all()]))
+                    dlgrp_map[dlgrp].item.set(items)
+                    dlgrp_map[dlgrp].save()
+                    
+                    
                 # connect the bijlagen to it
                 new_bijlagen = []
                 cur_items_obj = []
