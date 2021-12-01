@@ -221,7 +221,7 @@ def GetParagravenPingPong(request, client_pk, pk, hoofdstuk_pk, type, accept):
 
     for item in items:
         if item.paragraaf.id not in paragraven_ids:
-            paragraven.appends(item.paragraaf)
+            paragraven.append(item.paragraaf)
             paragraven_ids.append(item.paragraaf.id)
     
     context["comments"] = comments

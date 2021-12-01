@@ -202,7 +202,7 @@ def GetItemsFirstAnnotate(request, client_pk, pk, hoofdstuk_pk, paragraaf_id):
             .filter(hoofdstuk__id=hoofdstuk_pk, paragraaf__id=paragraaf_id)
             .all()
         )
-
+    print(pve_items)
     annotations = {}
 
     for annotation in project.annotation.select_related("item").select_related(
@@ -214,13 +214,15 @@ def GetItemsFirstAnnotate(request, client_pk, pk, hoofdstuk_pk, paragraaf_id):
     items_has_bijlages = [item.items.all() for item in itembijlages]
 
     items = []
-
+    
     for item in pve_items:
         bijlage = None
 
         if item in items_has_bijlages:
             bijlage = item.itembijlage.first()
-
+            
+        items.append([item, bijlage])
+        
     context["items"] = items
     context["project"] = project
     context["client_pk"] = client_pk

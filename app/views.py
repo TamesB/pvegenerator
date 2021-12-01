@@ -500,9 +500,6 @@ def AddPvEVersie(request, belegger_pk):
 
                 # finally, make new items with the new reference keys
                 new_items = []
-                cur_TypeObject_obj = {}
-                cur_Bouwsoort_obj = {}
-                cur_Doelgroep_obj = {}
                 
                 for i in items:
                     new_item = models.PVEItem()
