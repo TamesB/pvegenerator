@@ -1,0 +1,18 @@
+{% block main %}
+<span>
+  <button
+    hx-post="{% url 'acceptitempong' client_pk project_pk item_pk type %}"
+    class="ui green button d-inline"
+    type="button"
+  >
+    Accepteren
+  </button>
+  <button
+    hx-post="{% url 'nonacceptitempong' client_pk project_pk item_pk type %}"
+    class="ui red button d-inline"
+    type="button"
+  >
+    Afwijzen
+  </button></span
+>
+{% endblock %}

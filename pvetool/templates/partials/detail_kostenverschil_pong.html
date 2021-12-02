@@ -1,27 +1,47 @@
 {% block main %}
 <span hx-target="this" hx-swap="outerHTML">
-{% if last_reply.kostenConsequenties %}
-    <p><b>Kostenverschil (laag {{ last_reply.commentphase.level }}): €{{ last_reply.kostenConsequenties }}</b></p>
-{% elif annotation.kostenConsequenties %}
-    <p><b>Kostenverschil: €{{ annotation.kostenConsequenties }}</b></p>
-{% endif %}
-
-{% if current_reply %}
-{% if current_reply.accept is False %}
-{% if current_reply.kostenConsequenties %}
-    <b>Uw voorgestelde kostenverschil: €{{ current_reply.kostenConsequenties }}
-    <span><button hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
-        <span><a hx-delete="{% url 'deletekostenverschilpong' client_pk project_pk item_pk type %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></b>
-{% else %}
-    <p><button hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon plus"></i>Kostenverschilverandering</button></p>
-{% endif %}
-{% endif %}
-{% else %}
-{% if type != 2 %}
-    <p><button hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon plus"></i>Kostenverschilverandering</button></p>
-{% endif %}
-{% endif %}
+  {% if last_reply.kostenConsequenties %}
+  <p>
+    <b
+      >Kostenverschil (laag {{ last_reply.commentphase.level }}): €{{ last_reply.kostenConsequenties }}</b
+    >
+  </p>
+  {% elif annotation.kostenConsequenties %}
+  <p><b>Kostenverschil: €{{ annotation.kostenConsequenties }}</b></p>
+  {% endif %} {% if current_reply %} {% if current_reply.accept is False %} {% if current_reply.kostenConsequenties %}
+  <b
+    >Uw voorgestelde kostenverschil: €{{ current_reply.kostenConsequenties }}
+    <span
+      ><button
+        hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
+        class="ui basic icon button"
+      >
+        <i class="icon edit"></i></button
+    ></span>
+    <span
+      ><a
+        hx-delete="{% url 'deletekostenverschilpong' client_pk project_pk item_pk type %}"
+        ><button class="ui icon basic red button">
+          <i class="icon delete"></i></button></a></span
+  ></b>
+  {% else %}
+  <p>
+    <button
+      hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
+      class="ui basic button"
+    >
+      <i class="icon plus"></i>Kostenverschilverandering
+    </button>
+  </p>
+  {% endif %} {% endif %} {% else %} {% if type == 0 %}
+  <p>
+    <button
+      hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
+      class="ui basic button"
+    >
+      <i class="icon plus"></i>Kostenverschilverandering
+    </button>
+  </p>
+  {% endif %} {% endif %}
 </span>
-{% endblock %}{% block scripts %}
-{% include 'partials/messages.html' %}
 {% endblock %}

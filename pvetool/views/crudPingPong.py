@@ -321,6 +321,14 @@ def GetItemsPingPong(request, client_pk, pk, hoofdstuk_pk, paragraaf_id, type, a
     context["accept"] = accept
     return render(request, "partials/itempartialpong.html", context)
 
+@login_required(login_url=reverse_lazy("login_syn",  args={1,},))
+def FirstAcceptStepPong(request, client_pk, project_pk, item_pk, type):
+    context = {}
+    context["client_pk"] = client_pk
+    context["project_pk"] = project_pk
+    context["type"] = type
+    context["item_pk"] = item_pk
+    return render(request, "partials/firstacceptsteppong.html", context)
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def DetailItemPong(request, client_pk, project_pk, item_pk, type):
@@ -585,7 +593,7 @@ def AcceptItemPong(request, client_pk, project_pk, item_pk, type):
             accept=True,
         )
         current_reply.save()
-
+    print(current_reply)
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
     context["item_pk"] = item_pk
@@ -634,6 +642,79 @@ def NonAcceptItemPong(request, client_pk, project_pk, item_pk, type):
     context["project_pk"] = project_pk
     context["item_pk"] = item_pk
     context["current_reply"] = current_reply
+    context["annotation"] = annotation
+    context["type"] = type
+    return render(request, "partials/detail_accept_pong.html", context)
+
+@login_required(login_url=reverse_lazy("login_syn", args={1,},))
+def RedoCommentDetail(request, client_pk, project_pk, item_pk, type):
+    context = {}
+
+    project, current_phase = passed_commentcheck_guardclauses(
+        request, client_pk, project_pk
+    )
+
+    if not project:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    annotation = None
+    if PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).exists():
+        annotation = PVEItemAnnotation.objects.filter(
+            project=project, item__id=item_pk
+        ).first()
+
+    current_reply = None
+    if CommentReply.objects.filter(
+        onComment__id=annotation.id, commentphase=current_phase
+    ).exists():
+        current_reply = CommentReply.objects.get(
+            onComment__id=annotation.id, commentphase=current_phase
+        )
+            
+
+    context["client_pk"] = client_pk
+    context["project_pk"] = project_pk
+    context["item_pk"] = item_pk
+    context["annotation"] = annotation
+    context["current_reply"] = current_reply
+    context["type"] = type
+    return render(request, "partials/firstacceptstepredo.html", context)
+
+
+@login_required(login_url=reverse_lazy("login_syn", args={1,},))
+def RedoCommentPong(request, client_pk, project_pk, item_pk, type):
+    context = {}
+
+    project, current_phase = passed_commentcheck_guardclauses(
+        request, client_pk, project_pk
+    )
+
+    if not project:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    annotation = None
+    if PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).exists():
+        annotation = PVEItemAnnotation.objects.filter(
+            project=project, item__id=item_pk
+        ).first()
+
+    current_reply = None
+    if CommentReply.objects.filter(
+        onComment__id=annotation.id, commentphase=current_phase
+    ).exists():
+        current_reply = CommentReply.objects.get(
+            onComment__id=annotation.id, commentphase=current_phase
+        )
+        
+    if current_reply.bijlage:
+        for bijlage in current_reply.bijlagetoreply.all():
+            bijlage.delete()
+    
+    current_reply.delete()
+
+    context["client_pk"] = client_pk
+    context["project_pk"] = project_pk
+    context["item_pk"] = item_pk
     context["annotation"] = annotation
     context["type"] = type
     return render(request, "partials/detail_accept_pong.html", context)

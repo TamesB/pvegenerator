@@ -122,13 +122,22 @@ urlpatterns = [
     path("<int:client_pk>/project/<int:proj_id>/check", crudPingPong.CheckComments, name="commentscheck_syn"),
     path("<int:client_pk>/getparagravenpingpong/<int:pk>/<int:hoofdstuk_pk>/<int:type>/<int:accept>", crudPingPong.GetParagravenPingPong, name="getparagravenpingpong"),
     path("<int:client_pk>/getitemspingpong/<int:pk>/<int:hoofdstuk_pk>/<int:paragraaf_id>/<int:type>/<int:accept>", crudPingPong.GetItemsPingPong, name="getitemspingpong"),
+    
+    # first acceptation process per rule
+    path("<int:client_pk>/detailpong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DetailAcceptPong, name="detailpongaccept"),
+    path("<int:client_pk>/firstacceptsteppong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.FirstAcceptStepPong, name="firstacceptsteppong"),
+    path("<int:client_pk>/nonacceptitempong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.NonAcceptItemPong, name="nonacceptitempong"),
+        path("<int:client_pk>/acceptitempong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.AcceptItemPong, name="acceptitempong"),
+
+    # details after first accept/deny per rule
+    path("<int:client_pk>/redocommentdetail/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.RedoCommentDetail, name="redocommentdetail"),
     path("<int:client_pk>/detailitempong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DetailItemPong, name="detailitempong"),
     path("<int:client_pk>/detailpongstatus/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DetailStatusPong, name="detailpongstatus"),
-    path("<int:client_pk>/toggleaccept/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DetailAcceptPong, name="detailpongaccept"),
-    path("<int:client_pk>/acceptitempong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.AcceptItemPong, name="acceptitempong"),
-    path("<int:client_pk>/nonacceptitempong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.NonAcceptItemPong, name="nonacceptitempong"),
     path("<int:client_pk>/detailpongreply/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DetailReplyPong, name="detailpongreply"),
     path("<int:client_pk>/detailpongkostenverschil/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DetailKostenverschilPong, name="detailpongkostenverschil"),
+    path("<int:client_pk>/redocommentpong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.RedoCommentPong, name="redocommentpong"),
+    
+    # cruds of comments/costs/attachments
     path("<int:client_pk>/addstatuspong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.AddStatusPong, name="addstatuspong"),
     path("<int:client_pk>/addreplypong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.AddReplyPong, name="addreplypong"),
     path("<int:client_pk>/addkostenverschilpong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.AddKostenverschilPong, name="addkostenverschilpong"),
@@ -137,13 +146,13 @@ urlpatterns = [
     path("<int:client_pk>/deletereplypong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DeleteReplyPong, name="deletereplypong"),
     path("<int:client_pk>/deletekostenverschilpong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DeleteKostenverschilPong, name="deletekostenverschilpong"),
 
-    # CRUD of replies and attachments to replies
+    # Safe attachment downloads AWS
     path(
         "<int:client_pk>/project/<int:pk>/replies/my/<int:reply_id>/<int:bijlage_id>/dl",
         utils.DownloadReplyAttachment,
         name="downloadreplyattachment_syn",
     ),
-    # send back to projectmanager (and back to third parties)
+    # send back to other party
     path("<int:client_pk>/project/<int:pk>/sendreplies", actionsPingPong.SendReplies, name="sendreplies_syn"),
     
     # final freeze after every comment is accepted.

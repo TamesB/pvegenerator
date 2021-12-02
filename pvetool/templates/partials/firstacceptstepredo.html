@@ -1,0 +1,29 @@
+{% block main %}
+<span>
+    <div>
+    {% if current_reply.accept %}
+    <button
+      class="ui green button d-inline"
+      type="button"
+    >
+      Geaccepteerd
+    </button>
+    {% else %}
+    <button
+      class="ui red button d-inline"
+      type="button"
+    >
+      Afgewezen
+    </button>
+    {% endif %}
+</div>
+<button
+  hx-get="{% url 'redocommentpong' client_pk project_pk item_pk type %}"
+  hx-trigger="click"
+  style="float: right"
+  class="ui basic icon button"
+>
+  <i class="icon undo alternate"></i>
+</button>
+</span>
+{% endblock %}

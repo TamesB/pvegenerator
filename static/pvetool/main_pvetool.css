@@ -220,8 +220,8 @@ html {
   font-weight: bold;
   font-size: 1.5em;
   width: 3vw;
-  background-image: -webkit-gradient(linear, right bottom, left top, from(#0078AE), to(#66ACD1));
-  background-image: linear-gradient(bottom right, #0078AE, #66ACD1);
+  background-image: -webkit-gradient(linear, right bottom, left top, from(#0078ae), to(#66acd1));
+  background-image: linear-gradient(bottom right, #0078ae, #66acd1);
   top: 10vh;
   height: 100%;
   max-height: 90vh;
@@ -434,8 +434,8 @@ html {
   margin-left: 3vw;
   margin-right: 3vw;
   background: #b2dbdd;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(20%, #0085B7), color-stop(20%, #f7f7f8));
-  background: linear-gradient(0deg, #0085B7 20%, #f7f7f8 20%);
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(20%, #0085b7), color-stop(20%, #f7f7f8));
+  background: linear-gradient(0deg, #0085b7 20%, #f7f7f8 20%);
   border-radius: 1.6vh;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
@@ -536,7 +536,7 @@ html {
 }
 
 #main .layerOneInner .article .article_content .base_info_table table {
-  background-color: #0085B7;
+  background-color: #0085b7;
   display: table;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
@@ -577,7 +577,7 @@ html {
 }
 
 #main .layerOneInner .article .article_content .base_info_table table .table_title {
-  background-color: #0085B7;
+  background-color: #0085b7;
   letter-spacing: 0.1em;
   font-weight: 900;
   width: 100%;
@@ -687,7 +687,7 @@ html {
   font-weight: bold;
   color: white;
   letter-spacing: 0.2vw;
-  background-color: #0085B7;
+  background-color: #0085b7;
 }
 
 @media screen and (max-width: 540px) {
@@ -723,7 +723,7 @@ html {
   font-style: bold;
   width: 100%;
   padding-right: 2vw;
-  color: #0078AE;
+  color: #0078ae;
 }
 
 #main .layerOneInner .article .article_content .general_title a {
@@ -857,8 +857,8 @@ html {
   width: 20vw;
   min-width: 225px;
   background: #b2dbdd;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(15%, #0078AE), color-stop(15%, #f7f7f8));
-  background: linear-gradient(0deg, #0078AE 15%, #f7f7f8 15%);
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(15%, #0078ae), color-stop(15%, #f7f7f8));
+  background: linear-gradient(0deg, #0078ae 15%, #f7f7f8 15%);
   border-radius: 1.6vh;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
@@ -926,7 +926,7 @@ html {
   padding-left: 1.5vw;
   font-size: 2vh;
   font-style: bold;
-  color: #0078AE;
+  color: #0078ae;
 }
 
 #main .layerOneInner .article .article_content .generator_form form .specific_item_list {
@@ -1249,7 +1249,7 @@ html {
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .titel_plusopmerking {
-  background-color: #0078AE;
+  background-color: #0078ae;
   color: white;
   padding: 18px;
   margin: 0;
@@ -1295,7 +1295,7 @@ html {
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .hoofdstuk {
-  background-color: #0078AE;
+  background-color: #0078ae;
   color: white;
   cursor: pointer;
   padding-top: 1vh;
@@ -1322,7 +1322,7 @@ html {
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .paragraaf {
-  background-color: #66ACD1;
+  background-color: #66acd1;
   color: white;
   cursor: pointer;
   padding-top: 1vh;
@@ -1379,9 +1379,6 @@ html {
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .text_right {
-  -webkit-box-flex: 0;
-      -ms-flex: 0 0 40%;
-          flex: 0 0 40%;
   overflow: auto;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1396,6 +1393,7 @@ html {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  overflow: auto;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .status_added {
@@ -1688,7 +1686,7 @@ html {
   width: 100%;
   padding-top: 0.3vh;
   padding-bottom: 0.3vh;
-  background-color: #0085B7;
+  background-color: #0085b7;
   border-top-left-radius: 1.6vh;
   border-top-right-radius: 1.6vh;
 }
@@ -2046,7 +2044,7 @@ html {
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .extra_proj_info .title {
-  background: #0085B7;
+  background: #0085b7;
   min-width: 100%;
   width: 100%;
   font-size: 2.5vh;
@@ -2108,7 +2106,7 @@ html {
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .project_locatie .title {
-  background: #0085B7;
+  background: #0085b7;
   min-width: 100%;
   width: 100%;
   font-size: 2.5vh;
@@ -2182,7 +2180,7 @@ html {
   font-style: bold;
   width: 65%;
   padding-right: 2vw;
-  color: #0078AE;
+  color: #0078ae;
 }
 
 #main .layerOneInner .article .article_content .project_progress_bar .progress {
@@ -2208,7 +2206,7 @@ html {
   text-align: left;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  background: linear-gradient(180deg, #0078AE 95px, #f7f7f8 95px);
+  background: linear-gradient(180deg, #0078ae 95px, #f7f7f8 95px);
   overflow-y: auto;
 }
 
@@ -2399,7 +2397,7 @@ html {
 .loader {
   border: 16px solid #f3f3f3;
   border-radius: 50%;
-  border-top: 16px solid #66ACD1;
+  border-top: 16px solid #66acd1;
   width: 5em;
   height: 5em;
   margin-top: 20%;

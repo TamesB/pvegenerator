@@ -21,7 +21,7 @@
 {% endif %}
 {% endif %}
 {% else %}
-{% if type != 2 %}
+{% if type == 0 %}
     <p><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon plus"></i>Statusverandering</button></p>
 {% endif %}
 {% endif %}

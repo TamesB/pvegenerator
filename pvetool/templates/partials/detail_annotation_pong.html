@@ -55,7 +55,7 @@
 {% endif %}
 {% endif %}
 {% else %}
-{% if type != 2 %}
+{% if type == 0 %}
     <button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon plus"></i>Reactie</button>
     {% if not bijlagen %}
     <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button>
