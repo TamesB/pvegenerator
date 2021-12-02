@@ -577,8 +577,8 @@ def download_pve(request, client_pk, pk):
         else:
             reacties[reply.onComment.item.id] = [reply]
         if reply.bijlage:
-            bijlagen = BijlageToReply.objects.filter(reply=reply)
-            for bijlage in bijlagen:
+            bijlagenqs = BijlageToReply.objects.filter(reply=reply)
+            for bijlage in bijlagenqs:
                 if bijlage.bijlage:
                     if reply.id in reactiebijlagen.keys():
                         reactiebijlagen[reply.id].append(bijlage)
@@ -619,30 +619,30 @@ def download_pve(request, client_pk, pk):
 
     # get bijlagen
     bijlagen_models = models.ItemBijlages.objects.all()
-    bijlagen = []
+    bijlagenpve = []
 
     for bijlage_model in bijlagen_models:
         for item in bijlage_model.items.all():
             if item in basic_PVE:
-                bijlagen.append(bijlage_model)
+                bijlagenpve.append(bijlage_model)
 
-    bijlagen = list(set(bijlagen))
+    bijlagenpve = list(set(bijlagenpve))
 
     if BijlageToAnnotation.objects.filter(ann__project=project).exists():
         bijlagen_ann = BijlageToAnnotation.objects.filter(ann__project=project)
         for item in bijlagen_ann:
             if item.bijlage:
-                bijlagen.append(item)
+                bijlagenpve.append(item)
 
     if BijlageToReply.objects.filter(reply__onComment__project=project).exists():
         replybijlagen = BijlageToReply.objects.filter(reply__onComment__project=project)
         for bijlage in replybijlagen:
             if bijlage.bijlage:
-                bijlagen.append(bijlage)
+                bijlagenpve.append(bijlage)
 
-    if bijlagen:
+    if bijlagenpve:
         zipmaker = createBijlageZip.ZipMaker()
-        zipmaker.makeZip(zipFilename, filename, bijlagen)
+        zipmaker.makeZip(zipFilename, filename, bijlagenpve)
     else:
         zipFilename = False
 

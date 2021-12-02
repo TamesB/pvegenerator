@@ -1,54 +1,82 @@
-{% block main %}  
+{% block main %}
 <div class="item_deeper" hx-target="this" hx-swap="outerHTML">
-            <div class="text_left">
-                <div hx-get="{% url 'detailitempong' client_pk project_pk item_pk type %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></div>
-                {% if current_reply %}
-                {% if current_reply.accept is False %}
-                <div hx-get="{% url 'detailpongreply' client_pk project_pk item_pk type %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></div>
-                {% endif %}
-                {% else %}
-                {% if type != 2 %}
-                <div hx-get="{% url 'detailpongreply' client_pk project_pk item_pk type %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></div>
-                {% endif %}
-                {% endif %}
-
-            </div>
-            <div class="text_right">
-{% if type != 0 %}
-{% if current_reply %}
-{% if current_reply.accept %}
-<button
-hx-post="{% url 'nonacceptitempong' client_pk project_pk item_pk type %}"
-    class="ui basic red button d-inline"
-    type="button"
-    >Afwijzen</button>
-{% else %}
-<button
-hx-post="{% url 'acceptitempong' client_pk project_pk item_pk type %}"
-    class="ui basic green button d-inline"
-    type="button">Accepteren</button>
-{% endif %}
-{% else %}
-{% if type == 2 %}
-<button
-hx-post="{% url 'nonacceptitempong' client_pk project_pk item_pk type %}"
-    class="ui basic red button d-inline"
-    type="button"
-    >Afwijzen</button>
-{% else %}
-<button
-hx-post="{% url 'acceptitempong' client_pk project_pk item_pk type %}"
-    class="ui basic green button d-inline"
-    type="button">Accepteren</button>
-{% endif %} 
-{% endif %}
-{% endif %}
-            <span hx-get="{% url 'detailpongstatus' client_pk project_pk item_pk type %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
-            <span hx-get="{% url 'detailpongkostenverschil' client_pk project_pk item_pk type %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
-            </div>
+  <div class="text_left">
+    <div
+      hx-get="{% url 'detailitempong' client_pk project_pk item_pk type %}"
+      hx-swap="outerHTML"
+      hx-target="this"
+      hx-trigger="load"
+    ></div>
+    {% if current_reply %} {% if current_reply.accept is False %}
+    <div
+      hx-get="{% url 'detailpongreply' client_pk project_pk item_pk type %}"
+      hx-swap="outerHTML"
+      hx-target="this"
+      hx-trigger="load"
+    ></div>
+    {% endif %} {% else %} {% if type != 2 %}
+    <div
+      hx-get="{% url 'detailpongreply' client_pk project_pk item_pk type %}"
+      hx-swap="outerHTML"
+      hx-target="this"
+      hx-trigger="load"
+    ></div>
+    {% endif %} {% endif %}
+  </div>
+  <div class="text_right">
+    {% if type != 0 %} {% if current_reply %} {% if current_reply.accept %}
+    <button
+      hx-post="{% url 'nonacceptitempong' client_pk project_pk item_pk type %}"
+      class="ui basic red button d-inline"
+      type="button"
+    >
+      Afwijzen
+    </button>
+    {% else %}
+    <button
+      hx-post="{% url 'acceptitempong' client_pk project_pk item_pk type %}"
+      class="ui basic green button d-inline"
+      type="button"
+    >
+      Accepteren
+    </button>
+    {% endif %} {% else %} {% if type == 2 %}
+    <button
+      hx-post="{% url 'nonacceptitempong' client_pk project_pk item_pk type %}"
+      class="ui basic red button d-inline"
+      type="button"
+    >
+      Afwijzen
+    </button>
+    {% else %}
+    <button
+      hx-post="{% url 'acceptitempong' client_pk project_pk item_pk type %}"
+      class="ui basic green button d-inline"
+      type="button"
+    >
+      Accepteren
+    </button>
+    {% endif %} {% endif %} {% endif %}
+    <span
+      hx-get="{% url 'detailpongstatus' client_pk project_pk item_pk type %}"
+      hx-swap="outerHTML"
+      hx-target="this"
+      hx-trigger="load"
+    ></span>
+    <span
+      hx-get="{% url 'detailpongkostenverschil' client_pk project_pk item_pk type %}"
+      hx-swap="outerHTML"
+      hx-target="this"
+      hx-trigger="load"
+    ></span>
+  </div>
+  <div class="text_right">
+    <span>
+      <button class="ui basic green button d-inline" type="button">
+        Accepteren
+      </button>
+    </span>
+  </div>
 </div>
 
-{% endblock %}
-{% block scripts %}
-{% include "partials/messages.html" %}
 {% endblock %}
