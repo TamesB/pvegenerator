@@ -1,6 +1,5 @@
 {% block main %}
 <span>
-    <div>
     {% if current_reply.accept %}
     <button
       class="ui green button d-inline disabled"
@@ -16,7 +15,6 @@
       Afgewezen
     </button>
     {% endif %}
-</div>
 <button
   hx-get="{% url 'redocommentpong' client_pk project_pk item_pk type %}"
   hx-trigger="click"

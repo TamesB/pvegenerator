@@ -5,7 +5,9 @@
     <span><button hx-get="{% url 'addkostenverschilfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
     <span><a hx-delete="{% url 'deletekostenverschilfirst' client_pk project_pk item_pk %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></b>
 {% else %}
+{% if annotation.status %}
     <button hx-get="{% url 'addkostenverschilfirst' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon plus"></i>Kostenverschil</button>
+{% endif %}
 {% endif %}
 </span>
 {% endblock %}{% block scripts %}

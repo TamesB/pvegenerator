@@ -2,7 +2,7 @@
 {% block main %}
 <span hx-target="this" hx-swap="outerHTML">
 {% if annotation.annotation %}
-    <span><p><b>Aanvulling:</b> {{ annotation.annotation }} <span><button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic icon button">
+    <span><p><b>{{ annotation.gebruiker.klantenorganisatie }}:</b> {{ annotation.annotation }} <span><button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic icon button">
     <i class="icon edit"></i></button></span>
         <span><a hx-delete="{% url 'deleteannotationfirst' client_pk project_pk item_pk %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></p></span>
     <p>
@@ -21,7 +21,9 @@
     <button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation.id 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button>
     </p>
 {% else %}
+{% if annotation.status %}
     <button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon plus"></i>Aanvulling</button>
+    {% endif %}
     {% if bijlagen %}
     <span><b>Bijlage(n):</b>
     {% for bijlage in bijlagen %}
@@ -34,7 +36,9 @@
     {% endfor %}
     </span>
     {% endif %}
+    {% if annotation.status %}
     <button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk 0 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button>
+    {% endif %}
     </p>
 
 {% endif %}

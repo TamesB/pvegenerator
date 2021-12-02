@@ -17,12 +17,15 @@
     <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id type 0 bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button>
     {% endif %}
     {% endfor %}
+    {% if annotation.status or current_reply.status %}
     <span><button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button></span></span>
-
+    {% endif %}
     {% endif %}
 
     {% if not bijlagen %}
+    {% if annotation.status or current_reply.status %}
     <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button>
+    {% endif %}
     {% else %}
     
     <span><b>Uw Bijlage(n):</b>
@@ -32,13 +35,18 @@
     <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 0 bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button>
     {% endif %}
     {% endfor %}
+    {% if annotation.status or current_reply.status %}
     <span><button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button></span></span>
-
+    {% endif %}
     {% endif %}
 {% else %}
+{% if annotation.status or current_reply.status %}
     <button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon plus"></i>Reactie</button>
+{% endif %}
     {% if not bijlagen %}
+    {% if annotation.status or current_reply.status %}
     <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button>
+    {% endif %}
     {% else %}
 
     <span><b>Uw Bijlage(n):</b>
@@ -48,17 +56,23 @@
     <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 0 bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button>
     {% endif %}
     {% endfor %}
+    {% if annotation.status or current_reply.status %}
     <span><button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button></span></span>
     
+    {% endif %}
     {% endif %}
 
 {% endif %}
 {% endif %}
 {% else %}
 {% if type == 0 %}
+{% if annotation.status or current_reply.status %}
     <button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon plus"></i>Reactie</button>
+    {% endif %}
     {% if not bijlagen %}
+    {% if annotation.status %}
     <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button>
+    {% endif %}
     {% else %}
 
     <span><b>Uw Bijlage(n):</b>
@@ -68,8 +82,9 @@
     <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 0 bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button>
     {% endif %}
     {% endfor %}
+    {% if annotation.status or current_reply.status %}
     <span><button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 1 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button></span></span>
-
+        {% endif %}
     {% endif %}
 
 {% endif %}

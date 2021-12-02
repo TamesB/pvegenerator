@@ -1,0 +1,30 @@
+{% extends '_partial.html' %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+{% load cache %}
+{% block main %}
+<div class="item_deeper" hx-target="this" hx-swap="innerHTML" id="item-{{ item.id }}">
+<div class="text_left">
+    <p style="font-style:italic;">
+    {{ item }}{% if bijlages %} 
+    {% for bijlage in bijlages %}
+    <p>Bijlage: <a href="{% url 'downloadbijlage' client_pk item.id %}" target="_blank">
+    <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img>
+    </a></p>
+    {% endfor %}
+    {% endif %}
+    </p>
+
+    <div hx-get="{% url 'detailfirstannotation' client_pk project_pk item.id %}" hx-swap="innerHTML" hx-target="this" hx-trigger="load"></div>
+</div>
+<div class="text_right">
+<span hx-get="{% url 'detailfirststatus' client_pk project_pk item.id %}" hx-swap="innerHTML" hx-target="this" hx-trigger="load"></span>
+<span hx-get="{% url 'detailfirstkostenverschil' client_pk project_pk item.id %}" hx-swap="innerHTML" hx-target="this" hx-trigger="load"></span>
+</div>
+</div>
+{% endblock %}
+{% block scripts %}
+{% include 'partials/messages.html' %}
+{% endblock %}

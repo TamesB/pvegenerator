@@ -1,5 +1,5 @@
 {% block main %}
-<div class="item_deeper" hx-target="this" hx-swap="outerHTML">
+<div class="item_deeper" hx-target="this" hx-swap="outerHTML" id="item-{{ item_pk}}">
   <div class="text_left">
     <div
       hx-get="{% url 'detailitempong' client_pk project_pk item_pk type %}"

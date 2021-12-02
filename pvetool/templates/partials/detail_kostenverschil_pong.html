@@ -3,11 +3,11 @@
   {% if last_reply.kostenConsequenties %}
   <p>
     <b
-      >Kostenverschil (laag {{ last_reply.commentphase.level }}): €{{ last_reply.kostenConsequenties }}</b
+      >Kostenverschil ({% if last_reply.gebruiker.organisatie %}{{ last_reply.gebruiker.organisatie }}{% else %}{{ last_reply.gebruiker.klantenorganisatie }}{% endif %}, laag {{ last_reply.commentphase.level }}): €{{ last_reply.kostenConsequenties }}</b
     >
   </p>
   {% elif annotation.kostenConsequenties %}
-  <p><b>Kostenverschil: €{{ annotation.kostenConsequenties }}</b></p>
+  <p><b>Kostenverschil ({% if annotation.gebruiker.organisatie %}{{ annotation.gebruiker.organisatie }}{% else %}{{ annotation.gebruiker.klantenorganisatie }}{% endif %}): €{{ annotation.kostenConsequenties }}</b></p>
   {% endif %} {% if current_reply %} {% if current_reply.accept is False %} {% if current_reply.kostenConsequenties %}
   <b
     >Uw voorgestelde kostenverschil: €{{ current_reply.kostenConsequenties }}
@@ -25,6 +25,7 @@
           <i class="icon delete"></i></button></a></span
   ></b>
   {% else %}
+  {% if annotation.status or current_reply.status %}
   <p>
     <button
       hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
@@ -33,7 +34,8 @@
       <i class="icon plus"></i>Kostenverschilverandering
     </button>
   </p>
-  {% endif %} {% endif %} {% else %} {% if type == 0 %}
+  {% endif %}
+  {% endif %} {% endif %} {% else %} {% if type == 0 %} {% if annotation.status or current_reply.status %}
   <p>
     <button
       hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
@@ -42,6 +44,6 @@
       <i class="icon plus"></i>Kostenverschilverandering
     </button>
   </p>
-  {% endif %} {% endif %}
+  {% endif %} {% endif %} {% endif %}
 </span>
 {% endblock %}

@@ -101,6 +101,7 @@ urlpatterns = [
     path("<int:client_pk>/getparagravenfirstannotate/<int:pk>/<int:hoofdstuk_pk>", crudFirstAnnotate.GetParagravenFirstAnnotate, name="getparagravenfirstannotate"),
     path("<int:client_pk>/getitemsfirstannotate/<int:pk>/<int:hoofdstuk_pk>/<int:paragraaf_id>", crudFirstAnnotate.GetItemsFirstAnnotate, name="getitemsfirstannotate"),
     path("<int:client_pk>/detailfirststatus/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DetailStatusFirst, name="detailfirststatus"),
+    path("<int:client_pk>/detailitemfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DetailItemFirst, name="detailitemfirst"),
     path("<int:client_pk>/detailfirstannotation/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DetailAnnotationFirst, name="detailfirstannotation"),
     path("<int:client_pk>/detailfirstkostenverschil/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DetailKostenverschilFirst, name="detailfirstkostenverschil"),
     path("<int:client_pk>/addstatusfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.AddStatusFirst, name="addstatusfirst"),

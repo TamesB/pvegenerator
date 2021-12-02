@@ -8,7 +8,7 @@
 {% block main %}
 {% for item in items %}
         <div class="item_content" id="item_content-{{ item.hoofdstuk.id }}-{{ item.id }}">
-            <div class="item_deeper" hx-get="{% url 'detailpongaccept' client_pk project.id item.id type %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></div>
+            <div class="item_deeper" hx-get="{% url 'detailpongaccept' client_pk project.id item.id type %}" id="item-{{ item.id }}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></div>
         </div>
 {% endfor %}  
 {% endblock %}

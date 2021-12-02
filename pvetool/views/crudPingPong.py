@@ -359,7 +359,6 @@ def DetailItemPong(request, client_pk, project_pk, item_pk, type):
             if reply.bijlagetoreply.exists():
                 bijlagen[reply] = reply.bijlagetoreply.all()
                 
-
     annotation = None
     if PVEItemAnnotation.objects.filter(
         project__id=project_pk, item__id=item.id
@@ -443,21 +442,22 @@ def DetailReplyPong(request, client_pk, project_pk, item_pk, type):
 
     reply = None
     bijlagen = None
-
+    annotation = None
     if CommentReply.objects.filter(
         commentphase=current_phase, onComment__item__id=item_pk
     ).exists():
         reply = CommentReply.objects.filter(
             commentphase=current_phase, onComment__item__id=item_pk
         ).first()
-
+        annotation = reply.onComment
         if reply.bijlagetoreply.exists():
             bijlagen = reply.bijlagetoreply.all()
-
+    
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
     context["item_pk"] = item_pk
     context["reply"] = reply
+    context["annotation"] = annotation
     context["current_reply"] = reply
     context["bijlagen"] = bijlagen
     context["type"] = type
@@ -843,7 +843,7 @@ def AddStatusPong(request, client_pk, project_pk, item_pk, type):
 
             messages.warning(request, "Status toegevoegd!")
             return redirect(
-                "detailpongstatus",
+                "detailpongaccept",
                 client_pk=client_pk,
                 project_pk=project_pk,
                 item_pk=item_pk,
@@ -996,8 +996,6 @@ def DeleteStatusPong(request, client_pk, project_pk, item_pk, type):
 
     if not project:
         return redirect("logout_syn", client_pk=client_pk)
-    
-    
 
     annotation = None
     if PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).exists():
@@ -1020,7 +1018,7 @@ def DeleteStatusPong(request, client_pk, project_pk, item_pk, type):
         reply.save()
         messages.warning(request, "Status verwijderd.")
         return redirect(
-            "detailpongstatus",
+            "detailpongaccept",
             client_pk=client_pk,
             project_pk=project_pk,
             item_pk=item_pk,

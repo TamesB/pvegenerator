@@ -202,31 +202,55 @@ def GetItemsFirstAnnotate(request, client_pk, pk, hoofdstuk_pk, paragraaf_id):
             .filter(hoofdstuk__id=hoofdstuk_pk, paragraaf__id=paragraaf_id)
             .all()
         )
-    print(pve_items)
-    annotations = {}
-
-    for annotation in project.annotation.select_related("item").select_related(
-        "status"
-    ):
-        annotations[annotation.item] = annotation
-
-    itembijlages = [_ for _ in project.pve_versie.itembijlage.prefetch_related("items")]
-    items_has_bijlages = [item.items.all() for item in itembijlages]
-
-    items = []
-    
-    for item in pve_items:
-        bijlage = None
-
-        if item in items_has_bijlages:
-            bijlage = item.itembijlage.first()
-            
-        items.append([item, bijlage])
         
-    context["items"] = items
+    context["items"] = pve_items
     context["project"] = project
     context["client_pk"] = client_pk
     return render(request, "partials/itempartial.html", context)
+
+@login_required(login_url=reverse_lazy("login_syn",  args={1,},))
+def DetailItemFirst(request, client_pk, project_pk, item_pk):
+    context = {}
+
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    project = get_object_or_404(Project, pk=project_pk)
+    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user.type_user != project.first_annotate:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if project.frozenLevel > 0:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if not project.item.exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if models.PVEItem.objects.filter(pk=item_pk):
+        item = models.PVEItem.objects.get(pk=item_pk)
+    else:
+        return redirect("logout_syn", client_pk=client_pk)
+    
+    annotation = None
+    if PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).exists():
+        annotation = PVEItemAnnotation.objects.filter(
+            project=project, item__id=item_pk
+        ).first()
+    
+    bijlages = []
+        
+    for bijlage in item.itembijlage.all():
+        bijlages.append(bijlage)
+
+    context["client_pk"] = client_pk
+    context["project_pk"] = project_pk
+    context["item_pk"] = item_pk
+    context["annotation"] = annotation
+    context["item"] = item
+    context["bijlages"] = bijlages
+    return render(request, "partials/detail_item_first.html", context)
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
@@ -443,7 +467,7 @@ def AddStatusFirst(request, client_pk, project_pk, item_pk):
 
             messages.warning(request, "Status toegevoegd!")
             return redirect(
-                "detailfirststatus",
+                "detailitemfirst",
                 client_pk=client_pk,
                 project_pk=project_pk,
                 item_pk=item_pk,
@@ -694,7 +718,7 @@ def DeleteStatusFirst(request, client_pk, project_pk, item_pk):
         annotation.save()
         messages.warning(request, "Status verwijderd.")
         return redirect(
-            "detailfirststatus",
+            "detailitemfirst",
             client_pk=client_pk,
             project_pk=project_pk,
             item_pk=item_pk,
@@ -702,7 +726,7 @@ def DeleteStatusFirst(request, client_pk, project_pk, item_pk):
 
     messages.warning(request, "Fout met status verwijderen. Probeer het nog eens.")
     return redirect(
-        "detailfirststatus",
+        "detailitemfirst",
         client_pk=client_pk,
         project_pk=project_pk,
         item_pk=item_pk,

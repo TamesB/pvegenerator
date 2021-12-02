@@ -10,7 +10,7 @@
 {{ item.inhoud }}
 
 {% if annotation.annotation %}
-    <span><p><b>Aanvulling:</b> {{ annotation.annotation }}
+    <span><p><b>{% if annotation.gebruiker.organisatie %}{{ annotation.gebruiker.organisatie }}{% else %}{{ reply.gebruiker.klantenorganisatie }}{% endif %}: </b> {{ annotation.annotation }}
 {% endif %}
 
 {% if annotationbijlagen %}
@@ -25,7 +25,7 @@
 </p></span>
 {% for reply in replies %}
 {% if reply.comment %}
-<span><p><b>Opmerking (laag {{ reply.commentphase.level }}):</b> {{ reply.comment }}. </p></span>
+<span><p><b>{% if reply.gebruiker.organisatie %}{{ reply.gebruiker.organisatie }}{% else %}{{ reply.gebruiker.klantenorganisatie }}{% endif %} (laag {{ reply.commentphase.level }}):</b> {{ reply.comment }}. </p></span>
 {% endif %}
 {% if bijlagen.reply %} 
 <span>
