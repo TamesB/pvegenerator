@@ -2,27 +2,28 @@
 <span hx-target="this" hx-swap="outerHTML">
 {% if status_reply %}
     <div class="status_added" id="status-{{ item.id }}">
-    <p>Status: {{ status_reply.status }}
+    <p>{{ status_reply.status }}
 {% elif annotation.status %}
     <div class="status_added" id="status-{{ item.id }}">
-    <p>Status: {{ annotation.status }}
+    <p>{{ annotation.status }}
 {% else %}
     <div class="status_not_added" id="status-{{ item.id }}">
+        <p><span><i>Geen status</i></span>
 {% endif %}
 
 {% if current_reply %}
 {% if current_reply.accept is False %}
 {% if current_reply.status %}
-    <p>Voorgestelde status: {{ current_reply.status }}
+    <p style="color:#b69b00">Voorgesteld: {{ current_reply.status }}
     <span><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
         <span><a hx-delete="{% url 'deletestatuspong' client_pk project_pk item_pk type %}" hx-target="#item-{{ item_pk}}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></p>
 {% else %}
-    <p><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon edit"></i>Status</button></p>
+    <p><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic icon button"><i class="icon edit"></i></button></p>
 {% endif %}
 {% endif %}
 {% else %}
 {% if type == 0 %}
-    <p><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon plus"></i>Status</button></p>
+    <p><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic icon button"><i class="icon edit"></i></button></p>
 {% endif %}
 {% endif %}
 </span>

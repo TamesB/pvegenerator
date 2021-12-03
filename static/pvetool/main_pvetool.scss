@@ -1255,6 +1255,42 @@ html {
                   p {
                     margin: 0;
                   }
+
+                  .container_item_partial {
+                    display: flex;
+                    flex-direction: column;
+                    .pveruletext {
+                      font-style: italic;
+                      margin-bottom: 1em;
+                    }
+                    .reaction_on_rule {
+                      border-top: 1px solid;
+                      display: flex;
+                      flex-direction: row;
+                      justify-content: space-between;
+                      margin-bottom: 1em;
+                      .party {
+                        flex: 0 0 20%;
+                      }
+                      .accept {
+                        flex: 0 0 4%;
+                        .icon {
+                          margin-top: 1em;
+                        }
+                      }
+                      .comment {
+                        flex: 0 0 26%;
+                      }
+
+                      .attachments {
+                        flex: 0 0 25%;
+                      }
+
+                      .statuschange {
+                        flex: 0 0 25%;
+                      }
+                    }
+                  }
                 }
 
                 .text_right {
@@ -1284,13 +1320,11 @@ html {
                 .status_added {
                   padding-top: 1vh;
                   flex: 1;
-                  color: green;
                   font-weight: 700;
                 }
                 .status_not_added {
                   padding-top: 1vh;
                   flex: 1;
-                  color: red;
                   font-weight: 700;
                 }
               }

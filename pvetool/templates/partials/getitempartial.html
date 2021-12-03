@@ -5,42 +5,96 @@
 {% load custom_tags %}
 {% load cache %}
 {% block main %}
+<div class="container_item_partial">
 
-<p style="font-style:italic;">
-{{ item.inhoud }}
-<span><p>
-{% if annotation.annotation %}
-    <b>{% if annotation.gebruiker.organisatie %}{{ annotation.gebruiker.organisatie }}{% else %}{{ reply.gebruiker.klantenorganisatie }}{% endif %}: </b> {{ annotation.annotation }}
-{% endif %}
+    <div class="pveruletext">
+        <p>{{ item.inhoud }}</p>
+    </div>
+    {% if annotation.firststatus or annotation.bijlage or replies %}
+    <div class="reaction_on_rule">
+        <div class="party">
+            <p><b>Partij</b></p>
+        </div>
+        <div class="accept">
+            <p><b>Akk.</b></p>
+        </div>
+        <div class="statuschange">
+            <p><b>Statusverandering</b></p>
+        </div>
+        <div class="comment">
+            <p><b>Opmerking</b></p>
+        </div>
+        <div class="attachments">
+            <p><b>Bijlagen</b></p>
+        </div>
 
-{% if annotationbijlagen %}
-<span><b>Bijlage(n):</b>
-{% for bijlage in annotationbijlagen %}
-{% if bijlage.bijlage %}
-<a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project_pk annotation.id bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
-{% endif %}
-{% endfor %}
-</span>
-{% endif %}
-</p></span>
-{% for reply in replies %}
-{% if reply.comment %}
-<span><p><b>{% if reply.gebruiker.organisatie %}{{ reply.gebruiker.organisatie }}{% else %}{{ reply.gebruiker.klantenorganisatie }}{% endif %} (laag {{ reply.commentphase.level }}):</b> {{ reply.comment }}. </p></span>
-{% endif %}
-{% if bijlagen.reply %} 
-<span>
-<p><b>Bijlage(n) (laag {{ reply.commentphase.level }}):</b>
-{% for bijlage in bijlagen.reply %}
-<a href="{% url 'downloadreplyattachment_syn' client_pk project_pk bijlage.reply.id bijlage.id %}" target="_blank">
-{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img>
-</a>
-{% endfor %}
-{% if reply.status %}
-<i> Status veranderd: {{ reply.status }}</i>
-{% endif %}
-</p></span>
-{% endif %}
+    </div>
+    {% endif %}
+    {% if annotation.annotation or annotation.bijlage %}
 
-{% endfor %}
+    <div class="reaction_on_rule">
+        <div class="party">
+            <p><i>{% if annotation.gebruiker.organisatie %}{{ annotation.gebruiker.organisatie }}{% else %}{{ annotation.gebruiker.klantenorganisatie }}{% endif %}</i></p>
+        </div>
+        <div class="accept">
+            <p>{% if annotation.accept is False %}<i class="icon times"></i>{% elif annotation.accept is True %}<i class="icon check"></i>{% else %}&nbsp;{% endif %}</p>
+        </div>
+        <div class="statuschange">
+            <p><i>{% if annotation.firststatus %}{{ annotation.firststatus }}{% endif %}</i></p>
+        </div>
+        <div class="comment">
+        {% if annotation.annotation %}
+            <p><i>{{ annotation.annotation }}</i></p>
+        {% endif %}
+        </div>
+        <div class="attachments">
+        {% if annotationbijlagen %}
+            {% for bijlage in annotationbijlagen %}
+            {% if bijlage.bijlage %}
+            <span><i><a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project_pk annotation.id bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a></i></span>
+            {% endif %}
+            {% endfor %}
+        {% endif %}
+        </div>
 
+    </div>
+    {% endif %}
+
+    {% for reply in replies %}
+    {% if reply.comment or reply.status or reply.bijlage %}
+    <div class="reaction_on_rule">
+        <div class="party">
+            <p><i>{% if reply.gebruiker.organisatie %}{{ reply.gebruiker.organisatie }}{% else %}{{ reply.gebruiker.klantenorganisatie }}{% endif %}</i></p>
+        </div>
+        <div class="accept">
+            {% if reply.accept is False %}<i class="icon times"></i>{% else %}<i class="icon check"></i>{% endif %}
+        </div>
+
+        <div class="statuschange">
+            {% if reply.status %}
+            <p><i>{{ reply.status }}</i></p>
+            {% endif %}
+        </div>
+        <div class="comment">
+            {% if reply.comment %}
+            <p><i>{{ reply.comment }}. </i></p>
+            {% endif %}
+        </div>
+        <div class="attachments">
+            {% if bijlagen.reply %} 
+            <span>
+            <p><i>
+            {% for bijlage in bijlagen.reply %}
+            <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk bijlage.reply.id bijlage.id %}" target="_blank">
+            {{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img>
+            </a>
+            {% endfor %}
+        </i></p></span>
+            {% endif %}
+        </div>
+
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
 {% endblock %}

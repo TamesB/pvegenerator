@@ -178,6 +178,9 @@ class PVEItemAnnotation(models.Model):
     status = models.ForeignKey(
         "pvetool.CommentStatus", on_delete=models.CASCADE, default=None, null=True, related_name="annotation"
     )
+    firststatus = models.ForeignKey(
+        "pvetool.CommentStatus", on_delete=models.CASCADE, default=None, null=True, related_name="first_annotation"
+    )
     gebruiker = models.ForeignKey(
         "users.CustomUser", on_delete=models.CASCADE, default=None, null=True, related_name="annotation"
     )

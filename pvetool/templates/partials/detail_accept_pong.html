@@ -32,24 +32,24 @@
     ></span>
   </div>
   {% if type != 0 %}
-  <div class="text_right">
-    {% if not current_reply %}
-    <span
-      hx-get="{% url 'firstacceptsteppong' client_pk project_pk item_pk type %}"
-      hx-swap="outerHTML"
-      hx-target="this"
-      hx-trigger="load"
-    ></span>
-    {% else %}
-    <span
-      hx-get="{% url 'redocommentdetail' client_pk project_pk item_pk type %}"
-      hx-swap="outerHTML"
-      hx-target="this"
-      hx-trigger="load"
-    >
-  </span>
-    {% endif %}
-  </div>
+    <div class="text_right">
+      {% if not current_reply %}
+      <span
+        hx-get="{% url 'firstacceptsteppong' client_pk project_pk item_pk type %}"
+        hx-swap="outerHTML"
+        hx-target="this"
+        hx-trigger="load"
+      ></span>
+      {% else %}
+      <span
+        hx-get="{% url 'redocommentdetail' client_pk project_pk item_pk type %}"
+        hx-swap="outerHTML"
+        hx-target="this"
+        hx-trigger="load"
+      >
+    </span>
+      {% endif %}
+    </div>
   {% endif %}
   <div class="text_right">
     <span

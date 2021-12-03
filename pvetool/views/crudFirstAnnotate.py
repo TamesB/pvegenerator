@@ -456,6 +456,7 @@ def AddStatusFirst(request, client_pk, project_pk, item_pk):
         if form.is_valid():
             if annotation:
                 annotation.status = form.cleaned_data["status"]
+                annotation.firststatus = form.cleaned_data["status"]
                 annotation.save()
             else:
                 annotation = PVEItemAnnotation()
@@ -463,6 +464,7 @@ def AddStatusFirst(request, client_pk, project_pk, item_pk):
                 annotation.project = project
                 annotation.item = models.PVEItem.objects.get(id=item_pk)
                 annotation.gebruiker = request.user
+                annotation.firststatus = form.cleaned_data["status"]
                 annotation.save()
 
             messages.warning(request, "Status toegevoegd!")
@@ -714,8 +716,7 @@ def DeleteStatusFirst(request, client_pk, project_pk, item_pk):
         ).first()
 
     if annotation:
-        annotation.status = None
-        annotation.save()
+        annotation.delete()
         messages.warning(request, "Status verwijderd.")
         return redirect(
             "detailitemfirst",

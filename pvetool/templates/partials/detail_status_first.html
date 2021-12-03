@@ -1,13 +1,14 @@
 {% block main %}
-<span>
+<span hx-target="this" hx-swap="outerHTML">
 {% if annotation.status %}
     <div class="status_added" id="status-{{ item.id }}">
-    <p>Status: {{ annotation.status }}
+    <p>{{ annotation.status }}
     <span><button hx-get="{% url 'addstatusfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
-        <span><a hx-delete="{% url 'deletestatusfirst' client_pk project_pk item_pk %}" hx-target="#item-{{ item_pk }}" hx-swap="innerHTML"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></p>
+        <span><a hx-delete="{% url 'deletestatusfirst' client_pk project_pk item_pk %}" hx-target="#item-{{ item_pk }}" hx-swap="outerHTML"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></p>
 {% else %}
+<span><p><i>Geen status</i></p></span>
     <div class="status_not_added" id="status-{{ item.id }}">
-    <button hx-get="{% url 'addstatusfirst' client_pk project_pk item_pk %}" class="ui basic button"><i class="icon plus"></i>Status</button>
+    <button hx-get="{% url 'addstatusfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i class="icon edit"></i></button>
 {% endif %}
 </span>
 {% endblock %}{% block scripts %}

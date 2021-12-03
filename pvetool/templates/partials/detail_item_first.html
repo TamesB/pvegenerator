@@ -5,8 +5,10 @@
 {% load custom_tags %}
 {% load cache %}
 {% block main %}
-<div class="item_deeper" hx-target="this" hx-swap="innerHTML" id="item-{{ item.id }}">
+<div class="item_deeper" hx-target="this" hx-swap="outerHTML" id="item-{{ item.id }}">
 <div class="text_left">
+    <div class="container_item_partial">
+    <div class="pveruletext">
     <p style="font-style:italic;">
     {{ item }}{% if bijlages %} 
     {% for bijlage in bijlages %}
@@ -16,14 +18,15 @@
     {% endfor %}
     {% endif %}
     </p>
+    </div>
 
-    <div hx-get="{% url 'detailfirstannotation' client_pk project_pk item.id %}" hx-swap="innerHTML" hx-target="this" hx-trigger="load"></div>
+    <span hx-get="{% url 'detailfirstannotation' client_pk project_pk item.id %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
 </div>
 <div class="text_right">
-<span hx-get="{% url 'detailfirststatus' client_pk project_pk item.id %}" hx-swap="innerHTML" hx-target="this" hx-trigger="load"></span>
+<span hx-get="{% url 'detailfirststatus' client_pk project_pk item.id %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
 </div>
 <div class="text_right">
-    <span hx-get="{% url 'detailfirstkostenverschil' client_pk project_pk item.id %}" hx-swap="innerHTML" hx-target="this" hx-trigger="load"></span>
+    <span hx-get="{% url 'detailfirstkostenverschil' client_pk project_pk item.id %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
 </div>
 </div>
 {% endblock %}

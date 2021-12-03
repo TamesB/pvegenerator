@@ -1,82 +1,49 @@
 {% load static %}
 {% block main %}
 <span hx-target="this" hx-swap="outerHTML">
-{% if current_reply %}
-{% if current_reply.accept is False %}
-{% if current_reply.comment %}
-    <span><p><b>Uw reactie:</b> {{ current_reply.comment }} <span><button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic icon button">
-    <i class="icon edit"></i></button></span>
-        <span><a hx-delete="{% url 'deletereplypong' client_pk project_pk item_pk type %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></p></span>
-    <p>
-{% if bijlagen %}
+    <div class="container_item_partial">
+    {% if current_reply and current_reply.accept is False %}
+    <div class="reaction_on_rule">
+        <div class="party">
+            <p style="color:#b69b00;"><i>{% if request.user.organisatie %}{{ request.user.organisatie }}{% else %}{{ request.user.klantenorganisatie }}{% endif %}</i></p>
+        </div>
+        <div class="accept">
+            <p>{% if current_reply.accept is False %}<i class="icon times"></i>{% elif current_reply.accept is True %}<i class="icon check"></i>{% else %}&nbsp;{% endif %}</p>
+        </div>
 
-    <span><b>Uw Bijlage(n):</b>
-    {% for bijlage in bijlagen %}
-    {% if bijlage.bijlage %}
-        <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk current_reply.id bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
-    <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id type 0 bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button>
+        <div class="statuschange">
+            {% if current_reply.status %}
+            <p style="color:#b69b00;">{{ current_reply.status }}</p>
+            {% endif %}
+        </div>
+        <div class="comment">
+            {% if current_reply.comment %}
+                <span><p style="color:#b69b00;">{{ current_reply.comment }} <span><button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic icon button">
+                <i class="icon edit"></i></button></span>
+                <span><a hx-delete="{% url 'deletereplypong' client_pk project_pk item_pk type %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></p></span>
+            {% elif current_reply.status %}
+                <button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic icon button"><i class="icon plus"></i></button>
+            {% endif %}
+        </div>
+        <div class="attachments">
+            <p style="color:#b69b00;">
+                {% if bijlagen %}
+                <span style="color:#b69b00;">
+                {% for bijlage in bijlagen %}
+                {% if bijlage.bijlage %}
+                <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk current_reply.id bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
+                <span><button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 1 bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
+            
+                {% endif %}
+                {% endfor %}
+                </span>
+                {% endif %}
+                <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 1 0 %}" class="ui basic icon button"><i class="icon plus"></i></button>
+            </p>
+        </div>
+    </div>
     {% endif %}
-    {% endfor %}
-    {% if annotation.status or current_reply.status %}
-    <span><button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button></span></span>
-    {% endif %}
-{% endif %}
-
-    {% if not bijlagen %}
-    {% if annotation.status or current_reply.status %}
-    <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button>
-    {% endif %}
-    {% endif %}
-{% else %}
-{% if annotation.status or current_reply.status %}
-    <button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon plus"></i>Reactie</button>
-{% endif %}
-    {% if not bijlagen %}
-    {% if annotation.status or current_reply.status %}
-    <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button>
-    {% endif %}
-    {% else %}
-
-    <span><b>Uw Bijlage(n):</b>
-    {% for bijlage in bijlagen %}
-    {% if bijlage.bijlage %}
-        <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk current_reply.id bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
-    <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 0 bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button>
-    {% endif %}
-    {% endfor %}
-    {% if annotation.status or current_reply.status %}
-    <span><button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button></span></span>
-    
-    {% endif %}
-    {% endif %}
-
-{% endif %}
-{% endif %}
-{% else %}
-{% if type == 0 %}
-{% if annotation.status or current_reply.status %}
-    <button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon plus"></i>Reactie</button>
-    {% endif %}
-    {% if not bijlagen %}
-    {% if annotation.status %}
-    <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button>
-    {% endif %}
-    {% else %}
-
-    <span><b>Uw Bijlage(n):</b>
-    {% for bijlage in bijlagen %}
-    {% if bijlage.bijlage %}
-        <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk current_reply.id bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
-    <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 0 bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button>
-    {% endif %}
-    {% endfor %}
-    {% if annotation.status or current_reply.status %}
-    <span><button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 1 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button></span></span>
-        {% endif %}
-    {% endif %}
-
-{% endif %}
-{% endif %}
+</div>
 </span>
 {% endblock %}{% block scripts %}
 {% include 'partials/messages.html' %}
