@@ -8,9 +8,9 @@
 
 <p style="font-style:italic;">
 {{ item.inhoud }}
-
+<span><p>
 {% if annotation.annotation %}
-    <span><p><b>{% if annotation.gebruiker.organisatie %}{{ annotation.gebruiker.organisatie }}{% else %}{{ reply.gebruiker.klantenorganisatie }}{% endif %}: </b> {{ annotation.annotation }}
+    <b>{% if annotation.gebruiker.organisatie %}{{ annotation.gebruiker.organisatie }}{% else %}{{ reply.gebruiker.klantenorganisatie }}{% endif %}: </b> {{ annotation.annotation }}
 {% endif %}
 
 {% if annotationbijlagen %}
@@ -35,6 +35,9 @@
 {{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img>
 </a>
 {% endfor %}
+{% if reply.status %}
+<i> Status veranderd: {{ reply.status }}</i>
+{% endif %}
 </p></span>
 {% endif %}
 

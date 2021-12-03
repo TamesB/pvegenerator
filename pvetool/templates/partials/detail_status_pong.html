@@ -2,10 +2,10 @@
 <span hx-target="this" hx-swap="outerHTML">
 {% if status_reply %}
     <div class="status_added" id="status-{{ item.id }}">
-    <p>Status ({% if status_reply.gebruiker.organisatie %}{{ status_reply.gebruiker.organisatie }}{% else %}{{ status_reply.gebruiker.klantenorganisatie }}{% endif %}, laag {{ status_reply.commentphase.level }}): {{ status_reply.status }}
+    <p>Status: {{ status_reply.status }}
 {% elif annotation.status %}
     <div class="status_added" id="status-{{ item.id }}">
-    <p>Status ({% if annotation.gebruiker.organisatie %}{{ annotation.gebruiker.organisatie }}{% else %}{{ annotation.gebruiker.klantenorganisatie }}{% endif %}): {{ annotation.status }}
+    <p>Status: {{ annotation.status }}
 {% else %}
     <div class="status_not_added" id="status-{{ item.id }}">
 {% endif %}
@@ -13,16 +13,16 @@
 {% if current_reply %}
 {% if current_reply.accept is False %}
 {% if current_reply.status %}
-    <p>Uw voorgestelde status: {{ current_reply.status }}
+    <p>Voorgestelde status: {{ current_reply.status }}
     <span><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
         <span><a hx-delete="{% url 'deletestatuspong' client_pk project_pk item_pk type %}" hx-target="#item-{{ item_pk}}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></p>
 {% else %}
-    <p><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon plus"></i>Statusverandering</button></p>
+    <p><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon edit"></i>Status</button></p>
 {% endif %}
 {% endif %}
 {% else %}
 {% if type == 0 %}
-    <p><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon plus"></i>Statusverandering</button></p>
+    <p><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic button"><i class="icon plus"></i>Status</button></p>
 {% endif %}
 {% endif %}
 </span>

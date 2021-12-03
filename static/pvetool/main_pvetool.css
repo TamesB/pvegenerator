@@ -827,9 +827,17 @@ html {
 }
 
 #main .layerOneInner .article .article_content .first_annotate_formbox {
-  margin-bottom: 2vh;
+  margin-bottom: 0.5em;
   padding: 0;
   width: 100%;
+}
+
+#main .layerOneInner .article .article_content .first_annotate_formbox select {
+  padding: 0.32em 0.7em;
+}
+
+#main .layerOneInner .article .article_content .first_annotate_formbox input {
+  padding: 0.32em 0.7em;
 }
 
 #main .layerOneInner .article .article_content .generator_form form .parameter_container {
@@ -1220,6 +1228,10 @@ html {
   font-size: 2vh;
 }
 
+#main .layerOneInner .article .article_content .opmerking_form .ui.tab {
+  min-width: 660px;
+}
+
 #main .layerOneInner .article .article_content .opmerking_form .general_title .submit_button {
   font-family: "Montserrat";
   padding: 0;
@@ -1261,19 +1273,24 @@ html {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .titel_plusopmerking .left {
-  -webkit-box-flex: 0;
-      -ms-flex: 0 0 60%;
-          flex: 0 0 60%;
   text-align: left;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 55%;
+          flex: 0 0 55%;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .titel_plusopmerking .right {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 15%;
+          flex: 0 0 15%;
   text-align: center;
 }
 
@@ -1305,7 +1322,7 @@ html {
   border: none;
   text-align: left;
   outline: none;
-  font-size: 1.7vh;
+  font-size: 1.5vh;
   font-weight: bold;
 }
 
@@ -1333,7 +1350,7 @@ html {
   border: none;
   text-align: left;
   outline: none;
-  font-size: 1.6vh;
+  font-size: 1.4vh;
   font-weight: bold;
 }
 
@@ -1361,25 +1378,35 @@ html {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  font-size: 1.5vh;
-  padding-top: 0.5vh;
-  padding-bottom: 0.5vh;
+  font-size: 1.3vh;
+  padding-top: 0.3vh;
+  padding-bottom: 0vh;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
 }
 
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .ui.button {
+  padding: 0.5em 0.5em 0.5em;
+}
+
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .text_left {
-  padding-left: 4vw;
+  padding-left: 3vw;
   -webkit-box-flex: 0;
-      -ms-flex: 0 0 60%;
-          flex: 0 0 60%;
+      -ms-flex: 0 0 55%;
+          flex: 0 0 55%;
   text-align: left;
   overflow: auto;
 }
 
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .text_left p {
+  margin: 0;
+}
+
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .text_right {
-  overflow: auto;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 15%;
+          flex: 0 0 15%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1394,6 +1421,31 @@ html {
       -ms-flex-align: center;
           align-items: center;
   overflow: auto;
+  min-width: 80px;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .text_right p {
+  margin: 0;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .text_right .accept_buttons_pong {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  min-width: 40px;
+}
+
+@media screen and (max-width: 591px) {
+  #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .text_right .accept_buttons_pong {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .status_added {
@@ -2361,8 +2413,15 @@ html {
 
 @media screen and (max-width: 768px) {
   #main .layerOneInner .article .article_content {
-    margin-left: 4vw;
-    margin-right: 4vw;
+    margin-left: 3em;
+    margin-right: 3em;
+  }
+}
+
+@media screen and (max-width: 660px) {
+  #main .layerOneInner .article .article_content {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
   }
 }
 

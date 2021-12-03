@@ -8,7 +8,7 @@
     <i class="icon edit"></i></button></span>
         <span><a hx-delete="{% url 'deletereplypong' client_pk project_pk item_pk type %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></p></span>
     <p>
-    {% if bijlagen %}
+{% if bijlagen %}
 
     <span><b>Uw Bijlage(n):</b>
     {% for bijlage in bijlagen %}
@@ -20,23 +20,11 @@
     {% if annotation.status or current_reply.status %}
     <span><button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button></span></span>
     {% endif %}
-    {% endif %}
+{% endif %}
 
     {% if not bijlagen %}
     {% if annotation.status or current_reply.status %}
     <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk current_reply.id type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button>
-    {% endif %}
-    {% else %}
-    
-    <span><b>Uw Bijlage(n):</b>
-    {% for bijlage in bijlagen %}
-    {% if bijlage.bijlage %}
-        <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk current_reply.id bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
-    <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 0 bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button>
-    {% endif %}
-    {% endfor %}
-    {% if annotation.status or current_reply.status %}
-    <span><button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 1 0 %}" class="ui basic button"><i class="icon plus"></i>Bijlage</button></span></span>
     {% endif %}
     {% endif %}
 {% else %}

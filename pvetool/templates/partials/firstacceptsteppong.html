@@ -1,18 +1,19 @@
 {% block main %}
 <span>
+  <div class="accept_buttons_pong">
   <button
     hx-post="{% url 'acceptitempong' client_pk project_pk item_pk type %}"
-    class="ui green button d-inline"
+    class="ui green button icon"
     type="button"
   >
-    Accepteren
+    <i class="icon check"></i>
   </button>
   <button
     hx-post="{% url 'nonacceptitempong' client_pk project_pk item_pk type %}"
-    class="ui red button d-inline"
+    class="ui red button icon"
     type="button"
   >
-    Afwijzen
-  </button></span
+  <i class="icon times"></i>
+</button></div></span
 >
 {% endblock %}

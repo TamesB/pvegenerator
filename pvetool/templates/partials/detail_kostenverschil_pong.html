@@ -3,14 +3,18 @@
   {% if last_reply.kostenConsequenties %}
   <p>
     <b
-      >Kostenverschil ({% if last_reply.gebruiker.organisatie %}{{ last_reply.gebruiker.organisatie }}{% else %}{{ last_reply.gebruiker.klantenorganisatie }}{% endif %}, laag {{ last_reply.commentphase.level }}): €{{ last_reply.kostenConsequenties }}</b
+      >€{{ last_reply.kostenConsequenties }}</b
     >
   </p>
   {% elif annotation.kostenConsequenties %}
-  <p><b>Kostenverschil ({% if annotation.gebruiker.organisatie %}{{ annotation.gebruiker.organisatie }}{% else %}{{ annotation.gebruiker.klantenorganisatie }}{% endif %}): €{{ annotation.kostenConsequenties }}</b></p>
-  {% endif %} {% if current_reply %} {% if current_reply.accept is False %} {% if current_reply.kostenConsequenties %}
+  <p><b>€{{ annotation.kostenConsequenties }}</b></p>
+  {% else %}
+  <p><b>€ 0</b></p>
+  {% endif %} 
+  
+  {% if current_reply %} {% if current_reply.accept is False %} {% if current_reply.kostenConsequenties %}
   <b
-    >Uw voorgestelde kostenverschil: €{{ current_reply.kostenConsequenties }}
+    >Voorgesteld: €{{ current_reply.kostenConsequenties }}
     <span
       ><button
         hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
@@ -29,9 +33,9 @@
   <p>
     <button
       hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
-      class="ui basic button"
+      class="ui basic icon button"
     >
-      <i class="icon plus"></i>Kostenverschilverandering
+      <i class="icon edit"></i>
     </button>
   </p>
   {% endif %}
@@ -39,9 +43,9 @@
   <p>
     <button
       hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
-      class="ui basic button"
+      class="ui basic icon button"
     >
-      <i class="icon plus"></i>Kostenverschilverandering
+      <i class="icon edit"></i>
     </button>
   </p>
   {% endif %} {% endif %} {% endif %}

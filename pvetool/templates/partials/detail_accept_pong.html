@@ -30,12 +30,6 @@
       hx-target="this"
       hx-trigger="load"
     ></span>
-    <span
-      hx-get="{% url 'detailpongkostenverschil' client_pk project_pk item_pk type %}"
-      hx-swap="outerHTML"
-      hx-target="this"
-      hx-trigger="load"
-    ></span>
   </div>
   {% if type != 0 %}
   <div class="text_right">
@@ -57,6 +51,14 @@
     {% endif %}
   </div>
   {% endif %}
+  <div class="text_right">
+    <span
+    hx-get="{% url 'detailpongkostenverschil' client_pk project_pk item_pk type %}"
+    hx-swap="outerHTML"
+    hx-target="this"
+    hx-trigger="load"
+  ></span>
+  </div>
 </div>
 
 {% endblock %}

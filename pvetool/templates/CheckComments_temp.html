@@ -34,7 +34,7 @@
 
 <div class="ui bottom attached tab segment active" data-tab="todo_comments">
 {% if hoofdstukken_todo %}
-<div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>De status, opgevolgd door de opmerkingen op de regel en op elkaar. Mits er bijlages zijn toegevoegd, zijn deze downloadbaar hierna. "Nieuwe Status" betekent dat de status veranderd is bij de laatste check.</p></span></popup-notify></div></div>
+<div class="titel_plusopmerking"><div class="left">Regel</div><div class="right">Status<popup-notify><span slot="message"><p>De status, opgevolgd door de opmerkingen op de regel en op elkaar. Mits er bijlages zijn toegevoegd, zijn deze downloadbaar hierna. "Nieuwe Status" betekent dat de status veranderd is bij de laatste check.</p></span></popup-notify></div><div class="right">Kosten</div></div>
 <div class="item_opmerking_list">
 {% for key, value in hoofdstukken_todo.items %}
 {% if value %}
@@ -59,7 +59,7 @@
 
 <div class="ui bottom attached tab segment" data-tab="non_accepted_comments">
 {% if hoofdstukken_non_accept %}
-<div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>De status, opgevolgd door de opmerkingen op de regel en op elkaar. Mits er bijlages zijn toegevoegd, zijn deze downloadbaar hierna. "Nieuwe Status" betekent dat de status veranderd is bij de laatste check.</p></span></popup-notify></div></div>
+<div class="titel_plusopmerking"><div class="left">Regel</div><div class="right">Status<popup-notify><span slot="message"><p>De status, opgevolgd door de opmerkingen op de regel en op elkaar. Mits er bijlages zijn toegevoegd, zijn deze downloadbaar hierna. "Nieuwe Status" betekent dat de status veranderd is bij de laatste check.</p></span></popup-notify></div><div class="right">Akkoord</div><div class="right">Kosten</div></div>
 <div class="item_opmerking_list">
 {% for key, value in hoofdstukken_non_accept.items %}
 {% if value %}
@@ -79,7 +79,7 @@
 </div>
 <div class="ui bottom attached tab segment" data-tab="accepted_comments">
 {% if hoofdstukken_accept %}
-<div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status       <popup-notify><span slot="message"><p>De status, opgevolgd door de opmerkingen op de regel en op elkaar. Mits er bijlages zijn toegevoegd, zijn deze downloadbaar hierna. "Nieuwe Status" betekent dat de status veranderd is bij de laatste check.</p></span></popup-notify></div></div>
+<div class="titel_plusopmerking"><div class="left">Regel</div><div class="right">Status<popup-notify><span slot="message"><p>De status, opgevolgd door de opmerkingen op de regel en op elkaar. Mits er bijlages zijn toegevoegd, zijn deze downloadbaar hierna. "Nieuwe Status" betekent dat de status veranderd is bij de laatste check.</p></span></popup-notify></div><div class="right">Akkoord</div><div class="right">Kosten</div></div>
 <div class="item_opmerking_list">
 
 {% for key, value in hoofdstukken_accept.items %}

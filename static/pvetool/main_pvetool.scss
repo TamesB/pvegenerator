@@ -742,9 +742,17 @@ html {
         }
 
         .first_annotate_formbox {
-          margin-bottom: 2vh;
+          margin-bottom: 0.5em;
           padding: 0;
           width: 100%;
+
+          select {
+            padding: 0.32em 0.7em;
+          }
+
+          input {
+            padding: 0.32em 0.7em;
+          }
         }
         .generator_form {
           form {
@@ -1092,6 +1100,9 @@ html {
           }
         }
         .opmerking_form {
+          .ui.tab {
+            min-width: 660px;
+          }
           .general_title {
             .submit_button {
               font-family: "Montserrat";
@@ -1132,14 +1143,16 @@ html {
             font-size: 1.8vh;
             font-weight: bold;
             display: flex;
+            justify-content: space-around;
+            align-items: center;
 
             .left {
-              flex: 0 0 60%;
               text-align: left;
+              flex: 0 0 55%;
             }
 
             .right {
-              flex: 1;
+              flex: 0 0 15%;
               text-align: center;
             }
           }
@@ -1170,7 +1183,7 @@ html {
               border: none;
               text-align: left;
               outline: none;
-              font-size: 1.7vh;
+              font-size: 1.5vh;
               font-weight: bold;
             }
 
@@ -1197,7 +1210,7 @@ html {
               border: none;
               text-align: left;
               outline: none;
-              font-size: 1.6vh;
+              font-size: 1.4vh;
               font-weight: bold;
             }
 
@@ -1225,25 +1238,48 @@ html {
             .item_content {
               .item_deeper {
                 display: flex;
-                font-size: 1.5vh;
-                padding-top: 0.5vh;
-                padding-bottom: 0.5vh;
+                font-size: 1.3vh;
+                padding-top: 0.3vh;
+                padding-bottom: 0vh;
                 justify-content: space-between;
+                .ui.button {
+                  padding: 0.5em 0.5em 0.5em;
+                }
 
                 .text_left {
-                  padding-left: 4vw;
-                  flex: 0 0 60%;
+                  padding-left: 3vw;
+                  flex: 0 0 55%;
                   text-align: left;
                   overflow: auto;
+
+                  p {
+                    margin: 0;
+                  }
                 }
 
                 .text_right {
-                  overflow: auto;
+                  flex: 0 0 15%;
                   display: flex;
                   flex-direction: column;
                   justify-content: center;
                   align-items: center;
                   overflow: auto;
+                  min-width: 80px;
+                  p {
+                    margin: 0;
+                  }
+
+                  .accept_buttons_pong {
+                    display: flex;
+                    flex-direction: row;
+                    min-width: 40px;
+                  }
+
+                  @media screen and (max-width: 591px) {
+                    .accept_buttons_pong {
+                      flex-direction: column;
+                    }
+                  }
                 }
                 .status_added {
                   padding-top: 1vh;
@@ -2105,8 +2141,14 @@ html {
 
       @media screen and (max-width: 768px) {
         .article_content {
-          margin-left: 4vw;
-          margin-right: 4vw;
+          margin-left: 3em;
+          margin-right: 3em;
+        }
+      }
+      @media screen and (max-width: 660px) {
+        .article_content {
+          margin-left: 0.5em;
+          margin-right: 0.5em;
         }
       }
     }

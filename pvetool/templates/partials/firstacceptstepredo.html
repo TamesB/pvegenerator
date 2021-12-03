@@ -1,18 +1,19 @@
 {% block main %}
 <span>
+  <div class="accept_buttons_pong">
     {% if current_reply.accept %}
     <button
-      class="ui green button d-inline disabled"
-      type="button"
-    >
-      Geaccepteerd
+    class="ui green button icon disabled"
+    type="button"
+  >
+    <i class="icon check"></i>
     </button>
     {% else %}
     <button
-      class="ui red button d-inline disabled"
-      type="button"
-    >
-      Afgewezen
+    class="ui red button icon disabled"
+    type="button"
+  >
+  <i class="icon times"></i>
     </button>
     {% endif %}
 <button
@@ -23,5 +24,6 @@
 >
   <i class="icon undo alternate"></i>
 </button>
+</div>
 </span>
 {% endblock %}
