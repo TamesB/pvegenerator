@@ -61,7 +61,7 @@
     {% endif %}
 
     {% for reply in replies %}
-    {% if reply.comment or reply.status or reply.bijlage %}
+    {% if reply.comment or reply.status or reply.bijlage or reply.accept %}
     <div class="reaction_on_rule">
         <div class="party">
             <p><i>{% if reply.gebruiker.organisatie %}{{ reply.gebruiker.organisatie }}{% else %}{{ reply.gebruiker.klantenorganisatie }}{% endif %}</i></p>

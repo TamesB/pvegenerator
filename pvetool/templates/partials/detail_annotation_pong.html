@@ -2,7 +2,7 @@
 {% block main %}
 <span hx-target="this" hx-swap="outerHTML">
     <div class="container_item_partial">
-    {% if current_reply and current_reply.accept is False %}
+    {% if current_reply %}
     <div class="reaction_on_rule">
         <div class="party">
             <p style="color:#b69b00;"><i>{% if request.user.organisatie %}{{ request.user.organisatie }}{% else %}{{ request.user.klantenorganisatie }}{% endif %}</i></p>
