@@ -21,7 +21,9 @@
 </div>
 <div class="text_right">
 <span hx-get="{% url 'detailfirststatus' client_pk project_pk item.id %}" hx-swap="innerHTML" hx-target="this" hx-trigger="load"></span>
-<span hx-get="{% url 'detailfirstkostenverschil' client_pk project_pk item.id %}" hx-swap="innerHTML" hx-target="this" hx-trigger="load"></span>
+</div>
+<div class="text_right">
+    <span hx-get="{% url 'detailfirstkostenverschil' client_pk project_pk item.id %}" hx-swap="innerHTML" hx-target="this" hx-trigger="load"></span>
 </div>
 </div>
 {% endblock %}
