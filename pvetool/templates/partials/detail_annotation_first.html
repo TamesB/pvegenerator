@@ -25,7 +25,7 @@
             <p style="color:#b69b00;"><i>{% if request.user.organisatie %}{{ request.user.organisatie }}{% else %}{{ request.user.klantenorganisatie }}{% endif %}</i></p>
         </div>
         <div class="accept">
-            <p>{% if annotation.accept is False %}<i class="icon times"></i>{% elif annotation.accept is True %}<i class="icon check"></i>{% else %}&nbsp;{% endif %}</p>
+            <p></p>
         </div>
         <div class="statuschange">
             {% if annotation.firststatus %}
