@@ -349,12 +349,17 @@ def DetailItemPong(request, client_pk, project_pk, item_pk, type):
 
     replies = None
     bijlagen = {}
-
+    current_reply = None
+    
     if CommentReply.objects.filter(onComment__item__id=item.id, commentphase__project__id=current_phase.project.id).exists():
         replies = CommentReply.objects.filter(
             Q(onComment__item__id=item_pk) & ~Q(commentphase=current_phase) & Q(commentphase__project__id=current_phase.project.id)
         ).order_by("id")
 
+        current_reply = CommentReply.objects.filter(
+            Q(onComment__item__id=item_pk) & Q(commentphase=current_phase) & Q(commentphase__project__id=current_phase.project.id)
+        ).first()
+        
         for reply in replies:
             if reply.bijlagetoreply.exists():
                 bijlagen[reply] = reply.bijlagetoreply.all()
@@ -374,6 +379,7 @@ def DetailItemPong(request, client_pk, project_pk, item_pk, type):
     context["item"] = item
     context["itembijlage"] = itembijlage
     context["replies"] = replies
+    context["current_reply"] = current_reply
     context["bijlagen"] = bijlagen
     context["annotation"] = annotation
     context["annotationbijlagen"] = annotationbijlagen
@@ -1015,7 +1021,18 @@ def DeleteStatusPong(request, client_pk, project_pk, item_pk, type):
             commentphase=current_phase,
         ).first()
         reply.status = None
-        reply.save()
+        
+        # if reply is in tab 0
+        if not reply.accept:
+            if BijlageToReply.objects.filter(reply=reply):
+                bijlagen = BijlageToReply.objects.filter(reply=reply)
+                for bijlage in bijlagen:
+                    bijlage.delete()
+            
+            reply.delete()
+        else:
+            reply.save()
+            
         messages.warning(request, "Status verwijderd.")
         return redirect(
             "detailpongaccept",
@@ -1066,13 +1083,9 @@ def DeleteReplyPong(request, client_pk, project_pk, item_pk, type):
         reply.comment = None
         reply.save()
 
-        if BijlageToReply.objects.filter(reply__id=reply.id).exists():
-            bijlage = BijlageToReply.objects.get(reply__id=reply.id)
-            bijlage.delete()
-
         messages.warning(
             request,
-            "Opmerking verwijderd, als u een bijlage had geupload is deze ook verwijderd.",
+            "Opmerking verwijderd.",
         )
         return redirect(
             "detailpongreply",

@@ -1387,7 +1387,7 @@ html {
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .ui.button {
-  padding: 0.5em 0.5em 0.5em;
+  padding: 0.2em 0.2em 0.2em;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .text_left {
@@ -1501,6 +1501,10 @@ html {
       -ms-flex-direction: row;
           flex-direction: row;
   min-width: 40px;
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .text_right .accept_buttons_pong .ui.button {
+  padding: 0.5em 0.5em 0.5em;
 }
 
 @media screen and (max-width: 591px) {

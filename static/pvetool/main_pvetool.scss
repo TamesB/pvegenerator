@@ -1242,8 +1242,9 @@ html {
                 padding-top: 0.3vh;
                 padding-bottom: 0vh;
                 justify-content: space-between;
+                
                 .ui.button {
-                  padding: 0.5em 0.5em 0.5em;
+                  padding: 0.2em 0.2em 0.2em;
                 }
 
                 .text_left {
@@ -1309,6 +1310,10 @@ html {
                     display: flex;
                     flex-direction: row;
                     min-width: 40px;
+                    .ui.button {
+                      padding: 0.5em 0.5em 0.5em;
+                    }
+    
                   }
 
                   @media screen and (max-width: 591px) {

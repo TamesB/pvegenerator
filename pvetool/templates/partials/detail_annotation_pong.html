@@ -8,7 +8,7 @@
             <p style="color:#b69b00;"><i>{% if request.user.organisatie %}{{ request.user.organisatie }}{% else %}{{ request.user.klantenorganisatie }}{% endif %}</i></p>
         </div>
         <div class="accept">
-            <p>{% if current_reply.accept is False %}<i class="icon times"></i>{% elif current_reply.accept is True %}<i class="icon check"></i>{% else %}&nbsp;{% endif %}</p>
+            <p>{% if current_reply.accept %}{% if current_reply.accept is False %}<i class="icon times"></i>{% elif current_reply.accept is True %}<i class="icon check"></i>{% else %}&nbsp;{% endif %}{% endif %}</p>
         </div>
 
         <div class="statuschange">

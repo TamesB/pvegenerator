@@ -714,9 +714,15 @@ def DeleteStatusFirst(request, client_pk, project_pk, item_pk):
         annotation = PVEItemAnnotation.objects.filter(
             project=project, item__id=item_pk
         ).first()
-
+    if BijlageToAnnotation.objects.filter(ann=annotation):
+        bijlagen = BijlageToAnnotation.objects.filter(ann=annotation)
+        
     if annotation:
         annotation.delete()
+        
+        for bijlage in bijlagen:
+            bijlage.delete()
+            
         messages.warning(request, "Status verwijderd.")
         return redirect(
             "detailitemfirst",

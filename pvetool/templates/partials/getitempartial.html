@@ -10,7 +10,7 @@
     <div class="pveruletext">
         <p>{{ item.inhoud }}</p>
     </div>
-    {% if annotation.firststatus or annotation.bijlage or replies %}
+    {% if annotation.status or current_reply.status %}
     <div class="reaction_on_rule">
         <div class="party">
             <p><b>Partij</b></p>
@@ -30,7 +30,7 @@
 
     </div>
     {% endif %}
-    {% if annotation.annotation or annotation.bijlage %}
+    {% if annotation.annotation or annotation.bijlage or annotation.firststatus %}
 
     <div class="reaction_on_rule">
         <div class="party">
