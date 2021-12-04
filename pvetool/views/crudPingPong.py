@@ -855,6 +855,16 @@ def AddStatusPong(request, client_pk, project_pk, item_pk, type):
                 item_pk=item_pk,
                 type=type,
             )
+        else:
+            messages.warning(request, "Vul een geldige status in.")
+            return redirect(
+                "detailpongaccept",
+                client_pk=client_pk,
+                project_pk=project_pk,
+                item_pk=item_pk,
+                type=type,
+            )
+
 
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
