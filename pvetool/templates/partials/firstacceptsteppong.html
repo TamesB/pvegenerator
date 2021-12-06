@@ -1,12 +1,14 @@
 {% block main %}
 <span>
   <div class="accept_buttons_pong">
+    {% if type != 2 %}
   <button
     hx-post="{% url 'acceptitempong' client_pk project_pk item_pk type %}"
     class="ui green button icon"
     type="button"
   >
     <i class="icon check"></i>
+  {% endif %}
   </button>
   <button
     hx-post="{% url 'nonacceptitempong' client_pk project_pk item_pk type %}"
