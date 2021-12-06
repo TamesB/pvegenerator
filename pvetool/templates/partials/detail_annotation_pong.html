@@ -8,7 +8,7 @@
             <p style="color:#b69b00;"><i>{% if request.user.organisatie %}{{ request.user.organisatie }}{% else %}{{ request.user.klantenorganisatie }}{% endif %}</i></p>
         </div>
         <div class="accept">
-            <p>{% if current_reply.accept %}{% if current_reply.accept is False %}<i class="icon times"></i>{% elif current_reply.accept is True %}<i class="icon check"></i>{% else %}&nbsp;{% endif %}{% endif %}</p>
+            {% if current_reply.accept is False %}<i class="icon times"></i>{% else %}<i class="icon check"></i>{% endif %}
         </div>
 
         <div class="statuschange">
@@ -18,10 +18,11 @@
         </div>
         <div class="comment">
             {% if current_reply.comment %}
-                <span><p style="color:#b69b00;">{{ current_reply.comment }} <span><button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic icon button">
+                <span><p style="color:#b69b00;">{{ current_reply.comment }} <span><button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic icon button">
                 <i class="icon edit"></i></button></span>
                 <span><a hx-delete="{% url 'deletereplypong' client_pk project_pk item_pk type %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></p></span>
-            {% elif current_reply.status %}
+            {% endif %}
+            {% if current_reply.accept is False %}
                 <button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic icon button"><i class="icon plus"></i></button>
             {% endif %}
         </div>
@@ -38,7 +39,9 @@
                 {% endfor %}
                 </span>
                 {% endif %}
+                {% if current_reply.accept is False %}
                 <button hx-get="{% url 'addbijlagepong' client_pk project_pk item_pk 0 type 1 0 %}" class="ui basic icon button"><i class="icon plus"></i></button>
+                {% endif %}
             </p>
         </div>
     </div>

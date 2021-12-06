@@ -362,8 +362,8 @@ def DetailItemPong(request, client_pk, project_pk, item_pk, type):
         
         for reply in replies:
             if reply.bijlagetoreply.exists():
-                bijlagen[reply] = reply.bijlagetoreply.all()
-                
+                bijlagen[reply.id] = reply.bijlagetoreply.all()
+                                
     annotation = None
     if PVEItemAnnotation.objects.filter(
         project__id=project_pk, item__id=item.id

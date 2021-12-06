@@ -710,6 +710,7 @@ def DeleteStatusFirst(request, client_pk, project_pk, item_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     annotation = None
+    bijlagen = None
     if PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).exists():
         annotation = PVEItemAnnotation.objects.filter(
             project=project, item__id=item_pk
@@ -719,9 +720,9 @@ def DeleteStatusFirst(request, client_pk, project_pk, item_pk):
         
     if annotation:
         annotation.delete()
-        
-        for bijlage in bijlagen:
-            bijlage.delete()
+        if bijlagen:
+            for bijlage in bijlagen:
+                bijlage.delete()
             
         messages.warning(request, "Status verwijderd.")
         return redirect(

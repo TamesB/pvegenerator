@@ -1,6 +1,7 @@
 {% load static %}
 {% block main %}
 <span hx-target="this" hx-swap="outerHTML">
+    {% if annotation.firststatus %}
     <div class="reaction_on_rule">
         <div class="party">
             <p><b>Partij</b></p>
@@ -43,6 +44,7 @@
         </div>
         <div class="attachments">
             <p>
+                {% if annotation %}
                 {% if bijlagen %}
                 <span style="color:#b69b00;">
                 {% for bijlage in bijlagen %}
@@ -56,9 +58,11 @@
                 </span>
                 {% endif %}
                 <button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation.id 0 %}" class="ui basic icon button"><i class="icon plus"></i></button>
-                </p>
+                {% endif %}
+            </p>
         </div>
     </div>
+    {% endif %}
 </span>
 {% endblock %}{% block scripts %}
 {% include 'partials/messages.html' %}

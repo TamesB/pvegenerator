@@ -81,10 +81,10 @@
             {% endif %}
         </div>
         <div class="attachments">
-            {% if bijlagen.reply %} 
+            {% if bijlagen|get_item:reply.id %} 
             <span>
             <p><i>
-            {% for bijlage in bijlagen.reply %}
+            {% for bijlage in bijlagen|get_item:reply.id %}
             <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk bijlage.reply.id bijlage.id %}" target="_blank">
             {{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img>
             </a>

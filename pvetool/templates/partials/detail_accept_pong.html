@@ -7,14 +7,14 @@
       hx-target="this"
       hx-trigger="load"
     ></div>
-    {% if current_reply %} {% if current_reply.accept is False %}
+    {% if current_reply %}
     <div
       hx-get="{% url 'detailpongreply' client_pk project_pk item_pk type %}"
       hx-swap="outerHTML"
       hx-target="this"
       hx-trigger="load"
     ></div>
-    {% endif %} {% else %} {% if type != 2 %}
+     {% else %} {% if type != 2 %}
     <div
       hx-get="{% url 'detailpongreply' client_pk project_pk item_pk type %}"
       hx-swap="outerHTML"
