@@ -252,24 +252,24 @@ class FirstBijlageForm(ModelForm):
     class Meta:
         model = BijlageToAnnotation
         fields = ("bijlage", "ann", "naam")
-        labels = {"bijlage": "", "ann": "", "naam": "Bijlagenaam:"}
+        labels = {"bijlage": "", "ann": "", "naam": "Bijlagenaam (optioneel):"}
         widgets = {"ann": forms.HiddenInput()}
         
     def __init__(self, *args, **kwargs):
         super(FirstBijlageForm, self).__init__(*args, **kwargs)
-        self.fields["naam"].required = True
+        self.fields["naam"].required = False
         self.fields["bijlage"].required = True
 
 class PongBijlageForm(ModelForm):
     class Meta:
         model = BijlageToReply
         fields = ("bijlage", "reply", "naam")
-        labels = {"bijlage": "", "reply": "", "naam": "Bijlagenaam:"}
+        labels = {"bijlage": "", "reply": "", "naam": "Bijlagenaam (optioneel):"}
         widgets = {"reply": forms.HiddenInput()}
         
     def __init__(self, *args, **kwargs):
         super(PongBijlageForm, self).__init__(*args, **kwargs)
-        self.fields["naam"].required = True
+        self.fields["naam"].required = False
         self.fields["bijlage"].required = True
 
 

@@ -771,10 +771,29 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type,
         
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
-            if not BijlageToReply.objects.filter(naam=form.cleaned_data["naam"]).exists():
+            if form.cleaned_data["naam"]: 
+                if not BijlageToReply.objects.filter(naam=form.cleaned_data["naam"], reply__onComment__project=project).exists(): 
+                    form.save()
+                    reply.bijlage = True
+                    reply.save()
+                    messages.warning(request, "Bijlage toegevoegd!")
+                    return redirect(
+                        "detailpongreply",
+                        client_pk=client_pk,
+                        project_pk=project_pk,
+                        item_pk=item_pk,
+                        type=type,
+                    )
+                else:
+                    messages.warning(request, "Naam bestaat al voor een bijlage in dit project. Kies een andere.")
+            else:
+                # else save and the attachment ID is the attachment name.
                 form.save()
                 reply.bijlage = True
                 reply.save()
+                bijlage = reply.bijlagetoreply.all().order_by("-id").first()
+                bijlage.naam = bijlage.id
+                bijlage.save()
                 messages.warning(request, "Bijlage toegevoegd!")
                 return redirect(
                     "detailpongreply",
@@ -783,8 +802,6 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type,
                     item_pk=item_pk,
                     type=type,
                 )
-            else:
-                messages.warning(request, "Bijlagenaam bestaat al in dit project. Kies een andere.")
         else:
             messages.warning(request, "Fout met bijlage toevoegen. Probeer het opnieuw.")
 

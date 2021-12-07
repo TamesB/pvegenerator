@@ -395,10 +395,28 @@ def AddBijlageFirst(request, client_pk, project_pk, item_pk, annotation_pk, bijl
 
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
-            if not BijlageToAnnotation.objects.filter(naam=form.cleaned_data["naam"]).exists(): 
+            if form.cleaned_data["naam"]: 
+                if not BijlageToAnnotation.objects.filter(naam=form.cleaned_data["naam"], ann__project=project).exists(): 
+                    form.save()
+                    annotation.bijlage = True
+                    annotation.save()
+                    messages.warning(request, "Bijlage toegevoegd!")
+                    return redirect(
+                        "detailfirstannotation",
+                        client_pk=client_pk,
+                        project_pk=project_pk,
+                        item_pk=item_pk,
+                    )
+                else:
+                    messages.warning(request, "Naam bestaat al voor een bijlage in dit project. Kies een andere.")
+            else:
+                # else save and the attachment ID is the attachment name.
                 form.save()
-                annotation.bijlage=True
+                annotation.bijlage = True
                 annotation.save()
+                bijlage = annotation.bijlageobject.all().order_by("-id").first()
+                bijlage.naam = bijlage.id
+                bijlage.save()
                 messages.warning(request, "Bijlage toegevoegd!")
                 return redirect(
                     "detailfirstannotation",
@@ -406,8 +424,7 @@ def AddBijlageFirst(request, client_pk, project_pk, item_pk, annotation_pk, bijl
                     project_pk=project_pk,
                     item_pk=item_pk,
                 )
-            else:
-                messages.warning(request, "Naam bestaat al voor een bijlage in dit project. Kies een andere.")
+
         else:
             messages.warning(request, "Fout met bijlage toevoegen. Probeer het opnieuw.")
 
