@@ -150,6 +150,14 @@ def CheckComments(request, client_pk, proj_id):
     for comment in todo_comments:
         todo_hfst_count[comment.item.hoofdstuk.id] += 1
 
+    totale_kosten = 0
+    if PVEItemAnnotation.objects.filter(
+        project=project
+    ).aggregate(Sum("kostenConsequenties"))["kostenConsequenties__sum"]:
+        totale_kosten += PVEItemAnnotation.objects.filter(
+            project=project
+        ).aggregate(Sum("kostenConsequenties"))["kostenConsequenties__sum"]
+
     context["hoofdstukken_non_accept"] = hoofdstukken_non_accept
     context["hoofdstukken_accept"] = hoofdstukken_accept
     context["hoofdstukken_todo"] = hoofdstukken_todo
@@ -172,9 +180,7 @@ def CheckComments(request, client_pk, proj_id):
     context["commentphase"] = current_phase
     context["last_level"] = current_phase.level - 1
     context["logo_url"] = logo_url
-    context["totale_kosten"] = PVEItemAnnotation.objects.filter(
-        project=project
-    ).aggregate(Sum("kostenConsequenties"))["kostenConsequenties__sum"]
+    context["totale_kosten"] = totale_kosten
 
     return render(request, "CheckComments_temp.html", context)
 
