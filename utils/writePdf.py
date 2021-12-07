@@ -357,8 +357,8 @@ class PDFMaker:
                                         )
 
                                         opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: "
-                                        if opmerkingen[item.id].annotation:
-                                            opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
+                                        #if opmerkingen[item.id].annotation:
+                                        #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
                                         if opmerkingen[item.id].status:
                                             opmrk += f"Status: {opmerkingen[item.id].status}. "
                                         if opmerkingen[item.id].kostenConsequenties:
@@ -372,16 +372,19 @@ class PDFMaker:
                                         if item.id in reacties:
                                             for reactie in reacties[item.id]:
                                                 reactie_str = f""
-                                                if reactie.comment:
-                                                    if len(reactie_str) == 0:
-                                                        reactie_str += f"Opmerking: "
-                                                    reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
+                                                #if reactie.comment:
+                                                #    if len(reactie_str) == 0:
+                                                #        reactie_str += f"Opmerking: "
+                                                #    reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
 
                                                 if reactie.id in reactiebijlagen.keys():
-                                                    if len(reactie_str) == 0:
-                                                        reactie_str += f"Opmerking: "
+                                                #    if len(reactie_str) == 0:
+                                                #        reactie_str += f"Opmerking: "
                                                     
-                                                    reactie_str += f"Zie bijlage(n) "
+                                                #    reactie_str += f"Zie bijlage(n) "                                                    
+                                                
+                                                    if "Zie bijlage" not in opmrk and "Zie bijlage" not in reactie_str:
+                                                        reactie_str += f"Zie bijlage(n): "
                                                     
                                                     for bijlage in reactiebijlagen[reactie.id]:
                                                         reactie_str += f"'{bijlage.naam}', "
@@ -436,8 +439,8 @@ class PDFMaker:
                                         )
 
                                         opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: "
-                                        if opmerkingen[item.id].annotation:
-                                            opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
+                                        #if opmerkingen[item.id].annotation:
+                                        #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
                                         if opmerkingen[item.id].status:
                                             opmrk += f"Status: {opmerkingen[item.id].status}. "
                                         if opmerkingen[item.id].kostenConsequenties:
@@ -451,17 +454,19 @@ class PDFMaker:
                                         if item.id in reacties:
                                             for reactie in reacties[item.id]:
                                                 reactie_str = f""
-                                                if reactie.comment:
-                                                    if len(reactie_str) == 0:
-                                                        reactie_str += f"Opmerking: "
-                                                    reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
+                                                #if reactie.comment:
+                                                #    if len(reactie_str) == 0:
+                                                #        reactie_str += f"Opmerking: "
+                                                #    reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
 
                                                 if reactie.id in reactiebijlagen.keys():
-                                                    if len(reactie_str) == 0:
-                                                        reactie_str += f"Opmerking: "
+                                                #    if len(reactie_str) == 0:
+                                                #        reactie_str += f"Opmerking: "
                                                     
-                                                    reactie_str += f"Zie bijlage(n) "
+                                                #    reactie_str += f"Zie bijlage(n) "
                                                     
+                                                    if "Zie bijlage" not in opmrk and "Zie bijlage" not in reactie_str:
+                                                        reactie_str += f"Zie bijlage(n): "
                                                     for bijlage in reactiebijlagen[reactie.id]:
                                                         reactie_str += f"'{bijlage.naam}', "
 
@@ -524,12 +529,10 @@ class PDFMaker:
                                     )
 
                                     opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: "
-                                    if opmerkingen[item.id].annotation:
-                                        opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
+                                    #if opmerkingen[item.id].annotation:
+                                    #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
                                     if opmerkingen[item.id].status:
-                                        opmrk += (
-                                            f"Status: {opmerkingen[item.id].status}. "
-                                        )
+                                        opmrk += f"Status: {opmerkingen[item.id].status}. "
                                     if opmerkingen[item.id].kostenConsequenties:
                                         opmrk += f"Kostenverschil: €{opmerkingen[item.id].kostenConsequenties}. "
                                     if opmerkingen[item.id].bijlage:
@@ -541,18 +544,19 @@ class PDFMaker:
                                     if item.id in reacties:
                                         for reactie in reacties[item.id]:
                                             reactie_str = f""
-
-                                            if reactie.comment:
-                                                if len(reactie_str) == 0:
-                                                    reactie_str += f"Opmerking: "
-                                                reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
+                                            #if reactie.comment:
+                                            #    if len(reactie_str) == 0:
+                                            #        reactie_str += f"Opmerking: "
+                                            #    reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
 
                                             if reactie.id in reactiebijlagen.keys():
-                                                if len(reactie_str) == 0:
-                                                    reactie_str += f"Opmerking: "
+                                            #    if len(reactie_str) == 0:
+                                            #        reactie_str += f"Opmerking: "
                                                 
-                                                reactie_str += f"Zie bijlage(n) "
-                                                
+                                            #    reactie_str += f"Zie bijlage(n) "
+                                            
+                                                if "Zie bijlage" not in opmrk and "Zie bijlage" not in reactie_str:
+                                                    reactie_str += f"Zie bijlage(n): "
                                                 for bijlage in reactiebijlagen[reactie.id]:
                                                     reactie_str += f"'{bijlage.naam}', "
 
@@ -601,12 +605,10 @@ class PDFMaker:
                                     )
 
                                     opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: "
-                                    if opmerkingen[item.id].annotation:
-                                        opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
+                                    #if opmerkingen[item.id].annotation:
+                                    #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
                                     if opmerkingen[item.id].status:
-                                        opmrk += (
-                                            f"Status: {opmerkingen[item.id].status}. "
-                                        )
+                                        opmrk += f"Status: {opmerkingen[item.id].status}. "
                                     if opmerkingen[item.id].kostenConsequenties:
                                         opmrk += f"Kostenverschil: €{opmerkingen[item.id].kostenConsequenties}. "
                                     if opmerkingen[item.id].bijlage:
@@ -618,17 +620,19 @@ class PDFMaker:
                                     if item.id in reacties:
                                         for reactie in reacties[item.id]:
                                             reactie_str = f""
-                                            if reactie.comment:
-                                                if len(reactie_str) == 0:
-                                                    reactie_str += f"Opmerking: "
-                                                reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
+                                            #if reactie.comment:
+                                            #    if len(reactie_str) == 0:
+                                            #        reactie_str += f"Opmerking: "
+                                            #    reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
 
                                             if reactie.id in reactiebijlagen.keys():
-                                                if len(reactie_str) == 0:
-                                                    reactie_str += f"Opmerking: "
+                                            #    if len(reactie_str) == 0:
+                                            #        reactie_str += f"Opmerking: "
                                                 
-                                                reactie_str += f"Zie bijlage(n) "
-                                                
+                                            #    reactie_str += f"Zie bijlage(n) "
+                                        
+                                                if "Zie bijlage" not in opmrk and "Zie bijlage" not in reactie_str:
+                                                    reactie_str += f"Zie bijlage(n): "
                                                 for bijlage in reactiebijlagen[reactie.id]:
                                                     reactie_str += f"'{bijlage.naam}', "
 
