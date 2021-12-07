@@ -446,6 +446,7 @@ class PDFMaker:
                                         Story.append(p)
 
                                 else:
+                                    item_added += 1
                                     # opmerkingen en alles printen
                                     if item.id in opmerkingen:
                                         p = Paragraph(
