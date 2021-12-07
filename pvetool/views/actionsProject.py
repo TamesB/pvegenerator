@@ -561,7 +561,7 @@ def download_pve(request, client_pk, pk):
                         bijlagen[opmerking.item.id].append(bijlage)
                     else:
                         bijlagen[opmerking.item.id] = [bijlage]
-
+    print(bijlagen)
     replies = (
         CommentReply.objects.select_related("gebruiker")
         .select_related("onComment")

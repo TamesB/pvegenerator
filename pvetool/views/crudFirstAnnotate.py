@@ -93,17 +93,18 @@ def AddComment(request, client_pk, pk):
                 hoofdstukken[item.hoofdstuk] = False
 
     annotations = {}
-    annotations_hfst = {}
-
+    annotations_hfst = {hoofdstuk.id: 0 for hoofdstuk in hoofdstukken}
+    items_per_chapter = {hoofdstuk.id: 0 for hoofdstuk in hoofdstukken}
+    
+    for hoofdstuk in hoofdstukken.keys():
+        items_per_chapter_count = project.item.select_related("hoofdstuk").filter(hoofdstuk=hoofdstuk).count()
+        items_per_chapter[hoofdstuk.id] += items_per_chapter_count
+    
     for annotation in project.annotation.select_related("item").select_related("item__hoofdstuk").select_related(
         "status"
     ):
         annotations[annotation.item] = annotation
-
-        if annotation.item.hoofdstuk.id in annotations_hfst.keys():
-            annotations_hfst[annotation.item.hoofdstuk.id] += 1
-        else:
-            annotations_hfst[annotation.item.hoofdstuk.id] = 1
+        annotations_hfst[annotation.item.hoofdstuk.id] += 1
 
     aantal_opmerkingen_gedaan = len(annotations.keys())
 
@@ -116,6 +117,7 @@ def AddComment(request, client_pk, pk):
     context["progress"] = progress
     context["aantal_opmerkingen_gedaan"] = aantal_opmerkingen_gedaan
     context["hoofdstukken"] = hoofdstukken
+    context["items_per_chapter"] = items_per_chapter
     context["annotations_hfst"] = annotations_hfst
     context["project"] = project
     context["client_pk"] = client_pk
@@ -788,7 +790,7 @@ def DeleteBijlageFirst(request, client_pk, project_pk, annotation_pk, pk):
         annotation = PVEItemAnnotation.objects.get(
             id=annotation_pk
         )
-        
+
     if bijlage:
         bijlage.delete()
         if annotation:
@@ -801,7 +803,7 @@ def DeleteBijlageFirst(request, client_pk, project_pk, annotation_pk, pk):
             "detailfirstannotation",
             client_pk=client_pk,
             project_pk=project_pk,
-            item_pk=annotation_pk,
+            item_pk=annotation.item.id,
         )
 
     messages.warning(request, "Fout met bijlage verwijderen. Probeer het nog eens.")
@@ -809,5 +811,5 @@ def DeleteBijlageFirst(request, client_pk, project_pk, annotation_pk, pk):
         "detailfirstannotation",
         client_pk=client_pk,
         project_pk=project_pk,
-        item_pk=annotation_pk,
+        item_pk=annotation.item.id,
     )

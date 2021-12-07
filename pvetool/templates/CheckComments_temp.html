@@ -27,9 +27,9 @@
 </p></div>
 
 <div class="ui top attached tabular menu">
-  <a class="item active" data-tab="todo_comments">Status nog aan te wijzen</a>
-  <a class="item" data-tab="non_accepted_comments">Gewijzigde regels</a>
-  <a class="item" data-tab="accepted_comments">Geaccepteerde regels</a>
+  <a class="item active" data-tab="todo_comments">Status nog aan te wijzen ({{ todo_replies.count }} / {{ todo_comments.count }})</a>
+  <a class="item" data-tab="non_accepted_comments">Gewijzigde regels ({{ non_accepted_replies.count }} / {{ non_accepted_comments.count }})</a>
+  <a class="item" data-tab="accepted_comments">Geaccepteerde regels ({{ accepted_replies.count }} / {{ accepted_comments.count }})</a>
 </div>
 
 <div class="ui bottom attached tab segment active" data-tab="todo_comments">
@@ -40,12 +40,12 @@
 {% if value %}
     <button type="button" hx-get="{% url 'getparagravenpingpong' client_pk project.id key.id 0 0 %}" 
     hx-target="#hoofdstuk_content-0-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk">
-    <p>{{ key.hoofdstuk }} {% if todo_hfst_replies|get_item:key.id %}<i><span>({{ todo_hfst_replies|get_item:key.id }} wijziging(en) door u)</i></span>{% endif %}<img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img>
+    <p>{{ key.hoofdstuk }} <i><span>({{ todo_hfst_replies|get_item:key.id }} / {{ todo_hfst_count|get_item:key.id }})</i></span><img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img>
     <img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
 {% else %}
     <button type="button" hx-get="{% url 'getitemspingpong' client_pk project.id key.id 0 0 0 %}" 
     hx-target="#hoofdstuk_content-0-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk">
-    <p>{{ key.hoofdstuk }} {% if todo_hfst_replies|get_item:key.id %}<i><span>({{ todo_hfst_replies|get_item:key.id }} wijziging(en) door u)</i></span>{% endif %}<img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img>
+    <p>{{ key.hoofdstuk }} <i><span>({{ todo_hfst_replies|get_item:key.id }} / {{ todo_hfst_count|get_item:key.id }})</i></span><img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img>
     <img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
 {% endif %}
     <div class="hoofdstuk_content" id="hoofdstuk_content-0-{{ key.id }}">
@@ -64,10 +64,10 @@
 {% for key, value in hoofdstukken_non_accept.items %}
 {% if value %}
     <button type="button" hx-get="{% url 'getparagravenpingpong' client_pk project.id key.id 1 1 %}" 
-    hx-target="#hoofdstuk_content-1-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk"><p>{{ key.hoofdstuk }} {% if non_accepted_hfst_replies|get_item:key.id %}<i><span>({{ non_accepted_hfst_replies|get_item:key.id }} wijziging(en) door u)</i></span>{% endif %} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
+    hx-target="#hoofdstuk_content-1-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk"><p>{{ key.hoofdstuk }} <i><span>({{ non_accepted_hfst_replies|get_item:key.id }} / {{ non_accepted_hfst_count|get_item:key.id }})</i></span> <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
 {% else %}
     <button type="button" hx-get="{% url 'getitemspingpong' client_pk project.id key.id 0 1 1 %}" 
-    hx-target="#hoofdstuk_content-1-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk"><p>{{ key.hoofdstuk }} {% if non_accepted_hfst_replies|get_item:key.id %}<i><span>({{ non_accepted_hfst_replies|get_item:key.id }} wijziging(en) door u)</i></span>{% endif %} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
+    hx-target="#hoofdstuk_content-1-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk"><p>{{ key.hoofdstuk }} <i><span>({{ non_accepted_hfst_replies|get_item:key.id }} / {{ non_accepted_hfst_count|get_item:key.id }})</i></span> <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
 {% endif %}
     <div class="hoofdstuk_content" id="hoofdstuk_content-1-{{ key.id }}">
     </div>
@@ -86,11 +86,11 @@
 {% if value %}
     <button type="button" hx-get="{% url 'getparagravenpingpong' client_pk project.id key.id 2 1 %}" 
     hx-target="#hoofdstuk_content-2-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk">
-    <p>{{ key.hoofdstuk }} {% if accepted_hfst_replies|get_item:key.id %}<i><span>({{ accepted_hfst_replies|get_item:key.id }} wijziging(en) door u)</i></span>{% endif %} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
+    <p>{{ key.hoofdstuk }} <i><span>({{ accepted_hfst_replies|get_item:key.id }} / {{ accepted_hfst_count|get_item:key.id }})</i></span> <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
 {% else %}
     <button type="button" hx-get="{% url 'getitemspingpong' client_pk project.id key.id 0 2 1 %}" 
     hx-target="#hoofdstuk_content-2-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk">
-    <p>{{ key.hoofdstuk }} {% if accepted_hfst_replies|get_item:key.id %}<i><span>({{ accepted_hfst_replies|get_item:key.id }} wijziging(en) door u)</i></span>{% endif %} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
+    <p>{{ key.hoofdstuk }} <i><span>({{ accepted_hfst_replies|get_item:key.id }} / {{ accepted_hfst_count|get_item:key.id }})</i></span> <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
 {% endif %}
     <div class="hoofdstuk_content" id="hoofdstuk_content-2-{{ key.id }}">
     </div>

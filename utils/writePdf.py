@@ -355,7 +355,7 @@ class PDFMaker:
                                             f"{inhoud}".replace("\n", "<br />\n"),
                                             self.regelStyle,
                                         )
-
+                                        betrokken_str = f""
                                         opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: "
                                         #if opmerkingen[item.id].annotation:
                                         #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
@@ -368,7 +368,14 @@ class PDFMaker:
 
                                             for bijlage in bijlagen[item.id]:
                                                 opmrk += f"'{bijlage}'. "
-
+                                                
+                                        if opmerkingen[item.id].gebruiker.organisatie:
+                                            betrokken_partij = f"{opmerkingen[item.id].gebruiker.organisatie} "
+                                        else:
+                                            betrokken_partij = f"{opmerkingen[item.id].gebruiker.klantenorganisatie} "
+                                        
+                                        betrokken_str += betrokken_partij
+                                    
                                         if item.id in reacties:
                                             for reactie in reacties[item.id]:
                                                 reactie_str = f""
@@ -388,9 +395,19 @@ class PDFMaker:
                                                     
                                                     for bijlage in reactiebijlagen[reactie.id]:
                                                         reactie_str += f"'{bijlage.naam}', "
+                                                        
+                                                if reactie.gebruiker.organisatie:
+                                                    betrokken_partij = reactie.gebruiker.organisatie
+                                                else:
+                                                    betrokken_partij = reactie.gebruiker.klantenorganisatie
+                                                    
+                                                if f"{betrokken_partij}" not in betrokken_str:
+                                                    betrokken_str += f", {betrokken_partij} "
 
                                                 opmrk += reactie_str
-
+                                                                                        
+                                        opmrk += f"Betrokken partijen: {betrokken_str}"
+                                     
                                         if (
                                             len(opmrk)
                                             == len(
@@ -429,15 +446,13 @@ class PDFMaker:
                                         Story.append(p)
 
                                 else:
-                                    item_added += 1
-
                                     # opmerkingen en alles printen
                                     if item.id in opmerkingen:
                                         p = Paragraph(
                                             f"{inhoud}".replace("\n", "<br />\n"),
                                             self.regelStyleSwitch,
                                         )
-
+                                        betrokken_str = f""
                                         opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: "
                                         #if opmerkingen[item.id].annotation:
                                         #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
@@ -450,7 +465,14 @@ class PDFMaker:
 
                                             for bijlage in bijlagen[item.id]:
                                                 opmrk += f"'{bijlage}'. "
-
+                                                
+                                        if opmerkingen[item.id].gebruiker.organisatie:
+                                            betrokken_partij = f"{opmerkingen[item.id].gebruiker.organisatie} "
+                                        else:
+                                            betrokken_partij = f"{opmerkingen[item.id].gebruiker.klantenorganisatie} "
+                                        
+                                        betrokken_str += betrokken_partij
+                                    
                                         if item.id in reacties:
                                             for reactie in reacties[item.id]:
                                                 reactie_str = f""
@@ -463,14 +485,25 @@ class PDFMaker:
                                                 #    if len(reactie_str) == 0:
                                                 #        reactie_str += f"Opmerking: "
                                                     
-                                                #    reactie_str += f"Zie bijlage(n) "
-                                                    
+                                                #    reactie_str += f"Zie bijlage(n) "                                                    
+                                                
                                                     if "Zie bijlage" not in opmrk and "Zie bijlage" not in reactie_str:
                                                         reactie_str += f"Zie bijlage(n): "
+                                                    
                                                     for bijlage in reactiebijlagen[reactie.id]:
                                                         reactie_str += f"'{bijlage.naam}', "
 
                                                 opmrk += reactie_str
+                                                
+                                                if reactie.gebruiker.organisatie:
+                                                    betrokken_partij = reactie.gebruiker.organisatie
+                                                else:
+                                                    betrokken_partij = reactie.gebruiker.klantenorganisatie
+                                                    
+                                                if f"{betrokken_partij}" not in betrokken_str:
+                                                    betrokken_str += f", {betrokken_partij} "
+                                            
+                                        opmrk += f"Betrokken partijen: {betrokken_str}"
 
                                         if (
                                             len(opmrk)
@@ -527,7 +560,7 @@ class PDFMaker:
                                         f"{inhoud}".replace("\n", "<br />\n"),
                                         self.regelStyle,
                                     )
-
+                                    betrokken_str = f""
                                     opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: "
                                     #if opmerkingen[item.id].annotation:
                                     #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
@@ -540,7 +573,14 @@ class PDFMaker:
 
                                         for bijlage in bijlagen[item.id]:
                                             opmrk += f"'{bijlage}'. "
-
+                                            
+                                    if opmerkingen[item.id].gebruiker.organisatie:
+                                        betrokken_partij = f"{opmerkingen[item.id].gebruiker.organisatie} "
+                                    else:
+                                        betrokken_partij = f"{opmerkingen[item.id].gebruiker.klantenorganisatie} "
+                                    
+                                    betrokken_str += betrokken_partij
+                                
                                     if item.id in reacties:
                                         for reactie in reacties[item.id]:
                                             reactie_str = f""
@@ -553,14 +593,25 @@ class PDFMaker:
                                             #    if len(reactie_str) == 0:
                                             #        reactie_str += f"Opmerking: "
                                                 
-                                            #    reactie_str += f"Zie bijlage(n) "
+                                            #    reactie_str += f"Zie bijlage(n) "                                                    
                                             
                                                 if "Zie bijlage" not in opmrk and "Zie bijlage" not in reactie_str:
                                                     reactie_str += f"Zie bijlage(n): "
+                                                
                                                 for bijlage in reactiebijlagen[reactie.id]:
                                                     reactie_str += f"'{bijlage.naam}', "
+                                                    
+                                            if reactie.gebruiker.organisatie:
+                                                betrokken_partij = reactie.gebruiker.organisatie
+                                            else:
+                                                betrokken_partij = reactie.gebruiker.klantenorganisatie
+                                                
+                                            if f"{betrokken_partij}" not in betrokken_str:
+                                                betrokken_str += f", {betrokken_partij} "
 
                                             opmrk += reactie_str
+                                              
+                                    opmrk += f"Betrokken partijen: {betrokken_str}"
 
                                     if (
                                         len(opmrk)

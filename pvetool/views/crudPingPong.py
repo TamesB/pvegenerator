@@ -110,14 +110,14 @@ def CheckComments(request, client_pk, proj_id):
     hoofdstukken_accept = make_hoofdstukken(accepted_comments)
     hoofdstukken_todo = make_hoofdstukken(todo_comments)
 
-    non_accepted_hfst_replies = {}
-    accepted_hfst_replies = {}
-    todo_hfst_replies = {}
+    non_accepted_hfst_replies = {hoofdstuk.id: 0 for hoofdstuk in hoofdstukken_non_accept}
+    accepted_hfst_replies = {hoofdstuk.id: 0 for hoofdstuk in hoofdstukken_accept}
+    todo_hfst_replies = {hoofdstuk.id: 0 for hoofdstuk in hoofdstukken_todo}
 
     non_accepted_replies = current_phase.reply.select_related("onComment__item__hoofdstuk").filter(onComment__in=non_accepted_comments)
     accepted_replies = current_phase.reply.select_related("onComment__item__hoofdstuk").filter(onComment__in=accepted_comments)
     todo_replies = current_phase.reply.select_related("onComment__item__hoofdstuk").filter(onComment__in=todo_comments)
-
+    
     for reply in non_accepted_replies:
         hoofdstuk = reply.onComment.item.hoofdstuk.id
         if hoofdstuk in non_accepted_hfst_replies:
@@ -139,12 +139,33 @@ def CheckComments(request, client_pk, proj_id):
         else:
             todo_hfst_replies[hoofdstuk] = 1
 
+    non_accepted_hfst_count = {hoofdstuk.id: 0 for hoofdstuk in hoofdstukken_non_accept}
+    accepted_hfst_count = {hoofdstuk.id: 0 for hoofdstuk in hoofdstukken_accept}
+    todo_hfst_count = {hoofdstuk.id: 0 for hoofdstuk in hoofdstukken_todo}
+
+    for comment in non_accepted_comments:
+        non_accepted_hfst_count[comment.item.hoofdstuk.id] += 1
+    for comment in accepted_comments:
+        accepted_hfst_count[comment.item.hoofdstuk.id] += 1
+    for comment in todo_comments:
+        todo_hfst_count[comment.item.hoofdstuk.id] += 1
+
     context["hoofdstukken_non_accept"] = hoofdstukken_non_accept
     context["hoofdstukken_accept"] = hoofdstukken_accept
     context["hoofdstukken_todo"] = hoofdstukken_todo
     context["non_accepted_hfst_replies"] = non_accepted_hfst_replies
     context["accepted_hfst_replies"] = accepted_hfst_replies
     context["todo_hfst_replies"] = todo_hfst_replies
+    context["non_accepted_hfst_count"] = non_accepted_hfst_count
+    context["accepted_hfst_count"] = accepted_hfst_count
+    context["todo_hfst_count"] = todo_hfst_count
+    context["accepted_comments"] = accepted_comments
+    context["todo_comments"] = todo_comments
+    context["non_accepted_comments"] = non_accepted_comments
+    context["non_accepted_replies"] = non_accepted_replies
+    context["accepted_replies"] = accepted_replies
+    context["todo_replies"] = todo_replies
+
     context["project"] = project
     context["client_pk"] = client_pk
     context["client"] = client

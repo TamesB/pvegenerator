@@ -51,7 +51,7 @@
                 {% if bijlage.bijlage %}
                 <a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project_pk annotation.id bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
                 <span><button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation.id bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
-                    <span><a hx-delete="{% url 'deletebijlagefirst' client_pk project_pk item_pk bijlage.id %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span>
+                    <span><a hx-delete="{% url 'deletebijlagefirst' client_pk project_pk annotation.id bijlage.id %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span>
             
                 {% endif %}
                 {% endfor %}
