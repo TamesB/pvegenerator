@@ -26,6 +26,9 @@
 				<th>
 					Logo
 				</th>
+				<th>
+					Subwebsite
+				</th>
 				<th>&nbsp;</th>
 			</tr>
 		</thead>
@@ -36,6 +39,7 @@
 				<td>{{ klant.abbonement }}</td>
 				<td hx-get="{% url 'getbeheerderklant' klant.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></td>
 				<td hx-get="{% url 'logoklantdetail' klant.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></td>
+				<td><a href="{% url 'login_syn' klant.id %}" target="_blank"><button class="ui basic icon button"><i class="desktop icon"></i>Bezoek</button></a></td>
 				<td><button class="ui icon basic red button"
 				hx-post="{% url 'klantverwijderen' klant.id %}"
                     hx-prompt="Vul 'VERWIJDEREN' in om klant {{ klant.naam }} te verwijderen."
