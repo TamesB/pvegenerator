@@ -92,9 +92,14 @@ def AddComment(request, client_pk, pk):
                 chapters_false[item.chapter] = True
             else:
                 chapters_false[item.chapter] = False
+            
 
     chapters_ordered = models.PVEHoofdstuk.objects.filter(version__pk=items.first().version.pk).order_by("id")
     
+    items_jej = models.PVEItem.objects.filter(version__pk=items.first().version.pk, chapter__chapter="1 ALGEMEEN")
+    for item in items_jej:
+        item.chapter = models.PVEHoofdstuk.objects.get(id=792)
+        item.save()    
     for chapter in chapters_ordered:
         if chapter in chapters_false.keys():
             chapters[chapter] = chapters_false[chapter]
@@ -175,7 +180,7 @@ def GetParagravenFirstAnnotate(request, client_pk, pk, chapter_pk):
     for paragraph in paragraphs_ordered:
         if paragraph.id in paragraphs_ids_false.keys():
             paragraph_ids[paragraph.id] = paragraphs_ids_false[paragraph.id]
-
+    
     paragraphs = [paragraph for _, paragraph in paragraph_ids.items()]
     
     context["paragraphs"] = paragraphs
