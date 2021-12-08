@@ -56,6 +56,6 @@ class PVEItemAnnotationForm(forms.Form):
     annotation = forms.CharField(
         label="Opmerking", max_length=1000, widget=forms.Textarea
     )
-    kostenConsequenties = forms.DecimalField(
+    consequentCosts = forms.DecimalField(
         label="(Optioneel) Kosten Consequenties", required=False, min_value=0
     )
