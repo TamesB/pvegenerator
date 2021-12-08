@@ -209,35 +209,67 @@ class PDFMaker:
         version = models.PVEVersie.objects.get(id=version_pk)
 
         chapters = models.PVEHoofdstuk.objects.filter(version=version)
+        
+        chapters_exist = []
+        paragraphs_exist = []
+        
+        for item in PVEItems:
+            if item.chapter not in chapters_exist:
+                chapters_exist.append(item.chapter)
 
-        chapternamen = [chapter.chapter for chapter in chapters]
-
+            if item.paragraph not in paragraphs_exist:
+                paragraphs_exist.append(item.paragraph)
+                
         # Excel tabel simulasie
         for chapter in chapters:
+            if chapter in chapters_exist:
+                items_exist = [item for item in PVEItems if item.chapter == chapter]
+                if len(items_exist) > 0:
+                    p = Paragraph("%s" % chapter, self.chapterStyle)
+                    Story.append(p)
 
-            items_exist = [item for item in PVEItems if item.chapter == chapter]
-            if len(items_exist) > 0:
-                p = Paragraph("%s" % chapter, self.chapterStyle)
-                Story.append(p)
+                    paragraphs = models.PVEParagraaf.objects.filter(chapter=chapter)
 
-                paragraphs = models.PVEParagraaf.objects.filter(chapter=chapter)
+                    if paragraphs.exists():
+                        for paragraph in paragraphs:
+                            if paragraph in paragraphs_exist:
+                                items = [
+                                    item
+                                    for item in PVEItems
+                                    if item.chapter == chapter
+                                    and item.paragraph == paragraph
+                                ]
 
-                if paragraphs.exists():
-                    for paragraph in paragraphs:
-                        items = [
-                            item
-                            for item in PVEItems
-                            if item.chapter == chapter
-                            and item.paragraph == paragraph
-                        ]
+                                if len(items) > 0:
+                                    Story.append(Spacer(self.LeftPadding, 0))
+                                    p = Paragraph(
+                                        "%s" % paragraph.paragraph, self.paragraphStyle
+                                    )
+                                    Story.append(p)
+
+                                    for item in items:
+
+                                        Story.append(Spacer(self.LeftPadding, 0))
+                                        inhoud = "%s" % item.inhoud
+
+                                        if (item_added % 2) == 0:
+                                            item_added += 1
+                                            p = Paragraph(
+                                                inhoud.replace("\n", "<br />\n"),
+                                                self.regelStyle,
+                                            )
+                                        else:
+                                            item_added += 1
+                                            p = Paragraph(
+                                                inhoud.replace("\n", "<br />\n"),
+                                                self.regelStyleSwitch,
+                                            )
+
+                                        Story.append(p)
+                    else:
+                        items = [item for item in PVEItems if item.chapter == chapter]
 
                         if len(items) > 0:
-                            Story.append(Spacer(self.LeftPadding, 0))
-                            p = Paragraph(
-                                "%s" % paragraph.paragraph, self.paragraphStyle
-                            )
-                            Story.append(p)
-
                             for item in items:
 
                                 Story.append(Spacer(self.LeftPadding, 0))
@@ -246,8 +278,7 @@ class PDFMaker:
                                 if (item_added % 2) == 0:
                                     item_added += 1
                                     p = Paragraph(
-                                        inhoud.replace("\n", "<br />\n"),
-                                        self.regelStyle,
+                                        inhoud.replace("\n", "<br />\n"), self.regelStyle
                                     )
                                 else:
                                     item_added += 1
@@ -257,28 +288,6 @@ class PDFMaker:
                                     )
 
                                 Story.append(p)
-                else:
-                    items = [item for item in PVEItems if item.chapter == chapter]
-
-                    if len(items) > 0:
-                        for item in items:
-
-                            Story.append(Spacer(self.LeftPadding, 0))
-                            inhoud = "%s" % item.inhoud
-
-                            if (item_added % 2) == 0:
-                                item_added += 1
-                                p = Paragraph(
-                                    inhoud.replace("\n", "<br />\n"), self.regelStyle
-                                )
-                            else:
-                                item_added += 1
-                                p = Paragraph(
-                                    inhoud.replace("\n", "<br />\n"),
-                                    self.regelStyleSwitch,
-                                )
-
-                            Story.append(p)
 
         self.Centered = "".join(parameters)
         doc.build(Story, onFirstPage=self.myFirstPage, onLaterPages=self.myLaterPages)
