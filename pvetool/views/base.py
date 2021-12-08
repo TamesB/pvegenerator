@@ -17,7 +17,7 @@ from users.forms import AcceptInvitationForm
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.http import Http404
-from project.models import BijlageToAnnotation
+from project.models import BijlageToAnnotation, Project
 from pvetool.models import BijlageToReply
 
 def LoginView(request, client_pk):
@@ -183,7 +183,7 @@ def DashboardView(request, client_pk):
             return redirect("logout_syn", client_pk=client_pk)
     else:
         return redirect("logout_syn", client_pk=client_pk)
-
+            
     context = {}
     context["client_pk"] = client_pk
     context["client"] = client

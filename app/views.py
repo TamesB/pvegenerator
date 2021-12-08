@@ -97,7 +97,6 @@ def DashboardView(request):
     project_activities = models.Activity.objects.filter(activity_type="P")[0:5]
     client_activities = models.Activity.objects.filter(activity_type="K")[0:5]     
     
-    
     context["project_activities"] = project_activities
     context["client_activities"] = client_activities
     context["pve_activities"] = pve_activities

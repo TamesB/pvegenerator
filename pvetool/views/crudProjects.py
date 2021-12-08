@@ -37,7 +37,7 @@ def ManageProjects(request, client_pk):
 
     if request.user.type_user not in allowed_users:
         return redirect("logout_syn", client_pk=client_pk)
-    projecten = client.project.all().order_by("-datum_recent_verandering")
+    projecten = client.project.all().order_by("-date_recent_verandering")
 
     new_projecten = []
     old_projecten = []
