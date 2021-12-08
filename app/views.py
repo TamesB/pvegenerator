@@ -95,8 +95,9 @@ def DashboardView(request):
 
     pve_activities = models.Activity.objects.filter(activity_type="PvE")[0:5]
     project_activities = models.Activity.objects.filter(activity_type="P")[0:5]
-    client_activities = models.Activity.objects.filter(activity_type="K")[0:5]
-
+    client_activities = models.Activity.objects.filter(activity_type="K")[0:5]     
+    
+    
     context["project_activities"] = project_activities
     context["client_activities"] = client_activities
     context["pve_activities"] = pve_activities
@@ -126,7 +127,7 @@ def KlantOverzicht(request):
 
     context = {}
     context["clients"] = clients
-    return render(request, 'clientenOverzicht.html', context)
+    return render(request, 'clientsOverzicht.html', context)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def KlantVerwijderen(request, client_pk):
@@ -263,7 +264,7 @@ def PVEVersieDetail(request, version_pk):
     context = {}
     context["item"] = version
     context["version_pk"] = version_pk
-    return render(request, "partials/getpveversie.html", context)
+    return render(request, "partials/getpveversion.html", context)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def GetPveVersieDetail(request, version_pk):
@@ -272,7 +273,7 @@ def GetPveVersieDetail(request, version_pk):
     context = {}
     context["version"] = version
     context["version_pk"] = version_pk
-    return render(request, "partials/pveversiedetail.html", context)
+    return render(request, "partials/pveversiondetail.html", context)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def PveVersieEditName(request, version_pk):
@@ -291,7 +292,7 @@ def PveVersieEditName(request, version_pk):
     context["version"] = version
     context["form"] = form
     context["version_pk"] = version_pk
-    return render(request, "partials/pveversieeditname.html", context)
+    return render(request, "partials/pveversioneditname.html", context)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def KlantToevoegen(request):
@@ -577,7 +578,7 @@ def BeleggerVersieTable(request, client_pk):
     context = {}
     context["queryset"] = queryset
     context["key"] = key
-    return render(request, "partials/pveversietable.html", context)
+    return render(request, "partials/pveversiontable.html", context)
 
 
 @staff_member_required(login_url=reverse_lazy("logout"))
@@ -587,7 +588,7 @@ def VersieActiviteit(request, version_pk):
     context = {}
     context["version"] = version
     context["version_pk"] = version_pk
-    return render(request, "partials/getpveactiviteit.html", context)
+    return render(request, "partials/getpveactivity.html", context)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def ActivateVersie(request, version_pk):
@@ -595,7 +596,7 @@ def ActivateVersie(request, version_pk):
     version.public = True
     version.save()
     messages.warning(request, f"Versie geactiveerd: {version}")
-    return redirect("getpveactiviteit", version_pk=version_pk)
+    return redirect("getpveactivity", version_pk=version_pk)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def DeactivateVersie(request, version_pk):
@@ -603,7 +604,7 @@ def DeactivateVersie(request, version_pk):
     version.public = False
     version.save()
     messages.warning(request, f"Versie gedeactiveerd: {version}")
-    return redirect("getpveactiviteit", version_pk=version_pk)
+    return redirect("getpveactivity", version_pk=version_pk)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def PVEBewerkOverview(request, version_pk):
@@ -631,9 +632,9 @@ def DownloadWorksheet(request, excelFilename):
     # if pve version pk is used as the url (very hacky)
     try:
         excelFilename = int(excelFilename)
-        if models.PVEItem.objects.filter(versie__id=excelFilename).exists():
+        if models.PVEItem.objects.filter(version__id=excelFilename).exists():
             version_pk = excelFilename
-            items = models.PVEItem.objects.select_related("chapter").select_related("paragraph").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(versie__id=version_pk)
+            items = models.PVEItem.objects.select_related("chapter").select_related("paragraph").prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").filter(version__id=version_pk)
             worksheet = writeExcel.ExcelMaker()
             excelFilename = worksheet.linewriter(items)
     except ValueError:
@@ -714,7 +715,7 @@ def PVEeditchapterView(request, version_pk, pk):
 
 
 @staff_member_required(login_url=reverse_lazy("logout"))
-def paragraaflistView(request, version_pk, pk):
+def paragraphlistView(request, version_pk, pk):
     pk = int(pk)
     version = models.PVEVersie.objects.get(id=version_pk)
 
@@ -743,7 +744,7 @@ def paragraaflistView(request, version_pk, pk):
 
 
 @staff_member_required(login_url=reverse_lazy("logout"))
-def paragraaflistViewEdit(request, version_pk, pk):
+def paragraphlistViewEdit(request, version_pk, pk):
     pk = int(pk)
     version = models.PVEVersie.objects.get(id=version_pk)
 
@@ -773,7 +774,7 @@ def paragraaflistViewEdit(request, version_pk, pk):
 
 
 @staff_member_required(login_url=reverse_lazy("logout"))
-def paragraaflistViewDelete(request, version_pk, pk):
+def paragraphlistViewDelete(request, version_pk, pk):
     pk = int(pk)
     version = models.PVEVersie.objects.get(id=version_pk)
 
@@ -803,7 +804,7 @@ def paragraaflistViewDelete(request, version_pk, pk):
 
 
 @staff_member_required(login_url=reverse_lazy("logout"))
-def PVEaddparagraafView(request, version_pk, pk):
+def PVEaddparagraphView(request, version_pk, pk):
     pk = int(pk)
     version = models.PVEVersie.objects.get(id=version_pk)
     
@@ -847,7 +848,7 @@ def PVEaddparagraafView(request, version_pk, pk):
 
 
 @staff_member_required(login_url=reverse_lazy("logout"))
-def PVEeditparagraafView(request, version_pk, pk):
+def PVEeditparagraphView(request, version_pk, pk):
     pk = int(pk)
     version = models.PVEVersie.objects.get(id=version_pk)
 
@@ -861,10 +862,10 @@ def PVEeditparagraafView(request, version_pk, pk):
     if request.method == "POST":
         # check whether it's valid:
         if form.is_valid():
-            PVEparagraaf = version.paragraph.filter(id=pk).first()
-            PVEparagraaf.paragraph = form.cleaned_data["paragraph"]
-            PVEparagraaf.version = version
-            PVEparagraaf.save()
+            PVEparagraph = version.paragraph.filter(id=pk).first()
+            PVEparagraph.paragraph = form.cleaned_data["paragraph"]
+            PVEparagraph.version = version
+            PVEparagraph.save()
             return HttpResponseRedirect(
                 reverse(
                     "viewParagraaf",
@@ -940,7 +941,7 @@ def itemListView(request, version_pk, chapter_id, paragraph_id):
         context["paragraph"] = paragraph
         context["chapter"] = chapter
 
-    context["paragraaf_id"] = paragraph_id
+    context["paragraph_id"] = paragraph_id
     context["chapter_id"] = chapter_id
     context["version_pk"] = version_pk
     context["version"] = version
@@ -950,15 +951,15 @@ def itemListView(request, version_pk, chapter_id, paragraph_id):
 def viewItemView(request, version_pk, pk):
     pk = int(pk)
 
-    if models.PVEItem.objects.filter(versie__id=version_pk, id=pk).exists():
-        PVEItem = models.PVEItem.objects.filter(versie__id=version_pk, id=pk).first()
+    if models.PVEItem.objects.filter(version__id=version_pk, id=pk).exists():
+        PVEItem = models.PVEItem.objects.filter(version__id=version_pk, id=pk).first()
     else:
         raise Http404("Item does not exist.")
 
     context = {}
 
-    if models.ItemBijlages.objects.filter(versie__id=version_pk, items__id__contains=PVEItem.id).exists():
-        attachment = models.ItemBijlages.objects.filter(versie__id=version_pk, items__id__contains=PVEItem.id).first()
+    if models.ItemBijlages.objects.filter(version__id=version_pk, items__id__contains=PVEItem.id).exists():
+        attachment = models.ItemBijlages.objects.filter(version__id=version_pk, items__id__contains=PVEItem.id).first()
         context["attachment"] = attachment
         context["attachmentsame"] = attachment.name
 
@@ -969,17 +970,17 @@ def viewItemView(request, version_pk, pk):
 
     if not PVEItem.paragraph:
         context["queryset"] = models.PVEItem.objects.filter(
-            versie__id=version_pk, chapter=PVEItem.chapter
+            version__id=version_pk, chapter=PVEItem.chapter
         )
         context["chapter"] = PVEItem.chapter
-        context["paragraaf_id"] = 0
+        context["paragraph_id"] = 0
     else:
         context["queryset"] = models.PVEItem.objects.filter(
-            versie__id=version_pk, chapter=PVEItem.chapter
-        ).filter(versie__id=version_pk, paragraph=PVEItem.paragraph)
+            version__id=version_pk, chapter=PVEItem.chapter
+        ).filter(version__id=version_pk, paragraph=PVEItem.paragraph)
         context["paragraph"] = PVEItem.paragraph
         context["chapter"] = PVEItem.chapter
-        context["paragraaf_id"] = PVEItem.paragraph.id
+        context["paragraph_id"] = PVEItem.paragraph.id
 
     context["chapter_id"] = PVEItem.chapter.id
     context["version_pk"] = version_pk
@@ -1028,23 +1029,23 @@ def downloadBijlageView(request, pk):
 @staff_member_required(login_url=reverse_lazy("logout"))
 def editItemView(request, version_pk, pk):
     pk = int(pk)
-    if models.PVEItem.objects.filter(versie__id=version_pk, id=pk).exists():
-        PVEItem = models.PVEItem.objects.filter(versie__id=version_pk, id=pk).first()
+    if models.PVEItem.objects.filter(version__id=version_pk, id=pk).exists():
+        PVEItem = models.PVEItem.objects.filter(version__id=version_pk, id=pk).first()
     else:
         raise Http404("Item does not exist.")
     
     form = forms.PVEItemEditForm(request.POST or None, request.FILES or None, instance=PVEItem)
     form.fields["BestaandeBijlage"].queryset = models.ItemBijlages.objects.filter(
-        versie__id=version_pk
+        version__id=version_pk
     ).all()
     form.fields["Bouwsoort"].queryset = models.Bouwsoort.objects.filter(
-        versie__id=version_pk
+        version__id=version_pk
     ).all()    
     form.fields["TypeObject"].queryset = models.TypeObject.objects.filter(
-        versie__id=version_pk
+        version__id=version_pk
     ).all()    
     form.fields["Doelgroep"].queryset = models.Doelgroep.objects.filter(
-        versie__id=version_pk
+        version__id=version_pk
     ).all()
 
     if request.method == "POST":
@@ -1099,16 +1100,16 @@ def addItemView(request, version_pk, chapter_id, paragraph_id):
 
     form = forms.PVEItemEditForm(request.POST or None, request.FILES or None)
     form.fields["BestaandeBijlage"].queryset = models.ItemBijlages.objects.filter(
-        versie__id=version_pk
+        version__id=version_pk
     ).all()
     form.fields["Bouwsoort"].queryset = models.Bouwsoort.objects.filter(
-        versie__id=version_pk
+        version__id=version_pk
     ).all()    
     form.fields["TypeObject"].queryset = models.TypeObject.objects.filter(
-        versie__id=version_pk
+        version__id=version_pk
     ).all()    
     form.fields["Doelgroep"].queryset = models.Doelgroep.objects.filter(
-        versie__id=version_pk
+        version__id=version_pk
     ).all()
 
     if request.method == "POST":
@@ -1120,11 +1121,11 @@ def addItemView(request, version_pk, chapter_id, paragraph_id):
             # get parameters and save new item
             if int(paragraph_id) != 0:
                 PVEItem.paragraph = models.PVEParagraaf.objects.filter(
-                    versie__id=version_pk, id=paragraph_id
+                    version__id=version_pk, id=paragraph_id
                 ).first()
 
             PVEItem.chapter = models.PVEHoofdstuk.objects.filter(
-                versie__id=version_pk, id=chapter_id
+                version__id=version_pk, id=chapter_id
             ).first()
             PVEItem.inhoud = form.cleaned_data["inhoud"]
             PVEItem.save()
@@ -1172,8 +1173,8 @@ def addItemView(request, version_pk, chapter_id, paragraph_id):
 def deleteItemView(request, version_pk, pk):
     pk = int(pk)
 
-    if models.PVEItem.objects.filter(versie__id=version_pk, id=pk).exists():
-        PVEItem = models.PVEItem.objects.filter(versie__id=version_pk, id=pk).first()
+    if models.PVEItem.objects.filter(version__id=version_pk, id=pk).exists():
+        PVEItem = models.PVEItem.objects.filter(version__id=version_pk, id=pk).first()
         chapter = PVEItem.chapter
         paragraph = PVEItem.paragraph
     else:
@@ -1203,9 +1204,9 @@ def deleteItemView(request, version_pk, pk):
 def PVEdeletechapterView(request, version_pk, pk):
     pk = int(pk)
 
-    if models.PVEHoofdstuk.objects.filter(versie__id=version_pk, id=pk).exists():
+    if models.PVEHoofdstuk.objects.filter(version__id=version_pk, id=pk).exists():
         PVEHoofdstuk = models.PVEHoofdstuk.objects.filter(
-            versie__id=version_pk, id=pk
+            version__id=version_pk, id=pk
         ).first()
         chapter = PVEHoofdstuk.chapter
     else:
@@ -1219,7 +1220,7 @@ def PVEdeletechapterView(request, version_pk, pk):
 
 
 @staff_member_required(login_url=reverse_lazy("logout"))
-def PVEdeleteparagraafView(request, version_pk, pk):
+def PVEdeleteparagraphView(request, version_pk, pk):
     pk = int(pk)
     version = models.PVEVersie.objects.get(id=version_pk)
 
@@ -1550,7 +1551,7 @@ def deleteparameterchoiceView(request, version_pk, type_id, item_id):
 @staff_member_required(login_url=reverse_lazy("logout"))
 def attachmentsView(request, version_pk):
     context = {}
-    context["attachments"] = models.ItemBijlages.objects.filter(versie__id=version_pk)
+    context["attachments"] = models.ItemBijlages.objects.filter(version__id=version_pk)
     context["version_pk"] = version_pk
     context["version"] = models.PVEVersie.objects.get(pk=version_pk)
     return render(request, "attachmentsView.html", context)
@@ -1558,7 +1559,7 @@ def attachmentsView(request, version_pk):
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def attachmentDetail(request, version_pk, pk):
-    attachments = models.ItemBijlages.objects.filter(versie__id=version_pk)
+    attachments = models.ItemBijlages.objects.filter(version__id=version_pk)
     attachment = attachments.get(id=pk)
 
     items = attachment.items.all()
@@ -1643,7 +1644,7 @@ def attachmentEdit(request, version_pk, pk):
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def attachmentDelete(request, version_pk, pk):
-    attachment = models.ItemBijlages.objects.filter(versie__id=version_pk, id=pk)
+    attachment = models.ItemBijlages.objects.filter(version__id=version_pk, id=pk)
     attachment.delete()
     return HttpResponseRedirect(
         reverse("attachmentview", args=(version_pk,))

@@ -99,7 +99,7 @@ urlpatterns = [
     path("<int:client_pk>/comment", crudFirstAnnotate.AddCommentOverview, name="plusopmerkingOverview_syn"),
     path("<int:client_pk>/project/<int:pk>/comment/add", crudFirstAnnotate.AddComment, name="plusopmerking_syn"),
     path("<int:client_pk>/getparagraphsfirstannotate/<int:pk>/<int:chapter_pk>", crudFirstAnnotate.GetParagravenFirstAnnotate, name="getparagraphsfirstannotate"),
-    path("<int:client_pk>/getitemsfirstannotate/<int:pk>/<int:chapter_pk>/<int:paragraaf_id>", crudFirstAnnotate.GetItemsFirstAnnotate, name="getitemsfirstannotate"),
+    path("<int:client_pk>/getitemsfirstannotate/<int:pk>/<int:chapter_pk>/<int:paragraph_id>", crudFirstAnnotate.GetItemsFirstAnnotate, name="getitemsfirstannotate"),
     path("<int:client_pk>/detailfirststatus/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DetailStatusFirst, name="detailfirststatus"),
     path("<int:client_pk>/detailitemfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DetailItemFirst, name="detailitemfirst"),
     path("<int:client_pk>/detailfirstannotation/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DetailAnnotationFirst, name="detailfirstannotation"),
@@ -122,7 +122,7 @@ urlpatterns = [
     # Ping pong process
     path("<int:client_pk>/project/<int:proj_id>/check", crudPingPong.CheckComments, name="commentscheck_syn"),
     path("<int:client_pk>/getparagraphspingpong/<int:pk>/<int:chapter_pk>/<int:type>/<int:accept>", crudPingPong.GetParagravenPingPong, name="getparagraphspingpong"),
-    path("<int:client_pk>/getitemspingpong/<int:pk>/<int:chapter_pk>/<int:paragraaf_id>/<int:type>/<int:accept>", crudPingPong.GetItemsPingPong, name="getitemspingpong"),
+    path("<int:client_pk>/getitemspingpong/<int:pk>/<int:chapter_pk>/<int:paragraph_id>/<int:type>/<int:accept>", crudPingPong.GetItemsPingPong, name="getitemspingpong"),
     
     # first acceptation process per rule
     path("<int:client_pk>/detailpong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DetailAcceptPong, name="detailpongaccept"),

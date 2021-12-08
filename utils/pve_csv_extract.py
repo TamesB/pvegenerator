@@ -9,10 +9,10 @@ from project.models import Beleggers
 #version = "ADD_VERSION_NAME_HERE"
 #
 # if models.PVEVersie.objects.filter(version=version):
-#   versie_obj = models.PVEVersie.objects.filter(version=version).first()
-#   pveitems = models.PVEItem.objects.filter(version=versie_obj).all().delete()
-#   pvechapter = models.PVEHoofdstuk.objects.filter(version=versie_obj).all().delete()
-#   pveparagraaf = models.PVEParagraaf.objects.filter(version=versie_obj).all().delete()
+#   version_obj = models.PVEVersie.objects.filter(version=version).first()
+#   pveitems = models.PVEItem.objects.filter(version=version_obj).all().delete()
+#   pvechapter = models.PVEHoofdstuk.objects.filter(version=version_obj).all().delete()
+#   pveparagraph = models.PVEParagraaf.objects.filter(version=version_obj).all().delete()
 #   print("done_deleting")
 #
 #extract = pve_csv_extract.ExtractPVE(version)
@@ -53,18 +53,18 @@ class ExtractPVE:
         if models.PVEVersie.objects.filter(version=version):
             self.version = models.PVEVersie.objects.filter(version=version).first()
         else:
-            versie_obj = models.PVEVersie()
-            versie_obj.version = version
-            versie_obj.client = Beleggers.objects.filter(name="PVETool").first()
-            versie_obj.save()
-            self.version = versie_obj
+            version_obj = models.PVEVersie()
+            version_obj.version = version
+            version_obj.client = Beleggers.objects.filter(name="PVETool").first()
+            version_obj.save()
+            self.version = version_obj
 
         self.pve_book = []
         self.chapter_namen = []
-        self.paragraaf_namen = []
+        self.paragraph_namen = []
 
         self.chapter_objects = []
-        self.paragraaf_objects = []
+        self.paragraph_objects = []
         self.item_objects = []
 
     def read_pve(self):
@@ -74,7 +74,7 @@ class ExtractPVE:
                 self.pve_book.append(row)
 
     def organize_pve(self):
-        paragraaf_was_last = False
+        paragraph_was_last = False
 
         for index in range(len(self.pve_book)):
             if index > 0:
@@ -85,19 +85,19 @@ class ExtractPVE:
                     chapter = Hoofdstuk()
                     chapter.set_name(self.chapter_namen[-1])
                     self.chapter_objects.append(chapter)
-                    paragraaf_was_last = False
+                    paragraph_was_last = False
 
                 if (self.pve_book[index - 1][0] == "" and self.pve_book[index][0] == "") or (self.pve_book[index][0] == "" and (self.pve_book[index - 1][0] == self.pve_book[index + 1][0])):
-                    self.paragraaf_namen.append(self.pve_book[index][1])
+                    self.paragraph_namen.append(self.pve_book[index][1])
                     paragraph = Paragraaf()
-                    paragraph.set_name(self.paragraaf_namen[-1])
-                    self.paragraaf_objects.append(paragraph)
-                    paragraaf_was_last = True
+                    paragraph.set_name(self.paragraph_namen[-1])
+                    self.paragraph_objects.append(paragraph)
+                    paragraph_was_last = True
 
             # is an item if zeroeth cell not empty and 1st cell also not empty
             if (self.pve_book[index][0] != "" and self.pve_book[index][1] != ""):
-                if len(self.paragraaf_objects) > 0 and paragraaf_was_last:
-                    item = Item(self.chapter_objects[-1], self.paragraaf_objects[-1])
+                if len(self.paragraph_objects) > 0 and paragraph_was_last:
+                    item = Item(self.chapter_objects[-1], self.paragraph_objects[-1])
                 else:
                     item = Item(self.chapter_objects[-1], None)
 

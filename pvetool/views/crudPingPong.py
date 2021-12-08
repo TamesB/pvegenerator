@@ -83,7 +83,7 @@ def CheckComments(request, client_pk, proj_id):
         current_phase.comments.select_related("status")
         .select_related("item")
         .select_related("item__chapter")
-        .select_related("item__paragraaf")
+        .select_related("item__paragraph")
         .order_by("item__id")
         .all()
     )
@@ -92,7 +92,7 @@ def CheckComments(request, client_pk, proj_id):
         current_phase.accepted_comments.select_related("status")
         .select_related("item")
         .select_related("item__chapter")
-        .select_related("item__paragraaf")
+        .select_related("item__paragraph")
         .order_by("item__id")
         .all()
     )
@@ -101,7 +101,7 @@ def CheckComments(request, client_pk, proj_id):
         current_phase.todo_comments.select_related("status")
         .select_related("item")
         .select_related("item__chapter")
-        .select_related("item__paragraaf")
+        .select_related("item__paragraph")
         .order_by("item__id")
         .all()
     )
@@ -213,7 +213,7 @@ def GetParagravenPingPong(request, client_pk, pk, chapter_pk, type, accept):
             current_phase.comments.select_related("status")
             .select_related("item")
             .select_related("item__chapter")
-            .select_related("item__paragraaf")
+            .select_related("item__paragraph")
             .filter(item__chapter__id=chapter_pk)
             .order_by("item__id")
             .all()
@@ -223,7 +223,7 @@ def GetParagravenPingPong(request, client_pk, pk, chapter_pk, type, accept):
             current_phase.accepted_comments.select_related("status")
             .select_related("item")
             .select_related("item__chapter")
-            .select_related("item__paragraaf")
+            .select_related("item__paragraph")
             .filter(item__chapter__id=chapter_pk)
             .order_by("item__id")
             .all()
@@ -233,7 +233,7 @@ def GetParagravenPingPong(request, client_pk, pk, chapter_pk, type, accept):
             current_phase.todo_comments.select_related("status")
             .select_related("item")
             .select_related("item__chapter")
-            .select_related("item__paragraaf")
+            .select_related("item__paragraph")
             .filter(item__chapter__id=chapter_pk)
             .order_by("item__id")
             .all()
@@ -260,7 +260,7 @@ def GetParagravenPingPong(request, client_pk, pk, chapter_pk, type, accept):
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
-def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraaf_id, type, accept):
+def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraph_id, type, accept):
     context = {}
 
     project, current_phase = passed_commentcheck_guardclauses(request, client_pk, pk)
@@ -271,12 +271,12 @@ def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraaf_id, type, acc
     comments = None
 
     if type == 1:
-        if paragraaf_id == 0:
+        if paragraph_id == 0:
             comments = (
                 current_phase.comments.select_related("status")
                 .select_related("item")
                 .select_related("item__chapter")
-                .select_related("item__paragraaf")
+                .select_related("item__paragraph")
                 .filter(item__chapter__id=chapter_pk)
                 .order_by("item__id")
                 .all()
@@ -286,19 +286,19 @@ def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraaf_id, type, acc
                 current_phase.comments.select_related("status")
                 .select_related("item")
                 .select_related("item__chapter")
-                .select_related("item__paragraaf")
+                .select_related("item__paragraph")
                 .filter(item__chapter__id=chapter_pk)
-                .filter(item__paragraaf__id=paragraaf_id)
+                .filter(item__paragraph__id=paragraph_id)
                 .order_by("item__id")
                 .all()
             )
     if type == 2:
-        if paragraaf_id == 0:
+        if paragraph_id == 0:
             comments = (
                 current_phase.accepted_comments.select_related("status")
                 .select_related("item")
                 .select_related("item__chapter")
-                .select_related("item__paragraaf")
+                .select_related("item__paragraph")
                 .filter(item__chapter__id=chapter_pk)
                 .order_by("item__id")
                 .all()
@@ -308,19 +308,19 @@ def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraaf_id, type, acc
                 current_phase.accepted_comments.select_related("status")
                 .select_related("item")
                 .select_related("item__chapter")
-                .select_related("item__paragraaf")
+                .select_related("item__paragraph")
                 .filter(item__chapter__id=chapter_pk)
-                .filter(item__paragraaf__id=paragraaf_id)
+                .filter(item__paragraph__id=paragraph_id)
                 .order_by("item__id")
                 .all()
             )
     if type == 0:
-        if paragraaf_id == 0:
+        if paragraph_id == 0:
             comments = (
                 current_phase.todo_comments.select_related("status")
                 .select_related("item")
                 .select_related("item__chapter")
-                .select_related("item__paragraaf")
+                .select_related("item__paragraph")
                 .filter(item__chapter__id=chapter_pk)
                 .order_by("item__id")
                 .all()
@@ -330,9 +330,9 @@ def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraaf_id, type, acc
                 current_phase.todo_comments.select_related("status")
                 .select_related("item")
                 .select_related("item__chapter")
-                .select_related("item__paragraaf")
+                .select_related("item__paragraph")
                 .filter(item__chapter__id=chapter_pk)
-                .filter(item__paragraaf__id=paragraaf_id)
+                .filter(item__paragraph__id=paragraph_id)
                 .order_by("item__id")
                 .all()
             )

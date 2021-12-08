@@ -73,7 +73,7 @@ class PDFMaker:
             leading=12,
         )
 
-        self.paragraafStyle = ParagraphStyle(
+        self.paragraphStyle = ParagraphStyle(
             textColor=colors.Color(red=33 / 255, green=89 / 255, blue=103 / 255),
             bg=colors.Color(red=182 / 255, green=221 / 255, blue=232 / 255),
             backColor=colors.Color(red=182 / 255, green=221 / 255, blue=232 / 255),
@@ -334,7 +334,7 @@ class PDFMaker:
                         if len(items) > 0:
                             Story.append(Spacer(self.LeftPadding, 0))
                             p = Paragraph(
-                                "%s" % paragraph.paragraph, self.paragraafStyle
+                                "%s" % paragraph.paragraph, self.paragraphStyle
                             )
                             Story.append(p)
 

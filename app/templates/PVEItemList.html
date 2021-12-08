@@ -1,5 +1,5 @@
 {% extends "layout.html" %} {% load semanticui %} {% block main %}
-{% if paragraaf_id == 0 %}
+{% if paragraph_id == 0 %}
 <div class="ui big breadcrumb">
   <a class="section" href="{% url 'chapterview' version_pk %}">PvE {{ version.client }}: {{ version.version }}</a>
   <i class="right chevron icon divider"></i>
@@ -25,7 +25,7 @@
 					Regels
 				</th>
         <th><div class="d-inline" style="float: right;">
-					<span class="float right"><a href="{% url 'additem' version_pk chapter_id paragraaf_id %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
+					<span class="float right"><a href="{% url 'additem' version_pk chapter_id paragraph_id %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
 
         					</div></th>
 			</tr>
@@ -46,7 +46,7 @@
 		</tbody>
 	</table>
 </div>{% else %}
-<p>Geen regels in deze sectie! <input class="ui primary button d-inline" onclick="window.location.href='{% url 'additem' version_pk chapter_id paragraaf_id %}';" type="button" value="Voeg er een toe"></p>{% endif %}
+<p>Geen regels in deze sectie! <input class="ui primary button d-inline" onclick="window.location.href='{% url 'additem' version_pk chapter_id paragraph_id %}';" type="button" value="Voeg er een toe"></p>{% endif %}
 
 {% block modal %}{% endblock %}
 

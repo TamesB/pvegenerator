@@ -34,7 +34,7 @@ urlpatterns = [
     path("getpveversiedetail/<int:version_pk>", views.GetPveVersieDetail, name="getpveversiedetail"),
     path("pveversienameform/<int:version_pk>", views.PveVersieEditName, name="editpveversiename"),
     path("deletepveversie/<int:client_pk>/<int:version_pk>", views.DeletePVEVersie, name="deletepveversie"),
-    path("pveactiviteit/<int:version_pk>", views.VersieActiviteit, name="getpveactiviteit"),
+    path("pveactivity/<int:version_pk>", views.VersieActiviteit, name="getpveactivity"),
     path("makeactive/<int:version_pk>", views.ActivateVersie, name="maakactief"),
     path("makeinactive/<int:version_pk>", views.DeactivateVersie, name="maakinactief"),
     path("addclient", views.AddBelegger, name="addclient"),
@@ -78,22 +78,22 @@ urlpatterns = [
     ),
     path(
         "parameters/<int:version_pk>/<int:pk>",
-        views.paragraaflistView,
+        views.paragraphlistView,
         name="viewParagraaf",
     ),
     path(
         "parameters/<int:version_pk>/<int:pk>/addparagraph",
-        views.PVEaddparagraafView,
+        views.PVEaddparagraphView,
         name="addparagraph",
     ),
     path(
         "parameters/<int:version_pk>/<int:pk>/editparagraph",
-        views.PVEeditparagraafView,
+        views.PVEeditparagraphView,
         name="editparagraph",
     ),
     path(
         "parameters/<int:version_pk>/<int:pk>/deleteparagraph",
-        views.PVEdeleteparagraafView,
+        views.PVEdeleteparagraphView,
         name="deleteparagraph",
     ),
     path(

@@ -10,9 +10,9 @@ from app import models
 class ExcelMaker:
     def linewriter(self, PVEItems):
         #hierboven version_pk als je hele version wil uitdraaien
-        #PVEItems = [i for i in models.PVEItem.objects.prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").select_related("chapter").select_related("paragraph").filter(versie__id=version_pk)]
+        #PVEItems = [i for i in models.PVEItem.objects.prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").select_related("chapter").select_related("paragraph").filter(version__id=version_pk)]
 
-        version_pk = PVEItems.first().versie_id
+        version_pk = PVEItems.first().version_id
         
         date = datetime.datetime.now()
         filename = "PVEWORKSHEET-%s%s%s%s%s%s" % (
@@ -38,14 +38,14 @@ class ExcelMaker:
         column = 0
         
         Bouwsoorten = [
-            bouwsrt for bouwsrt in models.Bouwsoort.objects.filter(versie__id=version_pk)
+            bouwsrt for bouwsrt in models.Bouwsoort.objects.filter(version__id=version_pk)
         ]
         TypeObjecten = [
             typeobj
-            for typeobj in models.TypeObject.objects.filter(versie__id=version_pk)
+            for typeobj in models.TypeObject.objects.filter(version__id=version_pk)
         ]
         Doelgroepen = [
-            doelgrp for doelgrp in models.Doelgroep.objects.filter(versie__id=version_pk)
+            doelgrp for doelgrp in models.Doelgroep.objects.filter(version__id=version_pk)
         ]
 
         # Titel row

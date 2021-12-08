@@ -153,6 +153,7 @@ def GetParagravenFirstAnnotate(request, client_pk, pk, chapter_pk):
         .select_related("paragraph")
         .filter(chapter=chapter)
         .all()
+        .order_by("id")
     )
     
     paragraphs_ids = {}
@@ -171,7 +172,7 @@ def GetParagravenFirstAnnotate(request, client_pk, pk, chapter_pk):
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
-def GetItemsFirstAnnotate(request, client_pk, pk, chapter_pk, paragraaf_id):
+def GetItemsFirstAnnotate(request, client_pk, pk, chapter_pk, paragraph_id):
     context = {}
 
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -190,19 +191,21 @@ def GetItemsFirstAnnotate(request, client_pk, pk, chapter_pk, paragraaf_id):
     if not project.item.exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    if paragraaf_id == 0:
+    if paragraph_id == 0:
         pve_items = (
             project.item.select_related("chapter")
             .select_related("paragraph")
             .filter(chapter__id=chapter_pk)
             .all()
+            .order_by("id")
         )
     else:
         pve_items = (
             project.item.select_related("chapter")
             .select_related("paragraph")
-            .filter(chapter__id=chapter_pk, paragraaf__id=paragraaf_id)
+            .filter(chapter__id=chapter_pk, paragraph__id=paragraph_id)
             .all()
+            .order_by("id")
         )
         
     context["items"] = pve_items
