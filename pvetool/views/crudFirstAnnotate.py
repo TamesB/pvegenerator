@@ -82,16 +82,23 @@ def AddComment(request, client_pk, pk):
     if request.user not in project.permitted.all():
         return redirect("logout_syn", client_pk=client_pk)
 
-    items = project.item.select_related("chapter").select_related("paragraph").all()
+    items = project.item.select_related("chapter").select_related("paragraph").all().order_by("id")
+    chapters_false = {}
     chapters = {}
 
     for item in items:
-        if item.chapter not in chapters:
+        if item.chapter not in chapters_false:
             if item.paragraph:
-                chapters[item.chapter] = True
+                chapters_false[item.chapter] = True
             else:
-                chapters[item.chapter] = False
+                chapters_false[item.chapter] = False
 
+    chapters_ordered = models.PVEHoofdstuk.objects.filter(version__pk=items.first().version.pk).order_by("id")
+    
+    for chapter in chapters_ordered:
+        if chapter in chapters_false.keys():
+            chapters[chapter] = chapters_false[chapter]
+    
     annotations = {}
     annotations_hfst = {chapter.id: 0 for chapter in chapters}
     items_per_chapter = {chapter.id: 0 for chapter in chapters}
@@ -156,14 +163,20 @@ def GetParagravenFirstAnnotate(request, client_pk, pk, chapter_pk):
         .order_by("id")
     )
     
-    paragraphs_ids = {}
-    
+    paragraphs_ids_false = {}
+    paragraph_ids = {}
     for item in items:
         if item.paragraph:
-            if item.paragraph.id not in paragraphs_ids.keys():
-                paragraphs_ids[item.paragraph.id] = item.paragraph
-        
-    paragraphs = [paragraph for _, paragraph in paragraphs_ids.items()]
+            if item.paragraph.id not in paragraphs_ids_false.keys():
+                paragraphs_ids_false[item.paragraph.id] = item.paragraph
+    
+    paragraphs_ordered = models.PVEParagraaf.objects.filter(version__pk=items.first().version.pk).order_by("id")
+    
+    for paragraph in paragraphs_ordered:
+        if paragraph.id in paragraphs_ids_false.keys():
+            paragraph_ids[paragraph.id] = paragraphs_ids_false[paragraph.id]
+
+    paragraphs = [paragraph for _, paragraph in paragraph_ids.items()]
     
     context["paragraphs"] = paragraphs
     context["project"] = project
