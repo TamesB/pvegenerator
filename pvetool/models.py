@@ -32,7 +32,7 @@ class FAQ(models.Model):
         ("SD", "PVETool Derden"),
     )
 
-    gebruikersrang = models.CharField(max_length=3, choices=type_choices, default="SD")
+    usersrank = models.CharField(max_length=3, choices=type_choices, default="SD")
 
     vraag = models.CharField(max_length=500)
     antwoord = models.TextField(max_length=5000)
@@ -69,25 +69,25 @@ class CommentReply(models.Model):
     )
     comment = models.TextField(max_length=1000, default=None, null=True)
     accept = models.BooleanField(default=False, blank=True, null=True)
-    bijlage = models.BooleanField(default=False, blank=True, null=True)
-    kostenConsequenties = models.DecimalField(
+    attachment = models.BooleanField(default=False, blank=True, null=True)
+    consequentCosts = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True, default=None
     )
     status = models.ForeignKey(
         CommentStatus, on_delete=models.SET_NULL, null=True, blank=True, related_name='reply'
     )
-    gebruiker = models.ForeignKey(
+    user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name="reply"
     )
-    datum = models.DateTimeField(auto_now=True)
+    date = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-datum']
+        ordering = ['-date']
 
 class BijlageToReply(models.Model):
-    reply = models.ForeignKey(CommentReply, on_delete=models.CASCADE, default=None, related_name="bijlagetoreply")
-    bijlage = models.FileField(blank=True, null=True, upload_to="OpmerkingBijlages/")
-    naam = models.CharField(max_length=100, blank=True, null=True)
+    reply = models.ForeignKey(CommentReply, on_delete=models.CASCADE, default=None, related_name="attachmenttoreply")
+    attachment = models.FileField(blank=True, null=True, upload_to="OpmerkingBijlages/")
+    name = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.naam}"
+        return f"{self.name}"

@@ -21,7 +21,7 @@
 {% if user.omschrijving %}
 <p>Omschrijving: <i>{{ user.omschrijving }}</i></p>
 {% else %}
-<p>Omschrijving: <i>Deze gebruiker heeft geen omschrijving</i></p>
+<p>Omschrijving: <i>Deze user heeft geen omschrijving</i></p>
 {% endif %}
 <div class="ui divider"></div>
 <div>
@@ -39,7 +39,7 @@
 				{% for project in projects %}
 				<tr>
 				<td> 
-					<a href="{% url 'projectview' project.id %}">{{ project.naam }}</a>
+					<a href="{% url 'projectview' project.id %}">{{ project.name }}</a>
 				</td>
 				</tr>
 				{% endfor %}
@@ -48,7 +48,7 @@
 </div>
 {% else %}
 <h2 class="ui header">Projecten</h2>
-<i>Deze gebruiker heeft nog geen projecten.</i>
+<i>Deze user heeft nog geen projecten.</i>
 {% endif %}
 <div class="ui divider"></div>
 </div>

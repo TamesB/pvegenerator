@@ -5,14 +5,14 @@
 <thead>
     <tr>
     <th>
-        {{ parameter_naam }}
+        {{ parameter_name }}
     </th>
     </tr>
 </thead>
 
 <tbody>
     {% for parameter in parameters %}
-        <tr><td hx-get="{% url 'kiesparameterdetail' versie_pk type_id parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></td>
+        <tr><td hx-get="{% url 'parameterchoicedetail' version_pk type_id parameter.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></td>
         </tr>
     {% endfor %}
 </tbody>

@@ -17,8 +17,8 @@
 {% if faqquery %}
 <div class="item_opmerking_list">
 {% for faq in faqquery %}
-    <button type="button" class="hoofdstuk">{{ faq.vraag }} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></button>
-    <div class="hoofdstuk_content">
+    <button type="button" class="chapter">{{ faq.vraag }} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></button>
+    <div class="chapter_content">
         <p>{{ faq.antwoord }}</p>
     </div>
 {% endfor %}
@@ -31,7 +31,7 @@
 
 {% block scripts %}
 <script>
-var coll = document.getElementsByClassName("hoofdstuk");
+var coll = document.getElementsByClassName("chapter");
 var i;
 
 for (i = 0; i < coll.length; i++) {

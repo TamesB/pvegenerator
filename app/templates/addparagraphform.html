@@ -13,10 +13,10 @@ $('.mini.modal')
 
 <div class="ui mini modal">
   <div class="header">
-    Voeg paragraaf toe
+    Voeg paragraph toe
   </div>
   <div class="content">
-    <form action="{% url 'addparagraph' versie_pk sectie.id %}" class="ui form" method="POST" enctype="multipart/form-data">
+    <form action="{% url 'addparagraph' version_pk sectie.id %}" class="ui form" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {% render_form form %}
         <input type="submit" class="ui green button" value="Voeg toe">

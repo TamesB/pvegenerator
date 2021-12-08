@@ -14,7 +14,7 @@
   <i class="right chevron icon divider"></i>
   <a class="section" href="{% url 'viewprojectoverview_syn' client_pk %}">Mijn Projecten</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'viewproject_syn' client_pk pk %}">Project: {{ project.naam }}</a>
+  <a class="section" href="{% url 'viewproject_syn' client_pk pk %}">Project: {{ project.name }}</a>
   <i class="right chevron icon divider"></i>
   <div class="active section">First Freeze</div>
 </div>
@@ -22,7 +22,7 @@
 <div class="general_title"><img src="{% static 'pvetool/img/accountsderden.png' %}" class="title_img"></img><p>Bevries PvE</p></div>
 <div class="invite-container">
     <div class="box">
-            <p class="description">Alle PvE regels hebben een status en zijn geaccepteerd. Bevestig dat u het ping-pong proces wil bevriezen en het PvE wil finaliseren. Iedereen van het project krijgt een e-mail met een link naar het downloaden van het Programma van Eisen met alle opmerkingen en bijlagen per regel.</p>
+            <p class="description">Alle PvE regels hebben een status en zijn geaccepteerd. Bevestig dat u het ping-pong proces wil bevriezen en het PvE wil finaliseren. Iedereen van het project krijgt een e-mail met een link naar het downloaden van het Programma van Eisen met alle opmerkingen en attachments per regel.</p>
         <form action="{% url 'finalfreeze_syn' client_pk pk %}" method="post">
             {% csrf_token %}
             <p><label class="formtitle" for="{{ form.confirm.id_for_label }}">Vink aan voor bevestiging.</label></p>

@@ -20,9 +20,9 @@ def FirstFreeze(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -31,7 +31,7 @@ def FirstFreeze(request, client_pk, pk):
 
     project = get_object_or_404(Project, pk=pk)
 
-    if project.belegger != client:
+    if project.client != client:
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -62,7 +62,7 @@ def FirstFreeze(request, client_pk, pk):
                     PVEItemAnnotation(
                         project=project,
                         item=item,
-                        gebruiker=request.user,
+                        user=request.user,
                         init_accepted=True,
                     )
                     for item in unchanged_items
@@ -81,11 +81,11 @@ def FirstFreeze(request, client_pk, pk):
                         user.email for user in allprojectusers if user.type_user == "SD"
                     ]
                     send_mail(
-                        f"{ project.belegger.naam } Projecten - Uitnodiging opmerkingscheck voor project {project}",
-                        f"""{ request.user } heeft de initiele statussen van de PvE-regels ingevuld en nodigt u uit deze te checken voor het project { project } van { project.belegger.naam }.
+                        f"{ project.client.name } Projecten - Uitnodiging opmerkingscheck voor project {project}",
+                        f"""{ request.user } heeft de initiele statussen van de PvE-regels ingevuld en nodigt u uit deze te checken voor het project { project } van { project.client.name }.
                         
                         Klik op de link om rechtstreeks de statussen langs te gaan.
-                        Link: https://pvegenerator.net/pvetool/{project.belegger.id}/project/{project.id}/check
+                        Link: https://pvegenerator.net/pvetool/{project.client.id}/project/{project.id}/check
                         """,
                         "admin@pvegenerator.net",
                         filteredDerden,
@@ -99,11 +99,11 @@ def FirstFreeze(request, client_pk, pk):
                 else:
                     projectmanager = project.projectmanager
                     send_mail(
-                        f"{ project.belegger.naam } Projecten - Uitnodiging opmerkingscheck voor project {project}",
-                        f"""{ request.user } heeft de initiele statussen van de PvE-regels ingevuld en nodigt u uit deze te checken voor het project { project } van { project.belegger.naam }.
+                        f"{ project.client.name } Projecten - Uitnodiging opmerkingscheck voor project {project}",
+                        f"""{ request.user } heeft de initiele statussen van de PvE-regels ingevuld en nodigt u uit deze te checken voor het project { project } van { project.client.name }.
                         
                         Klik op de link om rechtstreeks de statussen langs te gaan.
-                        Link: https://pvegenerator.net/pvetool/{project.belegger.id}/project/{project.id}/check
+                        Link: https://pvegenerator.net/pvetool/{project.client.id}/project/{project.id}/check
                         """,
                         "admin@pvegenerator.net",
                         [f"{projectmanager.email}"],
@@ -139,9 +139,9 @@ def SendReplies(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -150,7 +150,7 @@ def SendReplies(request, client_pk, pk):
 
     project = get_object_or_404(Project, pk=pk)
 
-    if project.belegger != client:
+    if project.client != client:
         return redirect("logout_syn", client_pk=client_pk)
 
     if project.frozenLevel == 0:
@@ -211,10 +211,10 @@ def SendReplies(request, client_pk, pk):
                         original_comment.save()
 
                     # add costs to original comment if reply has it.
-                    if comment.kostenConsequenties:
+                    if comment.consequentCosts:
                         original_comment = comment.onComment
-                        original_comment.kostenConsequenties = (
-                            comment.kostenConsequenties
+                        original_comment.consequentCosts = (
+                            comment.consequentCosts
                         )
                         original_comment.save()
 
@@ -245,11 +245,11 @@ def SendReplies(request, client_pk, pk):
                         user.email for user in allprojectusers if user.type_user == "SD"
                     ]
                     send_mail(
-                        f"{ project.belegger.naam } Projecten - Reactie van opmerkingen op PvE ontvangen voor project {project}",
+                        f"{ project.client.name } Projecten - Reactie van opmerkingen op PvE ontvangen voor project {project}",
                         f"""U heeft reactie ontvangen van de opmerkingen van de projectmanager voor project {project}
                         
                         Klik op de link om rechtstreeks de statussen langs te gaan.
-                        Link: https://pvegenerator.net/pvetool/{project.belegger.id}/project/{project.id}/check
+                        Link: https://pvegenerator.net/pvetool/{project.client.id}/project/{project.id}/check
                         """,
                         "admin@pvegenerator.net",
                         filteredDerden,
@@ -263,11 +263,11 @@ def SendReplies(request, client_pk, pk):
                     projectmanager = project.projectmanager
 
                     send_mail(
-                        f"{ project.belegger.naam } Projecten - Reactie van opmerkingen op PvE ontvangen voor project {project}",
+                        f"{ project.client.name } Projecten - Reactie van opmerkingen op PvE ontvangen voor project {project}",
                         f"""U heeft reactie ontvangen van de opmerkingen van de derde partijen voor project {project}
                         
                         Klik op de link om rechtstreeks de opmerkingen te checken.
-                        Link: https://pvegenerator.net/pvetool/{project.belegger.id}/project/{project.id}/check
+                        Link: https://pvegenerator.net/pvetool/{project.client.id}/project/{project.id}/check
                         """,
                         "admin@pvegenerator.net",
                         [f"{projectmanager.email}"],
@@ -303,9 +303,9 @@ def FinalFreeze(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -314,7 +314,7 @@ def FinalFreeze(request, client_pk, pk):
 
     project = get_object_or_404(Project, id=pk)
 
-    if project.belegger != client:
+    if project.client != client:
         return redirect("logout_syn", client_pk=client_pk)
 
     if project.frozenLevel == 0:
@@ -353,11 +353,11 @@ def FinalFreeze(request, client_pk, pk):
                 user.email for user in allprojectusers if user.type_user == "SD"
             ]
             send_mail(
-                f"{ project.belegger.naam } Projecten - Project {project} is bevroren, download het PvE",
+                f"{ project.client.name } Projecten - Project {project} is bevroren, download het PvE",
                 f"""Alle regels in het project {project} zijn akkoord mee gegaan en de projectmanager heeft het project afgesloten.
                 
-                Klik op de link om het PvE met alle opmerkingen en bijlages te downloaden.
-                Link: https://pvegenerator.net/pvetool/{project.belegger.id}/project/{project.id}/pve
+                Klik op de link om het PvE met alle opmerkingen en attachments te downloaden.
+                Link: https://pvegenerator.net/pvetool/{project.client.id}/project/{project.id}/pve
                 """,
                 "admin@pvegenerator.net",
                 filteredDerden,
@@ -366,13 +366,13 @@ def FinalFreeze(request, client_pk, pk):
             projectmanager = project.projectmanager
 
             send_mail(
-                f"{ project.belegger.naam } Projecten - Project {project} is bevroren, download het PvE",
+                f"{ project.client.name } Projecten - Project {project} is bevroren, download het PvE",
                 f"""Beste { projectmanager.username },
                 
                 Alle regels in het project {project} zijn akkoord mee gegaan en de projectmanager heeft het project afgesloten.
                 
-                Klik op de link om het PvE met alle opmerkingen en bijlages te downloaden.
-                Link: https://pvegenerator.net/pvetool/{project.belegger.id}/project/{project.id}/pve
+                Klik op de link om het PvE met alle opmerkingen en attachments te downloaden.
+                Link: https://pvegenerator.net/pvetool/{project.client.id}/project/{project.id}/pve
                 """,
                 "admin@pvegenerator.net",
                 [f"{projectmanager.email}"],
@@ -381,7 +381,7 @@ def FinalFreeze(request, client_pk, pk):
 
             messages.warning(
                 request,
-                f"Het project {project.naam} is succesvol bevroren. Er kunnen geen opmerkingen worden geplaatst en het uiteindelijke PvE is te downloaden via de projectpagina. Alle medewerkers van dit project hebben een E-Mail ontvangen van de downloadlink van het PvE.",
+                f"Het project {project.name} is succesvol bevroren. Er kunnen geen opmerkingen worden geplaatst en het uiteindelijke PvE is te downloaden via de projectpagina. Alle medewerkers van dit project hebben een E-Mail ontvangen van de downloadlink van het PvE.",
             )
         else:
             messages.warning(request, "Vul de verplichte velden in.")

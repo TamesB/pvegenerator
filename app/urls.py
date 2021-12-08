@@ -8,162 +8,162 @@ from . import views
 urlpatterns = [
     path("", views.LoginPageView, name="login"),
     path("dashboard", views.DashboardView, name="dashboard"),
-    path("klanten", views.KlantOverzicht, name="klantoverzicht"),
-    path("klanten/add", views.KlantToevoegen, name="klanttoevoegen"),
-    path("klanten/<int:client_pk>/delete", views.KlantVerwijderen, name="klantverwijderen"),
-    path("klanten/logo/<int:client_pk>", views.GetLogo, name="logoklantdetail"),
-    path("klanten/logo/<int:client_pk>/add", views.LogoKlantForm, name="logoklantform"),
-    path("klanten/beheerder/<int:client_pk>", views.GetBeheerderKlant, name="getbeheerderklant"),
-    path("klanten/beheerder/<int:client_pk>/add", views.BeheerderKlantForm, name="beheerderklantform"),
+    path("clients", views.KlantOverzicht, name="clientoverzicht"),
+    path("clients/add", views.KlantToevoegen, name="clienttoevoegen"),
+    path("clients/<int:client_pk>/delete", views.KlantVerwijderen, name="clientverwijderen"),
+    path("clients/logo/<int:client_pk>", views.GetLogo, name="logoclientdetail"),
+    path("clients/logo/<int:client_pk>/add", views.LogoKlantForm, name="logoclientform"),
+    path("clients/beheerder/<int:client_pk>", views.GetBeheerderKlant, name="getbeheerderclient"),
+    path("clients/beheerder/<int:client_pk>/add", views.BeheerderKlantForm, name="beheerderclientform"),
     path("logout", views.LogoutView, name="logout"),
 
     path(
-        "beleggersversie",
+        "clientsversie",
         views.PVEBeleggerVersieOverview,
-        name="beleggerversieoverview",
+        name="clientversieoverview",
     ),
     path(
-        "bewerkpveoverview/<int:versie_pk>",
+        "bewerkpveoverview/<int:version_pk>",
         views.PVEBewerkOverview,
         name="pvebewerkoverview",
     ),
     
-    path("addpveversieform/<int:belegger_pk>", views.AddPvEVersie, name="addpveversieform"),
-    path("beleggerversietable/<int:belegger_pk>", views.BeleggerVersieTable, name="pveversietable"),
-    path("pveversiedetail/<int:versie_pk>", views.PVEVersieDetail, name="getpveversie"),
-    path("getpveversiedetail/<int:versie_pk>", views.GetPveVersieDetail, name="getpveversiedetail"),
-    path("pveversienaamform/<int:versie_pk>", views.PveVersieEditName, name="editpveversiename"),
-    path("deletepveversie/<int:belegger_pk>/<int:versie_pk>", views.DeletePVEVersie, name="deletepveversie"),
-    path("pveactiviteit/<int:versie_pk>", views.VersieActiviteit, name="getpveactiviteit"),
-    path("makeactive/<int:versie_pk>", views.ActivateVersie, name="maakactief"),
-    path("makeinactive/<int:versie_pk>", views.DeactivateVersie, name="maakinactief"),
-    path("addbelegger", views.AddBelegger, name="addbelegger"),
+    path("addpveversieform/<int:client_pk>", views.AddPvEVersie, name="addpveversieform"),
+    path("clientversietable/<int:client_pk>", views.BeleggerVersieTable, name="pveversietable"),
+    path("pveversiedetail/<int:version_pk>", views.PVEVersieDetail, name="getpveversie"),
+    path("getpveversiedetail/<int:version_pk>", views.GetPveVersieDetail, name="getpveversiedetail"),
+    path("pveversienameform/<int:version_pk>", views.PveVersieEditName, name="editpveversiename"),
+    path("deletepveversie/<int:client_pk>/<int:version_pk>", views.DeletePVEVersie, name="deletepveversie"),
+    path("pveactiviteit/<int:version_pk>", views.VersieActiviteit, name="getpveactiviteit"),
+    path("makeactive/<int:version_pk>", views.ActivateVersie, name="maakactief"),
+    path("makeinactive/<int:version_pk>", views.DeactivateVersie, name="maakinactief"),
+    path("addclient", views.AddBelegger, name="addclient"),
     path(
         "parameters/<str:excelFilename>/download",
         views.DownloadWorksheet,
         name="worksheetdownload",
     ),
     path(
-        "parameters/<int:versie_pk>/bijlagen", views.bijlagenView, name="bijlageview"
+        "parameters/<int:version_pk>/attachments", views.attachmentsView, name="attachmentview"
     ),
     path(
-        "parameters/<int:versie_pk>/bijlagen/<int:pk>", views.bijlageDetail, name="bijlagedetail"
+        "parameters/<int:version_pk>/attachments/<int:pk>", views.attachmentDetail, name="attachmentdetail"
     ),
     path(
-        "parameters/<int:versie_pk>/bijlagen/add", views.bijlageAdd, name="addbijlage"
+        "parameters/<int:version_pk>/attachments/add", views.attachmentAdd, name="addattachment"
     ),
     path(
-        "parameters/<int:versie_pk>/bijlagen/<int:pk>/edit", views.bijlageEdit, name="editbijlage"
+        "parameters/<int:version_pk>/attachments/<int:pk>/edit", views.attachmentEdit, name="editattachment"
     ),
     path(
-        "parameters/<int:versie_pk>/bijlagen/<int:pk>/delete", views.bijlageDelete, name="deletebijlage"
+        "parameters/<int:version_pk>/attachments/<int:pk>/delete", views.attachmentDelete, name="deleteattachment"
     ),
     path(
-        "parameters/<int:versie_pk>", views.PVEHoofdstukListView, name="hoofdstukview"
+        "parameters/<int:version_pk>", views.PVEHoofdstukListView, name="chapterview"
     ),
     path(
-        "parameters/<int:versie_pk>/addchapter",
-        views.PVEaddhoofdstukView,
+        "parameters/<int:version_pk>/addchapter",
+        views.PVEaddchapterView,
         name="addchapter",
     ),
     path(
-        "parameters/<int:versie_pk>/editchapter/<int:pk>",
-        views.PVEedithoofdstukView,
+        "parameters/<int:version_pk>/editchapter/<int:pk>",
+        views.PVEeditchapterView,
         name="editchapter",
     ),
     path(
-        "parameters/<int:versie_pk>/deletechapter/<int:pk>",
-        views.PVEdeletehoofdstukView,
+        "parameters/<int:version_pk>/deletechapter/<int:pk>",
+        views.PVEdeletechapterView,
         name="deletechapter",
     ),
     path(
-        "parameters/<int:versie_pk>/<int:pk>",
+        "parameters/<int:version_pk>/<int:pk>",
         views.paragraaflistView,
         name="viewParagraaf",
     ),
     path(
-        "parameters/<int:versie_pk>/<int:pk>/addparagraph",
+        "parameters/<int:version_pk>/<int:pk>/addparagraph",
         views.PVEaddparagraafView,
         name="addparagraph",
     ),
     path(
-        "parameters/<int:versie_pk>/<int:pk>/editparagraph",
+        "parameters/<int:version_pk>/<int:pk>/editparagraph",
         views.PVEeditparagraafView,
         name="editparagraph",
     ),
     path(
-        "parameters/<int:versie_pk>/<int:pk>/deleteparagraph",
+        "parameters/<int:version_pk>/<int:pk>/deleteparagraph",
         views.PVEdeleteparagraafView,
         name="deleteparagraph",
     ),
     path(
-        "parameters/<int:versie_pk>/<int:chapter_id>/<int:paragraph_id>",
+        "parameters/<int:version_pk>/<int:chapter_id>/<int:paragraph_id>",
         views.itemListView,
         name="itemlistview",
     ),
     path(
-        "parameters/<int:versie_pk>/<int:chapter_id>/<int:paragraph_id>/add",
+        "parameters/<int:version_pk>/<int:chapter_id>/<int:paragraph_id>/add",
         views.addItemView,
         name="additem",
     ),
     path(
-        "parameters/<int:versie_pk>/item/<int:pk>", views.viewItemView, name="viewitem"
+        "parameters/<int:version_pk>/item/<int:pk>", views.viewItemView, name="viewitem"
     ),
     path(
-        "parameters/<int:versie_pk>/item/<int:pk>/edit",
+        "parameters/<int:version_pk>/item/<int:pk>/edit",
         views.editItemView,
         name="edititem",
     ),
     path(
-        "parameters/<int:versie_pk>/item/<int:pk>/delete",
+        "parameters/<int:version_pk>/item/<int:pk>/delete",
         views.deleteItemView,
         name="deleteitem",
     ),
     path(
-        "parameters/item/<int:pk>/bijlage",
+        "parameters/item/<int:pk>/attachment",
         views.downloadBijlageView,
-        name="downloadbijlage",
+        name="downloadattachment",
     ),
     path(
-        "kiesparameters/<int:versie_pk>",
-        views.kiesparametersView,
-        name="kiesparametersview",
+        "parameterchoices/<int:version_pk>",
+        views.parameterchoicesView,
+        name="parameterchoicesview",
     ),
     path(
-        "kiesparameters/<int:versie_pk>/<int:type>/<int:parameter_id>/form",
-        views.kiesparameterform,
-        name="kiesparameterform",
+        "parameterchoices/<int:version_pk>/<int:type>/<int:parameter_id>/form",
+        views.parameterchoiceform,
+        name="parameterchoiceform",
     ),
     path(
-        "kiesparameters/<int:versie_pk>/<int:type>/addform",
-        views.addkiesparameterform,
-        name="addkiesparameterform",
+        "parameterchoices/<int:version_pk>/<int:type>/addform",
+        views.addparameterchoiceform,
+        name="addparameterchoiceform",
     ),
     path(
-        "kiesparameters/<int:versie_pk>/<int:type>/table",
-        views.kiesparametertable,
-        name="kiesparametertable",
+        "parameterchoices/<int:version_pk>/<int:type>/table",
+        views.parameterchoicetable,
+        name="parameterchoicetable",
     ),
     path(
-        "kiesparameters/<int:versie_pk>/<int:type>/modaladd",
-        views.kiesparametermodaladd,
-        name="kiesparametermodaladd",
+        "parameterchoices/<int:version_pk>/<int:type>/modaladd",
+        views.parameterchoicemodaladd,
+        name="parameterchoicemodaladd",
     ),
 
     path(
-        "kiesparameters/<int:versie_pk>/<int:type>/<int:parameter_id>/get",
-        views.kiesparameterdetail,
-        name="kiesparameterdetail",
+        "parameterchoices/<int:version_pk>/<int:type>/<int:parameter_id>/get",
+        views.parameterchoicedetail,
+        name="parameterchoicedetail",
     ),
     path(
-        "kiesparameters/<int:versie_pk>/<int:type_id>/add",
-        views.addkiesparameterView,
-        name="addkiesparameter",
+        "parameterchoices/<int:version_pk>/<int:type_id>/add",
+        views.addparameterchoiceView,
+        name="addparameterchoice",
     ),
     path(
-        "kiesparameters/<int:versie_pk>/<int:type_id>/<int:item_id>/delete",
-        views.deletekiesparameterView,
-        name="kiesparameterdelete",
+        "parameterchoices/<int:version_pk>/<int:type_id>/<int:item_id>/delete",
+        views.deleteparameterchoiceView,
+        name="parameterchoicedelete",
     ),
     path("heatmap", views.projectHeatmap, name="projectheatmap"),
     path("accounts", views.AccountOverview, name="accountoverview"),

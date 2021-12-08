@@ -29,7 +29,7 @@
         {% if projects %}
             {% for project in projects %}
         <tr class="table_content">
-          <td><p>{{ project.naam }}</p></td>
+          <td><p>{{ project.name }}</p></td>
           <td class="link"><p>{% if project.frozenLevel == 0 %}<a href="{% url 'plusopmerking_syn' client_pk project.id %}"><img src="{% static 'pvetool/img/plus.png' %}"></img></a>{% else %}<i>Bevroren</i>{% endif %}</p></td>
         </tr>
         {% endfor %}

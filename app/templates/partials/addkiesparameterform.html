@@ -7,11 +7,11 @@
         <div class="modal-content">
         <form class="ui form" method="POST" hx-encoding='multipart/form-data' enctype="multipart/form-data">
         {% csrf_token %}
-        <h2 class="ui header">Voeg parameter toe aan {{ naam }}</h2>
+        <h2 class="ui header">Voeg parameter toe aan {{ name }}</h2>
             <div>{{ form }}</div>
             <div class="ui divider"></div>
             <div style="float:left; margin-top 2vh;"><div class="ui basic button" _="on click trigger closeModal">Terug</div></div>
-            <div style="float:right; margin-top 2vh;"><button hx-post="{% url 'kiesparametermodaladd' versie_pk type_id %}" hx-target="#parameter-table-{{ type_id }}" type="submit" _="on click trigger closeModal" class="ui icon green button"><i class="check icon"></i></button></div>
+            <div style="float:right; margin-top 2vh;"><button hx-post="{% url 'parameterchoicemodaladd' version_pk type_id %}" hx-target="#parameter-table-{{ type_id }}" type="submit" _="on click trigger closeModal" class="ui icon green button"><i class="check icon"></i></button></div>
         </form>  
         </div>
     </div>

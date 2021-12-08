@@ -23,9 +23,9 @@ urlpatterns = [
     path("<int:client_pk>/dashboard", base.DashboardView, name="dashboard_syn"),
     path("<int:client_pk>/faq", base.FAQView, name="faq_syn"),
     path("<int:client_pk>/generate/kiespve", base.KiesPVEGenerate, name="kiespvegenerate"),
-    path("<int:client_pk>/generate/<int:versie_pk>", base.GeneratePVEView, name="generate_syn"),
+    path("<int:client_pk>/generate/<int:version_pk>", base.GeneratePVEView, name="generate_syn"),
 
-    # organisatie beheer (groep van derden) CRUD
+    # stakeholder beheer (groep van derden) CRUD
     path("<int:client_pk>/organisaties", crudPartijen.ManageOrganisaties, name="manageorganisaties_syn"),
     path("<int:client_pk>/organisaties/add", crudPartijen.AddOrganisatie, name="addorganisatie_syn"),
     path(
@@ -49,9 +49,9 @@ urlpatterns = [
         name="organisatieremovefromproject",
     ),
     path(
-        "<int:client_pk>/organisaties/<int:organisatie_pk>/removegebruiker/<int:gebruiker_pk>",
+        "<int:client_pk>/organisaties/<int:organisatie_pk>/removeuser/<int:user_pk>",
         crudPartijen.GebruikerRemoveFromOrganisatie,
-        name="gebruikerremovefromorganisatie",
+        name="userremovefromorganisatie",
     ),
 
     # projectbeheer CRUD
@@ -92,14 +92,14 @@ urlpatterns = [
     path("<int:client_pk>/project/<int:pk>", actionsProject.ViewProject, name="viewproject_syn"),
     path("<int:client_pk>/project/pve", actionsProject.download_pve_overview, name="downloadPveOverview_syn"),
     path("<int:client_pk>/project/<int:pk>/pve", actionsProject.download_pve, name="download_pve_syn"),
-    path("<int:client_pk>/project/<int:pk>/<int:versie_pk>/addpve", actionsProject.ConnectPVE, name="connectpve_syn"),
+    path("<int:client_pk>/project/<int:pk>/<int:version_pk>/addpve", actionsProject.ConnectPVE, name="connectpve_syn"),
     path("<int:client_pk>/project/<int:pk>/addpvepartial", actionsProject.KiesPVE, name="kiespveversie"),
 
     # first annotate crud
     path("<int:client_pk>/comment", crudFirstAnnotate.AddCommentOverview, name="plusopmerkingOverview_syn"),
     path("<int:client_pk>/project/<int:pk>/comment/add", crudFirstAnnotate.AddComment, name="plusopmerking_syn"),
-    path("<int:client_pk>/getparagravenfirstannotate/<int:pk>/<int:hoofdstuk_pk>", crudFirstAnnotate.GetParagravenFirstAnnotate, name="getparagravenfirstannotate"),
-    path("<int:client_pk>/getitemsfirstannotate/<int:pk>/<int:hoofdstuk_pk>/<int:paragraaf_id>", crudFirstAnnotate.GetItemsFirstAnnotate, name="getitemsfirstannotate"),
+    path("<int:client_pk>/getparagraphsfirstannotate/<int:pk>/<int:chapter_pk>", crudFirstAnnotate.GetParagravenFirstAnnotate, name="getparagraphsfirstannotate"),
+    path("<int:client_pk>/getitemsfirstannotate/<int:pk>/<int:chapter_pk>/<int:paragraaf_id>", crudFirstAnnotate.GetItemsFirstAnnotate, name="getitemsfirstannotate"),
     path("<int:client_pk>/detailfirststatus/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DetailStatusFirst, name="detailfirststatus"),
     path("<int:client_pk>/detailitemfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DetailItemFirst, name="detailitemfirst"),
     path("<int:client_pk>/detailfirstannotation/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DetailAnnotationFirst, name="detailfirstannotation"),
@@ -110,19 +110,19 @@ urlpatterns = [
     path("<int:client_pk>/deletestatusfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DeleteStatusFirst, name="deletestatusfirst"),
     path("<int:client_pk>/deleteannotationfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DeleteAnnotationFirst, name="deleteannotationfirst"),
     path("<int:client_pk>/deletekostenverschilfirst/<int:project_pk>/<int:item_pk>", crudFirstAnnotate.DeleteKostenverschilFirst, name="deletekostenverschilfirst"),
-    path("<int:client_pk>/deletebijlagefirst/<int:project_pk>/<int:annotation_pk>/<int:pk>", crudFirstAnnotate.DeleteBijlageFirst, name="deletebijlagefirst"),
-    path("<int:client_pk>/addbijlagefirst/<int:project_pk>/<int:item_pk>/<int:annotation_pk>/<int:bijlage_id>", crudFirstAnnotate.AddBijlageFirst, name="addbijlagefirst"),
+    path("<int:client_pk>/deleteattachmentfirst/<int:project_pk>/<int:annotation_pk>/<int:pk>", crudFirstAnnotate.DeleteBijlageFirst, name="deleteattachmentfirst"),
+    path("<int:client_pk>/addattachmentfirst/<int:project_pk>/<int:item_pk>/<int:annotation_pk>/<int:attachment_id>", crudFirstAnnotate.AddBijlageFirst, name="addattachmentfirst"),
     path(
-        "<int:client_pk>/project/<int:projid>/comment/my/<int:annid>/<int:bijlage_id>/dl",
+        "<int:client_pk>/project/<int:projid>/comment/my/<int:annid>/<int:attachment_id>/dl",
         utils.DownloadAnnotationAttachment,
-        name="downloadbijlageaanopmerking_syn",
+        name="downloadattachmentaanopmerking_syn",
     ),
     path("<int:client_pk>/project/<int:pk>/firstfreeze", actionsPingPong.FirstFreeze, name="firstfreeze_syn"),
 
     # Ping pong process
     path("<int:client_pk>/project/<int:proj_id>/check", crudPingPong.CheckComments, name="commentscheck_syn"),
-    path("<int:client_pk>/getparagravenpingpong/<int:pk>/<int:hoofdstuk_pk>/<int:type>/<int:accept>", crudPingPong.GetParagravenPingPong, name="getparagravenpingpong"),
-    path("<int:client_pk>/getitemspingpong/<int:pk>/<int:hoofdstuk_pk>/<int:paragraaf_id>/<int:type>/<int:accept>", crudPingPong.GetItemsPingPong, name="getitemspingpong"),
+    path("<int:client_pk>/getparagraphspingpong/<int:pk>/<int:chapter_pk>/<int:type>/<int:accept>", crudPingPong.GetParagravenPingPong, name="getparagraphspingpong"),
+    path("<int:client_pk>/getitemspingpong/<int:pk>/<int:chapter_pk>/<int:paragraaf_id>/<int:type>/<int:accept>", crudPingPong.GetItemsPingPong, name="getitemspingpong"),
     
     # first acceptation process per rule
     path("<int:client_pk>/detailpong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DetailAcceptPong, name="detailpongaccept"),
@@ -142,14 +142,14 @@ urlpatterns = [
     path("<int:client_pk>/addstatuspong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.AddStatusPong, name="addstatuspong"),
     path("<int:client_pk>/addreplypong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.AddReplyPong, name="addreplypong"),
     path("<int:client_pk>/addkostenverschilpong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.AddKostenverschilPong, name="addkostenverschilpong"),
-    path("<int:client_pk>/addbijlagepong/<int:project_pk>/<int:item_pk>/<int:annotation_pk>/<int:type>/<int:new>/<int:bijlage_id>", crudPingPong.AddBijlagePong, name="addbijlagepong"),
+    path("<int:client_pk>/addattachmentpong/<int:project_pk>/<int:item_pk>/<int:annotation_pk>/<int:type>/<int:new>/<int:attachment_id>", crudPingPong.AddBijlagePong, name="addattachmentpong"),
     path("<int:client_pk>/deletestatuspong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DeleteStatusPong, name="deletestatuspong"),
     path("<int:client_pk>/deletereplypong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DeleteReplyPong, name="deletereplypong"),
     path("<int:client_pk>/deletekostenverschilpong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DeleteKostenverschilPong, name="deletekostenverschilpong"),
 
     # Safe attachment downloads AWS
     path(
-        "<int:client_pk>/project/<int:pk>/replies/my/<int:reply_id>/<int:bijlage_id>/dl",
+        "<int:client_pk>/project/<int:pk>/replies/my/<int:reply_id>/<int:attachment_id>/dl",
         utils.DownloadReplyAttachment,
         name="downloadreplyattachment_syn",
     ),

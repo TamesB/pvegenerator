@@ -18,9 +18,9 @@ class StartProjectForm(ModelForm):
     class Meta:
         model = Project
         fields = (
-            "belegger",
+            "client",
             "projectmanager",
-            "naam",
+            "name",
             "nummer",
             "vhe",
             "pensioenfonds",
@@ -29,9 +29,9 @@ class StartProjectForm(ModelForm):
         )
         geom = forms.PointField()
         labels = {
-            "belegger": "Belegger:",
+            "client": "Belegger:",
             "projectmanager": "Projectmanager:",
-            "naam": "Projectnaam:",
+            "name": "Projectname:",
             "nummer": "Projectnummer:",
             "plaats": "Plaats:",
             "vhe": "Aantal verhuureenheden:",

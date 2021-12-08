@@ -36,7 +36,7 @@ def AllProjectsView(request):
 
     projects = models.Project.objects.all()
     locations = [
-        [project.naam, project.plaats.x, project.plaats.y] for project in projects
+        [project.name, project.plaats.x, project.plaats.y] for project in projects
     ]
 
     context = {}

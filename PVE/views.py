@@ -8,7 +8,7 @@ def LandingView(request):
     if request.user:
         if request.user.is_authenticated:
             if request.user.type_user in pvetool_type:
-                return redirect("dashboard_syn", client_pk=request.user.klantenorganisatie.id)
+                return redirect("dashboard_syn", client_pk=request.user.client.id)
             elif request.user.type_user == "B":
                 return redirect("dashboard")
 

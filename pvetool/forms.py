@@ -14,7 +14,7 @@ from users.models import CustomUser, Invitation, Organisatie
 class LoginForm(forms.Form):
     attrs = {"type": "password"}
 
-    username = forms.CharField(label="Gebruikersnaam of e-mail", max_length=100)
+    username = forms.CharField(label="Gebruikersname of e-mail", max_length=100)
     password = forms.CharField(
         label="Wachtwoord", max_length=100, widget=forms.TextInput(attrs=attrs)
     )
@@ -139,7 +139,7 @@ class PVEParameterForm(ModelForm):
 
 
 class KoppelDerdeUserForm(ModelForm):
-    organisatie = forms.ModelChoiceField(
+    stakeholder = forms.ModelChoiceField(
         queryset=Organisatie.objects.none(), label="Organisatie:"
     )
     project = forms.ModelChoiceField(
@@ -162,7 +162,7 @@ class PlusAccountForm(ModelForm):
     )
 
     rang = forms.ChoiceField(choices=type_choices)
-    organisatie = forms.ModelChoiceField(
+    stakeholder = forms.ModelChoiceField(
         queryset=Organisatie.objects.none(), label="Organisatie (optioneel):", required=False
     )
     project = forms.ModelChoiceField(
@@ -174,12 +174,12 @@ class PlusAccountForm(ModelForm):
             "invitee",
         }
         labels = {
-            "rang": "Rang gebruiker:",
+            "rang": "Rang user:",
             "invitee": "E-Mail:",
         }
 
 class PlusDerdeToProjectForm(ModelForm):
-    organisatie = forms.ModelChoiceField(
+    stakeholder = forms.ModelChoiceField(
         queryset=Organisatie.objects.none(), label="Organisatie (optioneel):", required=False
     )
 
@@ -211,7 +211,7 @@ class PVEItemAnnotationForm(forms.Form):
     annotation = forms.CharField(
         label="annotation", max_length=1000, widget=forms.Textarea, required=False
     )
-    kostenConsequenties = forms.DecimalField(
+    consequentCosts = forms.DecimalField(
         label="(Optioneel) Kosten Consequenties", required=False
     )
 
@@ -223,17 +223,17 @@ class PVEItemAnnotationForm(forms.Form):
 class BijlageToAnnotationForm(ModelForm):    
     class Meta:
         model = BijlageToAnnotation
-        fields = ("ann", "bijlage", "naam")
+        fields = ("ann", "attachment", "name")
         labels = {
             "ann": "Opmerking:",
-            "bijlage": "Bijlage:",
-            "naam": "Bijlagenaam:"
+            "attachment": "Bijlage:",
+            "name": "Bijlagename:"
         }
         widgets = {"ann": forms.HiddenInput()}
         
     def __init__(self, *args, **kwargs):
         super(BijlageToAnnotationForm, self).__init__(*args, **kwargs)
-        self.fields["naam"].required = True
+        self.fields["name"].required = True
 
 class FirstAnnotationForm(forms.Form):
     annotation = forms.CharField(label="annotation", required=True, widget=forms.Textarea(attrs={'rows':3, 'cols':10}))
@@ -251,45 +251,45 @@ class FirstStatusForm(forms.Form):
 class FirstBijlageForm(ModelForm):
     class Meta:
         model = BijlageToAnnotation
-        fields = ("bijlage", "ann", "naam")
-        labels = {"bijlage": "", "ann": "", "naam": "Bijlagenaam (optioneel):"}
+        fields = ("attachment", "ann", "name")
+        labels = {"attachment": "", "ann": "", "name": "Bijlagename (optioneel):"}
         widgets = {"ann": forms.HiddenInput()}
         
     def __init__(self, *args, **kwargs):
         super(FirstBijlageForm, self).__init__(*args, **kwargs)
-        self.fields["naam"].required = False
-        self.fields["bijlage"].required = True
+        self.fields["name"].required = False
+        self.fields["attachment"].required = True
 
 class PongBijlageForm(ModelForm):
     class Meta:
         model = BijlageToReply
-        fields = ("bijlage", "reply", "naam")
-        labels = {"bijlage": "", "reply": "", "naam": "Bijlagenaam (optioneel):"}
+        fields = ("attachment", "reply", "name")
+        labels = {"attachment": "", "reply": "", "name": "Bijlagename (optioneel):"}
         widgets = {"reply": forms.HiddenInput()}
         
     def __init__(self, *args, **kwargs):
         super(PongBijlageForm, self).__init__(*args, **kwargs)
-        self.fields["naam"].required = False
-        self.fields["bijlage"].required = True
+        self.fields["name"].required = False
+        self.fields["attachment"].required = True
 
 
 class AddOrganisatieForm(forms.Form):
-    naam = forms.CharField(max_length=100)
+    name = forms.CharField(max_length=100)
 
     class Meta:
         labels = {
-            "naam": "Organisatienaam:",
+            "name": "Organisatiename:",
         }
 
 
 class AddUserToOrganisatieForm(forms.Form):
-    werknemer = forms.ModelChoiceField(
+    employee = forms.ModelChoiceField(
         queryset=CustomUser.objects.none(), label=""
     )
 
     class Meta:
         labels = {
-            "werknemer": "",
+            "employee": "",
         }
 
 
@@ -305,13 +305,13 @@ class AddProjectmanagerToProjectForm(forms.Form):
 
 
 class AddOrganisatieToProjectForm(forms.Form):
-    organisatie = forms.ModelChoiceField(
+    stakeholder = forms.ModelChoiceField(
         queryset=Organisatie.objects.none(), label=""
     )
 
     class Meta:
         labels = {
-            "organisatie": "",
+            "stakeholder": "",
         }
 
 
@@ -328,7 +328,7 @@ class StartProjectForm(ModelForm):
     class Meta:
         model = Project
         fields = (
-            "naam",
+            "name",
             "nummer",
             "organisaties",
             "vhe",
@@ -339,7 +339,7 @@ class StartProjectForm(ModelForm):
         )
         geom = forms.PointField()
         labels = {
-            "naam": "Projectnaam:",
+            "name": "Projectname:",
             "nummer": "Projectnummer:",
             "plaats": "Plaats:",
             "vhe": "Aantal verhuureenheden:",
@@ -363,7 +363,7 @@ class InviteProjectStartForm(forms.Form):
         queryset=CustomUser.objects.none(), label="Projectmanager:"
     )
     organisaties = forms.ModelMultipleChoiceField(
-        queryset=Organisatie.objects.none(), label="Organisaties (Voegt alle derden toe van een organisatie):"
+        queryset=Organisatie.objects.none(), label="Organisaties (Voegt alle derden toe van een stakeholder):"
     )
     permitted = forms.ModelMultipleChoiceField(
         queryset=CustomUser.objects.none(), label="Handmatig Derden:"
@@ -408,7 +408,7 @@ class CommentReplyForm(forms.Form):
     annotation = forms.CharField(
         label="annotation", max_length=1000, widget=forms.Textarea, required=False
     )
-    kostenConsequenties = forms.DecimalField(
+    consequentCosts = forms.DecimalField(
         label="(Optioneel) Kosten Consequenties", required=False
     )
     accept = forms.ChoiceField(choices=CHOICES, required=False)
@@ -425,9 +425,9 @@ class CommentReplyForm(forms.Form):
 class BijlageToReplyForm(ModelForm):
     class Meta:
         model = BijlageToReply
-        fields = ("reply", "bijlage")
+        fields = ("reply", "attachment")
         labels = {
             "reply": "Reactie:",
-            "bijlage": "Bijlage:",
+            "attachment": "Bijlage:",
         }
         widgets = {"reply": forms.HiddenInput()}

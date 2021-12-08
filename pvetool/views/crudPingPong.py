@@ -21,9 +21,9 @@ def passed_commentcheck_guardclauses(request, client_pk, project_pk):
 
     client = Beleggers.objects.filter(pk=client_pk).first()
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return False, False
@@ -35,7 +35,7 @@ def passed_commentcheck_guardclauses(request, client_pk, project_pk):
 
     project = Project.objects.get(pk=project_pk)
 
-    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Beleggers.objects.filter(pk=client_pk).first():
         return False, False
 
     if request.user not in project.permitted.all():
@@ -82,7 +82,7 @@ def CheckComments(request, client_pk, proj_id):
     non_accepted_comments = (
         current_phase.comments.select_related("status")
         .select_related("item")
-        .select_related("item__hoofdstuk")
+        .select_related("item__chapter")
         .select_related("item__paragraaf")
         .order_by("item__id")
         .all()
@@ -91,7 +91,7 @@ def CheckComments(request, client_pk, proj_id):
     accepted_comments = (
         current_phase.accepted_comments.select_related("status")
         .select_related("item")
-        .select_related("item__hoofdstuk")
+        .select_related("item__chapter")
         .select_related("item__paragraaf")
         .order_by("item__id")
         .all()
@@ -100,67 +100,67 @@ def CheckComments(request, client_pk, proj_id):
     todo_comments = (
         current_phase.todo_comments.select_related("status")
         .select_related("item")
-        .select_related("item__hoofdstuk")
+        .select_related("item__chapter")
         .select_related("item__paragraaf")
         .order_by("item__id")
         .all()
     )
 
-    hoofdstukken_non_accept = make_hoofdstukken(non_accepted_comments)
-    hoofdstukken_accept = make_hoofdstukken(accepted_comments)
-    hoofdstukken_todo = make_hoofdstukken(todo_comments)
+    chapters_non_accept = make_chapters(non_accepted_comments)
+    chapters_accept = make_chapters(accepted_comments)
+    chapters_todo = make_chapters(todo_comments)
 
-    non_accepted_hfst_replies = {hoofdstuk.id: 0 for hoofdstuk in hoofdstukken_non_accept}
-    accepted_hfst_replies = {hoofdstuk.id: 0 for hoofdstuk in hoofdstukken_accept}
-    todo_hfst_replies = {hoofdstuk.id: 0 for hoofdstuk in hoofdstukken_todo}
+    non_accepted_hfst_replies = {chapter.id: 0 for chapter in chapters_non_accept}
+    accepted_hfst_replies = {chapter.id: 0 for chapter in chapters_accept}
+    todo_hfst_replies = {chapter.id: 0 for chapter in chapters_todo}
 
-    non_accepted_replies = current_phase.reply.select_related("onComment__item__hoofdstuk").filter(onComment__in=non_accepted_comments)
-    accepted_replies = current_phase.reply.select_related("onComment__item__hoofdstuk").filter(onComment__in=accepted_comments)
-    todo_replies = current_phase.reply.select_related("onComment__item__hoofdstuk").filter(onComment__in=todo_comments)
+    non_accepted_replies = current_phase.reply.select_related("onComment__item__chapter").filter(onComment__in=non_accepted_comments)
+    accepted_replies = current_phase.reply.select_related("onComment__item__chapter").filter(onComment__in=accepted_comments)
+    todo_replies = current_phase.reply.select_related("onComment__item__chapter").filter(onComment__in=todo_comments)
     
     for reply in non_accepted_replies:
-        hoofdstuk = reply.onComment.item.hoofdstuk.id
-        if hoofdstuk in non_accepted_hfst_replies:
-            non_accepted_hfst_replies[hoofdstuk] += 1
+        chapter = reply.onComment.item.chapter.id
+        if chapter in non_accepted_hfst_replies:
+            non_accepted_hfst_replies[chapter] += 1
         else:
-            non_accepted_hfst_replies[hoofdstuk] = 1
+            non_accepted_hfst_replies[chapter] = 1
             
     for reply in accepted_replies:
-        hoofdstuk = reply.onComment.item.hoofdstuk.id
-        if hoofdstuk in accepted_hfst_replies:
-            accepted_hfst_replies[hoofdstuk] += 1
+        chapter = reply.onComment.item.chapter.id
+        if chapter in accepted_hfst_replies:
+            accepted_hfst_replies[chapter] += 1
         else:
-            accepted_hfst_replies[hoofdstuk] = 1
+            accepted_hfst_replies[chapter] = 1
             
     for reply in todo_replies:
-        hoofdstuk = reply.onComment.item.hoofdstuk.id
-        if hoofdstuk in todo_hfst_replies:
-            todo_hfst_replies[hoofdstuk] += 1
+        chapter = reply.onComment.item.chapter.id
+        if chapter in todo_hfst_replies:
+            todo_hfst_replies[chapter] += 1
         else:
-            todo_hfst_replies[hoofdstuk] = 1
+            todo_hfst_replies[chapter] = 1
 
-    non_accepted_hfst_count = {hoofdstuk.id: 0 for hoofdstuk in hoofdstukken_non_accept}
-    accepted_hfst_count = {hoofdstuk.id: 0 for hoofdstuk in hoofdstukken_accept}
-    todo_hfst_count = {hoofdstuk.id: 0 for hoofdstuk in hoofdstukken_todo}
+    non_accepted_hfst_count = {chapter.id: 0 for chapter in chapters_non_accept}
+    accepted_hfst_count = {chapter.id: 0 for chapter in chapters_accept}
+    todo_hfst_count = {chapter.id: 0 for chapter in chapters_todo}
 
     for comment in non_accepted_comments:
-        non_accepted_hfst_count[comment.item.hoofdstuk.id] += 1
+        non_accepted_hfst_count[comment.item.chapter.id] += 1
     for comment in accepted_comments:
-        accepted_hfst_count[comment.item.hoofdstuk.id] += 1
+        accepted_hfst_count[comment.item.chapter.id] += 1
     for comment in todo_comments:
-        todo_hfst_count[comment.item.hoofdstuk.id] += 1
+        todo_hfst_count[comment.item.chapter.id] += 1
 
     totale_kosten = 0
     if PVEItemAnnotation.objects.filter(
         project=project
-    ).aggregate(Sum("kostenConsequenties"))["kostenConsequenties__sum"]:
+    ).aggregate(Sum("consequentCosts"))["consequentCosts__sum"]:
         totale_kosten += PVEItemAnnotation.objects.filter(
             project=project
-        ).aggregate(Sum("kostenConsequenties"))["kostenConsequenties__sum"]
+        ).aggregate(Sum("consequentCosts"))["consequentCosts__sum"]
 
-    context["hoofdstukken_non_accept"] = hoofdstukken_non_accept
-    context["hoofdstukken_accept"] = hoofdstukken_accept
-    context["hoofdstukken_todo"] = hoofdstukken_todo
+    context["chapters_non_accept"] = chapters_non_accept
+    context["chapters_accept"] = chapters_accept
+    context["chapters_todo"] = chapters_todo
     context["non_accepted_hfst_replies"] = non_accepted_hfst_replies
     context["accepted_hfst_replies"] = accepted_hfst_replies
     context["todo_hfst_replies"] = todo_hfst_replies
@@ -173,7 +173,6 @@ def CheckComments(request, client_pk, proj_id):
     context["non_accepted_replies"] = non_accepted_replies
     context["accepted_replies"] = accepted_replies
     context["todo_replies"] = todo_replies
-
     context["project"] = project
     context["client_pk"] = client_pk
     context["client"] = client
@@ -181,26 +180,25 @@ def CheckComments(request, client_pk, proj_id):
     context["last_level"] = current_phase.level - 1
     context["logo_url"] = logo_url
     context["totale_kosten"] = totale_kosten
-
     return render(request, "CheckComments_temp.html", context)
 
 
-def make_hoofdstukken(comments):
-    hoofdstuk_ordered_items = {}
+def make_chapters(comments):
+    chapter_ordered_items = {}
 
     for comment in comments:
         item = comment.item
-        if item.hoofdstuk not in hoofdstuk_ordered_items.keys():
-            if item.paragraaf:
-                hoofdstuk_ordered_items[item.hoofdstuk] = True
+        if item.chapter not in chapter_ordered_items.keys():
+            if item.paragraph:
+                chapter_ordered_items[item.chapter] = True
             else:
-                hoofdstuk_ordered_items[item.hoofdstuk] = False
+                chapter_ordered_items[item.chapter] = False
 
-    return hoofdstuk_ordered_items
+    return chapter_ordered_items
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
-def GetParagravenPingPong(request, client_pk, pk, hoofdstuk_pk, type, accept):
+def GetParagravenPingPong(request, client_pk, pk, chapter_pk, type, accept):
     context = {}
 
     project, current_phase = passed_commentcheck_guardclauses(request, client_pk, pk)
@@ -214,9 +212,9 @@ def GetParagravenPingPong(request, client_pk, pk, hoofdstuk_pk, type, accept):
         comments = (
             current_phase.comments.select_related("status")
             .select_related("item")
-            .select_related("item__hoofdstuk")
+            .select_related("item__chapter")
             .select_related("item__paragraaf")
-            .filter(item__hoofdstuk__id=hoofdstuk_pk)
+            .filter(item__chapter__id=chapter_pk)
             .order_by("item__id")
             .all()
         )
@@ -224,9 +222,9 @@ def GetParagravenPingPong(request, client_pk, pk, hoofdstuk_pk, type, accept):
         comments = (
             current_phase.accepted_comments.select_related("status")
             .select_related("item")
-            .select_related("item__hoofdstuk")
+            .select_related("item__chapter")
             .select_related("item__paragraaf")
-            .filter(item__hoofdstuk__id=hoofdstuk_pk)
+            .filter(item__chapter__id=chapter_pk)
             .order_by("item__id")
             .all()
         )
@@ -234,35 +232,35 @@ def GetParagravenPingPong(request, client_pk, pk, hoofdstuk_pk, type, accept):
         comments = (
             current_phase.todo_comments.select_related("status")
             .select_related("item")
-            .select_related("item__hoofdstuk")
+            .select_related("item__chapter")
             .select_related("item__paragraaf")
-            .filter(item__hoofdstuk__id=hoofdstuk_pk)
+            .filter(item__chapter__id=chapter_pk)
             .order_by("item__id")
             .all()
         )
 
     items = [comment.item for comment in comments]
 
-    paragraven = []
-    paragraven_ids = []
+    paragraphs = []
+    paragraphs_ids = []
 
     for item in items:
-        if item.paragraaf.id not in paragraven_ids:
-            paragraven.append(item.paragraaf)
-            paragraven_ids.append(item.paragraaf.id)
+        if item.paragraph.id not in paragraphs_ids:
+            paragraphs.append(item.paragraph)
+            paragraphs_ids.append(item.paragraph.id)
     
     context["comments"] = comments
     context["items"] = items
     context["type"] = type
-    context["paragraven"] = paragraven
+    context["paragraphs"] = paragraphs
     context["project"] = project
     context["client_pk"] = client_pk
     context["accept"] = accept
-    return render(request, "partials/paragravenpartialpong.html", context)
+    return render(request, "partials/paragraphspartialpong.html", context)
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
-def GetItemsPingPong(request, client_pk, pk, hoofdstuk_pk, paragraaf_id, type, accept):
+def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraaf_id, type, accept):
     context = {}
 
     project, current_phase = passed_commentcheck_guardclauses(request, client_pk, pk)
@@ -277,9 +275,9 @@ def GetItemsPingPong(request, client_pk, pk, hoofdstuk_pk, paragraaf_id, type, a
             comments = (
                 current_phase.comments.select_related("status")
                 .select_related("item")
-                .select_related("item__hoofdstuk")
+                .select_related("item__chapter")
                 .select_related("item__paragraaf")
-                .filter(item__hoofdstuk__id=hoofdstuk_pk)
+                .filter(item__chapter__id=chapter_pk)
                 .order_by("item__id")
                 .all()
             )
@@ -287,9 +285,9 @@ def GetItemsPingPong(request, client_pk, pk, hoofdstuk_pk, paragraaf_id, type, a
             comments = (
                 current_phase.comments.select_related("status")
                 .select_related("item")
-                .select_related("item__hoofdstuk")
+                .select_related("item__chapter")
                 .select_related("item__paragraaf")
-                .filter(item__hoofdstuk__id=hoofdstuk_pk)
+                .filter(item__chapter__id=chapter_pk)
                 .filter(item__paragraaf__id=paragraaf_id)
                 .order_by("item__id")
                 .all()
@@ -299,9 +297,9 @@ def GetItemsPingPong(request, client_pk, pk, hoofdstuk_pk, paragraaf_id, type, a
             comments = (
                 current_phase.accepted_comments.select_related("status")
                 .select_related("item")
-                .select_related("item__hoofdstuk")
+                .select_related("item__chapter")
                 .select_related("item__paragraaf")
-                .filter(item__hoofdstuk__id=hoofdstuk_pk)
+                .filter(item__chapter__id=chapter_pk)
                 .order_by("item__id")
                 .all()
             )
@@ -309,9 +307,9 @@ def GetItemsPingPong(request, client_pk, pk, hoofdstuk_pk, paragraaf_id, type, a
             comments = (
                 current_phase.accepted_comments.select_related("status")
                 .select_related("item")
-                .select_related("item__hoofdstuk")
+                .select_related("item__chapter")
                 .select_related("item__paragraaf")
-                .filter(item__hoofdstuk__id=hoofdstuk_pk)
+                .filter(item__chapter__id=chapter_pk)
                 .filter(item__paragraaf__id=paragraaf_id)
                 .order_by("item__id")
                 .all()
@@ -321,9 +319,9 @@ def GetItemsPingPong(request, client_pk, pk, hoofdstuk_pk, paragraaf_id, type, a
             comments = (
                 current_phase.todo_comments.select_related("status")
                 .select_related("item")
-                .select_related("item__hoofdstuk")
+                .select_related("item__chapter")
                 .select_related("item__paragraaf")
-                .filter(item__hoofdstuk__id=hoofdstuk_pk)
+                .filter(item__chapter__id=chapter_pk)
                 .order_by("item__id")
                 .all()
             )
@@ -331,9 +329,9 @@ def GetItemsPingPong(request, client_pk, pk, hoofdstuk_pk, paragraaf_id, type, a
             comments = (
                 current_phase.todo_comments.select_related("status")
                 .select_related("item")
-                .select_related("item__hoofdstuk")
+                .select_related("item__chapter")
                 .select_related("item__paragraaf")
-                .filter(item__hoofdstuk__id=hoofdstuk_pk)
+                .filter(item__chapter__id=chapter_pk)
                 .filter(item__paragraaf__id=paragraaf_id)
                 .order_by("item__id")
                 .all()
@@ -370,12 +368,12 @@ def DetailItemPong(request, client_pk, project_pk, item_pk, type):
 
     item = project.item.filter(id=item_pk).first()
 
-    itembijlage = None
+    itemAttachment = None
     if models.ItemBijlages.objects.filter(items__id=item.id).exists():
-        itembijlage = models.ItemBijlages.objects.filter(items__id=item.id).first()
+        itemAttachment = models.ItemBijlages.objects.filter(items__id=item.id).first()
 
     replies = None
-    bijlagen = {}
+    attachments = {}
     current_reply = None
     
     if CommentReply.objects.filter(onComment__item__id=item.id, commentphase__project__id=current_phase.project.id).exists():
@@ -388,8 +386,8 @@ def DetailItemPong(request, client_pk, project_pk, item_pk, type):
         ).first()
         
         for reply in replies:
-            if reply.bijlagetoreply.exists():
-                bijlagen[reply.id] = reply.bijlagetoreply.all()
+            if reply.attachmenttoreply.exists():
+                attachments[reply.id] = reply.attachmenttoreply.all()
                                 
     annotation = None
     if PVEItemAnnotation.objects.filter(
@@ -399,17 +397,17 @@ def DetailItemPong(request, client_pk, project_pk, item_pk, type):
             project__id=project_pk, item__id=item.id
         ).first()
 
-        annotationbijlagen = None
-        if annotation.bijlageobject.exists():
-            annotationbijlagen = annotation.bijlageobject.all()
+        annotationattachments = None
+        if annotation.attachmentobject.exists():
+            annotationattachments = annotation.attachmentobject.all()
 
     context["item"] = item
-    context["itembijlage"] = itembijlage
+    context["itemAttachment"] = itemAttachment
     context["replies"] = replies
     context["current_reply"] = current_reply
-    context["bijlagen"] = bijlagen
+    context["attachments"] = attachments
     context["annotation"] = annotation
-    context["annotationbijlagen"] = annotationbijlagen
+    context["annotationattachments"] = annotationattachments
     context["client_pk"] = client_pk
     context["type"] = type
     context["project_pk"] = project_pk
@@ -474,7 +472,7 @@ def DetailReplyPong(request, client_pk, project_pk, item_pk, type):
         return redirect("logout_syn", client_pk=client_pk)
 
     reply = None
-    bijlagen = None
+    attachments = None
     annotation = None
     if CommentReply.objects.filter(
         commentphase=current_phase, onComment__item__id=item_pk
@@ -483,8 +481,8 @@ def DetailReplyPong(request, client_pk, project_pk, item_pk, type):
             commentphase=current_phase, onComment__item__id=item_pk
         ).first()
         annotation = reply.onComment
-        if reply.bijlagetoreply.exists():
-            bijlagen = reply.bijlagetoreply.all()
+        if reply.attachmenttoreply.exists():
+            attachments = reply.attachmenttoreply.all()
     
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
@@ -492,7 +490,7 @@ def DetailReplyPong(request, client_pk, project_pk, item_pk, type):
     context["reply"] = reply
     context["annotation"] = annotation
     context["current_reply"] = reply
-    context["bijlagen"] = bijlagen
+    context["attachments"] = attachments
     context["type"] = type
     return render(request, "partials/detail_annotation_pong.html", context)
 
@@ -608,12 +606,12 @@ def AcceptItemPong(request, client_pk, project_pk, item_pk, type):
         if current_reply.comment:
             current_reply.comment = None
 
-        if current_reply.bijlage:
-            current_reply.bijlage = None
-            bijlageobject = current_reply.bijlagetoreply.first()
-            bijlageobject.delete()
-        if current_reply.kostenConsequenties:
-            current_reply.kostenConsequenties = None
+        if current_reply.attachment:
+            current_reply.attachment = None
+            attachmentobject = current_reply.attachmenttoreply.first()
+            attachmentobject.delete()
+        if current_reply.consequentCosts:
+            current_reply.consequentCosts = None
         if current_reply.status:
             current_reply.status = None
 
@@ -621,7 +619,7 @@ def AcceptItemPong(request, client_pk, project_pk, item_pk, type):
     else:
         current_reply = CommentReply.objects.create(
             commentphase=current_phase,
-            gebruiker=request.user,
+            user=request.user,
             onComment=annotation,
             accept=True,
         )
@@ -665,7 +663,7 @@ def NonAcceptItemPong(request, client_pk, project_pk, item_pk, type):
     else:
         current_reply = CommentReply.objects.create(
             commentphase=current_phase,
-            gebruiker=request.user,
+            user=request.user,
             onComment=annotation,
             accept=False,
         )
@@ -739,9 +737,9 @@ def RedoCommentPong(request, client_pk, project_pk, item_pk, type):
             onComment__id=annotation.id, commentphase=current_phase
         )
         
-    if current_reply.bijlage:
-        for bijlage in current_reply.bijlagetoreply.all():
-            bijlage.delete()
+    if current_reply.attachment:
+        for attachment in current_reply.attachmenttoreply.all():
+            attachment.delete()
     
     current_reply.delete()
 
@@ -754,7 +752,7 @@ def RedoCommentPong(request, client_pk, project_pk, item_pk, type):
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
-def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type, new, bijlage_id):
+def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type, new, attachment_id):
     context = {}
 
     project, current_phase = passed_commentcheck_guardclauses(
@@ -776,8 +774,8 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type,
             onComment__item__id=item_pk,
             commentphase=current_phase,
         ):
-        reply = CommentReply.objects.create(commentphase=current_phase, onComment=annotation, gebruiker=request.user)
-        bijlage_id = reply.id
+        reply = CommentReply.objects.create(commentphase=current_phase, onComment=annotation, user=request.user)
+        attachment_id = reply.id
     else:
         reply = CommentReply.objects.filter(
             onComment__id=annotation.id,
@@ -786,10 +784,10 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type,
         ).first()
     
     # seperate forms because we want to create a reply only once (GET)
-    if BijlageToReply.objects.filter(id=bijlage_id).exists() and new == 0 and bijlage_id != 0:
-        bijlagemodel = BijlageToReply.objects.filter(id=bijlage_id).first()
+    if BijlageToReply.objects.filter(id=attachment_id).exists() and new == 0 and attachment_id != 0:
+        attachmentmodel = BijlageToReply.objects.filter(id=attachment_id).first()
         form = forms.PongBijlageForm(
-            request.POST or None, request.FILES or None, instance=bijlagemodel
+            request.POST or None, request.FILES or None, instance=attachmentmodel
         )
     else:
         form = forms.PongBijlageForm(
@@ -798,10 +796,10 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type,
         
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
-            if form.cleaned_data["naam"]: 
-                if not BijlageToReply.objects.filter(naam=form.cleaned_data["naam"], reply__onComment__project=project).exists(): 
+            if form.cleaned_data["name"]: 
+                if not BijlageToReply.objects.filter(name=form.cleaned_data["name"], reply__onComment__project=project).exists(): 
                     form.save()
-                    reply.bijlage = True
+                    reply.attachment = True
                     reply.save()
                     messages.warning(request, "Bijlage toegevoegd!")
                     return redirect(
@@ -812,15 +810,15 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type,
                         type=type,
                     )
                 else:
-                    messages.warning(request, "Naam bestaat al voor een bijlage in dit project. Kies een andere.")
+                    messages.warning(request, "Naam bestaat al voor een attachment in dit project. Kies een andere.")
             else:
                 # else save and the attachment ID is the attachment name.
                 form.save()
-                reply.bijlage = True
+                reply.attachment = True
                 reply.save()
-                bijlage = reply.bijlagetoreply.all().order_by("-id").first()
-                bijlage.naam = bijlage.id
-                bijlage.save()
+                attachment = reply.attachmenttoreply.all().order_by("-id").first()
+                attachment.name = attachment.id
+                attachment.save()
                 messages.warning(request, "Bijlage toegevoegd!")
                 return redirect(
                     "detailpongreply",
@@ -830,18 +828,18 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type,
                     type=type,
                 )
         else:
-            messages.warning(request, "Fout met bijlage toevoegen. Probeer het opnieuw.")
+            messages.warning(request, "Fout met attachment toevoegen. Probeer het opnieuw.")
 
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
     context["annotation_pk"] = annotation_pk
     context["new"] = new
     context["item_pk"] = item_pk
-    context["bijlage_id"] = bijlage_id
+    context["attachment_id"] = attachment_id
     context["type"] = type
     context["form"] = form
     context["annotation"] = annotation
-    return render(request, "partials/form_bijlage_pong.html", context)
+    return render(request, "partials/form_attachment_pong.html", context)
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
@@ -888,7 +886,7 @@ def AddStatusPong(request, client_pk, project_pk, item_pk, type):
                 reply.status = form.cleaned_data["status"]
                 reply.onComment = annotation
                 reply.commentphase = current_phase
-                reply.gebruiker = request.user
+                reply.user = request.user
                 reply.save()
 
             messages.warning(request, "Status toegevoegd!")
@@ -947,7 +945,7 @@ def AddKostenverschilPong(request, client_pk, project_pk, item_pk, type):
             commentphase=current_phase,
         ).first()
         form = forms.FirstKostenverschilForm(
-            request.POST or None, initial={"kostenverschil": reply.kostenConsequenties}
+            request.POST or None, initial={"kostenverschil": reply.consequentCosts}
         )
     else:
         form = forms.FirstKostenverschilForm(request.POST or None)
@@ -955,14 +953,14 @@ def AddKostenverschilPong(request, client_pk, project_pk, item_pk, type):
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
             if reply:
-                reply.kostenConsequenties = form.cleaned_data["kostenverschil"]
+                reply.consequentCosts = form.cleaned_data["kostenverschil"]
                 reply.save()
             else:
                 reply = CommentReply()
-                reply.kostenConsequenties = form.cleaned_data["kostenverschil"]
+                reply.consequentCosts = form.cleaned_data["kostenverschil"]
                 reply.onComment = annotation
                 reply.commentphase = current_phase
-                reply.gebruiker = request.user
+                reply.user = request.user
                 reply.save()
 
             messages.warning(request, "Kostenverschil toegevoegd!")
@@ -1026,7 +1024,7 @@ def AddReplyPong(request, client_pk, project_pk, item_pk, type):
                 reply.comment = form.cleaned_data["annotation"]
                 reply.onComment = annotation
                 reply.commentphase = current_phase
-                reply.gebruiker = request.user
+                reply.user = request.user
                 reply.save()
 
             messages.warning(request, "Opmerking toegevoegd!")
@@ -1079,9 +1077,9 @@ def DeleteStatusPong(request, client_pk, project_pk, item_pk, type):
         # if reply is in tab 0
         if not reply.accept:
             if BijlageToReply.objects.filter(reply=reply):
-                bijlagen = BijlageToReply.objects.filter(reply=reply)
-                for bijlage in bijlagen:
-                    bijlage.delete()
+                attachments = BijlageToReply.objects.filter(reply=reply)
+                for attachment in attachments:
+                    attachment.delete()
             
             reply.delete()
         else:
@@ -1187,7 +1185,7 @@ def DeleteKostenverschilPong(request, client_pk, project_pk, item_pk, type):
             onComment__item__id=item_pk,
             commentphase=current_phase,
         ).first()
-        reply.kostenConsequenties = None
+        reply.consequentCosts = None
         reply.save()
         messages.warning(request, "Kostenverschil verwijderd.")
         return redirect(

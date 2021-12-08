@@ -12,18 +12,18 @@ from pvetool.models import BijlageToReply
 
 
 @login_required(login_url="login_syn")
-def DownloadAnnotationAttachment(request, client_pk, projid, annid, bijlage_id):
+def DownloadAnnotationAttachment(request, client_pk, projid, annid, attachment_id):
     access_key = settings.AWS_ACCESS_KEY_ID
     secret_key = settings.AWS_SECRET_ACCESS_KEY
     bucket_name = settings.AWS_STORAGE_BUCKET_NAME
     region = settings.AWS_S3_REGION_NAME
     if annid != 0:
         item = BijlageToAnnotation.objects.filter(
-            ann__project__id=projid, ann__id=annid, id=bijlage_id
+            ann__project__id=projid, ann__id=annid, id=attachment_id
         ).first()
     else:
         item = BijlageToAnnotation.objects.filter(
-            id=bijlage_id
+            id=attachment_id
         ).first()
     expiration = 10000
     s3_client = boto3.client(
@@ -38,7 +38,7 @@ def DownloadAnnotationAttachment(request, client_pk, projid, annid, bijlage_id):
     try:
         response = s3_client.generate_presigned_url(
             "get_object",
-            Params={"Bucket": bucket_name, "Key": str(item.bijlage)},
+            Params={"Bucket": bucket_name, "Key": str(item.attachment)},
             ExpiresIn=expiration,
         )
     except ClientError as e:
@@ -79,12 +79,12 @@ def GetAWSURL(client):
 
 
 @login_required
-def DownloadReplyAttachment(request, client_pk, pk, reply_id, bijlage_id):
+def DownloadReplyAttachment(request, client_pk, pk, reply_id, attachment_id):
     access_key = settings.AWS_ACCESS_KEY_ID
     secret_key = settings.AWS_SECRET_ACCESS_KEY
     bucket_name = settings.AWS_STORAGE_BUCKET_NAME
     region = settings.AWS_S3_REGION_NAME
-    item = BijlageToReply.objects.filter(reply__id=reply_id, id=bijlage_id).first()
+    item = BijlageToReply.objects.filter(reply__id=reply_id, id=attachment_id).first()
     expiration = 10000
     s3_client = boto3.client(
         "s3",
@@ -99,7 +99,7 @@ def DownloadReplyAttachment(request, client_pk, pk, reply_id, bijlage_id):
     try:
         response = s3_client.generate_presigned_url(
             "get_object",
-            Params={"Bucket": bucket_name, "Key": str(item.bijlage)},
+            Params={"Bucket": bucket_name, "Key": str(item.attachment)},
             ExpiresIn=expiration,
         )
     except ClientError as e:

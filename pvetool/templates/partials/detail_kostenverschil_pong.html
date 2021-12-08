@@ -1,21 +1,21 @@
 {% block main %}
 <span hx-target="this" hx-swap="outerHTML">
-  {% if last_reply.kostenConsequenties %}
+  {% if last_reply.consequentCosts %}
   <p>
     <b
-      >€{{ last_reply.kostenConsequenties }}</b
+      >€{{ last_reply.consequentCosts }}</b
     >
   </p>
-  {% elif annotation.kostenConsequenties %}
-  <p><b>€{{ annotation.kostenConsequenties }}</b></p>
+  {% elif annotation.consequentCosts %}
+  <p><b>€{{ annotation.consequentCosts }}</b></p>
   {% else %}
   <p><b>€ 0</b></p>
   {% endif %} 
   
-  {% if current_reply %} {% if current_reply.accept is False %} {% if current_reply.kostenConsequenties %}
+  {% if current_reply %} {% if current_reply.accept is False %} {% if current_reply.consequentCosts %}
   <p style="color:#b69b00;">
   <b
-    >Voorgesteld: €{{ current_reply.kostenConsequenties }}
+    >Voorgesteld: €{{ current_reply.consequentCosts }}
     <span
       ><button
         hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"

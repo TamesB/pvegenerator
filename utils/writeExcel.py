@@ -9,10 +9,10 @@ from app import models
 
 class ExcelMaker:
     def linewriter(self, PVEItems):
-        #hierboven versie_pk als je hele versie wil uitdraaien
-        #PVEItems = [i for i in models.PVEItem.objects.prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").select_related("hoofdstuk").select_related("paragraaf").filter(versie__id=versie_pk)]
+        #hierboven version_pk als je hele version wil uitdraaien
+        #PVEItems = [i for i in models.PVEItem.objects.prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").select_related("chapter").select_related("paragraph").filter(versie__id=version_pk)]
 
-        versie_pk = PVEItems.first().versie_id
+        version_pk = PVEItems.first().versie_id
         
         date = datetime.datetime.now()
         filename = "PVEWORKSHEET-%s%s%s%s%s%s" % (
@@ -38,14 +38,14 @@ class ExcelMaker:
         column = 0
         
         Bouwsoorten = [
-            bouwsrt for bouwsrt in models.Bouwsoort.objects.filter(versie__id=versie_pk)
+            bouwsrt for bouwsrt in models.Bouwsoort.objects.filter(versie__id=version_pk)
         ]
         TypeObjecten = [
             typeobj
-            for typeobj in models.TypeObject.objects.filter(versie__id=versie_pk)
+            for typeobj in models.TypeObject.objects.filter(versie__id=version_pk)
         ]
         Doelgroepen = [
-            doelgrp for doelgrp in models.Doelgroep.objects.filter(versie__id=versie_pk)
+            doelgrp for doelgrp in models.Doelgroep.objects.filter(versie__id=version_pk)
         ]
 
         # Titel row
@@ -68,8 +68,8 @@ class ExcelMaker:
         row += 1
         column = 0
 
-        hoofdstukken = list(set([item.hoofdstuk for item in PVEItems.order_by("id")]))
-        hoofdstuknamen = [hoofdstuk.hoofdstuk for hoofdstuk in hoofdstukken]
+        chapters = list(set([item.chapter for item in PVEItems.order_by("id")]))
+        chapternamen = [chapter.chapter for chapter in chapters]
 
         # Run door de items heen
         cell_format = workbook.add_format()
@@ -80,26 +80,26 @@ class ExcelMaker:
         typeobjecten_item = {item.id:[i for i in item.TypeObject.all()] for item in PVEItems}
         doelgroepen_item = {item.id:[i for i in item.Doelgroep.all()] for item in PVEItems}
 
-        paragraven = list(set([item.paragraaf for item in PVEItems if item.paragraaf]))
-        paragraven_hfst = {hoofdstuk.id:[paragraaf for paragraaf in paragraven if paragraaf.hoofdstuk and paragraaf.hoofdstuk == hoofdstuk] for hoofdstuk in hoofdstukken}
+        paragraphs = list(set([item.paragraph for item in PVEItems if item.paragraph]))
+        paragraphs_hfst = {chapter.id:[paragraph for paragraph in paragraphs if paragraph.chapter and paragraph.chapter == chapter] for chapter in chapters}
 
-        for hoofdstuk in hoofdstukken:
-            print(f"hoofdstuk: {hoofdstuk}")
-            items = [item for item in PVEItems if item.hoofdstuk == hoofdstuk]
-            worksheet.write(row, column, hoofdstuk.hoofdstuk, bold)
+        for chapter in chapters:
+            print(f"chapter: {chapter}")
+            items = [item for item in PVEItems if item.chapter == chapter]
+            worksheet.write(row, column, chapter.chapter, bold)
             row += 1
 
-            paragraven = paragraven_hfst[hoofdstuk.id]
+            paragraphs = paragraphs_hfst[chapter.id]
 
-            if len(paragraven) > 0:
-                for paragraaf in paragraven:
+            if len(paragraphs) > 0:
+                for paragraph in paragraphs:
                     items_spec = [
                         item
                         for item in items
-                        if item.paragraaf == paragraaf
+                        if item.paragraph == paragraph
                     ]
                     
-                    worksheet.write(row, column, paragraaf.paragraaf, bold)
+                    worksheet.write(row, column, paragraph.paragraph, bold)
                     row += 1
 
                     for item in items_spec:

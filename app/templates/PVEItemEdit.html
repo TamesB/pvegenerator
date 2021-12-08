@@ -7,7 +7,7 @@
 
 <h1 class="ui header">Bewerk PvE Itemnummer {{ id }}</h1>
 
-<form action="{% url 'edititem' versie_pk id %}" class="ui form" method="POST" enctype="multipart/form-data">
+<form action="{% url 'edititem' version_pk id %}" class="ui form" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {% render_form form %}
     <button type="submit" class="ui primary button" value="generate">Bevestig</button>

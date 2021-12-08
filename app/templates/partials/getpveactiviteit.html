@@ -1,14 +1,14 @@
 {% block main %}  
 <span hx-target="this" hx-swap="outerHTML">
-{% if versie.public %}
+{% if version.public %}
 <button
-hx-post="{% url 'maakinactief' versie.id %}"
+hx-post="{% url 'maakinactief' version.id %}"
     class="ui basic red button d-inline"
     type="button"
     >Deactiveer</button>
 {% else %}
 <button
-hx-post="{% url 'maakactief' versie.id %}"
+hx-post="{% url 'maakactief' version.id %}"
     class="ui basic green button d-inline"
     type="button">Activeer</button>
 {% endif %}

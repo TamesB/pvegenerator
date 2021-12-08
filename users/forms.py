@@ -15,7 +15,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ("type_user", "organisatie", "username", "password1")
+        fields = ("type_user", "stakeholder", "username", "password1")
 
 
 class KoppelDerdeUser(forms.Form):
@@ -44,7 +44,7 @@ class CustomUserChangeForm(UserChangeForm):
 
 
 class ForgotPassForm(forms.Form):
-    email = forms.CharField(max_length=100, label="Gebruikersnaam of e-mail:")
+    email = forms.CharField(max_length=100, label="Gebruikersname of e-mail:")
 
 
 class ResetPassForm(UserCreationForm):

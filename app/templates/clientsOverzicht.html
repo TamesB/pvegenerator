@@ -1,0 +1,58 @@
+{% extends "_baselayout.html" %} {% load i18n %} {% load semanticui %} {% block main %}
+{% language 'nl' %}
+<div class="ui big breadcrumb">
+  <a class="section" hx-get="{% url 'dashboard' %}" hx-target="body" hx-swap="innerHTML">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+  <a class="active section">Klanten</a>
+</div>
+<br><br>
+{% if clients %}
+        <div class="d-inline" style="float: right;">
+					<span class="float right"><a hx-get="{% url 'clienttoevoegen' %}" hx-target="#main" hx-swap="innerHTML"><button class="ui icon green button"><i class="icon plus"></i>Klant Toevoegen</button></a></span>
+        					</div><br><br>
+<div>
+	<table class="ui fixed blue table" style="overflow:hidden;">
+		<thead>
+			<tr>
+				<th>
+					Klant
+				</th>
+				<th>
+					Abonnement
+				</th>
+				<th>
+					Beheerder
+				</th>
+				<th>
+					Logo
+				</th>
+				<th>
+					Subwebsite
+				</th>
+				<th>&nbsp;</th>
+			</tr>
+		</thead>
+		<tbody>
+      {% for client in clients %}
+			<tr hx-target="this" hx-swap="outerHTML">
+				<td>{{ client.name }}</td>
+				<td>{{ client.subscription }}</td>
+				<td hx-get="{% url 'getbeheerderclient' client.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></td>
+				<td hx-get="{% url 'logoclientdetail' client.id %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></td>
+				<td><a href="{% url 'login_syn' client.id %}" target="_blank"><button class="ui basic icon button"><i class="desktop icon"></i>Bezoek</button></a></td>
+				<td><button class="ui icon basic red button"
+				hx-post="{% url 'clientverwijderen' client.id %}"
+                    hx-prompt="Vul 'VERWIJDEREN' in om client {{ client.name }} te verwijderen."
+					hx-target="closest tr"><i class="icon trash"></i></button></td>
+			</tr>
+      {% endfor %}
+		</tbody>
+	</table>
+</div>
+
+{% else %}
+<p>Geen clients! <input class="ui primary button d-inline" onclick="window.location.href='{% url 'clienttoevoegen' %}';" type="button" value="Voeg er een toe"></p>{% endif %}
+{% endlanguage %}
+{% block modal %}{% endblock %}
+
+{% endblock %}

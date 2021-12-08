@@ -46,7 +46,7 @@
     <tbody>
       <tr class="table_title">
         <th><p>Projectnummer</p></th>
-        <th><p>Projectnaam</p></th>
+        <th><p>Projectname</p></th>
         <th><p>Locatie</p></th>
         <th><p>Aantal VHE</p></th>
         <th><p>Fase</p></th>
@@ -58,7 +58,7 @@
       {% for project in projects %}
       <tr class="table_content">
         <td><p>{{ project.nummer }}</p></td>
-    <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
+    <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.name }}<i class="right arrow icon"></i></button></a></p></td>
         <td><p>{{ project.plaatsnamen }}</p></td>
         <td><p>{{ project.vhe }}</p></td>
         <td><p>{{ project.statuscontract }}</p></td>
@@ -130,7 +130,7 @@
         {% if projects %}
         {% for project in projects %}
           <tr>
-            <td><p>{{ project.naam }}</p></td>
+            <td><p>{{ project.name }}</p></td>
             <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="dimg" style="align-self: right; max-height: 2vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>{% else %}<a href="{% url 'kiespveversie' client_pk project.id %}"><img src="{% static 'pvetool/img/plus.png' %}"></img>Voeg toe</a>{% endif %}</p></td>
           </tr>
         {% endfor %}
@@ -161,7 +161,7 @@
                                     {% if project.frozenLevel == 0 %}
                                     {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
         <tr class="table_content">
-          <td><p>{{ project.naam }}</p></td>
+          <td><p>{{ project.name }}</p></td>
           <td class="link"><a href="{% url 'plusopmerking_syn' client_pk project.id %}"><img style="max-height: 2vh;" src="{% static 'pvetool/img/plus.png' %}"></img></a></p></td>
         </tr>
         {% endif %}
@@ -169,14 +169,14 @@
                 {% if not project.frozenLevel|divisibleby:2 %}
                                     {% if request.user.type_user != first_annotate|index:forloop.counter0 %}
         <tr class="table_content">
-          <td><p>{{ project.naam }}</p></td>
+          <td><p>{{ project.name }}</p></td>
           <td class="link"><a href="{% url 'commentscheck_syn' client_pk project.id %}"><img style="max-height: 2vh;" src="{% static 'pvetool/img/plus.png' %}"></img></a></p></td>
         </tr>
         {% endif %}
         {% else %}
                                     {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
         <tr class="table_content">
-          <td><p>{{ project.naam }}</p></td>
+          <td><p>{{ project.name }}</p></td>
           <td class="link"><a href="{% url 'commentscheck_syn' client_pk project.id %}"><img style="max-height: 2vh;" src="{% static 'pvetool/img/plus.png' %}"></img></a></p></td>
         </tr>
         {% endif %}

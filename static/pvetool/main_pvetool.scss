@@ -1172,7 +1172,7 @@ html {
               max-height: 1vh;
             }
 
-            .hoofdstuk {
+            .chapter {
               background-color: #0078ae;
               color: white;
               cursor: pointer;
@@ -1187,18 +1187,18 @@ html {
               font-weight: bold;
             }
 
-            .hoofdstuk:hover {
+            .chapter:hover {
               opacity: 0.7;
             }
 
-            .hoofdstuk_content {
+            .chapter_content {
               display: none;
               overflow: hidden;
               background-color: #f1f1f1;
               transition: 0.1s ease;
             }
 
-            .paragraaf {
+            .paragraph {
               background-color: #66acd1;
               color: white;
               cursor: pointer;
@@ -1214,7 +1214,7 @@ html {
               font-weight: bold;
             }
 
-            .paragraaf:hover {
+            .paragraph:hover {
               opacity: 0.7;
             }
 
@@ -1242,7 +1242,7 @@ html {
                 padding-top: 0.3vh;
                 padding-bottom: 0vh;
                 justify-content: space-between;
-                
+
                 .ui.button {
                   padding: 0.2em 0.2em 0.2em;
                 }

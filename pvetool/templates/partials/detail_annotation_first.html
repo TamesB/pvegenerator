@@ -23,7 +23,7 @@
 
     <div class="reaction_on_rule">
         <div class="party">
-            <p style="color:#b69b00;"><i>{% if request.user.organisatie %}{{ request.user.organisatie }}{% else %}{{ request.user.klantenorganisatie }}{% endif %}</i></p>
+            <p style="color:#b69b00;"><i>{% if request.user.stakeholder %}{{ request.user.stakeholder }}{% else %}{{ request.user.client }}{% endif %}</i></p>
         </div>
         <div class="accept">
             <p></p>
@@ -45,19 +45,19 @@
         <div class="attachments">
             <p>
                 {% if annotation %}
-                {% if bijlagen %}
+                {% if attachments %}
                 <span style="color:#b69b00;">
-                {% for bijlage in bijlagen %}
-                {% if bijlage.bijlage %}
-                <a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project_pk annotation.id bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
-                <span><button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation.id bijlage.id %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
-                    <span><a hx-delete="{% url 'deletebijlagefirst' client_pk project_pk annotation.id bijlage.id %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span>
+                {% for attachment in attachments %}
+                {% if attachment.attachment %}
+                <a href="{% url 'downloadattachmentaanopmerking_syn' client_pk project_pk annotation.id attachment.id %}" target="_blank">{{ attachment }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>
+                <span><button hx-get="{% url 'addattachmentfirst' client_pk project_pk item_pk annotation.id attachment.id %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
+                    <span><a hx-delete="{% url 'deleteattachmentfirst' client_pk project_pk annotation.id attachment.id %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span>
             
                 {% endif %}
                 {% endfor %}
                 </span>
                 {% endif %}
-                <button hx-get="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation.id 0 %}" class="ui basic icon button"><i class="icon plus"></i></button>
+                <button hx-get="{% url 'addattachmentfirst' client_pk project_pk item_pk annotation.id 0 %}" class="ui basic icon button"><i class="icon plus"></i></button>
                 {% endif %}
             </p>
         </div>

@@ -4,8 +4,8 @@
     <form hx-target="this" hx-swap="outerHTML" class="ui form" method="POST" hx-encoding='multipart/form-data' enctype="multipart/form-data">
     {% csrf_token %}
         {{ form }}
-        <button hx-get="{% url 'getpveversiedetail' versie.id %}" style="float: left;" class="ui basic button">Terug</button>
-        <button hx-post="{% url 'editpveversiename' versie.id %}" type="submit" class="ui icon green button"><i class="check icon"></i></button>
+        <button hx-get="{% url 'getpveversiedetail' version.id %}" style="float: left;" class="ui basic button">Terug</button>
+        <button hx-post="{% url 'editpveversiename' version.id %}" type="submit" class="ui icon green button"><i class="check icon"></i></button>
     </form>  
 
 

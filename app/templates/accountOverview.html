@@ -8,13 +8,13 @@
 <span class="float right"><a href="#"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
 </div>
 <br><br>
-{% if klanten %}
-{% for klant in klanten %}
+{% if clients %}
+{% for client in clients %}
 	<table class="ui fixed multiple line blue table">
 		<thead>
 			<tr>
 				<th>
-					{{ klant }}
+					{{ client }}
 				</th>
 				<th>
 					Rang
@@ -27,8 +27,8 @@
 			</tr>
 		</thead>
 		<tbody>
-		{% if klant.werknemer.all %}
-				{% for user in klant.werknemer.all %}
+		{% if client.employee.all %}
+				{% for user in client.employee.all %}
 				<tr>
                     <td> 
 					<a href="#">{{ user.username }}</a> &nbsp; 
@@ -44,11 +44,11 @@
 							Beheerder
                         {% endif %}
                     </td>
-					<td>{% if user.organisatie %}{{ user.organisatie }}{% else %}&nbsp;{% endif %}</td>
-					<td>{% if user.projectspermitted.all %}{% for project in user.projectspermitted.all %}{{ project.naam }}, {% endfor %}{% else %}&nbsp;{% endif %}</td>
+					<td>{% if user.stakeholder %}{{ user.stakeholder }}{% else %}&nbsp;{% endif %}</td>
+					<td>{% if user.projectspermitted.all %}{% for project in user.projectspermitted.all %}{{ project.name }}, {% endfor %}{% else %}&nbsp;{% endif %}</td>
 					<td>
 					<span><button hx-post="#"
-						hx-prompt="Vul 'VERWIJDEREN' in om de gebruiker {{ user.username }} te verwijderen."
+						hx-prompt="Vul 'VERWIJDEREN' in om de user {{ user.username }} te verwijderen."
 						hx-target="closest tr"
 						class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
 					</td>
@@ -57,14 +57,14 @@
 
 		{% else %}
 		<tr>
-			<td><i>Nog geen gebruikers</i></td>
+			<td><i>Nog geen users</i></td>
 		</tr>
 		{% endif %}
 		</tbody>
 	</table>
 {% endfor %}
 {% else %}
-<p>Nog geen gebruikers (?)</p>
+<p>Nog geen users (?)</p>
 {% endif %}
 {% block modal %}{% endblock %} 
 {% endblock %}

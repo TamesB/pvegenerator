@@ -24,9 +24,9 @@ def ManageProjects(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -72,9 +72,9 @@ def AddProject(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -93,7 +93,7 @@ def AddProject(request, client_pk):
 
             project = Project.objects.all().order_by("-id")[0]
             project.permitted.add(request.user)
-            project.belegger = client
+            project.client = client
             project.first_annotate = form.cleaned_data["first_annotate"]
 
             geolocator = Nominatim(user_agent="tamesbpvegenerator")
@@ -112,7 +112,7 @@ def AddProject(request, client_pk):
                 ).raw["address"]["town"]
 
             project.save()
-            messages.warning(request, f"Project {project.naam} aangemaakt.")
+            messages.warning(request, f"Project {project.name} aangemaakt.")
             return redirect("manageprojecten_syn", client_pk=client_pk)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
@@ -133,7 +133,7 @@ def GetProjectManagerOfProject(request, client_pk, pk):
     client = Beleggers.objects.filter(pk=client_pk).first()
 
     if (
-        request.user.klantenorganisatie.id != client.id
+        request.user.client.id != client.id
         and request.user.type_user != "B"
     ):
         return render(request, "partials/tests_error.html")
@@ -144,7 +144,7 @@ def GetProjectManagerOfProject(request, client_pk, pk):
         return render(request, "partials/tests_error.html")
 
     project = get_object_or_404(Project, id=pk)
-    if project.belegger != client:
+    if project.client != client:
         return render(request, "partials/tests_error.html")
 
     context = {}
@@ -160,7 +160,7 @@ def DeleteProject(request, client_pk, pk):
     client = Beleggers.objects.filter(pk=client_pk).first()
 
     if (
-        request.user.klantenorganisatie.id != client.id
+        request.user.client.id != client.id
         and request.user.type_user != "B"
     ):
         return render(request, "partials/tests_error.html")
@@ -171,12 +171,12 @@ def DeleteProject(request, client_pk, pk):
         return render(request, "partials/tests_error.html")
 
     project = get_object_or_404(Project, id=pk)
-    if project.belegger != client:
+    if project.client != client:
         return render(request, "partials/tests_error.html")
 
     if request.headers["HX-Prompt"] == "VERWIJDEREN":
         project.delete()
-        messages.warning(request, f"Project: {project.naam} succesvol verwijderd!")
+        messages.warning(request, f"Project: {project.name} succesvol verwijderd!")
         return render(request, "partials/messages.html")
     else:
         messages.warning(request, f"Onjuiste invulling. Probeer het opnieuw.")
@@ -191,7 +191,7 @@ def AddProjectManagerToProject(request, client_pk, pk):
     project = Project.objects.get(id=pk)
     form = forms.AddProjectmanagerToProjectForm(request.POST or None)
     form.fields["projectmanager"].queryset = CustomUser.objects.filter(
-        type_user="SOG", klantenorganisatie=client
+        type_user="SOG", client=client
     )
     form.fields["projectmanager"].initial = project.projectmanager
 
@@ -202,7 +202,7 @@ def AddProjectManagerToProject(request, client_pk, pk):
 
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
-            if form.cleaned_data["projectmanager"].klantenorganisatie != client:
+            if form.cleaned_data["projectmanager"].client != client:
                 return render(request, "partials/tests_error.html")
 
             if project.projectmanager == form.cleaned_data["projectmanager"]:
@@ -215,8 +215,8 @@ def AddProjectManagerToProject(request, client_pk, pk):
             project.save()
 
             send_mail(
-                f"{ client.naam } Projecten - Uitnodiging voor project {project}",
-                f"""{ request.user } heeft u uitgenodigd projectmanager te zijn van het project { project } van { client.naam }.
+                f"{ client.name } Projecten - Uitnodiging voor project {project}",
+                f"""{ request.user } heeft u uitgenodigd projectmanager te zijn van het project { project } van { client.name }.
                 
                 U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan en de eerste PvE check uit te voeren.
                 Link: https://pvegenerator.net/pvetool/{ client_pk }/project/{project.id}""",
@@ -226,7 +226,7 @@ def AddProjectManagerToProject(request, client_pk, pk):
             )
             messages.warning(
                 request,
-                f"""De projectmanager van Project: {project.naam} is nu {form.cleaned_data["projectmanager"]}.""",
+                f"""De projectmanager van Project: {project.name} is nu {form.cleaned_data["projectmanager"]}.""",
             )
             return render(request, "partials/projectmanager_detail.html", context)
         else:
@@ -246,9 +246,9 @@ def GetOrganisatieToProject(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -261,7 +261,7 @@ def GetOrganisatieToProject(request, client_pk, pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, id=pk)
-    if project.belegger != client:
+    if project.client != client:
         return redirect("logout_syn", client_pk=client_pk)
 
     context = {}
@@ -282,9 +282,9 @@ def AddOrganisatieToProject(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -297,42 +297,42 @@ def AddOrganisatieToProject(request, client_pk, pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, id=pk)
-    if project.belegger != client:
+    if project.client != client:
         return redirect("logout_syn", client_pk=client_pk)
     form = forms.AddOrganisatieToProjectForm(request.POST or None)
-    form.fields["organisatie"].queryset = Organisatie.objects.filter(
-        Q(klantenorganisatie=client) & ~Q(projecten=project)
+    form.fields["stakeholder"].queryset = Organisatie.objects.filter(
+        Q(client=client) & ~Q(projecten=project)
     )
 
     if request.method == "POST":
         if form.is_valid():
-            # voeg project toe aan organisatie
-            organisatie = form.cleaned_data["organisatie"]
-            if organisatie.klantenorganisatie != client:
+            # voeg project toe aan stakeholder
+            stakeholder = form.cleaned_data["stakeholder"]
+            if stakeholder.client != client:
                 return redirect("logout_syn", client_pk=client_pk)
 
-            organisatie.projecten.add(project)
+            stakeholder.projecten.add(project)
 
-            # voeg organisatie toe aan project
-            project.organisaties.add(organisatie)
+            # voeg stakeholder toe aan project
+            project.organisaties.add(stakeholder)
 
             # geef alle werknemers toegang aan het project
-            werknemers = organisatie.gebruikers.all()
+            werknemers = stakeholder.users.all()
 
-            for werknemer in werknemers:
-                if werknemer.klantenorganisatie != client:
+            for employee in werknemers:
+                if employee.client != client:
                     return redirect("logout_syn", client_pk=client_pk)
 
-                project.permitted.add(werknemer)
+                project.permitted.add(employee)
 
                 send_mail(
-                    f"{ client.naam } Projecten - Uitnodiging voor project {project}",
-                    f"""{ request.user } heeft u uitgenodigd om mee te werken aan het project { project } van { client.naam }.
+                    f"{ client.name } Projecten - Uitnodiging voor project {project}",
+                    f"""{ request.user } heeft u uitgenodigd om mee te werken aan het project { project } van { client.name }.
                     
                     U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
                     Link: https://pvegenerator.net/pvetool/{ client_pk }/project/{project.id}""",
                     "admin@pvegenerator.net",
-                    [f"{werknemer.email}"],
+                    [f"{employee.email}"],
                     fail_silently=False,
                 )
 
@@ -359,9 +359,9 @@ def SOGAddDerdenToProj(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -389,17 +389,17 @@ def SOGAddDerdenToProj(request, client_pk, pk):
             project.permitted.add(*permitted)
 
             if permitted:
-                gebruikers = [user for user in permitted]
+                users = [user for user in permitted]
 
-                for gebruiker in gebruikers:
+                for user in users:
                     send_mail(
-                        f"{ client.naam } Projecten - Uitnodiging voor project {project}",
-                        f"""{ request.user } heeft u uitgenodigd om mee te werken aan het project { project } van { client.naam }.
+                        f"{ client.name } Projecten - Uitnodiging voor project {project}",
+                        f"""{ request.user } heeft u uitgenodigd om mee te werken aan het project { project } van { client.name }.
                         
                         U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
                         Link: https://pvegenerator.net/pvetool/{ client_pk }/project/{project.id}""",
                         "admin@pvegenerator.net",
-                        [f"{gebruiker.email}"],
+                        [f"{user.email}"],
                         fail_silently=False,
                     )
 
@@ -410,7 +410,7 @@ def SOGAddDerdenToProj(request, client_pk, pk):
     # form
     form = forms.SOGAddDerdenForm()
     form.fields["permitted"].queryset = CustomUser.objects.filter(
-        type_user="SD", klantenorganisatie=client
+        type_user="SD", client=client
     ).all()
 
     context = {}

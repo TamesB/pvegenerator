@@ -21,13 +21,13 @@
   <div class="content">
     <h4 class="ui sub header">Activiteit</h4>
     <div class="ui small feed">
-	{% if klant_activiteiten %}
-	{% for activiteit in klant_activiteiten %}
+	{% if client_activities %}
+	{% for activity in client_activities %}
       <div class="event">
         <div class="content">
           <div class="summary">
           {% language 'nl' %}
-			{{ activiteit.schuldige }}: {{ activiteit.update }} <br><i>Datum: {{ activiteit.datum }}</i>
+			{{ activity.schuldige }}: {{ activity.update }} <br><i>Datum: {{ activity.date }}</i>
       {% endlanguage %}
          </div>
         </div>
@@ -37,7 +37,7 @@
       <div class="event">
         <div class="content">
           <div class="summary">
-		  Geen activiteit.
+		  Geen activity.
           </div>
         </div>
       </div>
@@ -45,8 +45,8 @@
     </div>
   </div>
   <div class="extra content">
-  	<span><a style="float:left;" hx-get="{% url 'klanttoevoegen' %}" hx-target="#main" hx-swap="innerHTML"><button class="ui basic button"><i class="user plus icon"></i>Klant Toevoegen</button></a>
-	<a style="float:right;" hx-get="{% url 'klantoverzicht' %}" hx-target="#main" hx-swap="innerHTML"><button class="ui basic button"><i class="address card outline icon"></i>Klanten Overzicht</button></a></span>
+  	<span><a style="float:left;" hx-get="{% url 'clienttoevoegen' %}" hx-target="#main" hx-swap="innerHTML"><button class="ui basic button"><i class="user plus icon"></i>Klant Toevoegen</button></a>
+	<a style="float:right;" hx-get="{% url 'clientoverzicht' %}" hx-target="#main" hx-swap="innerHTML"><button class="ui basic button"><i class="address card outline icon"></i>Klanten Overzicht</button></a></span>
   </div>
 </div>
 </div>
@@ -59,13 +59,13 @@
   <div class="content">
     <h4 class="ui sub header">Activiteit</h4>
     <div class="ui small feed">
-	{% if pve_activiteiten %}
-	{% for activiteit in pve_activiteiten %}
+	{% if pve_activities %}
+	{% for activity in pve_activities %}
       <div class="event">
         <div class="content">
           <div class="summary">
           {% language 'nl' %}
-			{{ activiteit.schuldige }}: {{ activiteit.update }} <br><i>Datum: {{ activiteit.datum }}</i>
+			{{ activity.schuldige }}: {{ activity.update }} <br><i>Datum: {{ activity.date }}</i>
       {% endlanguage %}
               </div>
         </div>
@@ -75,7 +75,7 @@
       <div class="event">
         <div class="content">
           <div class="summary">
-		  Geen activiteit.
+		  Geen activity.
           </div>
         </div>
       </div>
@@ -83,7 +83,7 @@
     </div>
   </div>
   <div class="extra content">
-  	<span><a style="float:left;" hx-get="{% url 'beleggerversieoverview' %}" hx-target="#main" hx-swap="innerHTML"><button class="ui basic button"><i class="icon edit"></i>Bewerk PvE's</button></a>
+  	<span><a style="float:left;" hx-get="{% url 'clientversieoverview' %}" hx-target="#main" hx-swap="innerHTML"><button class="ui basic button"><i class="icon edit"></i>Bewerk PvE's</button></a>
 	</span>
   </div>
 </div>
@@ -97,13 +97,13 @@
   <div class="content">
     <h4 class="ui sub header">Activiteit</h4>
     <div class="ui small feed">
-	{% if project_activiteiten %}
-	{% for activiteit in project_activiteiten %}
+	{% if project_activities %}
+	{% for activity in project_activities %}
       <div class="event">
         <div class="content">
           <div class="summary">
           {% language 'nl' %}
-			{{ activiteit.schuldige }}: {{ activiteit.update }} <br><i>Datum: {{ activiteit.datum }}</i>
+			{{ activity.schuldige }}: {{ activity.update }} <br><i>Datum: {{ activity.date }}</i>
       {% endlanguage %}
           </div>
         </div>
@@ -113,7 +113,7 @@
       <div class="event">
         <div class="content">
           <div class="summary">
-		  Geen activiteit.
+		  Geen activity.
           </div>
         </div>
       </div>

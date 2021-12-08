@@ -58,7 +58,7 @@ def LoginView(request, client_pk):
                 user = authenticate(request, username=username, password=password)
 
             if user is not None:
-                if user.klantenorganisatie == client and user.type_user != "B":
+                if user.client == client and user.type_user != "B":
                     login(request, user)
                     return redirect("dashboard_syn", client_pk=client_pk)
 
@@ -117,15 +117,15 @@ def BeheerdersAcceptUitnodiging(request, client_pk, key):
                 )
 
             user.email = invitation.invitee
-            if invitation.klantenorganisatie:
-                user.klantenorganisatie = invitation.klantenorganisatie
+            if invitation.client:
+                user.client = invitation.client
 
             user.type_user = "SB"
             user.save()
 
-            klant = invitation.klantenorganisatie
-            klant.beheerder = user
-            klant.save()
+            client = invitation.client
+            client.beheerder = user
+            client.save()
 
             user = authenticate(
                 request, username=username, password=form.cleaned_data["password1"]
@@ -134,9 +134,9 @@ def BeheerdersAcceptUitnodiging(request, client_pk, key):
             invitation.delete()
 
             send_mail(
-                f"{klant.naam} PvE Tool - Uw Logingegevens",
+                f"{client.name} PvE Tool - Uw Logingegevens",
                 f"""Reeds heeft u zich aangemeld bij de PvE tool.
-                Voor het vervolgens inloggen op de tool is uw gebruikersnaam: {user.username}
+                Voor het vervolgens inloggen op de tool is uw usersname: {user.username}
                 en het wachtwoord wat u heeft aangegeven bij het aanmelden.""",
                 "admin@pvegenerator.net",
                 [f"{invitation.invitee}"],
@@ -146,7 +146,7 @@ def BeheerdersAcceptUitnodiging(request, client_pk, key):
                 login(request, user)
                 messages.warning(
                     request,
-                    f"Account aangemaakt met gebruikersnaam: {user.username}. Uw logingegevens zijn naar u gemaild.",
+                    f"Account aangemaakt met usersname: {user.username}. Uw logingegevens zijn naar u gemaild.",
                 )
                 return redirect("dashboard_syn", client_pk=client_pk)
         else:
@@ -175,9 +175,9 @@ def DashboardView(request, client_pk):
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -189,8 +189,8 @@ def DashboardView(request, client_pk):
     context["client"] = client
     context["logo_url"] = logo_url
 
-    if request.user.projectspermitted.all().filter(belegger__id=client_pk).exists():
-        projects = request.user.projectspermitted.all().filter(belegger__id=client_pk)
+    if request.user.projectspermitted.all().filter(client__id=client_pk).exists():
+        projects = request.user.projectspermitted.all().filter(client__id=client_pk)
         context["projects"] = projects
 
         if request.user.annotation.exists():
@@ -234,9 +234,9 @@ def FAQView(request, client_pk):
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -245,11 +245,11 @@ def FAQView(request, client_pk):
 
     faqquery = FAQ.objects.all()
     if request.user.type_user == "SB":
-        faqquery = FAQ.objects.filter(gebruikersrang="SB")
+        faqquery = FAQ.objects.filter(usersrank="SB")
     if request.user.type_user == "SOG":
-        faqquery = FAQ.objects.filter(gebruikersrang="SOG")
+        faqquery = FAQ.objects.filter(usersrank="SOG")
     if request.user.type_user == "SD":
-        faqquery = FAQ.objects.filter(gebruikersrang="SD")
+        faqquery = FAQ.objects.filter(usersrank="SD")
 
     context = {}
     context["faqquery"] = faqquery
@@ -269,9 +269,9 @@ def KiesPVEGenerate(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -283,7 +283,7 @@ def KiesPVEGenerate(request, client_pk):
 
     form = forms.PVEVersieKeuzeForm(request.POST or None)
     qs = models.PVEVersie.objects.filter(
-        belegger=client, public=True
+        client=client, public=True
     )
     form.fields["pve_versie"].queryset = qs
 
@@ -292,7 +292,7 @@ def KiesPVEGenerate(request, client_pk):
             return redirect(
                 "generate_syn",
                 client_pk=client_pk,
-                versie_pk=form.cleaned_data["pve_versie"].id,
+                version_pk=form.cleaned_data["pve_versie"].id,
             )
 
     context = {}
@@ -305,7 +305,7 @@ def KiesPVEGenerate(request, client_pk):
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
-def GeneratePVEView(request, client_pk, versie_pk):
+def GeneratePVEView(request, client_pk, version_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
@@ -315,9 +315,9 @@ def GeneratePVEView(request, client_pk, versie_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -327,26 +327,26 @@ def GeneratePVEView(request, client_pk, versie_pk):
     if request.user.id is not client.beheerder.id and request.user.type_user != "B":
         return redirect("logout_syn", client_pk=client_pk)
 
-    if not models.PVEVersie.objects.filter(pk=versie_pk).exists():
+    if not models.PVEVersie.objects.filter(pk=version_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
     else:
-        versie = models.PVEVersie.objects.filter(pk=versie_pk).first()
+        version = models.PVEVersie.objects.filter(pk=version_pk).first()
 
     if request.method == "POST":
         # get user entered form
         form = forms.PVEParameterForm(request.POST)
 
-        bouwsoort = versie.bouwsoort.all()
+        bouwsoort = version.bouwsoort.all()
         form.fields["Bouwsoort1"].queryset = bouwsoort
         form.fields["Bouwsoort2"].queryset = bouwsoort
         form.fields["Bouwsoort3"].queryset = bouwsoort
 
-        typeObject = versie.typeobject.all()
+        typeObject = version.typeobject.all()
         form.fields["TypeObject1"].queryset = typeObject
         form.fields["TypeObject2"].queryset = typeObject
         form.fields["TypeObject3"].queryset = typeObject
 
-        doelgroep = versie.doelgroep.all()
+        doelgroep = version.doelgroep.all()
         form.fields["Doelgroep1"].queryset = doelgroep
         form.fields["Doelgroep2"].queryset = doelgroep
         form.fields["Doelgroep3"].queryset = doelgroep
@@ -388,63 +388,63 @@ def GeneratePVEView(request, client_pk, versie_pk):
 
             # Entered parameters are in the manytomany parameters of the object
             basic_PVE = (
-                versie.item.select_related("paragraaf")
-                .select_related("hoofdstuk")
+                version.item.select_related("paragraph")
+                .select_related("chapter")
                 .filter(basisregel=True)
             )
 
             basic_PVE = basic_PVE.union(
-                Bouwsoort1.item.select_related("hoofdstuk")
-                .select_related("paragraaf")
+                Bouwsoort1.item.select_related("chapter")
+                .select_related("paragraph")
                 .all()
             )
 
             if Bouwsoort2:
                 basic_PVE = basic_PVE.union(
-                    Bouwsoort2.item.select_related("hoofdstuk")
-                    .select_related("paragraaf")
+                    Bouwsoort2.item.select_related("chapter")
+                    .select_related("paragraph")
                     .all()
                 )
             if Bouwsoort3:
                 basic_PVE = basic_PVE.union(
-                    Bouwsoort3.item.select_related("hoofdstuk")
-                    .select_related("paragraaf")
+                    Bouwsoort3.item.select_related("chapter")
+                    .select_related("paragraph")
                     .all()
                 )
             if TypeObject1:
                 basic_PVE = basic_PVE.union(
-                    TypeObject1.item.select_related("hoofdstuk")
-                    .select_related("paragraaf")
+                    TypeObject1.item.select_related("chapter")
+                    .select_related("paragraph")
                     .all()
                 )
             if TypeObject2:
                 basic_PVE = basic_PVE.union(
-                    TypeObject2.item.select_related("hoofdstuk")
-                    .select_related("paragraaf")
+                    TypeObject2.item.select_related("chapter")
+                    .select_related("paragraph")
                     .all()
                 )
             if TypeObject3:
                 basic_PVE = basic_PVE.union(
-                    TypeObject3.item.select_related("hoofdstuk")
-                    .select_related("paragraaf")
+                    TypeObject3.item.select_related("chapter")
+                    .select_related("paragraph")
                     .all()
                 )
             if Doelgroep1:
                 basic_PVE = basic_PVE.union(
-                    Doelgroep1.item.select_related("hoofdstuk")
-                    .select_related("paragraaf")
+                    Doelgroep1.item.select_related("chapter")
+                    .select_related("paragraph")
                     .all()
                 )
             if Doelgroep2:
                 basic_PVE = basic_PVE.union(
-                    Doelgroep2.item.select_related("hoofdstuk")
-                    .select_related("paragraaf")
+                    Doelgroep2.item.select_related("chapter")
+                    .select_related("paragraph")
                     .all()
                 )
             if Doelgroep3:
                 basic_PVE = basic_PVE.union(
-                    Doelgroep3.item.select_related("hoofdstuk")
-                    .select_related("paragraaf")
+                    Doelgroep3.item.select_related("chapter")
+                    .select_related("paragraph")
                     .all()
                 )
 
@@ -452,32 +452,32 @@ def GeneratePVEView(request, client_pk, versie_pk):
             # if box checked
             if AED:
                 basic_PVE = basic_PVE.union(
-                    versie.item.select_related("paragraaf")
-                    .select_related("hoofdstuk")
+                    version.item.select_related("paragraph")
+                    .select_related("chapter")
                     .filter(AED=True)
                 )
             if Smarthome:
                 basic_PVE = basic_PVE.union(
-                    versie.item.select_related("paragraaf")
-                    .select_related("hoofdstuk")
+                    version.item.select_related("paragraph")
+                    .select_related("chapter")
                     .filter(Smarthome=True)
                 )
             if EntreeUpgrade:
                 basic_PVE = basic_PVE.union(
-                    versie.item.select_related("paragraaf")
-                    .select_related("hoofdstuk")
+                    version.item.select_related("paragraph")
+                    .select_related("chapter")
                     .filter(EntreeUpgrade=True)
                 )
             if Pakketdient:
                 basic_PVE = basic_PVE.union(
-                    versie.item.select_related("paragraaf")
-                    .select_related("hoofdstuk")
+                    version.item.select_related("paragraph")
+                    .select_related("chapter")
                     .filter(Pakketdient=True)
                 )
             if JamesConcept:
                 basic_PVE = basic_PVE.union(
-                    versie.item.select_related("paragraaf")
-                    .select_related("hoofdstuk")
+                    version.item.select_related("paragraph")
+                    .select_related("chapter")
                     .filter(JamesConcept=True)
                 )
 
@@ -516,38 +516,38 @@ def GeneratePVEView(request, client_pk, versie_pk):
 
             filename = f"PvE-{fileExt}"
             zipFilename = f"PvE_Compleet-{fileExt}"
-            pdfmaker = writePdf.PDFMaker(versie.versie, logo_url)
+            pdfmaker = writePdf.PDFMaker(version.version, logo_url)
             opmerkingen = {}
-            bijlagen = {}
+            attachments = {}
             reacties = {}
-            reactiebijlagen = {}
+            reactieattachments = {}
 
             pdfmaker.makepdf(
                 filename,
                 basic_PVE,
-                versie.id,
+                version.id,
                 opmerkingen,
-                bijlagen,
+                attachments,
                 reacties,
-                reactiebijlagen,
+                reactieattachments,
                 parameters,
                 [],
             )
 
-            # get bijlagen
-            bijlagen_models = models.ItemBijlages.objects.all()
-            bijlagen = []
+            # get attachments
+            attachments_models = models.ItemBijlages.objects.all()
+            attachments = []
 
-            for bijlage_model in bijlagen_models:
-                for item in bijlage_model.items.all():
+            for attachment_model in attachments_models:
+                for item in attachment_model.items.all():
                     if item in basic_PVE:
-                        bijlagen.append(bijlage_model)
+                        attachments.append(attachment_model)
 
-            bijlagen = list(set(bijlagen))
+            attachments = list(set(attachments))
 
-            if bijlagen:
+            if attachments:
                 zipmaker = createBijlageZip.ZipMaker()
-                zipmaker.makeZip(zipFilename, filename, bijlagen)
+                zipmaker.makeZip(zipFilename, filename, attachments)
             else:
                 zipFilename = False
 
@@ -561,17 +561,17 @@ def GeneratePVEView(request, client_pk, versie_pk):
             messages.warning(request, "Vul de verplichte keuzes in.")
 
     form = forms.PVEParameterForm()
-    bouwsoort = versie.bouwsoort.all()
+    bouwsoort = version.bouwsoort.all()
     form.fields["Bouwsoort1"].queryset = bouwsoort
     form.fields["Bouwsoort2"].queryset = bouwsoort
     form.fields["Bouwsoort3"].queryset = bouwsoort
 
-    typeObject = versie.typeobject.all()
+    typeObject = version.typeobject.all()
     form.fields["TypeObject1"].queryset = typeObject
     form.fields["TypeObject2"].queryset = typeObject
     form.fields["TypeObject3"].queryset = typeObject
 
-    doelgroep = versie.doelgroep.all()
+    doelgroep = version.doelgroep.all()
     form.fields["Doelgroep1"].queryset = doelgroep
     form.fields["Doelgroep2"].queryset = doelgroep
     form.fields["Doelgroep3"].queryset = doelgroep
@@ -579,8 +579,8 @@ def GeneratePVEView(request, client_pk, versie_pk):
     # if get method, just render the empty form
     context = {}
     context["form"] = form
-    context["versie"] = versie
-    context["versie_pk"] = versie_pk
+    context["version"] = version
+    context["version_pk"] = version_pk
     context["client_pk"] = client_pk
     context["client"] = client
     context["logo_url"] = logo_url

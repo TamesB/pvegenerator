@@ -13,17 +13,17 @@ from app import models
 
 
 class PDFMaker:
-    def __init__(self, versienaam):
+    def __init__(self, versiename):
         self.date = datetime.datetime.now()
 
-        self.bedrijfsnaam = "PVETool"
+        self.bedrijfsname = "PVETool"
 
         self.defaultPageSize = letter
         self.PAGE_HEIGHT = self.defaultPageSize[1]
         self.PAGE_WIDTH = self.defaultPageSize[0]
         self.styles = getSampleStyleSheet()
 
-        self.version = versienaam
+        self.version = versiename
         self.Topleft = f"PVE SAREF {self.version}"
         self.Topright = "CONCEPT"
         self.Centered = "PARAMETERS"
@@ -46,7 +46,7 @@ class PDFMaker:
         self.PrePVEBoxHeight = -75
         self.logo = "./utils/logo.png"
 
-        self.hoofdstukStyle = ParagraphStyle(
+        self.chapterStyle = ParagraphStyle(
             textColor=colors.Color(red=1, green=1, blue=1),
             backColor=colors.Color(red=49 / 255, green=133 / 255, blue=154 / 255),
             name="Normal",
@@ -81,7 +81,7 @@ class PDFMaker:
         canvas.saveState()
         # eerste pagina: opmerkingen, logo, etc aan de top. Datum en paginanr onderaan.
         canvas.setTitle(f"PvE Afwijkingen lijst")
-        canvas.setAuthor(f"{self.bedrijfsnaam} / Tames Boon")
+        canvas.setAuthor(f"{self.bedrijfsname} / Tames Boon")
         # titelbox (OPMERKINGEN)
         canvas.setLineWidth(2)
         canvas.setFillColorRGB(145 / 255, 205 / 255, 219 / 255)
@@ -189,7 +189,7 @@ class PDFMaker:
 
         canvas.restoreState()
 
-    def makepdf(self, filename, PVEItems, versie_pk, parameters):
+    def makepdf(self, filename, PVEItems, version_pk, parameters):
         # for switching background styles between added items
 
         item_added = 0
@@ -206,35 +206,35 @@ class PDFMaker:
         Story = [Spacer(0, 224)]
         style = self.styles["Normal"]
 
-        versie = models.PVEVersie.objects.get(id=versie_pk)
+        version = models.PVEVersie.objects.get(id=version_pk)
 
-        hoofdstukken = models.PVEHoofdstuk.objects.filter(versie=versie)
+        chapters = models.PVEHoofdstuk.objects.filter(version=version)
 
-        hoofdstuknamen = [hoofdstuk.hoofdstuk for hoofdstuk in hoofdstukken]
+        chapternamen = [chapter.chapter for chapter in chapters]
 
         # Excel tabel simulasie
-        for hoofdstuk in hoofdstukken:
+        for chapter in chapters:
 
-            items_exist = [item for item in PVEItems if item.hoofdstuk == hoofdstuk]
+            items_exist = [item for item in PVEItems if item.chapter == chapter]
             if len(items_exist) > 0:
-                p = Paragraph("%s" % hoofdstuk, self.hoofdstukStyle)
+                p = Paragraph("%s" % chapter, self.chapterStyle)
                 Story.append(p)
 
-                paragraven = models.PVEParagraaf.objects.filter(hoofdstuk=hoofdstuk)
+                paragraphs = models.PVEParagraaf.objects.filter(chapter=chapter)
 
-                if paragraven.exists():
-                    for paragraaf in paragraven:
+                if paragraphs.exists():
+                    for paragraph in paragraphs:
                         items = [
                             item
                             for item in PVEItems
-                            if item.hoofdstuk == hoofdstuk
-                            and item.paragraaf == paragraaf
+                            if item.chapter == chapter
+                            and item.paragraph == paragraph
                         ]
 
                         if len(items) > 0:
                             Story.append(Spacer(self.LeftPadding, 0))
                             p = Paragraph(
-                                "%s" % paragraaf.paragraaf, self.paragraafStyle
+                                "%s" % paragraph.paragraph, self.paragraafStyle
                             )
                             Story.append(p)
 
@@ -258,7 +258,7 @@ class PDFMaker:
 
                                 Story.append(p)
                 else:
-                    items = [item for item in PVEItems if item.hoofdstuk == hoofdstuk]
+                    items = [item for item in PVEItems if item.chapter == chapter]
 
                     if len(items) > 0:
                         for item in items:

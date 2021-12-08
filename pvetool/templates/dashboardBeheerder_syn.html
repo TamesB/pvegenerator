@@ -28,7 +28,7 @@
       <tbody>
         <tr class="table_title">
           <th><p>Projectnummer</p></th>
-          <th><p>Projectnaam</p></th>
+          <th><p>Projectname</p></th>
           <th><p>Locatie</p></th>
           <th><p>Aantal VHE</p></th>
           <th><p>Fase</p></th>
@@ -39,7 +39,7 @@
         {% for project in projects %}
         <tr class="table_content">
           <td><p>{{ project.nummer }}</p></td>
-      <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
+      <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.name }}<i class="right arrow icon"></i></button></a></p></td>
           <td><p>{{ project.plaatsnamen }}</p></td>
           <td><p>{{ project.vhe }}</p></td>
           <td><p>{{ project.statuscontract }}</p></td>

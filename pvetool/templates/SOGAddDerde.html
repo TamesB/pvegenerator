@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block main %}
-<div class="general_title"><img src="{% static 'pvetool/img/plusproject.png'%}" class="title_img"></img><p>Voeg derden toe aan project {{ project.naam }}</p></div>
+<div class="general_title"><img src="{% static 'pvetool/img/plusproject.png'%}" class="title_img"></img><p>Voeg derden toe aan project {{ project.name }}</p></div>
 <div class="invite-container">
     <div class="box">
         <p class="description">Voeg de derden toe die bemachtigt worden het PvE te checken. Er wordt een e-mail naar iedereen gestuurd behorend tot het project. Als de gewenste derde nog niet bestaat kan u ze uitnodigen via <a href="{% url 'plusaccount_syn' client_pk %}"><button class="ui icon green button"><i class="icon plus"></i>Nodig derde uit</button></a></p>

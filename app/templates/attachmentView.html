@@ -1,11 +1,11 @@
 {% extends "layout.html" %} {% load semanticui %} {% block main %}
 <div class="ui big breadcrumb">
-  <a class="section" href="{% url 'pvebewerkoverview' versie_pk %}">Overview {{ versie.belegger }}: {{ versie.versie }}</a>
+  <a class="section" href="{% url 'pvebewerkoverview' version_pk %}">Overview {{ version.client }}: {{ version.version }}</a>
   <i class="right chevron icon divider"></i>
   <a class="active section">Bijlagen</a>
 </div>
 <br><br>
-{% if bijlagen %}
+{% if attachments %}
 <div class="d-inline" style="float: left;">
 	<a href="#"><button class="ui icon basic button"><i class="icon edit"></i></button></a>
 </div>
@@ -22,24 +22,24 @@
 					Bijlage
 				</th>
         <th><div class="d-inline" style="float: right;">
-					<span class="float right"><a href="{% url 'addbijlage' versie_pk %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
+					<span class="float right"><a href="{% url 'addattachment' version_pk %}"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
         					</div></th>
 			</tr>
 		</thead>
 		<tbody>
-      {% for item in bijlagen %}
+      {% for item in attachments %}
 			<tr>
-				<td>{% if item.naam %}{{ item.naam|linebreaks }}{% else %}{{ item.bijlage|linebreaks }}{% endif %}</td>
+				<td>{% if item.name %}{{ item.name|linebreaks }}{% else %}{{ item.attachment|linebreaks }}{% endif %}</td>
         <td>
 					<div class="d-inline" style="float: right;">
-						<input class="ui primary button d-inline" onclick="window.location.href='{% url 'bijlagedetail' versie_pk item.id %}';" type="button" value="Bekijk">									
+						<input class="ui primary button d-inline" onclick="window.location.href='{% url 'attachmentdetail' version_pk item.id %}';" type="button" value="Bekijk">									
 				</td>
 			</tr>
       {% endfor %}
 		</tbody>
 	</table>
 </div>{% else %}
-<p>Geen bijlagen in dit PvE! <input class="ui primary button d-inline" onclick="window.location.href='{% url 'addbijlage' versie_pk %}';" type="button" value="Voeg er een toe"></p>{% endif %}
+<p>Geen attachments in dit PvE! <input class="ui primary button d-inline" onclick="window.location.href='{% url 'addattachment' version_pk %}';" type="button" value="Voeg er een toe"></p>{% endif %}
 
 {% block modal %}{% endblock %}
 

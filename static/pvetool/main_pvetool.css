@@ -1311,7 +1311,7 @@ html {
   max-height: 1vh;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .hoofdstuk {
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .chapter {
   background-color: #0078ae;
   color: white;
   cursor: pointer;
@@ -1326,11 +1326,11 @@ html {
   font-weight: bold;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .hoofdstuk:hover {
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .chapter:hover {
   opacity: 0.7;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .hoofdstuk_content {
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .chapter_content {
   display: none;
   overflow: hidden;
   background-color: #f1f1f1;
@@ -1338,7 +1338,7 @@ html {
   transition: 0.1s ease;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .paragraaf {
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .paragraph {
   background-color: #66acd1;
   color: white;
   cursor: pointer;
@@ -1354,7 +1354,7 @@ html {
   font-weight: bold;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .paragraaf:hover {
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .paragraph:hover {
   opacity: 0.7;
 }
 

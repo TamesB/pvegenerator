@@ -8,7 +8,7 @@
 
 {% endblock %}
 {% block main %}
-<h1 class="ui header">Project: {{ project.naam }}</h1>
+<h1 class="ui header">Project: {{ project.name }}</h1>
 <div>
 {% if project.pveconnected %}
     {% if project.bouwsoort1 %}
@@ -41,14 +41,14 @@
 {% endif %}
 <p><b>Aantal verhuureenheden: </b><i>{{ project.vhe }}</i></p>
 <p><b>Contractstatus: </b><i>{{ project.statuscontract }}</i></p>
-<p><b>Aangemaakt op: </b><i>{{ project.datum }}</i></p>
+<p><b>Aangemaakt op: </b><i>{{ project.date }}</i></p>
 </div>
 
 <div class="ui divider"></div>
 <div>
 <h3 class="ui header">Basis handelingen</h1>
 {% if project.pveconnected %}
-<p><span><a href="{% url 'download_pve_syn' project.id project.belegger.id %}"><button class="ui basic button"><i class="icon download"></i>Download huidige staat PvE</button></a></span></p>
+<p><span><a href="{% url 'download_pve_syn' project.id project.client.id %}"><button class="ui basic button"><i class="icon download"></i>Download huidige staat PvE</button></a></span></p>
 {% else %}
 <p>
 Nog geen PvE gekoppeld.

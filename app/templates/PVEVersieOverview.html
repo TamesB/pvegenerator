@@ -3,15 +3,15 @@
   class="ui primary button d-inline"
   hx-get="{% url 'dashboard' %}" hx-target="body" hx-swap="innerHTML"
   >< Dashboard</button>
-<h1 class="ui header center aligned">PvE versie overview</h1>
-{% if beleggers %}
+<h1 class="ui header center aligned">PvE version overview</h1>
+{% if clients %}
 <br /><br />
 <div>
   {% for key, queryset in BeleggerVersieQuerySet.items %}
   <div id="versietable-{{ key.id }}" hx-swap="innerHTML" hx-trigger="load" hx-get="{% url 'pveversietable' key.id %}"></div>
   <div id="newline-{{ key.id }}"></div>
   <br>
-  <button hx-get="{% url 'addpveversieform' key.id %}" hx-target="#newline-{{ key.id }}" class="ui green button">Voeg versie toe</button>
+  <button hx-get="{% url 'addpveversieform' key.id %}" hx-target="#newline-{{ key.id }}" class="ui green button">Voeg version toe</button>
   <div class="ui divider"></div>
   {% endfor %}
   {% else %}

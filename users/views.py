@@ -126,7 +126,7 @@ def ForgotPassword(request, client_pk):
             invitation.save()
 
             send_mail(
-                f"{ client.naam } Projecten - Wachtwoord Reset",
+                f"{ client.name } Projecten - Wachtwoord Reset",
                 f"""U heeft aangevraagd uw wachtwoord te resetten. Klik op de link om uw wachtwoord opnieuw in te stellen.
                 
                 Link: https://pvegenerator.net/beheer/users/{client_pk}/passreset/{invitation.key}

@@ -3,14 +3,14 @@
 {% load semanticui %}
 
 {% block main %}
-<button class="ui primary button d-inline" hx-get="{% url 'klantoverzicht' %}" hx-target="#main" hx-swap="innerHTML">< Terug</button>
+<button class="ui primary button d-inline" hx-get="{% url 'clientoverzicht' %}" hx-target="#main" hx-swap="innerHTML">< Terug</button>
 
-<h1 class="ui header">Maak klant aan</h1>
+<h1 class="ui header">Maak client aan</h1>
 
 <form class="ui form" method="POST" hx-encoding='multipart/form-data' enctype="multipart/form-data">
     {% csrf_token %}
     {% render_form form %}
-    <button hx-post="{% url 'klanttoevoegen' %}" hx-target="#main" hx-swap="innerHTML" type="submit" class="ui primary button" value="generate">Bevestig</button>
+    <button hx-post="{% url 'clienttoevoegen' %}" hx-target="#main" hx-swap="innerHTML" type="submit" class="ui primary button" value="generate">Bevestig</button>
 </form>
 
 <script>

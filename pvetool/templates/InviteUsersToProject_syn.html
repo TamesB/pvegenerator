@@ -12,7 +12,7 @@
 <div class="general_title"><img src="{% static 'pvetool/img/plusproject.png'%}" class="title_img"></img><p>Start project</p></div>
 <div class="invite-container">
     <div class="box">
-        <p class="description">Wijs een projectmanager toe aan uw project, en nodig organisaties/derden uit om vervolgens op het PvE te reageren. Iedere gebruiker behorend tot een organisatie krijgt toegang tot het project. Er wordt een e-mail naar iedereen gestuurd behorend tot het project</p>
+        <p class="description">Wijs een projectmanager toe aan uw project, en nodig organisaties/derden uit om vervolgens op het PvE te reageren. Iedere user behorend tot een stakeholder krijgt toegang tot het project. Er wordt een e-mail naar iedereen gestuurd behorend tot het project</p>
         <form action="{% url 'addusersproject_syn' client_pk project.id %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <label class="formtitle" for="{{ form.projectmanager.id_for_label }}">Projectmanager:</label>

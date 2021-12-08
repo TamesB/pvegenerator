@@ -3,8 +3,8 @@
 {% load semanticui %}
 
 {% block main %}
-<input type="button" class="ui primary button d-inline" onclick="javascript:window.location='{% url 'pvebewerkoverview' versie_pk %}'" value="< Overview {{ versie.belegger }}: {{ versie.versie }}" />
-<form action="{% url 'compare' versie_pk %}" class="ui form" method="POST" enctype="multipart/form-data">
+<input type="button" class="ui primary button d-inline" onclick="javascript:window.location='{% url 'pvebewerkoverview' version_pk %}'" value="< Overview {{ version.client }}: {{ version.version }}" />
+<form action="{% url 'compare' version_pk %}" class="ui form" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {% render_form form %}
     <button type="submit" class="ui primary button" value="generate">Genereer</button>

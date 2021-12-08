@@ -5,15 +5,15 @@
 {% block main %}
 
 <div hx-target="this" hx-swap="outerHTML">
-{% if klant.beheerder %}
-<p>{{ klant.beheerder }}</p>
-<button hx-get="{% url 'beheerderklantform' klant.id %}" class="ui icon basic button"><i class="icon edit"></i></button>
+{% if client.beheerder %}
+<p>{{ client.beheerder }}</p>
+<button hx-get="{% url 'beheerderclientform' client.id %}" class="ui icon basic button"><i class="icon edit"></i></button>
 {% else %}
 {% if invitation %}
 <i>Uitnodiging verstuurd naar {{ invitation.invitee }}</i>
-<button hx-get="{% url 'beheerderklantform' klant.id %}" class="ui icon basic button"><i class="icon edit"></i></button>
+<button hx-get="{% url 'beheerderclientform' client.id %}" class="ui icon basic button"><i class="icon edit"></i></button>
 {% else %}
-<button hx-get="{% url 'beheerderklantform' klant.id %}" class="ui icon basic button"><i class="icon plus"></i></button>
+<button hx-get="{% url 'beheerderclientform' client.id %}" class="ui icon basic button"><i class="icon plus"></i></button>
 {% endif %}
 {% endif %}
 </div>

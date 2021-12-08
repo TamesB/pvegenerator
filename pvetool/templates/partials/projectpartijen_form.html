@@ -4,7 +4,7 @@
 {% block main %}
     <form hx-target="this" hx-swap="outerHTML" class="ui form" method="POST" enctype="multipart/form-data">
     <p>{% if project.organisaties.all %}
-    {% for organisatie in project.organisaties.all %}{{ organisatie }}, {% endfor %}
+    {% for stakeholder in project.organisaties.all %}{{ stakeholder }}, {% endfor %}
     {% endif %}</p>
     {% csrf_token %}
         {{ form }}

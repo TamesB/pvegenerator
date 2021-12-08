@@ -23,9 +23,9 @@ def ManageOrganisaties(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -38,7 +38,7 @@ def ManageOrganisaties(request, client_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     context = {}
-    context["organisaties"] = Organisatie.objects.filter(klantenorganisatie=client)
+    context["organisaties"] = Organisatie.objects.filter(client=client)
     context["client_pk"] = client_pk
     context["client"] = client
     context["logo_url"] = logo_url
@@ -55,9 +55,9 @@ def AddOrganisatie(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -74,18 +74,18 @@ def AddOrganisatie(request, client_pk):
 
         if form.is_valid():
             new_organisatie = Organisatie()
-            new_organisatie.naam = form.cleaned_data["naam"]
-            new_organisatie.klantenorganisatie = client
+            new_organisatie.name = form.cleaned_data["name"]
+            new_organisatie.client = client
             new_organisatie.save()
             messages.warning(
-                request, f"Organisatie {form.cleaned_data['naam']} aangemaakt."
+                request, f"Organisatie {form.cleaned_data['name']} aangemaakt."
             )
             return redirect("manageorganisaties_syn", client_pk=client_pk)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
     context = {}
-    context["organisaties"] = Organisatie.objects.filter(klantenorganisatie=client)
+    context["organisaties"] = Organisatie.objects.filter(client=client)
     context["form"] = AddOrganisatieForm()
     context["client_pk"] = client_pk
     context["client"] = client
@@ -103,9 +103,9 @@ def DeleteOrganisatie(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -117,14 +117,14 @@ def DeleteOrganisatie(request, client_pk, pk):
     if request.user.type_user not in allowed_users:
         return redirect("logout_syn", client_pk=client_pk)
 
-    organisatie = get_object_or_404(Organisatie, id=pk)
-    if organisatie.klantenorganisatie != client:
+    stakeholder = get_object_or_404(Organisatie, id=pk)
+    if stakeholder.client != client:
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.method == "POST":
-        naam = organisatie.naam
-        organisatie.delete()
-        messages.warning(request, f"Organisatie {naam} verwijderd.")
+        name = stakeholder.name
+        stakeholder.delete()
+        messages.warning(request, f"Organisatie {name} verwijderd.")
         return HttpResponse("")
 
     return redirect("manageorganisaties_syn", client_pk=client_pk)
@@ -140,9 +140,9 @@ def AddUserOrganisatie(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -156,11 +156,11 @@ def AddUserOrganisatie(request, client_pk, pk):
     if not Organisatie.objects.filter(id=pk):
         return redirect("logout_syn", client_pk=client_pk)
 
-    organisatie = Organisatie.objects.filter(id=pk, klantenorganisatie=client).first()
-    organisaties = Organisatie.objects.filter(klantenorganisatie=client)
+    stakeholder = Organisatie.objects.filter(id=pk, client=client).first()
+    organisaties = Organisatie.objects.filter(client=client)
     form = forms.AddUserToOrganisatieForm(request.POST or None)
-    form.fields["werknemer"].queryset = CustomUser.objects.filter(
-        ~Q(organisatie=organisatie) & Q(type_user="SD") & Q(klantenorganisatie=client)
+    form.fields["employee"].queryset = CustomUser.objects.filter(
+        ~Q(stakeholder=stakeholder) & Q(type_user="SD") & Q(client=client)
     )
 
     if request.method == "POST":
@@ -168,41 +168,41 @@ def AddUserOrganisatie(request, client_pk, pk):
 
         # check validity
         if form.is_valid():
-            werknemer = form.cleaned_data["werknemer"]
-            if werknemer.klantenorganisatie != client:
+            employee = form.cleaned_data["employee"]
+            if employee.client != client:
                 return redirect("logout_syn", client_pk=client_pk)
 
-            organisatie.gebruikers.add(werknemer)
+            stakeholder.users.add(employee)
 
             # add new user to all projects the organisation works with
-            projects = organisatie.projecten.all()
+            projects = stakeholder.projecten.all()
 
             for project in projects:
                 if (
-                    werknemer not in project.permitted.all()
-                    and project.belegger == client
+                    employee not in project.permitted.all()
+                    and project.client == client
                 ):
-                    project.permitted.add(werknemer)
+                    project.permitted.add(employee)
                     project.save()
 
-            organisatie.save()
+            stakeholder.save()
 
             send_mail(
-                f"{ client.naam } Projecten - Toegevoegd aan organisatie {organisatie.naam}",
-                f"""{ request.user } heeft u toegevoegd aan de organisatie {organisatie.naam}.
+                f"{ client.name } Projecten - Toegevoegd aan stakeholder {stakeholder.name}",
+                f"""{ request.user } heeft u toegevoegd aan de stakeholder {stakeholder.name}.
                 
-                Een organisatie kan toegevoegd worden aan projecten en werknemers krijgen dan automatisch toegang tot deze projecten.
+                Een stakeholder kan toegevoegd worden aan projecten en werknemers krijgen dan automatisch toegang tot deze projecten.
                 U kunt uw huidige projecten bekijken bij https://pvegenerator.net/pvetool/{client.id}/projects""",
                 "admin@pvegenerator.net",
-                [f"{werknemer.email}"],
+                [f"{employee.email}"],
                 fail_silently=False,
             )
             messages.warning(
                 request,
-                f"{werknemer.username} toegevoegd aan organisatie {organisatie.naam}. Een notificatie is gemaild naar deze persoon.",
+                f"{employee.username} toegevoegd aan stakeholder {stakeholder.name}. Een notificatie is gemaild naar deze persoon.",
             )
             return redirect(
-                "getusersorganisatie", client_pk=client_pk, pk=organisatie.id
+                "getusersorganisatie", client_pk=client_pk, pk=stakeholder.id
             )
         else:
             messages.warning(request, "Vul de verplichte velden in.")
@@ -210,7 +210,7 @@ def AddUserOrganisatie(request, client_pk, pk):
     context = {}
     context["form"] = form
     context["pk"] = pk
-    context["organisatie"] = organisatie
+    context["stakeholder"] = stakeholder
     context["organisaties"] = organisaties
     context["client_pk"] = client_pk
     context["client"] = client
@@ -228,9 +228,9 @@ def GetUsersInOrganisatie(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -244,12 +244,12 @@ def GetUsersInOrganisatie(request, client_pk, pk):
     if not Organisatie.objects.filter(id=pk):
         return redirect("logout_syn", client_pk=client_pk)
 
-    organisatie = Organisatie.objects.filter(id=pk, klantenorganisatie=client).first()
-    organisaties = Organisatie.objects.filter(klantenorganisatie=client)
+    stakeholder = Organisatie.objects.filter(id=pk, client=client).first()
+    organisaties = Organisatie.objects.filter(client=client)
 
     context = {}
     context["pk"] = pk
-    context["organisatie"] = organisatie
+    context["stakeholder"] = stakeholder
     context["organisaties"] = organisaties
     context["client_pk"] = client_pk
     context["client"] = client
@@ -262,9 +262,9 @@ def OrganisatieRemoveFromProject(request, client_pk, organisatie_pk, project_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -287,18 +287,18 @@ def OrganisatieRemoveFromProject(request, client_pk, organisatie_pk, project_pk)
     if stakeholder in project.organisaties.all():
         project.organisaties.remove(stakeholder)
 
-    messages.warning(request, f"Project { project.naam } verwijderd uit stakeholder { stakeholder.naam }")
+    messages.warning(request, f"Project { project.name } verwijderd uit stakeholder { stakeholder.name }")
     return HttpResponse("")
 
-def GebruikerRemoveFromOrganisatie(request, client_pk, organisatie_pk, gebruiker_pk):
+def GebruikerRemoveFromOrganisatie(request, client_pk, organisatie_pk, user_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     client = Beleggers.objects.filter(pk=client_pk).first()
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -309,21 +309,21 @@ def GebruikerRemoveFromOrganisatie(request, client_pk, organisatie_pk, gebruiker
 
     if request.user.type_user not in allowed_users:
         return redirect("logout_syn", client_pk=client_pk)
-    if not CustomUser.objects.filter(id=gebruiker_pk):
+    if not CustomUser.objects.filter(id=user_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     stakeholder = Organisatie.objects.get(id=organisatie_pk)
-    gebruiker = CustomUser.objects.get(id=gebruiker_pk)
+    user = CustomUser.objects.get(id=user_pk)
 
-    if gebruiker.klantenorganisatie.id != client.id:
+    if user.client.id != client.id:
         return redirect("logout_syn", client_pk=client_pk)
 
-    if gebruiker in stakeholder.gebruikers.all():
-        stakeholder.gebruikers.remove(gebruiker)
+    if user in stakeholder.users.all():
+        stakeholder.users.remove(user)
 
-    if stakeholder == gebruiker.organisatie:
-        gebruiker.organisatie = None
-        gebruiker.save()
+    if stakeholder == user.stakeholder:
+        user.stakeholder = None
+        user.save()
 
-    messages.warning(request, f"Gebruiker { gebruiker.username } verwijderd uit stakeholder { stakeholder.naam }")
+    messages.warning(request, f"Gebruiker { user.username } verwijderd uit stakeholder { stakeholder.name }")
     return HttpResponse("")

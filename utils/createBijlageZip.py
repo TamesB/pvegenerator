@@ -39,7 +39,7 @@ class ZipMaker:
             try:
                 response = s3_client.generate_presigned_url(
                     "get_object",
-                    Params={"Bucket": bucket_name, "Key": str(item.bijlage)},
+                    Params={"Bucket": bucket_name, "Key": str(item.attachment)},
                     ExpiresIn=expiration,
                 )
             except ClientError as e:
@@ -48,15 +48,15 @@ class ZipMaker:
 
             page = urllib.request.urlopen(response)  # Change to website
             # put in this map of the zip with this name
-            filename_split = str(item.bijlage).split("/")
+            filename_split = str(item.attachment).split("/")
             map_name = filename_split[0]
             extension = filename_split[1].split(".")[1]
-            if item.naam:
-                naam = item.naam
+            if item.name:
+                name = item.name
             else:
-                naam = filename_split[1].split(".")[0]
+                name = filename_split[1].split(".")[0]
                 
-            full_attach_url = f"{map_name}/{naam}.{extension}"
+            full_attach_url = f"{map_name}/{name}.{extension}"
             zipf.writestr(full_attach_url, page.read())
 
         # write the pdf in the root of zip

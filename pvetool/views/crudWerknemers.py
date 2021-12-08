@@ -38,9 +38,9 @@ def ManageWerknemers(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -54,7 +54,7 @@ def ManageWerknemers(request, client_pk):
 
     context = {}
     context["werknemers"] = (
-        client.werknemer.all()
+        client.employee.all()
         .filter(Q(type_user="SD") | Q(type_user="SOG"))
         .order_by("-last_visit")
     )
@@ -81,9 +81,9 @@ def AddAccount(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -107,12 +107,12 @@ def AddAccount(request, client_pk):
             invitation.inviter = request.user
             invitation.invitee = form.cleaned_data["invitee"]
             invitation.rang = form.cleaned_data["rang"]
-            invitation.klantenorganisatie = client
+            invitation.client = client
 
             if form.cleaned_data["project"]:
                 invitation.project = form.cleaned_data["project"]
-            if form.cleaned_data["organisatie"]:
-                invitation.organisatie = form.cleaned_data["organisatie"]
+            if form.cleaned_data["stakeholder"]:
+                invitation.stakeholder = form.cleaned_data["stakeholder"]
 
             # Als pvetool beheerder invitatie doet kan hij ook rang geven (projectmanager/derde)
             manager = False
@@ -130,8 +130,8 @@ def AddAccount(request, client_pk):
 
             if manager:
                 send_mail(
-                    f"{ client.naam } Projecten - Uitnodiging voor de PvE tool",
-                    f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor een of meerdere projecten van { client.naam }.
+                    f"{ client.name } Projecten - Uitnodiging voor de PvE tool",
+                    f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor een of meerdere projecten van { client.name }.
                     
                     Klik op de uitnodigingslink om rechtstreeks de tool in te gaan.
                     Link: https://pvegenerator.net/pvetool/invite/{invitation.key}
@@ -143,11 +143,11 @@ def AddAccount(request, client_pk):
                 )
             else:
                 send_mail(
-                    f"{ client.naam } Projecten - Uitnodiging voor de PvE tool",
-                    f"""{ request.user } nodigt u uit voor het commentaar leveren en het checken van het Programma van Eisen voor een of meerdere projecten van { client.naam }.
+                    f"{ client.name } Projecten - Uitnodiging voor de PvE tool",
+                    f"""{ request.user } nodigt u uit voor het commentaar leveren en het checken van het Programma van Eisen voor een of meerdere projecten van { client.name }.
                     
                     Uw stappenplan:
-                    1. Volg de link hieronder en maak een wachtwoord aan. Uw gebruikersnaam wordt naar u gemaild.
+                    1. Volg de link hieronder en maak een wachtwoord aan. Uw usersname wordt naar u gemaild.
                     2. Check uw projecten op de dashboard of bij "Mijn Projecten" in het uitschuifmenu links.
                     3. Check de projectpagina's en volg de To Do stappen om commentaar te leveren op de regels.
 
@@ -177,9 +177,9 @@ def AddAccount(request, client_pk):
     else:
         form = forms.KoppelDerdeUserForm()
 
-    form.fields["project"].queryset = Project.objects.filter(belegger=client)
-    form.fields["organisatie"].queryset = Organisatie.objects.filter(
-        klantenorganisatie=client
+    form.fields["project"].queryset = Project.objects.filter(client=client)
+    form.fields["stakeholder"].queryset = Organisatie.objects.filter(
+        client=client
     )
 
     context = {}
@@ -204,9 +204,9 @@ def AcceptInvite(request, client_pk, key):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -232,10 +232,10 @@ def AcceptInvite(request, client_pk, key):
                 username, password=form.cleaned_data["password1"]
             )
             user.email = invitation.invitee
-            if invitation.organisatie:
-                user.organisatie = invitation.organisatie
-            if invitation.klantenorganisatie:
-                user.klantenorganisatie = invitation.klanteorganisatie
+            if invitation.stakeholder:
+                user.stakeholder = invitation.stakeholder
+            if invitation.client:
+                user.client = invitation.clienteorganisatie
 
             user.save()
 
@@ -257,17 +257,17 @@ def AcceptInvite(request, client_pk, key):
                         project.projectmanager = user
                         project.save()
 
-            if invitation.organisatie:
-                organisatie = invitation.organisatie
-                organisatie.gebruikers.add(user)
-                organisatie.save()
+            if invitation.stakeholder:
+                stakeholder = invitation.stakeholder
+                stakeholder.users.add(user)
+                stakeholder.save()
 
             invitation.delete()
 
             send_mail(
-                f"{ client.naam } Projecten - Uw Logingegevens",
+                f"{ client.name } Projecten - Uw Logingegevens",
                 f"""Reeds heeft u zich aangemeld bij de PvE tool.
-                Voor het vervolgens inloggen op de tool is uw gebruikersnaam: {user.username}
+                Voor het vervolgens inloggen op de tool is uw usersname: {user.username}
                 en het wachtwoord wat u heeft aangegeven bij het aanmelden.""",
                 "admin@pvegenerator.net",
                 [f"{invitation.invitee}"],
@@ -277,7 +277,7 @@ def AcceptInvite(request, client_pk, key):
                 login(request, user)
                 messages.warning(
                     request,
-                    f"Account aangemaakt met gebruikersnaam: {user.username}. Uw logingegevens zijn naar u gemaild.",
+                    f"Account aangemaakt met usersname: {user.username}. Uw logingegevens zijn naar u gemaild.",
                 )
                 return redirect("viewprojectoverview_syn", client_pk=client_pk)
         else:
@@ -310,9 +310,9 @@ def InviteUsersToProject(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -335,7 +335,7 @@ def InviteUsersToProject(request, client_pk, pk):
             permitted = form.cleaned_data["permitted"]
 
             for user in permitted:
-                if user.klantenorganisatie != client:
+                if user.client != client:
                     return redirect("logout_syn", client_pk=client_pk)
 
             project.projectmanager = projectmanager
@@ -344,31 +344,31 @@ def InviteUsersToProject(request, client_pk, pk):
             project.save()
 
             if organisaties:
-                organisaties = [organisatie for organisatie in organisaties]
-                gebruikers = []
+                organisaties = [stakeholder for stakeholder in organisaties]
+                users = []
 
-                for organisatie in organisaties:
-                    gebruikerSet = [user for user in organisatie.gebruikers.all()]
-                    gebruikers.append(gebruikerSet)
-                    organisatie.projecten.add(project)
-                    organisatie.save()
+                for stakeholder in organisaties:
+                    userSet = [user for user in stakeholder.users.all()]
+                    users.append(userSet)
+                    stakeholder.projecten.add(project)
+                    stakeholder.save()
 
-                for gebruiker in gebruikers:
+                for user in users:
                     send_mail(
-                        f"{ client.naam } Projecten - Uitnodiging voor project {project}",
-                        f"""{ request.user } heeft u uitgenodigd om mee te werken aan het project { project } van { client.naam }.
+                        f"{ client.name } Projecten - Uitnodiging voor project {project}",
+                        f"""{ request.user } heeft u uitgenodigd om mee te werken aan het project { project } van { client.name }.
                         
                         U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
                         Link: https://pvegenerator.net/pvetool/project/{project.id}""",
                         "admin@pvegenerator.net",
-                        [f"{gebruiker.email}"],
+                        [f"{user.email}"],
                         fail_silently=False,
                     )
 
             if projectmanager:
                 send_mail(
-                    f"{ client.naam } Projecten - Uitnodiging voor project {project}",
-                    f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor het project { project } van { client.naam }.
+                    f"{ client.name } Projecten - Uitnodiging voor project {project}",
+                    f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor het project { project } van { client.name }.
                     
                     U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
                     Link: https://pvegenerator.net/pvetool/project/{project.id}""",
@@ -378,17 +378,17 @@ def InviteUsersToProject(request, client_pk, pk):
                 )
 
             if permitted:
-                gebruikers = [user for user in permitted]
+                users = [user for user in permitted]
 
-                for gebruiker in gebruikers:
+                for user in users:
                     send_mail(
-                        f"{ client.naam } Projecten - Uitnodiging voor project {project}",
-                        f"""{ request.user } heeft u uitgenodigd om mee te werken aan het project { project } van { client.naam }.
+                        f"{ client.name } Projecten - Uitnodiging voor project {project}",
+                        f"""{ request.user } heeft u uitgenodigd om mee te werken aan het project { project } van { client.name }.
                         
                         U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
                         Link: https://pvegenerator.net/pvetool/project/{project.id}""",
                         "admin@pvegenerator.net",
-                        [f"{gebruiker.email}"],
+                        [f"{user.email}"],
                         fail_silently=False,
                     )
             messages.warning(
@@ -402,7 +402,7 @@ def InviteUsersToProject(request, client_pk, pk):
     # form
     form = forms.InviteProjectStartForm()
     form.fields["organisaties"].queryset = Organisatie.objects.filter(
-        klantenorganisatie=client
+        client=client
     )
 
     context = {}

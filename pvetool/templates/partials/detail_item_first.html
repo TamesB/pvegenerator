@@ -10,9 +10,9 @@
     <div class="container_item_partial">
     <div class="pveruletext">
     <p style="font-style:italic;">
-    {{ item }}{% if bijlages %} 
-    {% for bijlage in bijlages %}
-    <p>Bijlage: <a href="{% url 'downloadbijlage' client_pk item.id %}" target="_blank">
+    {{ item }}{% if attachments %} 
+    {% for attachment in attachments %}
+    <p>Bijlage: <a href="{% url 'downloadattachment' client_pk item.id %}" target="_blank">
     <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img>
     </a></p>
     {% endfor %}

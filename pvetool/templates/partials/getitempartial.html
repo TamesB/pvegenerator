@@ -30,11 +30,11 @@
 
     </div>
     {% endif %}
-    {% if annotation.annotation or annotation.bijlage or annotation.firststatus %}
+    {% if annotation.annotation or annotation.attachment or annotation.firststatus %}
 
     <div class="reaction_on_rule">
         <div class="party">
-            <p><i>{% if annotation.gebruiker.organisatie %}{{ annotation.gebruiker.organisatie }}{% else %}{{ annotation.gebruiker.klantenorganisatie }}{% endif %}</i></p>
+            <p><i>{% if annotation.user.stakeholder %}{{ annotation.user.stakeholder }}{% else %}{{ annotation.user.client }}{% endif %}</i></p>
         </div>
         <div class="accept">
             <p></p>
@@ -48,10 +48,10 @@
         {% endif %}
         </div>
         <div class="attachments">
-        {% if annotationbijlagen %}
-            {% for bijlage in annotationbijlagen %}
-            {% if bijlage.bijlage %}
-            <span><i><a href="{% url 'downloadbijlageaanopmerking_syn' client_pk project_pk annotation.id bijlage.id %}" target="_blank">{{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a></i></span>
+        {% if annotationattachments %}
+            {% for attachment in annotationattachments %}
+            {% if attachment.attachment %}
+            <span><i><a href="{% url 'downloadattachmentaanopmerking_syn' client_pk project_pk annotation.id attachment.id %}" target="_blank">{{ attachment }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a></i></span>
             {% endif %}
             {% endfor %}
         {% endif %}
@@ -61,10 +61,10 @@
     {% endif %}
 
     {% for reply in replies %}
-    {% if reply.comment or reply.status or reply.bijlage or reply.accept %}
+    {% if reply.comment or reply.status or reply.attachment or reply.accept %}
     <div class="reaction_on_rule">
         <div class="party">
-            <p><i>{% if reply.gebruiker.organisatie %}{{ reply.gebruiker.organisatie }}{% else %}{{ reply.gebruiker.klantenorganisatie }}{% endif %}</i></p>
+            <p><i>{% if reply.user.stakeholder %}{{ reply.user.stakeholder }}{% else %}{{ reply.user.client }}{% endif %}</i></p>
         </div>
         <div class="accept">
             {% if reply.accept is False %}<i class="icon times"></i>{% else %}<i class="icon check"></i>{% endif %}
@@ -81,12 +81,12 @@
             {% endif %}
         </div>
         <div class="attachments">
-            {% if bijlagen|get_item:reply.id %} 
+            {% if attachments|get_item:reply.id %} 
             <span>
             <p><i>
-            {% for bijlage in bijlagen|get_item:reply.id %}
-            <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk bijlage.reply.id bijlage.id %}" target="_blank">
-            {{ bijlage }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img>
+            {% for attachment in attachments|get_item:reply.id %}
+            <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk attachment.reply.id attachment.id %}" target="_blank">
+            {{ attachment }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img>
             </a>
             {% endfor %}
         </i></p></span>

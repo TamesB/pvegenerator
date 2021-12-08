@@ -6,9 +6,9 @@
 >
   <a class="logo"><img style="margin-top: 2vh; margin-bottom: 2vh;" src="{% static 'logo.png' %}"></img> </a>
   <a class="item" hx-get="{% url 'dashboard' %}" hx-target="body" hx-swap="innerHTML"><span><i class="desktop icon small"></i> Dashboard </span></a>
-  <a class="item" hx-get="{% url 'klantoverzicht' %}" hx-target="#main" hx-swap="innerHTML"> <span><i class="address card outline icon"></i> Klantenoverzicht </span></a>
-  <a class="item" hx-get="{% url 'klanttoevoegen' %}" hx-target="#main" hx-swap="innerHTML"> <span><i class="user plus icon"></i> Klant toevoegen </span></a>
-  <a class="item" hx-get="{% url 'beleggerversieoverview' %}" hx-target="#main" hx-swap="innerHTML"> <span><i class="edit outline icon"></i> Bewerk PvE's </span></a>
+  <a class="item" hx-get="{% url 'clientoverzicht' %}" hx-target="#main" hx-swap="innerHTML"> <span><i class="address card outline icon"></i> Klantenoverzicht </span></a>
+  <a class="item" hx-get="{% url 'clienttoevoegen' %}" hx-target="#main" hx-swap="innerHTML"> <span><i class="user plus icon"></i> Klant toevoegen </span></a>
+  <a class="item" hx-get="{% url 'clientversieoverview' %}" hx-target="#main" hx-swap="innerHTML"> <span><i class="edit outline icon"></i> Bewerk PvE's </span></a>
   <a class="item" href="{% url 'allprojects' %}"><span><i class="map marker alternate icon"></i> Projecten </span></a>
   <a class="item" href="{% url 'projectheatmap' %}"><span><i class="map outline icon"></i> Project Heatmap </span></a>
   <a class="item" hx-get="{% url 'accountoverview' %}" hx-target="#main" hx-swap="innerHTML"><span><i class="address card outline icon"></i> Accounts</span></a>

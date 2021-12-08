@@ -45,7 +45,7 @@
         {% if new_projecten %}
             {% for project in new_projecten %}
         <tr class="table_content">
-          <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
+          <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.name }}<i class="right arrow icon"></i></button></a></p></td>
           {% language 'nl' %}
           <td><p>{{ project.datum_recent_verandering }}</p></td>
           {% endlanguage %}
@@ -61,7 +61,7 @@
               <span><button hx-post="{% url 'deleteproject' client_pk project.id %}"
                       hx-target="closest tr"
                       hx-swap="outerHTML"
-          hx-prompt="Vul 'VERWIJDEREN' in om project {{ project.naam }} te verwijderen."
+          hx-prompt="Vul 'VERWIJDEREN' in om project {{ project.name }} te verwijderen."
           class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
 
               </td>
@@ -104,7 +104,7 @@
       {% if old_projecten %}
           {% for project in old_projecten %}
       <tr class="table_content">
-        <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.naam }}<i class="right arrow icon"></i></button></a></p></td>
+        <td><p><a href="{% url 'viewproject_syn' client_pk project.id %}"><button class="ui basic button">{{ project.name }}<i class="right arrow icon"></i></button></a></p></td>
                   {% language 'nl' %}
         <td><p>{{ project.datum_recent_verandering }}</p></td>
         {% endlanguage %}
@@ -120,7 +120,7 @@
               <span><button hx-post="{% url 'deleteproject' client_pk project.id %}"
                       hx-target="closest tr"
                       hx-swap="outerHTML"
-          hx-prompt="Vul 'VERWIJDEREN' in om project {{ project.naam }} te verwijderen."
+          hx-prompt="Vul 'VERWIJDEREN' in om project {{ project.name }} te verwijderen."
           class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
 
               </td>

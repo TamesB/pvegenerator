@@ -1,8 +1,8 @@
 {% block main %}
-<div id="versienaam-{{ versie.id }}">
-<a href="{% url 'pvebewerkoverview' versie.id %}"
->{{ versie.versie }}</a
+<div id="versiename-{{ version.id }}">
+<a href="{% url 'pvebewerkoverview' version.id %}"
+>{{ version.version }}</a
 >
-<button hx-get="{% url 'editpveversiename' versie.id %}" hx-target="#versienaam-{{ versie.id }}" hx-swap="outerHTML" type="submit" class="ui icon basic button"><i class="edit icon"></i></button>
+<button hx-get="{% url 'editpveversiename' version.id %}" hx-target="#versiename-{{ version.id }}" hx-swap="outerHTML" type="submit" class="ui icon basic button"><i class="edit icon"></i></button>
 </div>
 {% endblock %}

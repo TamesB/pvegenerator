@@ -3,12 +3,12 @@
 {% load semanticui %}
 
 {% block main %}
-<input type="button" class="ui primary button d-inline" onclick="javascript:window.location='{% url 'compare' versie_pk %}'" value="< Vergelijkingsformulier" />
+<input type="button" class="ui primary button d-inline" onclick="javascript:window.location='{% url 'compare' version_pk %}'" value="< Vergelijkingsformulier" />
     <h1 class="ui header">Afwijkingen lijst</h1>
     {% if afwijkingen %}
     <p><span><a href="{% url 'download' filename %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>Open als PDF</button></a></span></p>
     {% if zipFilename %}
-    <p><span><a href="{% url 'downloadbijlagen' zipFilename %}"><button class="ui basic button"><i class="icon download"></i>Download PvE + Bijlagen (.zip)</button></a></span></p>
+    <p><span><a href="{% url 'downloadattachments' zipFilename %}"><button class="ui basic button"><i class="icon download"></i>Download PvE + Bijlagen (.zip)</button></a></span></p>
     {% endif %}
     {% if excelFilename %}
     <p><span><a href="{% url 'worksheetdownload' excelFilename %}"><button class="ui basic button"><i class="icon download"></i>Download Excel PvE</button></a></span></p>
@@ -33,7 +33,7 @@
                         {{ item.inhoud }}
                     </td>
                     <td> 
-					<a href="{% url 'edititem' versie_pk item.id %}">Bewerk</a> &nbsp; 
+					<a href="{% url 'edititem' version_pk item.id %}">Bewerk</a> &nbsp; 
                     </td>
 				</tr>
 				{% endfor %}

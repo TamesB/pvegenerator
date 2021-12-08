@@ -5,16 +5,16 @@
 {% load cache %}
 
 {% block main %}
-{% for paragraaf in paragraven %}
-    <button type="button" hx-get="{% url 'getitemspingpong' client_pk project.id paragraaf.hoofdstuk.id paragraaf.id type accept %}" hx-target="#paragraaf_content-{{ type }}-{{ paragraaf.hoofdstuk.id }}-{{ paragraaf.id }}" hx-swap="innerHTML" hx-trigger="click once" class="paragraaf"><p>{{ paragraaf.paragraaf }} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
-    <div class="paragraaf_content" id="paragraaf_content-{{ type }}-{{ paragraaf.hoofdstuk.id }}-{{ paragraaf.id }}">
+{% for paragraph in paragraphs %}
+    <button type="button" hx-get="{% url 'getitemspingpong' client_pk project.id paragraph.chapter.id paragraph.id type accept %}" hx-target="#paragraaf_content-{{ type }}-{{ paragraph.chapter.id }}-{{ paragraph.id }}" hx-swap="innerHTML" hx-trigger="click once" class="paragraph"><p>{{ paragraph.paragraph }} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
+    <div class="paragraaf_content" id="paragraaf_content-{{ type }}-{{ paragraph.chapter.id }}-{{ paragraph.id }}">
     </div>
 {% endfor %}
 {% endblock %}
 
 {% block scripts %}
 <script>
-var coll2 = document.getElementsByClassName("paragraaf");
+var coll2 = document.getElementsByClassName("paragraph");
 var i;
 
 for (i = 0; i < coll2.length; i++) {

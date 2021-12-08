@@ -18,18 +18,18 @@ class Abbonement(models.Model):
         return f"{self.soort} - €{self.kosten} p/m - Projecten: {self.projectlimiet} - Werknemers: {self.werknemerlimiet}"
 
 class Beleggers(models.Model):
-    naam = models.CharField(max_length=100, blank=True, null=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
     beheerder = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
-    abbonement = models.ForeignKey(Abbonement, on_delete=models.CASCADE, null=True, blank=True)
+    subscription = models.ForeignKey(Abbonement, on_delete=models.CASCADE, null=True, blank=True)
 
     logo = models.FileField(blank=True, null=True, upload_to="KlantLogos")
 
     def __str__(self):
-        return f"{self.naam}"
+        return f"{self.name}"
 
 class BeheerdersUitnodiging(models.Model):
     invitee = models.EmailField()
-    klantenorganisatie = models.ForeignKey(
+    client = models.ForeignKey(
         "project.Beleggers", on_delete=models.CASCADE, null=True, blank=True
          )
     expires = models.DateTimeField(auto_now=False)
@@ -48,16 +48,16 @@ class ContractStatus(models.Model):
 # Create your models here.
 class Project(models.Model):
     nummer = models.FloatField(max_length=100, default=None)
-    naam = models.CharField(max_length=500, default=None)
+    name = models.CharField(max_length=500, default=None)
     plaats = gismodels.PointField()
     plaatsnamen = models.CharField(max_length=250, default=None, null=True)
     vhe = models.FloatField(max_length=100, default=None)
     pensioenfonds = models.CharField(max_length=100, default=None)
     statuscontract = models.ForeignKey(ContractStatus, on_delete=models.SET_NULL, null=True, related_name="project")
-    datum_aangemaakt = models.DateTimeField(auto_now=True)
-    belegger = models.ForeignKey(Beleggers, on_delete=models.SET_NULL, null=True, related_name="project")
+    date_aangemaakt = models.DateTimeField(auto_now=True)
+    client = models.ForeignKey(Beleggers, on_delete=models.SET_NULL, null=True, related_name="project")
 
-    datum_recent_verandering = models.DateTimeField(
+    date_recent_verandering = models.DateTimeField(
         "recente_verandering", auto_now=True
     )
 
@@ -168,7 +168,7 @@ class Project(models.Model):
     JamesConcept = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.naam}"
+        return f"{self.name}"
 
 
 class PVEItemAnnotation(models.Model):
@@ -181,29 +181,30 @@ class PVEItemAnnotation(models.Model):
     firststatus = models.ForeignKey(
         "pvetool.CommentStatus", on_delete=models.CASCADE, default=None, null=True, related_name="first_annotation"
     )
-    gebruiker = models.ForeignKey(
+    user = models.ForeignKey(
         "users.CustomUser", on_delete=models.CASCADE, default=None, null=True, related_name="annotation"
     )
-    datum = models.DateTimeField(auto_now=True)
-    kostenConsequenties = models.DecimalField(
+    date = models.DateTimeField(auto_now=True)
+    consequentCosts = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True, default=None
     )
-    bijlage = models.BooleanField(default=False, blank=True, null=True)
+    costs_per_unit = models.BooleanField(default=False, blank=True, null=True)
+    attachment = models.BooleanField(default=False, blank=True, null=True)
     init_accepted = models.BooleanField(default=False, blank=True, null=True)
 
     def __str__(self):
         return f"{self.annotation}"
 
     class Meta:
-        ordering = ["-datum"]
+        ordering = ["-date"]
 
 class BijlageToAnnotation(models.Model):
-    ann = models.ForeignKey(PVEItemAnnotation, on_delete=models.CASCADE, default=None, related_name="bijlageobject")
-    bijlage = models.FileField(blank=True, null=True, upload_to="OpmerkingBijlages/")
-    naam = models.CharField(max_length=100, blank=True, null=True)
+    ann = models.ForeignKey(PVEItemAnnotation, on_delete=models.CASCADE, default=None, related_name="attachmentobject")
+    attachment = models.FileField(blank=True, null=True, upload_to="OpmerkingBijlages/")
+    name = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.naam}"
+        return f"{self.name}"
     
 @receiver(pre_save, sender=Beleggers)
 def on_change(sender, instance: Beleggers, **kwargs):
@@ -223,17 +224,17 @@ def on_change(sender, instance: Beleggers, **kwargs):
     activity.save()
     
     if instance.id is None: # new object will be created
-        activity.update = f"Nieuwe klant aangemaakt: { instance.naam }."
+        activity.update = f"Nieuwe client aangemaakt: { instance.name }."
     else:
         previous = Beleggers.objects.get(id=instance.id)
-        if previous.naam != instance.naam: # field will be updated
-            activity.update = f"Klantnaam { previous.naam } veranderd naar { instance.naam }."
+        if previous.name != instance.name: # field will be updated
+            activity.update = f"Klantname { previous.name } veranderd naar { instance.name }."
         if previous.beheerder != instance.beheerder: # field will be updated
-            activity.update = f"Beheerder van { instance.naam } veranderd naar { instance.beheerder }."
+            activity.update = f"Beheerder van { instance.name } veranderd naar { instance.beheerder }."
         if previous.logo != instance.logo: # field will be updated
-            activity.update = f"Logo veranderd van klant { instance.naam }."
-        if previous.abbonement != instance.abbonement: # field will be updated
-            activity.update = f"Abonnement veranderd van klant { instance.naam }."
+            activity.update = f"Logo veranderd van client { instance.name }."
+        if previous.subscription != instance.subscription: # field will be updated
+            activity.update = f"Abonnement veranderd van client { instance.name }."
 
     
     activity.save()
@@ -256,19 +257,19 @@ def on_change(sender, instance: Project, **kwargs):
     activity.save()
     
     if instance.id is None: # new object will be created
-        activity.update = f"Nieuw project van klant { request.user.klantenorganisatie }: '{ instance.naam }'."
+        activity.update = f"Nieuw project van client { request.user.client }: '{ instance.name }'."
     else:
         previous = Project.objects.get(id=instance.id)
-        if previous.naam != instance.naam: # field will be updated
-            activity.update = f"{ previous.naam } van klant { instance.belegger }: Projectnaam veranderd naar { instance.naam }."
+        if previous.name != instance.name: # field will be updated
+            activity.update = f"{ previous.name } van client { instance.client }: Projectname veranderd naar { instance.name }."
         if previous.pveconnected != instance.pveconnected: # field will be updated
-            activity.update = f"{ instance.naam } van klant { instance.belegger }: PvE verbonden aan project (PvE Versie: { instance.pve_versie })."
+            activity.update = f"{ instance.name } van client { instance.client }: PvE verbonden aan project (PvE Versie: { instance.pve_versie })."
         if previous.fullyFrozen != instance.fullyFrozen: # field will be updated
-            activity.update = f"{ instance.naam } van klant { instance.belegger }: Opmerkingen bevroren."
+            activity.update = f"{ instance.name } van client { instance.client }: Opmerkingen bevroren."
         if previous.frozenLevel < instance.frozenLevel: # field will be updated
-            activity.update = f"{ instance.naam } van klant { instance.belegger }: Opmerkingen doorgestuurd (naar opmerkingsniveau {instance.frozenLevel})."
+            activity.update = f"{ instance.name } van client { instance.client }: Opmerkingen doorgestuurd (naar opmerkingsniveau {instance.frozenLevel})."
         if previous.projectmanager != instance.projectmanager: # field will be updated
-            activity.update = f"{ instance.naam } van klant { instance.belegger }: Projectmanager veranderd naar { instance.projectmanager }."
+            activity.update = f"{ instance.name } van client { instance.client }: Projectmanager veranderd naar { instance.projectmanager }."
             
         if list(previous.organisaties.all()) != list(instance.organisaties.all()): # field will be updated
             huidige_orgas = list(instance.organisaties.all())
@@ -276,8 +277,8 @@ def on_change(sender, instance: Project, **kwargs):
             verschil = list(set(huidige_orgas) - set(previous_orgas))
             if not verschil:
                 negatief_verschil = list(set(previous_orgas) - set(huidige_orgas))
-                activity.update = f"{ instance.naam } van klant { instance.belegger }: Organisatie(s) verwijderd; { ', '.join(negatief_verschil) }."
+                activity.update = f"{ instance.name } van client { instance.client }: Organisatie(s) verwijderd; { ', '.join(negatief_verschil) }."
             else:
-                activity.update = f"{ instance.naam } van klant { instance.belegger }: Organisatie(s) toegevoegd; { ', '.join(verschil) }."
+                activity.update = f"{ instance.name } van client { instance.client }: Organisatie(s) toegevoegd; { ', '.join(verschil) }."
 
     activity.save()

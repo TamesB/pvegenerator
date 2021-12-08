@@ -19,9 +19,9 @@
   <div class="active section">Voeg PvE Toe</div>
 </div>
 
-<div class="general_title"><img src="{% static 'pvetool/img/genereer.png'%}" class="title_img"></img><p>+ Programma van Eisen (Versie: {{ versie.versie }})</p></div>
+<div class="general_title"><img src="{% static 'pvetool/img/genereer.png'%}" class="title_img"></img><p>+ Programma van Eisen (Versie: {{ version.version }})</p></div>
 <div class="generator_form">
-    <form action="{% url 'connectpve_syn' client_pk project.id versie_pk %}" method="POST" enctype="multipart/form-data">
+    <form action="{% url 'connectpve_syn' client_pk project.id version_pk %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="parameter_container">
         <div class="parameter_item">

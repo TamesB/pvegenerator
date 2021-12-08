@@ -15,7 +15,7 @@
   <i class="right chevron icon divider"></i>
   <a class="section" href="{% url 'viewprojectoverview_syn' client_pk %}">Mijn Projecten</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'viewproject_syn' client_pk project.id %}">Project: {{ project.naam }}</a>
+  <a class="section" href="{% url 'viewproject_syn' client_pk project.id %}">Project: {{ project.name }}</a>
   <i class="right chevron icon divider"></i>
   <div class="active section">PvE Download</div>
 </div>
@@ -37,7 +37,7 @@
             <input class="button" type="submit" value="Open als PDF" />
         </form>
         {% if zipFilename %}
-        <form action="{% url 'downloadbijlagen' zipFilename %}" target="_blank">
+        <form action="{% url 'downloadattachments' zipFilename %}" target="_blank">
             <input class="button" type="submit" value="Download PvE + Bijlagen (.zip)" />
         </form>
         {% endif %}

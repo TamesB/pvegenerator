@@ -23,7 +23,7 @@ from .models import (
 class LoginForm(forms.Form):
     attrs = {"type": "password"}
 
-    username = forms.CharField(label="Gebruikersnaam", max_length=100)
+    username = forms.CharField(label="Gebruikersname", max_length=100)
     password = forms.CharField(
         label="Wachtwoord", max_length=100, widget=forms.TextInput(attrs=attrs)
     )
@@ -49,60 +49,60 @@ class BeleggerForm(ModelForm):
 
     class Meta:
         model = Beleggers
-        fields = ("naam", "abbonement", "logo")
+        fields = ("name", "subscription", "logo")
         labels = {
-            "naam": "Naam:",
-            "abbonement": "Abbonement Type:",
+            "name": "Naam:",
+            "subscription": "Abbonement Type:",
             "logo": "Upload Logo:",
             "email": "E-mail beheerder (optioneel):"
         }
 
         layout = [
             ("Text", '<h2 class="ui dividing header">Basisinformatie</h2>'),
-            ("Field", "naam"),
-            ("Field", "abbonement"),
+            ("Field", "name"),
+            ("Field", "subscription"),
             ("Text", '<h2 class="ui dividing header">Beheerder</h2>'),
             (
                 "Text",
-                "<i>Vul de e-mail van de beheerder van de klant in. Een e-mail wordt naar hen gestuurd voor toegang naar de gegenereerde sub-website.</i>",
+                "<i>Vul de e-mail van de beheerder van de client in. Een e-mail wordt naar hen gestuurd voor toegang naar de gegenereerde sub-website.</i>",
             ),
             ("Field", "email"),
             ("Text", '<h2 class="ui dividing header">Klantenlogo</h2>'),
             (
                 "Text",
-                "<i>Upload hier de logo van de klant. Deze logo wordt gebruikt voor hun subwebsite en PvE's.</i><br>",
+                "<i>Upload hier de logo van de client. Deze logo wordt gebruikt voor hun subwebsite en PvE's.</i><br>",
             ),
             ("Field", "logo"),
         ]
 
 class PVEVersieForm(ModelForm):
-    kopie_versie = forms.ModelChoiceField(
+    version_copy = forms.ModelChoiceField(
         queryset=PVEVersie.objects.all(), label="Kopie (optioneel):", required=False
     )
 
     class Meta:
         model = PVEVersie
-        fields = ("versie", "belegger")
+        fields = ("version", "client")
         labels = {
-            "versie": "Versie Naam:",
-            "kopie_versie": "Kopie (optioneel):"
+            "version": "Versie Naam:",
+            "version_copy": "Kopie (optioneel):"
         }
-        widgets = {"belegger": forms.HiddenInput()}
+        widgets = {"client": forms.HiddenInput()}
 
 class PVEVersieNameForm(ModelForm):
     class Meta:
         model = PVEVersie
-        fields = ("versie",)
+        fields = ("version",)
         labels = {
-            "versie": "",
+            "version": "",
         }
 
-class bijlageEditForm(forms.Form):
-    bijlage = forms.FileField(required=False, label="Bijlage")
+class attachmentEditForm(forms.Form):
+    attachment = forms.FileField(required=False, label="Bijlage")
     items = forms.ModelMultipleChoiceField(
         queryset=PVEItem.objects.all(), label="Behoort tot regel(s)", required=False
     )
-    naam = forms.CharField(label="", required=False, max_length=100)
+    name = forms.CharField(label="", required=False, max_length=100)
 
     widgets = {
         "items": forms.SelectMultiple(
@@ -116,60 +116,60 @@ class bijlageEditForm(forms.Form):
                 "Text",
                 "<i>Upload het bestand hier.</i><br>",
             ),
-            ("Field", "bijlage"),
+            ("Field", "attachment"),
             ("Text", '<h2 class="ui dividing header">Items</h2>'),
             (
                 "Text",
-                "<i>Voeg hier een of meerdere regels toe waar de bijlage tot behoort</i>",
+                "<i>Voeg hier een of meerdere regels toe waar de attachment tot behoort</i>",
             ),
             ("Field", "items"),
-            ("Text", '<h2 class="ui dividing header">Bijnaam (optioneel)</h2>'),
+            ("Text", '<h2 class="ui dividing header">Bijname (optioneel)</h2>'),
             (
                 "Text",
-                "<i>Voeg hier de bijnaam toe van de bijlage. Deze naam wordt gebruikt in het PvE en als bestandsnaam bij het downloaden van het PvE.</i><br>",
+                "<i>Voeg hier de bijname toe van de attachment. Deze name wordt gebruikt in het PvE en als bestandsname bij het downloaden van het PvE.</i><br>",
             ),
-            ("Field", "naam"),
+            ("Field", "name"),
         ]
 
 
 class SectionForm(ModelForm):
     class Meta:
         model = PVEOnderdeel
-        fields = ("naam",)
+        fields = ("name",)
         labels = {
-            "naam": "Naam:",
+            "name": "Naam:",
         }
 
 
 class ActieveVersieEditForm(ModelForm):
     class Meta:
         model = ActieveVersie
-        fields = ("versie",)
+        fields = ("version",)
         labels = {
-            "versie": "Versie:",
+            "version": "Versie:",
         }
 
 
 class ChapterForm(ModelForm):
     class Meta:
         model = PVEHoofdstuk
-        fields = ("hoofdstuk",)
+        fields = ("chapter",)
         labels = {
-            "hoofdstuk": "Naam:",
+            "chapter": "Naam:",
         }
 
 
 class ParagraafForm(ModelForm):
     class Meta:
         model = PVEParagraaf
-        fields = ("paragraaf",)
+        fields = ("paragraph",)
         labels = {
-            "paragraaf": "Naam:",
+            "paragraph": "Naam:",
         }
 
 
 class PVEItemEditForm(ModelForm):
-    bijlage = forms.FileField(required=False)
+    attachment = forms.FileField(required=False)
     BestaandeBijlage = forms.ModelChoiceField(
         queryset=ItemBijlages.objects.none(), label="Bestaande Bijlage(s)", required=False
     )
@@ -214,7 +214,7 @@ class PVEItemEditForm(ModelForm):
         )
         labels = {
             "inhoud": "Inhoud",
-            "bijlage": "Bijlage",
+            "attachment": "Bijlage",
             "basisregel": "BASIS-regel",
             "Bouwsoort": "Bouwsoort",
             "TypeObject": "Type Object",
@@ -235,9 +235,9 @@ class PVEItemEditForm(ModelForm):
             ("Field", "inhoud"),
             (
                 "Text",
-                "<i>Upload een nieuwe bijlage, of kies een bestaande bijlage.</i><br>",
+                "<i>Upload een nieuwe attachment, of kies een existing attachment.</i><br>",
             ),
-            ("Field", "bijlage"),
+            ("Field", "attachment"),
             ("Field", "BestaandeBijlage"),
             ("Text", '<h2 class="ui dividing header">Parameters</h2>'),
             (
@@ -274,5 +274,5 @@ class PVEItemEditForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(PVEItemEditForm, self).__init__(*args, **kwargs)
-        self.fields['bijlage'].required = False
+        self.fields['attachment'].required = False
         self.fields['BestaandeBijlage'].required = False

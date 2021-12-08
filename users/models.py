@@ -8,9 +8,9 @@ from django.utils.translation import ugettext_lazy as _
 from users.managers import CustomUserManager
 
 class Organisatie(models.Model):
-    naam = models.CharField(max_length=500, null=True)
-    klantenorganisatie = models.ForeignKey("project.Beleggers", on_delete=models.CASCADE, null=True, blank=True, related_name="organisatie")
-    gebruikers = models.ManyToManyField(
+    name = models.CharField(max_length=500, null=True)
+    client = models.ForeignKey("project.Beleggers", on_delete=models.CASCADE, null=True, blank=True, related_name="stakeholder")
+    users = models.ManyToManyField(
         "users.CustomUser", default=None, related_name="in_organisatie"
     )
     projecten = models.ManyToManyField(
@@ -18,7 +18,7 @@ class Organisatie(models.Model):
     )
 
     def __str__(self):
-        return self.naam
+        return self.name
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -58,8 +58,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     type_user = models.CharField(max_length=3, choices=type_choices, default="SD")
 
-    organisatie = models.ForeignKey(Organisatie, on_delete=models.SET_NULL, null=True, blank=True, related_name="user")
-    klantenorganisatie = models.ForeignKey("project.Beleggers", on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name="werknemer")
+    stakeholder = models.ForeignKey(Organisatie, on_delete=models.SET_NULL, null=True, blank=True, related_name="user")
+    client = models.ForeignKey("project.Beleggers", on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name="employee")
     objects = CustomUserManager()
 
     USERNAME_FIELD = "username"
@@ -98,10 +98,10 @@ class Invitation(models.Model):
     )
     inviter = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     invitee = models.EmailField()
-    organisatie = models.ForeignKey(
+    stakeholder = models.ForeignKey(
         Organisatie, on_delete=models.CASCADE, null=True, blank=True
     )
-    klantenorganisatie = models.ForeignKey(
+    client = models.ForeignKey(
         "project.Beleggers", on_delete=models.CASCADE, null=True, blank=True
          )
     project = models.ForeignKey(

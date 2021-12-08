@@ -25,16 +25,16 @@ def ViewProjectOverview(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
     else:
         return redirect("logout_syn", client_pk=client_pk)
 
-    projects = request.user.projectspermitted.filter(belegger__id=client_pk)
+    projects = request.user.projectspermitted.filter(client__id=client_pk)
 
     medewerkers = [proj.permitted.all() for proj in projects]
 
@@ -66,9 +66,9 @@ def ViewProject(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -80,7 +80,7 @@ def ViewProject(request, client_pk, pk):
 
     project = get_object_or_404(Project, id=pk)
 
-    if project.belegger != client:
+    if project.client != client:
         return redirect("logout_syn", client_pk=client_pk)
 
     medewerkers = [medewerker.username for medewerker in project.permitted.all()]
@@ -144,9 +144,9 @@ def KiesPVE(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -160,12 +160,12 @@ def KiesPVE(request, client_pk, pk):
 
     project = get_object_or_404(Project, pk=pk)
 
-    if project.belegger != client:
+    if project.client != client:
         return redirect("logout_syn", client_pk=client_pk)
 
     form = forms.PVEVersieKeuzeForm(request.POST or None)
     qs = models.PVEVersie.objects.filter(
-        belegger=client, public=True
+        client=client, public=True
     )
     form.fields["pve_versie"].queryset = qs
 
@@ -175,7 +175,7 @@ def KiesPVE(request, client_pk, pk):
                 "connectpve_syn",
                 client_pk=client_pk,
                 pk=pk,
-                versie_pk=form.cleaned_data["pve_versie"].id,
+                version_pk=form.cleaned_data["pve_versie"].id,
             )
 
     context = {}
@@ -190,7 +190,7 @@ def KiesPVE(request, client_pk, pk):
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
-def ConnectPVE(request, client_pk, pk, versie_pk):
+def ConnectPVE(request, client_pk, pk, version_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
@@ -199,9 +199,9 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -215,11 +215,11 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
 
     project = get_object_or_404(Project, pk=pk)
 
-    if project.belegger != client:
+    if project.client != client:
         return redirect("logout_syn", client_pk=client_pk)
 
     # we get the active version of the pve based on what is active right now
-    versie = models.PVEVersie.objects.filter(id=versie_pk).first()
+    version = models.PVEVersie.objects.filter(id=version_pk).first()
 
     if project.pveconnected:
         return redirect("logout_syn", client_pk=client_pk)
@@ -227,17 +227,17 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
     if request.method == "POST":
         form = forms.PVEParameterForm(request.POST)
 
-        bouwsoort = versie.bouwsoort.all()
+        bouwsoort = version.bouwsoort.all()
         form.fields["Bouwsoort1"].queryset = bouwsoort
         form.fields["Bouwsoort2"].queryset = bouwsoort
         form.fields["Bouwsoort3"].queryset = bouwsoort
 
-        typeObject = versie.typeobject.all()
+        typeObject = version.typeobject.all()
         form.fields["TypeObject1"].queryset = typeObject
         form.fields["TypeObject2"].queryset = typeObject
         form.fields["TypeObject3"].queryset = typeObject
 
-        doelgroep = versie.doelgroep.all()
+        doelgroep = version.doelgroep.all()
         form.fields["Doelgroep1"].queryset = doelgroep
         form.fields["Doelgroep2"].queryset = doelgroep
         form.fields["Doelgroep3"].queryset = doelgroep
@@ -279,14 +279,14 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
 
             # Entered parameters are in the manytomany parameters of the object
             basic_PVE = (
-                versie.item.select_related("paragraaf")
-                .select_related("hoofdstuk")
+                version.item.select_related("paragraph")
+                .select_related("chapter")
                 .filter(basisregel=True)
             )
 
             basic_PVE = basic_PVE.union(
-                Bouwsoort1.item.select_related("hoofdstuk")
-                .select_related("paragraaf")
+                Bouwsoort1.item.select_related("chapter")
+                .select_related("paragraph")
                 .all()
             )
             
@@ -294,63 +294,63 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
 
             if Bouwsoort2:
                 basic_PVE = basic_PVE.union(
-                    Bouwsoort2.item.select_related("hoofdstuk")
-                    .select_related("paragraaf")
+                    Bouwsoort2.item.select_related("chapter")
+                    .select_related("paragraph")
                     .all()
                 )
                 project.bouwsoort2 = Bouwsoort2
             if Bouwsoort3:
                 basic_PVE = basic_PVE.union(
-                    Bouwsoort3.item.select_related("hoofdstuk")
-                    .select_related("paragraaf")
+                    Bouwsoort3.item.select_related("chapter")
+                    .select_related("paragraph")
                     .all()
                 )
                 project.bouwsoort3 = Bouwsoort3
 
             if TypeObject1:
                 basic_PVE = basic_PVE.union(
-                    TypeObject1.item.select_related("hoofdstuk")
-                    .select_related("paragraaf")
+                    TypeObject1.item.select_related("chapter")
+                    .select_related("paragraph")
                     .all()
                 )
                 project.typeObject1 = TypeObject1
 
             if TypeObject2:
                 basic_PVE = basic_PVE.union(
-                    TypeObject2.item.select_related("hoofdstuk")
-                    .select_related("paragraaf")
+                    TypeObject2.item.select_related("chapter")
+                    .select_related("paragraph")
                     .all()
                 )
                 project.typeObject2 = TypeObject2
 
             if TypeObject3:
                 basic_PVE = basic_PVE.union(
-                    TypeObject3.item.select_related("hoofdstuk")
-                    .select_related("paragraaf")
+                    TypeObject3.item.select_related("chapter")
+                    .select_related("paragraph")
                     .all()
                 )
                 project.typeObject3 = TypeObject3
 
             if Doelgroep1:
                 basic_PVE = basic_PVE.union(
-                    Doelgroep1.item.select_related("hoofdstuk")
-                    .select_related("paragraaf")
+                    Doelgroep1.item.select_related("chapter")
+                    .select_related("paragraph")
                     .all()
                 )
                 project.doelgroep1 = Doelgroep1
 
             if Doelgroep2:
                 basic_PVE = basic_PVE.union(
-                    Doelgroep2.item.select_related("hoofdstuk")
-                    .select_related("paragraaf")
+                    Doelgroep2.item.select_related("chapter")
+                    .select_related("paragraph")
                     .all()
                 )
                 project.doelgroep2 = Doelgroep2
 
             if Doelgroep3:
                 basic_PVE = basic_PVE.union(
-                    Doelgroep3.item.select_related("hoofdstuk")
-                    .select_related("paragraaf")
+                    Doelgroep3.item.select_related("chapter")
+                    .select_related("paragraph")
                     .all()
                 )
                 project.doelgroep3 = Doelgroep3
@@ -360,39 +360,39 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
             # if box checked
             if AED:
                 basic_PVE = basic_PVE.union(
-                    versie.item.select_related("paragraaf")
-                    .select_related("hoofdstuk")
+                    version.item.select_related("paragraph")
+                    .select_related("chapter")
                     .filter(AED=True)
                 )
                 project.AED = True
             if Smarthome:
                 basic_PVE = basic_PVE.union(
-                    versie.item.select_related("paragraaf")
-                    .select_related("hoofdstuk")
+                    version.item.select_related("paragraph")
+                    .select_related("chapter")
                     .filter(Smarthome=True)
                 )
                 project.Smarthome = True
 
             if EntreeUpgrade:
                 basic_PVE = basic_PVE.union(
-                    versie.item.select_related("paragraaf")
-                    .select_related("hoofdstuk")
+                    version.item.select_related("paragraph")
+                    .select_related("chapter")
                     .filter(EntreeUpgrade=True)
                 )
                 project.EntreeUpgrade = True
 
             if Pakketdient:
                 basic_PVE = basic_PVE.union(
-                    versie.item.select_related("paragraaf")
-                    .select_related("hoofdstuk")
+                    version.item.select_related("paragraph")
+                    .select_related("chapter")
                     .filter(Pakketdient=True)
                 )
                 project.Pakketdient = True
 
             if JamesConcept:
                 basic_PVE = basic_PVE.union(
-                    versie.item.select_related("paragraaf")
-                    .select_related("hoofdstuk")
+                    version.item.select_related("paragraph")
+                    .select_related("chapter")
                     .filter(JamesConcept=True)
                 )
                 project.JamesConcept = True
@@ -407,11 +407,11 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
             project.pveconnected = True
 
             # set current pve version to project
-            project.pve_versie = versie
+            project.pve_versie = version
             project.save()
             messages.warning(
                 request,
-                f"Parameters van het Programma van Eisen van project {project.naam} zijn toegevoegd. U kunt het PvE downloaden vanaf de projecthomepagina.",
+                f"Parameters van het Programma van Eisen van project {project.name} zijn toegevoegd. U kunt het PvE downloaden vanaf de projecthomepagina.",
             )
             return redirect("manageprojecten_syn", client_pk=client_pk)
         else:
@@ -419,17 +419,17 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
 
     # form
     form = forms.PVEParameterForm()
-    bouwsoort = versie.bouwsoort.all()
+    bouwsoort = version.bouwsoort.all()
     form.fields["Bouwsoort1"].queryset = bouwsoort
     form.fields["Bouwsoort2"].queryset = bouwsoort
     form.fields["Bouwsoort3"].queryset = bouwsoort
 
-    typeObject = versie.typeobject.all()
+    typeObject = version.typeobject.all()
     form.fields["TypeObject1"].queryset = typeObject
     form.fields["TypeObject2"].queryset = typeObject
     form.fields["TypeObject3"].queryset = typeObject
 
-    doelgroep = versie.doelgroep.all()
+    doelgroep = version.doelgroep.all()
     form.fields["Doelgroep1"].queryset = doelgroep
     form.fields["Doelgroep2"].queryset = doelgroep
     form.fields["Doelgroep3"].queryset = doelgroep
@@ -440,8 +440,8 @@ def ConnectPVE(request, client_pk, pk, versie_pk):
     context["client_pk"] = client_pk
     context["client"] = client
     context["logo_url"] = logo_url
-    context["versie"] = versie
-    context["versie_pk"] = versie_pk
+    context["version"] = version
+    context["version_pk"] = version_pk
     return render(request, "ConnectPVE_syn.html", context)
 
 
@@ -455,9 +455,9 @@ def download_pve_overview(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -488,9 +488,9 @@ def download_pve(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -504,14 +504,14 @@ def download_pve(request, client_pk, pk):
             raise Http404("404")
 
     project = get_object_or_404(Project, id=pk)
-    if project.belegger != client:
+    if project.client != client:
         return redirect("logout_syn", client_pk=client_pk)
 
-    versie = project.pve_versie
+    version = project.pve_versie
 
     basic_PVE = (
-        models.PVEItem.objects.select_related("hoofdstuk")
-        .select_related("paragraaf")
+        models.PVEItem.objects.select_related("chapter")
+        .select_related("paragraph")
         .filter(projects__id__contains=pk)
         .order_by("id")
     )
@@ -519,7 +519,7 @@ def download_pve(request, client_pk, pk):
     # make pdf
     parameters = []
 
-    parameters += (f"Project: {project.naam}",)
+    parameters += (f"Project: {project.name}",)
 
     date = datetime.datetime.now()
 
@@ -537,38 +537,38 @@ def download_pve(request, client_pk, pk):
 
     # Opmerkingen in kleur naast de regels
     opmerkingen = {}
-    bijlagen = {}
+    attachments = {}
     reacties = {}
-    reactiebijlagen = {}
+    reactieattachments = {}
     kostenverschil = 0
 
     comments = (
         PVEItemAnnotation.objects.select_related("item")
         .select_related("status")
-        .select_related("gebruiker")
+        .select_related("user")
         .filter(project=project)
     )
 
     for opmerking in comments:
         opmerkingen[opmerking.item.id] = opmerking
-        if opmerking.kostenConsequenties:
-            kostenverschil += opmerking.kostenConsequenties
-        if opmerking.bijlage:
-            bijlagenqs = BijlageToAnnotation.objects.filter(ann=opmerking)
-            for bijlage in bijlagenqs:
-                if bijlage.bijlage:
-                    if opmerking.item.id in bijlagen.keys():
-                        bijlagen[opmerking.item.id].append(bijlage)
+        if opmerking.consequentCosts:
+            kostenverschil += opmerking.consequentCosts
+        if opmerking.attachment:
+            attachmentsqs = BijlageToAnnotation.objects.filter(ann=opmerking)
+            for attachment in attachmentsqs:
+                if attachment.attachment:
+                    if opmerking.item.id in attachments.keys():
+                        attachments[opmerking.item.id].append(attachment)
                     else:
-                        bijlagen[opmerking.item.id] = [bijlage]
-    print(bijlagen)
+                        attachments[opmerking.item.id] = [attachment]
+    print(attachments)
     replies = (
-        CommentReply.objects.select_related("gebruiker")
+        CommentReply.objects.select_related("user")
         .select_related("onComment")
         .select_related("onComment__item")
         .filter(commentphase__project=project)
         .exclude(commentphase=project.phase.first())
-        .order_by("datum")
+        .order_by("date")
     )
 
     for reply in replies:
@@ -576,14 +576,14 @@ def download_pve(request, client_pk, pk):
             reacties[reply.onComment.item.id].append(reply)
         else:
             reacties[reply.onComment.item.id] = [reply]
-        if reply.bijlage:
-            bijlagenqs = BijlageToReply.objects.filter(reply=reply)
-            for bijlage in bijlagenqs:
-                if bijlage.bijlage:
-                    if reply.id in reactiebijlagen.keys():
-                        reactiebijlagen[reply.id].append(bijlage)
+        if reply.attachment:
+            attachmentsqs = BijlageToReply.objects.filter(reply=reply)
+            for attachment in attachmentsqs:
+                if attachment.attachment:
+                    if reply.id in reactieattachments.keys():
+                        reactieattachments[reply.id].append(attachment)
                     else:
-                        reactiebijlagen[reply.id] = [bijlage]
+                        reactieattachments[reply.id] = [attachment]
 
     geaccepteerde_regels_ids = []
 
@@ -595,7 +595,7 @@ def download_pve(request, client_pk, pk):
             accepted_id.id for accepted_id in commentphase.accepted_comments.all()
         ]
 
-    pdfmaker = writePdf.PDFMaker(versie.versie, logo_url)
+    pdfmaker = writePdf.PDFMaker(version.version, logo_url)
 
     # verander CONCEPT naar DEFINITIEF als het project volbevroren is.
     if project.fullyFrozen:
@@ -608,41 +608,41 @@ def download_pve(request, client_pk, pk):
     pdfmaker.makepdf(
         filename,
         basic_PVE,
-        versie.id,
+        version.id,
         opmerkingen,
-        bijlagen,
+        attachments,
         reacties,
-        reactiebijlagen,
+        reactieattachments,
         parameters,
         geaccepteerde_regels_ids,
     )
 
-    # get bijlagen
-    bijlagen_models = models.ItemBijlages.objects.all()
-    bijlagenpve = []
+    # get attachments
+    attachments_models = models.ItemBijlages.objects.all()
+    attachmentspve = []
 
-    for bijlage_model in bijlagen_models:
-        for item in bijlage_model.items.all():
+    for attachment_model in attachments_models:
+        for item in attachment_model.items.all():
             if item in basic_PVE:
-                bijlagenpve.append(bijlage_model)
+                attachmentspve.append(attachment_model)
 
-    bijlagenpve = list(set(bijlagenpve))
+    attachmentspve = list(set(attachmentspve))
 
     if BijlageToAnnotation.objects.filter(ann__project=project).exists():
-        bijlagen_ann = BijlageToAnnotation.objects.filter(ann__project=project)
-        for item in bijlagen_ann:
-            if item.bijlage:
-                bijlagenpve.append(item)
+        attachments_ann = BijlageToAnnotation.objects.filter(ann__project=project)
+        for item in attachments_ann:
+            if item.attachment:
+                attachmentspve.append(item)
 
     if BijlageToReply.objects.filter(reply__onComment__project=project).exists():
-        replybijlagen = BijlageToReply.objects.filter(reply__onComment__project=project)
-        for bijlage in replybijlagen:
-            if bijlage.bijlage:
-                bijlagenpve.append(bijlage)
+        replyattachments = BijlageToReply.objects.filter(reply__onComment__project=project)
+        for attachment in replyattachments:
+            if attachment.attachment:
+                attachmentspve.append(attachment)
 
-    if bijlagenpve:
+    if attachmentspve:
         zipmaker = createBijlageZip.ZipMaker()
-        zipmaker.makeZip(zipFilename, filename, bijlagenpve)
+        zipmaker.makeZip(zipFilename, filename, attachmentspve)
     else:
         zipFilename = False
 

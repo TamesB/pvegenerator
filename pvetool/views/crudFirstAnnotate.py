@@ -24,9 +24,9 @@ def AddCommentOverview(request, client_pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -35,8 +35,8 @@ def AddCommentOverview(request, client_pk):
 
     context = {}
 
-    if request.user.projectspermitted.all().filter(belegger__id=client_pk).exists():
-        projects = request.user.projectspermitted.all().filter(belegger__id=client_pk)
+    if request.user.projectspermitted.all().filter(client__id=client_pk).exists():
+        projects = request.user.projectspermitted.all().filter(client__id=client_pk)
         context["projects"] = projects
 
     context["client_pk"] = client_pk
@@ -57,9 +57,9 @@ def AddComment(request, client_pk, pk):
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    if request.user.klantenorganisatie:
+    if request.user.client:
         if (
-            request.user.klantenorganisatie.id != client.id
+            request.user.client.id != client.id
             and request.user.type_user != "B"
         ):
             return redirect("logout_syn", client_pk=client_pk)
@@ -67,7 +67,7 @@ def AddComment(request, client_pk, pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
-    if project.belegger != client:
+    if project.client != client:
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -82,29 +82,29 @@ def AddComment(request, client_pk, pk):
     if request.user not in project.permitted.all():
         return redirect("logout_syn", client_pk=client_pk)
 
-    items = project.item.select_related("hoofdstuk").select_related("paragraaf").all()
-    hoofdstukken = {}
+    items = project.item.select_related("chapter").select_related("paragraph").all()
+    chapters = {}
 
     for item in items:
-        if item.hoofdstuk not in hoofdstukken:
-            if item.paragraaf:
-                hoofdstukken[item.hoofdstuk] = True
+        if item.chapter not in chapters:
+            if item.paragraph:
+                chapters[item.chapter] = True
             else:
-                hoofdstukken[item.hoofdstuk] = False
+                chapters[item.chapter] = False
 
     annotations = {}
-    annotations_hfst = {hoofdstuk.id: 0 for hoofdstuk in hoofdstukken}
-    items_per_chapter = {hoofdstuk.id: 0 for hoofdstuk in hoofdstukken}
+    annotations_hfst = {chapter.id: 0 for chapter in chapters}
+    items_per_chapter = {chapter.id: 0 for chapter in chapters}
     
-    for hoofdstuk in hoofdstukken.keys():
-        items_per_chapter_count = project.item.select_related("hoofdstuk").filter(hoofdstuk=hoofdstuk).count()
-        items_per_chapter[hoofdstuk.id] += items_per_chapter_count
+    for chapter in chapters.keys():
+        items_per_chapter_count = project.item.select_related("chapter").filter(chapter=chapter).count()
+        items_per_chapter[chapter.id] += items_per_chapter_count
     
-    for annotation in project.annotation.select_related("item").select_related("item__hoofdstuk").select_related(
+    for annotation in project.annotation.select_related("item").select_related("item__chapter").select_related(
         "status"
     ):
         annotations[annotation.item] = annotation
-        annotations_hfst[annotation.item.hoofdstuk.id] += 1
+        annotations_hfst[annotation.item.chapter.id] += 1
 
     aantal_opmerkingen_gedaan = len(annotations.keys())
 
@@ -116,7 +116,7 @@ def AddComment(request, client_pk, pk):
     context["items"] = items
     context["progress"] = progress
     context["aantal_opmerkingen_gedaan"] = aantal_opmerkingen_gedaan
-    context["hoofdstukken"] = hoofdstukken
+    context["chapters"] = chapters
     context["items_per_chapter"] = items_per_chapter
     context["annotations_hfst"] = annotations_hfst
     context["project"] = project
@@ -127,14 +127,14 @@ def AddComment(request, client_pk, pk):
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
-def GetParagravenFirstAnnotate(request, client_pk, pk, hoofdstuk_pk):
+def GetParagravenFirstAnnotate(request, client_pk, pk, chapter_pk):
     context = {}
 
     if not Beleggers.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
-    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Beleggers.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -146,39 +146,39 @@ def GetParagravenFirstAnnotate(request, client_pk, pk, hoofdstuk_pk):
     if not project.item.exists():
         return redirect("logout_syn", client_pk=client_pk)
     
-    hoofdstuk = models.PVEHoofdstuk.objects.filter(pk=hoofdstuk_pk).first()
+    chapter = models.PVEHoofdstuk.objects.filter(pk=chapter_pk).first()
 
     items = (
-        project.item.select_related("hoofdstuk")
-        .select_related("paragraaf")
-        .filter(hoofdstuk=hoofdstuk)
+        project.item.select_related("chapter")
+        .select_related("paragraph")
+        .filter(chapter=chapter)
         .all()
     )
     
-    paragraven_ids = {}
+    paragraphs_ids = {}
     
     for item in items:
-        if item.paragraaf:
-            if item.paragraaf.id not in paragraven_ids.keys():
-                paragraven_ids[item.paragraaf.id] = item.paragraaf
+        if item.paragraph:
+            if item.paragraph.id not in paragraphs_ids.keys():
+                paragraphs_ids[item.paragraph.id] = item.paragraph
         
-    paragraven = [paragraaf for _, paragraaf in paragraven_ids.items()]
+    paragraphs = [paragraph for _, paragraph in paragraphs_ids.items()]
     
-    context["paragraven"] = paragraven
+    context["paragraphs"] = paragraphs
     context["project"] = project
     context["client_pk"] = client_pk
-    return render(request, "partials/paragravenpartial.html", context)
+    return render(request, "partials/paragraphspartial.html", context)
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
-def GetItemsFirstAnnotate(request, client_pk, pk, hoofdstuk_pk, paragraaf_id):
+def GetItemsFirstAnnotate(request, client_pk, pk, chapter_pk, paragraaf_id):
     context = {}
 
     if not Beleggers.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
-    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Beleggers.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -192,16 +192,16 @@ def GetItemsFirstAnnotate(request, client_pk, pk, hoofdstuk_pk, paragraaf_id):
 
     if paragraaf_id == 0:
         pve_items = (
-            project.item.select_related("hoofdstuk")
-            .select_related("paragraaf")
-            .filter(hoofdstuk__id=hoofdstuk_pk)
+            project.item.select_related("chapter")
+            .select_related("paragraph")
+            .filter(chapter__id=chapter_pk)
             .all()
         )
     else:
         pve_items = (
-            project.item.select_related("hoofdstuk")
-            .select_related("paragraaf")
-            .filter(hoofdstuk__id=hoofdstuk_pk, paragraaf__id=paragraaf_id)
+            project.item.select_related("chapter")
+            .select_related("paragraph")
+            .filter(chapter__id=chapter_pk, paragraaf__id=paragraaf_id)
             .all()
         )
         
@@ -218,7 +218,7 @@ def DetailItemFirst(request, client_pk, project_pk, item_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Beleggers.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -241,17 +241,17 @@ def DetailItemFirst(request, client_pk, project_pk, item_pk):
             project=project, item__id=item_pk
         ).first()
     
-    bijlages = []
+    attachments = []
         
-    for bijlage in item.itembijlage.all():
-        bijlages.append(bijlage)
+    for attachment in item.itemAttachment.all():
+        attachments.append(attachment)
 
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
     context["item_pk"] = item_pk
     context["annotation"] = annotation
     context["item"] = item
-    context["bijlages"] = bijlages
+    context["attachments"] = attachments
     return render(request, "partials/detail_item_first.html", context)
 
 
@@ -263,7 +263,7 @@ def DetailStatusFirst(request, client_pk, project_pk, item_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Beleggers.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -296,7 +296,7 @@ def DetailAnnotationFirst(request, client_pk, project_pk, item_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Beleggers.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -309,19 +309,19 @@ def DetailAnnotationFirst(request, client_pk, project_pk, item_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     annotation = None
-    bijlagen = None
+    attachments = None
     if PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).exists():
         annotation = PVEItemAnnotation.objects.filter(
             project=project, item__id=item_pk
         ).first()
-        if annotation.bijlageobject.exists():
-            bijlagen = annotation.bijlageobject.all()
+        if annotation.attachmentobject.exists():
+            attachments = annotation.attachmentobject.all()
 
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
     context["item_pk"] = item_pk
     context["annotation"] = annotation
-    context["bijlagen"] = bijlagen
+    context["attachments"] = attachments
     return render(request, "partials/detail_annotation_first.html", context)
 
 
@@ -333,7 +333,7 @@ def DetailKostenverschilFirst(request, client_pk, project_pk, item_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Beleggers.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -359,14 +359,14 @@ def DetailKostenverschilFirst(request, client_pk, project_pk, item_pk):
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
-def AddBijlageFirst(request, client_pk, project_pk, item_pk, annotation_pk, bijlage_id):
+def AddBijlageFirst(request, client_pk, project_pk, item_pk, annotation_pk, attachment_id):
     context = {}
 
     if not Beleggers.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Beleggers.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -381,14 +381,14 @@ def AddBijlageFirst(request, client_pk, project_pk, item_pk, annotation_pk, bijl
     if annotation_pk != 0:
         annotation = PVEItemAnnotation.objects.filter(id=annotation_pk).first()
     else:
-        annotation = PVEItemAnnotation.objects.create(project=project, item=models.PVEItem.objects.get(id=item_pk), gebruiker=request.user)
+        annotation = PVEItemAnnotation.objects.create(project=project, item=models.PVEItem.objects.get(id=item_pk), user=request.user)
         annotation_pk = annotation.id
 
-    bijlagemodel = None
-    if bijlage_id != 0 and annotation_pk != 0 and BijlageToAnnotation.objects.filter(id=bijlage_id, ann__id=annotation_pk).exists():
-        bijlagemodel = BijlageToAnnotation.objects.filter(id=bijlage_id, ann__id=annotation_pk).first()
+    attachmentmodel = None
+    if attachment_id != 0 and annotation_pk != 0 and BijlageToAnnotation.objects.filter(id=attachment_id, ann__id=annotation_pk).exists():
+        attachmentmodel = BijlageToAnnotation.objects.filter(id=attachment_id, ann__id=annotation_pk).first()
         form = FirstBijlageForm(
-            request.POST or None, request.FILES or None, instance=bijlagemodel
+            request.POST or None, request.FILES or None, instance=attachmentmodel
         )
     else:
         form = FirstBijlageForm(
@@ -397,10 +397,10 @@ def AddBijlageFirst(request, client_pk, project_pk, item_pk, annotation_pk, bijl
 
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
-            if form.cleaned_data["naam"]: 
-                if not BijlageToAnnotation.objects.filter(naam=form.cleaned_data["naam"], ann__project=project).exists(): 
+            if form.cleaned_data["name"]: 
+                if not BijlageToAnnotation.objects.filter(name=form.cleaned_data["name"], ann__project=project).exists(): 
                     form.save()
-                    annotation.bijlage = True
+                    annotation.attachment = True
                     annotation.save()
                     messages.warning(request, "Bijlage toegevoegd!")
                     return redirect(
@@ -410,15 +410,15 @@ def AddBijlageFirst(request, client_pk, project_pk, item_pk, annotation_pk, bijl
                         item_pk=item_pk,
                     )
                 else:
-                    messages.warning(request, "Naam bestaat al voor een bijlage in dit project. Kies een andere.")
+                    messages.warning(request, "Naam bestaat al voor een attachment in dit project. Kies een andere.")
             else:
                 # else save and the attachment ID is the attachment name.
                 form.save()
-                annotation.bijlage = True
+                annotation.attachment = True
                 annotation.save()
-                bijlage = annotation.bijlageobject.all().order_by("-id").first()
-                bijlage.naam = bijlage.id
-                bijlage.save()
+                attachment = annotation.attachmentobject.all().order_by("-id").first()
+                attachment.name = attachment.id
+                attachment.save()
                 messages.warning(request, "Bijlage toegevoegd!")
                 return redirect(
                     "detailfirstannotation",
@@ -428,16 +428,16 @@ def AddBijlageFirst(request, client_pk, project_pk, item_pk, annotation_pk, bijl
                 )
 
         else:
-            messages.warning(request, "Fout met bijlage toevoegen. Probeer het opnieuw.")
+            messages.warning(request, "Fout met attachment toevoegen. Probeer het opnieuw.")
 
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
-    context["bijlage_id"] = bijlage_id
+    context["attachment_id"] = attachment_id
     context["annotation_pk"] = annotation_pk
     context["item_pk"] = item_pk
     context["form"] = form
     context["annotation"] = annotation
-    return render(request, "partials/form_bijlage_first.html", context)
+    return render(request, "partials/form_attachment_first.html", context)
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
@@ -448,7 +448,7 @@ def AddStatusFirst(request, client_pk, project_pk, item_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Beleggers.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -482,7 +482,7 @@ def AddStatusFirst(request, client_pk, project_pk, item_pk):
                 annotation.status = form.cleaned_data["status"]
                 annotation.project = project
                 annotation.item = models.PVEItem.objects.get(id=item_pk)
-                annotation.gebruiker = request.user
+                annotation.user = request.user
                 annotation.firststatus = form.cleaned_data["status"]
                 annotation.save()
 
@@ -509,7 +509,7 @@ def AddKostenverschilFirst(request, client_pk, project_pk, item_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Beleggers.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -528,7 +528,7 @@ def AddKostenverschilFirst(request, client_pk, project_pk, item_pk):
         ).first()
         form = FirstKostenverschilForm(
             request.POST or None,
-            initial={"kostenverschil": annotation.kostenConsequenties},
+            initial={"kostenverschil": annotation.consequentCosts},
         )
     else:
         form = FirstKostenverschilForm(request.POST or None)
@@ -536,14 +536,14 @@ def AddKostenverschilFirst(request, client_pk, project_pk, item_pk):
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
             if annotation:
-                annotation.kostenConsequenties = form.cleaned_data["kostenverschil"]
+                annotation.consequentCosts = form.cleaned_data["kostenverschil"]
                 annotation.save()
             else:
                 annotation = PVEItemAnnotation()
-                annotation.kostenConsequenties = form.cleaned_data["kostenverschil"]
+                annotation.consequentCosts = form.cleaned_data["kostenverschil"]
                 annotation.project = project
                 annotation.item = models.PVEItem.objects.get(id=item_pk)
-                annotation.gebruiker = request.user
+                annotation.user = request.user
                 annotation.save()
 
             messages.warning(request, "Kostenverschil toegevoegd!")
@@ -569,7 +569,7 @@ def AddAnnotationFirst(request, client_pk, project_pk, item_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Beleggers.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -602,7 +602,7 @@ def AddAnnotationFirst(request, client_pk, project_pk, item_pk):
                 annotation.annotation = form.cleaned_data["annotation"]
                 annotation.project = project
                 annotation.item = models.PVEItem.objects.get(id=item_pk)
-                annotation.gebruiker = request.user
+                annotation.user = request.user
                 annotation.save()
 
             messages.warning(request, "Opmerking toegevoegd!")
@@ -625,7 +625,7 @@ def DeleteKostenverschilFirst(request, client_pk, project_pk, item_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Beleggers.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -644,7 +644,7 @@ def DeleteKostenverschilFirst(request, client_pk, project_pk, item_pk):
         ).first()
 
     if annotation:
-        annotation.kostenConsequenties = None
+        annotation.consequentCosts = None
         annotation.save()
         messages.warning(request, "Kostenverschil verwijderd.")
         return redirect(
@@ -668,7 +668,7 @@ def DeleteAnnotationFirst(request, client_pk, project_pk, item_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Beleggers.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -690,11 +690,11 @@ def DeleteAnnotationFirst(request, client_pk, project_pk, item_pk):
         annotation.annotation = None
         annotation.save()
 
-        if annotation.bijlageobject.exists():
-            bijlage = annotation.bijlageobject.first()
-            bijlage.delete()
+        if annotation.attachmentobject.exists():
+            attachment = annotation.attachmentobject.first()
+            attachment.delete()
             
-        messages.warning(request, "Aanvulling verwijderd. Als u een bijlage heb toegevoegd, is deze ook verwijderd.")
+        messages.warning(request, "Aanvulling verwijderd. Als u een attachment heb toegevoegd, is deze ook verwijderd.")
         return redirect(
             "detailfirstannotation",
             client_pk=client_pk,
@@ -716,7 +716,7 @@ def DeleteStatusFirst(request, client_pk, project_pk, item_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Beleggers.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -729,19 +729,19 @@ def DeleteStatusFirst(request, client_pk, project_pk, item_pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     annotation = None
-    bijlagen = None
+    attachments = None
     if PVEItemAnnotation.objects.filter(project=project, item__id=item_pk).exists():
         annotation = PVEItemAnnotation.objects.filter(
             project=project, item__id=item_pk
         ).first()
     if BijlageToAnnotation.objects.filter(ann=annotation):
-        bijlagen = BijlageToAnnotation.objects.filter(ann=annotation)
+        attachments = BijlageToAnnotation.objects.filter(ann=annotation)
         
     if annotation:
         annotation.delete()
-        if bijlagen:
-            for bijlage in bijlagen:
-                bijlage.delete()
+        if attachments:
+            for attachment in attachments:
+                attachment.delete()
             
         messages.warning(request, "Status verwijderd.")
         return redirect(
@@ -765,7 +765,7 @@ def DeleteBijlageFirst(request, client_pk, project_pk, annotation_pk, pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.belegger != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Beleggers.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -777,9 +777,9 @@ def DeleteBijlageFirst(request, client_pk, project_pk, annotation_pk, pk):
     if not project.item.exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    bijlage = None
+    attachment = None
     if BijlageToAnnotation.objects.filter(id=pk).exists():
-        bijlage = BijlageToAnnotation.objects.filter(
+        attachment = BijlageToAnnotation.objects.filter(
             id=pk
         ).first()
     
@@ -791,11 +791,11 @@ def DeleteBijlageFirst(request, client_pk, project_pk, annotation_pk, pk):
             id=annotation_pk
         )
 
-    if bijlage:
-        bijlage.delete()
+    if attachment:
+        attachment.delete()
         if annotation:
             if not BijlageToAnnotation.objects.filter(ann=annotation).exists():
-                annotation.bijlage = False
+                annotation.attachment = False
                 annotation.save()
                 
         messages.warning(request, "Bijlage verwijderd.")
@@ -806,7 +806,7 @@ def DeleteBijlageFirst(request, client_pk, project_pk, annotation_pk, pk):
             item_pk=annotation.item.id,
         )
 
-    messages.warning(request, "Fout met bijlage verwijderen. Probeer het nog eens.")
+    messages.warning(request, "Fout met attachment verwijderen. Probeer het nog eens.")
     return redirect(
         "detailfirstannotation",
         client_pk=client_pk,

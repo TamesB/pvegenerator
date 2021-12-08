@@ -7,17 +7,17 @@
 {% block modal %}
 <div class="ui long modal">
   <div class="header">
-    PvE Itemnummer {{ PVEItem.id }} <span class="float right" style="float: right;"><a href="{% url 'edititem' versie_pk PVEItem.id %}"><button class="ui basic button"><i class="icon edit"></i>Bewerk</button></a></span>
+    PvE Itemnummer {{ PVEItem.id }} <span class="float right" style="float: right;"><a href="{% url 'edititem' version_pk PVEItem.id %}"><button class="ui basic button"><i class="icon edit"></i>Bewerk</button></a></span>
   </div>
   <div class="very padded description" style="margin-left: 3em; margin-right: 3em; margin-top: 1em; margin-bottom: 1em; "> 
     <h3 class="ui header">Inhoud</h3>
     <p style="word-wrap: break-word;">{{ PVEItem.inhoud|linebreaks }}</p>
     <div class="ui divider"></div>
     <h3 class="ui header">Bijlage</h3>
-    {% if bijlage %}
-    <span><a href="{% url 'downloadbijlage' PVEItem.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>{{ bijlagenaam }}</button></a></span>
+    {% if attachment %}
+    <span><a href="{% url 'downloadattachment' PVEItem.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>{{ attachmentsame }}</button></a></span>
     {% else %}
-    <p>Geen bijlage bij deze regel.<p>
+    <p>Geen attachment bij deze regel.<p>
     {% endif %}
 
     <div class="ui divider"></div>
@@ -36,8 +36,8 @@
     {% endif %}
   </div>
   <div class="actions" style="margin-bottom: 1em;">
-    <span><a href="{% url 'deleteitem' versie_pk PVEItem.id %}"><button class="ui basic red button"><i class="icon trash alternate outline"></i>Verwijder</button></a></span>
-    <span class="float right"><a href="{% url 'itemlistview' versie_pk hoofdstuk_id paragraaf_id %}"><button class="ui green button"><i class="icon check"></i>Gereed</button></a></span>
+    <span><a href="{% url 'deleteitem' version_pk PVEItem.id %}"><button class="ui basic red button"><i class="icon trash alternate outline"></i>Verwijder</button></a></span>
+    <span class="float right"><a href="{% url 'itemlistview' version_pk chapter_id paragraaf_id %}"><button class="ui green button"><i class="icon check"></i>Gereed</button></a></span>
   </div>
 </div>
 </div>

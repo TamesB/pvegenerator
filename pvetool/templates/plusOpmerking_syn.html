@@ -16,7 +16,7 @@
   <i class="right chevron icon divider"></i>
   <a class="section" href="{% url 'viewprojectoverview_syn' client_pk %}">Mijn Projecten</a>
   <i class="right chevron icon divider"></i>
-  <a class="section" href="{% url 'viewproject_syn' client_pk project.id %}">Project: {{ project.naam }}</a>
+  <a class="section" href="{% url 'viewproject_syn' client_pk project.id %}">Project: {{ project.name }}</a>
   <i class="right chevron icon divider"></i>
   <div class="active section">Eerste statusaanwijzing</div>
 </div>
@@ -25,25 +25,25 @@
 <div class="general_title"><img src="{% static 'pvetool/img/accountsderden.png'%}" class="title_img"></img><p>Eerste statusaanwijzing / Aanvullingen op regels<input type="submit" class="submit_button" onClick="javascript:location.href='{% url 'firstfreeze_syn' client_pk project.id %}';" value="Stuur door >"></input></p></div>
 <div style="height:1vh;"></div>
 
-{% if hoofdstukken.items %}
+{% if chapters.items %}
 <div class="titel_plusopmerking"><div class="left">Sectie</div><div class="right">Status<popup-notify><span slot="message"><p>Groen = status is al opgeslagen. Geel = u heeft net een wijziging gemaakt. Rood = nog geen status aangegeven.</p></span></popup-notify></div><div class="right">Kosten</div></div>
 <div class="item_opmerking_list">
 
-{% for key, value in hoofdstukken.items %}
+{% for key, value in chapters.items %}
 {% if value %}
-    <button type="button" hx-get="{% url 'getparagravenfirstannotate' client_pk project.id key.id %}" 
-    hx-target="#hoofdstuk_content-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk">
-    <p>{{ key.hoofdstuk }} <span><i>({{ annotations_hfst|get_item:key.id }} / {{ items_per_chapter|get_item:key.id }})</i></span>
+    <button type="button" hx-get="{% url 'getparagraphsfirstannotate' client_pk project.id key.id %}" 
+    hx-target="#chapter_content-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="chapter">
+    <p>{{ key.chapter }} <span><i>({{ annotations_hfst|get_item:key.id }} / {{ items_per_chapter|get_item:key.id }})</i></span>
     <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img>
     <img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
 {% else %}
     <button type="button" hx-get="{% url 'getitemsfirstannotate' client_pk project.id key.id 0 %}" 
-    hx-target="#hoofdstuk_content-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="hoofdstuk">
-    <p>{{ key.hoofdstuk }} <span><i>({{ annotations_hfst|get_item:key.id }} / {{ items_per_chapter|get_item:key.id }})</i></span>
+    hx-target="#chapter_content-{{ key.id }}" hx-swap="innerHTML" hx-trigger="click once" class="chapter">
+    <p>{{ key.chapter }} <span><i>({{ annotations_hfst|get_item:key.id }} / {{ items_per_chapter|get_item:key.id }})</i></span>
     <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img>
     <img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
 {% endif %}
-    <div class="hoofdstuk_content" id="hoofdstuk_content-{{ key.id }}">
+    <div class="chapter_content" id="chapter_content-{{ key.id }}">
     </div>
 {% endfor %}
 </div>
@@ -56,7 +56,7 @@
 
 {% block scripts %}
 <script>
-var coll = document.getElementsByClassName("hoofdstuk");
+var coll = document.getElementsByClassName("chapter");
 var i;
 
 for (i = 0; i < coll.length; i++) {
@@ -71,7 +71,7 @@ for (i = 0; i < coll.length; i++) {
   });
 }
 
-var coll2 = document.getElementsByClassName("paragraaf");
+var coll2 = document.getElementsByClassName("paragraph");
 var i;
 
 for (i = 0; i < coll2.length; i++) {

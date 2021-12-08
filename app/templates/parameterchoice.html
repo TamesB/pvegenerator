@@ -2,55 +2,55 @@
 <input
   type="button"
   class="ui primary button d-inline"
-  onclick="javascript:window.location='{% url 'pvebewerkoverview' versie_pk %}'"
-  value="< Overview {{ versie.belegger}}: {{ versie.versie }}"
+  onclick="javascript:window.location='{% url 'pvebewerkoverview' version_pk %}'"
+  value="< Overview {{ version.client}}: {{ version.version }}"
 />
 <h1 class="ui header center aligned">Bewerk Keuzematrix</h1>
 {% if bouwsoorten %}
 <br /><br />
 <div>
-  <table hx-get="{% url 'kiesparametertable' versie_pk 1 %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load" id="parameter-table-1"></table>
+  <table hx-get="{% url 'parameterchoicetable' version_pk 1 %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load" id="parameter-table-1"></table>
 
   <div id="newline-{{ 1 }}" hx-target="this" hx-swap="innerHTML"></div>
-<button hx-get="{% url 'kiesparametermodaladd' versie_pk 1 %}" hx-target="#newline-{{ 1 }}" class="ui green button">Voeg parameter toe</button>
+<button hx-get="{% url 'parameterchoicemodaladd' version_pk 1 %}" hx-target="#newline-{{ 1 }}" class="ui green button">Voeg parameter toe</button>
 <div class="ui divider"></div>
   {% else %}
   <p>
     Nog geen bouwsoorten!
     <span class="float right"
-      ><a href="{% url 'addkiesparameter' versie_pk 1 %}"
+      ><a href="{% url 'addparameterchoice' version_pk 1 %}"
         ><button class="ui icon green button">
           <i class="icon plus"></i></button></a
     ></span>
   </p>
   {% endif %} {% if typeObjecten %}
   <div>
-  <table hx-get="{% url 'kiesparametertable' versie_pk 2 %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load" id="parameter-table-2"></table>
+  <table hx-get="{% url 'parameterchoicetable' version_pk 2 %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load" id="parameter-table-2"></table>
   <div id="newline-{{ 2 }}" hx-target="this" hx-swap="innerHTML"></div>
-<button hx-get="{% url 'kiesparametermodaladd' versie_pk 2 %}" hx-target="#newline-{{ 1 }}" class="ui green button">Voeg parameter toe</button>
+<button hx-get="{% url 'parameterchoicemodaladd' version_pk 2 %}" hx-target="#newline-{{ 1 }}" class="ui green button">Voeg parameter toe</button>
 <div class="ui divider"></div>
 
     {% else %}
     <p>
       Nog geen type objecten!
       <span class="float right"
-        ><a href="{% url 'addkiesparameter' versie_pk 2 %}"
+        ><a href="{% url 'addparameterchoice' version_pk 2 %}"
           ><button class="ui icon green button">
             <i class="icon plus"></i></button></a
       ></span>
     </p>
     {% endif %} {% if doelgroepen %}
     <div>
-  <table hx-get="{% url 'kiesparametertable' versie_pk 3 %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load" id="parameter-table-3"></table>
+  <table hx-get="{% url 'parameterchoicetable' version_pk 3 %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load" id="parameter-table-3"></table>
   <div id="newline-{{ 3 }}" hx-target="this" hx-swap="innerHTML"></div>
-<button hx-get="{% url 'kiesparametermodaladd' versie_pk 3 %}" hx-target="#newline-{{ 1 }}" class="ui green button">Voeg parameter toe</button>
+<button hx-get="{% url 'parameterchoicemodaladd' version_pk 3 %}" hx-target="#newline-{{ 1 }}" class="ui green button">Voeg parameter toe</button>
 <div class="ui divider"></div>
 
       {% else %}
       <p>
         Nog geen doelgroepen!
         <span class="float right"
-          ><a href="{% url 'addkiesparameter' versie_pk 3 %}"
+          ><a href="{% url 'addparameterchoice' version_pk 3 %}"
             ><button class="ui icon green button">
               <i class="icon plus"></i></button></a
         ></span>

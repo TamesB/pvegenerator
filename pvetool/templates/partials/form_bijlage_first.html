@@ -5,14 +5,14 @@
     <form hx-target="this" hx-swap="outerHTML" class="ui form" method="POST" hx-encoding='multipart/form-data' enctype="multipart/form-data">
     {% csrf_token %}
         <div>
-        <p><label for="{{ form.bijlage.id_for_label }}"><b>Upload bijlage:</b></label><p>
-        <p class="first_annotate_formbox">{{ form.bijlage }}</p>
-        <p><label for="{{ form.naam.id_for_label }}"><b>Bijlagenaam (optioneel):</b></label><p>
-        <p class="first_annotate_formbox">{{ form.naam }}</p>
+        <p><label for="{{ form.attachment.id_for_label }}"><b>Upload attachment:</b></label><p>
+        <p class="first_annotate_formbox">{{ form.attachment }}</p>
+        <p><label for="{{ form.name.id_for_label }}"><b>Bijlagename (optioneel):</b></label><p>
+        <p class="first_annotate_formbox">{{ form.name }}</p>
         <p class="first_annotate_formbox" hidden>{{ form.ann }}</p>
         </div>
         <button hx-get="{% url 'detailfirstannotation' client_pk project_pk item_pk %}" hx-trigger="click" style="float: left;" class="ui basic icon button"><i class="icon undo alternate"></i></button>
-        <span style="float:right;"><button hx-post="{% url 'addbijlagefirst' client_pk project_pk item_pk annotation_pk bijlage_id %}" hx-trigger="click" type="submit" class="ui icon green button"><i class="check icon"></i></button>
+        <span style="float:right;"><button hx-post="{% url 'addattachmentfirst' client_pk project_pk item_pk annotation_pk attachment_id %}" hx-trigger="click" type="submit" class="ui icon green button"><i class="check icon"></i></button>
         </span>
     </form>
 {% endblock %}

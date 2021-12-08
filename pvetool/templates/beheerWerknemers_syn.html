@@ -17,7 +17,7 @@
 
 <div class="opmerking_project_list">
     <div class="general_title"><img src="{% static 'pvetool/img/accountsderden.png'%}" class="title_img"></img><p>Werknemers <a href="{% url 'plusaccount_syn' client_pk %}"><button class="ui icon green button"><i class="icon plus"></i>Nodig uit</button></a></p> </div>
-<input type="text" class="searchable_table_input" id="myInput" onkeyup="searchableLookup()" placeholder="Zoek op werknemer.." title="Typ een werknemer in">
+<input type="text" class="searchable_table_input" id="myInput" onkeyup="searchableLookup()" placeholder="Zoek op employee.." title="Typ een employee in">
 
 
 <div class="base_info_table">
@@ -32,14 +32,14 @@
           <th><p>Acties</p></th>
         </tr>
         {% if werknemers %}
-            {% for werknemer in werknemers %}
+            {% for employee in werknemers %}
                       {% language 'nl' %}
         <tr class="table_content">
-          <td><p>{{ werknemer.username }} (<a onclick="copyToClipboard()" id="emailClip">{{ werknemer.email }}</a>)</p></td>
-          <td><p>{{ werknemer.last_visit }}</p></td>
-          <td><p>{% if werknemer.type_user == "SD"%}Derde{% endif %}{% if werknemer.type_user == "SOG"%}{{ client.naam }} Projectmanager{% endif %}</p></td>
-          <td><p>{% if werknemer.organisatie %}{{ werknemer.organisatie }}{% else %}<i>Geen</i>{% endif %}</p></td>
-          <td><p>{% if werknemer.organisatie.projecten.all %}{% for project in werknemer.organisatie.projecten.all %}{{ project }}, {% endfor %}{% else %}<i>Geen</i>{% endif %}</p></td>
+          <td><p>{{ employee.username }} (<a onclick="copyToClipboard()" id="emailClip">{{ employee.email }}</a>)</p></td>
+          <td><p>{{ employee.last_visit }}</p></td>
+          <td><p>{% if employee.type_user == "SD"%}Derde{% endif %}{% if employee.type_user == "SOG"%}{{ client.name }} Projectmanager{% endif %}</p></td>
+          <td><p>{% if employee.stakeholder %}{{ employee.stakeholder }}{% else %}<i>Geen</i>{% endif %}</p></td>
+          <td><p>{% if employee.stakeholder.projecten.all %}{% for project in employee.stakeholder.projecten.all %}{{ project }}, {% endfor %}{% else %}<i>Geen</i>{% endif %}</p></td>
           <td><p><a href="#"><button class="ui icon basic button"><i class="icon edit"></i></button></a></p></td>
           {% endlanguage %}
         </tr>

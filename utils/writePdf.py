@@ -15,19 +15,19 @@ from PIL import Image
 import numpy as np
 
 class PDFMaker:
-    def __init__(self, versie, logo_url):
+    def __init__(self, version, logo_url):
         self.date = datetime.datetime.now()
 
-        self.bedrijfsnaam = "PVETool"
+        self.bedrijfsname = "PVETool"
 
         self.defaultPageSize = letter
         self.PAGE_HEIGHT = self.defaultPageSize[1]
         self.PAGE_WIDTH = self.defaultPageSize[0]
         self.styles = getSampleStyleSheet()
 
-        self.version = versie
+        self.version = version
         self.Topleft = f"PVE SAREF {self.version}"
-        self.BijlageDisclaimer = f"Bijlages van regels zijn in het mapje BasisBijlages, bijlagen van opmerkingen in het mapje OpmerkingBijlages."
+        self.BijlageDisclaimer = f"Bijlages van regels zijn in het mapje BasisBijlages, attachments van opmerkingen in het mapje OpmerkingBijlages."
         self.GeaccepteerdDisclaimer = f"Geaccepteerde statussen zijn in het groen."
         self.NietGeaccepteerdDisclaimer = (
             f"Niet geaccepteerde statussen zijn in het rood."
@@ -64,7 +64,7 @@ class PDFMaker:
         else:
             self.logo = None
 
-        self.hoofdstukStyle = ParagraphStyle(
+        self.chapterStyle = ParagraphStyle(
             textColor=colors.Color(red=1, green=1, blue=1),
             backColor=colors.Color(red=49 / 255, green=133 / 255, blue=154 / 255),
             name="Normal",
@@ -145,8 +145,8 @@ class PDFMaker:
     def myFirstPage(self, canvas, doc):
         canvas.saveState()
         # eerste pagina: opmerkingen, logo, etc aan de top. Datum en paginanr onderaan.
-        canvas.setTitle(f"Programma van Eisen - {self.bedrijfsnaam}")
-        canvas.setAuthor(f"{self.bedrijfsnaam} / Tames Boon")
+        canvas.setTitle(f"Programma van Eisen - {self.bedrijfsname}")
+        canvas.setAuthor(f"{self.bedrijfsname} / Tames Boon")
         # titelbox (OPMERKINGEN)
         canvas.setLineWidth(2)
         canvas.setFillColorRGB(145 / 255, 205 / 255, 219 / 255)
@@ -283,11 +283,11 @@ class PDFMaker:
         self,
         filename,
         PVEItems,
-        versie_pk,
+        version_pk,
         opmerkingen,
-        bijlagen,
+        attachments,
         reacties,
-        reactiebijlagen,
+        reactieattachments,
         parameters,
         accepted_comment_ids,
     ):
@@ -307,34 +307,34 @@ class PDFMaker:
         Story = [Spacer(0, 224)]
         style = self.styles["Normal"]
 
-        # get pve versie
-        versie = models.PVEVersie.objects.get(id=versie_pk)
+        # get pve version
+        version = models.PVEVersie.objects.get(id=version_pk)
 
-        hoofdstukken = models.PVEHoofdstuk.objects.prefetch_related("paragraaf").filter(versie=versie).order_by("id")
+        chapters = models.PVEHoofdstuk.objects.prefetch_related("paragraph").filter(version=version).order_by("id")
 
         # Excel tabel simulasie
-        for hoofdstuk in hoofdstukken:
+        for chapter in chapters:
 
-            items_exist = [item for item in PVEItems if item.hoofdstuk == hoofdstuk]
+            items_exist = [item for item in PVEItems if item.chapter == chapter]
             if len(items_exist) > 0:
-                p = Paragraph("%s" % hoofdstuk, self.hoofdstukStyle)
+                p = Paragraph("%s" % chapter, self.chapterStyle)
                 Story.append(p)
 
-                paragraven = [_ for _ in hoofdstuk.paragraaf.all()]
+                paragraphs = [_ for _ in chapter.paragraph.all()]
 
-                if paragraven:
-                    for paragraaf in paragraven:
+                if paragraphs:
+                    for paragraph in paragraphs:
                         items = [
                             item
                             for item in PVEItems
-                            if item.hoofdstuk == hoofdstuk
-                            and item.paragraaf == paragraaf
+                            if item.chapter == chapter
+                            and item.paragraph == paragraph
                         ]
 
                         if len(items) > 0:
                             Story.append(Spacer(self.LeftPadding, 0))
                             p = Paragraph(
-                                "%s" % paragraaf.paragraaf, self.paragraafStyle
+                                "%s" % paragraph.paragraph, self.paragraafStyle
                             )
                             Story.append(p)
 
@@ -356,23 +356,23 @@ class PDFMaker:
                                             self.regelStyle,
                                         )
                                         betrokken_str = f""
-                                        opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: "
+                                        opmrk = f"{opmerkingen[item.id].date.strftime('%Y-%m-%d')}: "
                                         #if opmerkingen[item.id].annotation:
-                                        #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
+                                        #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].user}. "
                                         if opmerkingen[item.id].status:
                                             opmrk += f"Status: {opmerkingen[item.id].status}. "
                                         if opmerkingen[item.id].kostenConsequenties:
                                             opmrk += f"Kostenverschil: €{opmerkingen[item.id].kostenConsequenties}. "
-                                        if opmerkingen[item.id].bijlage:
-                                            opmrk += f"Zie bijlage(n) "
+                                        if opmerkingen[item.id].attachment:
+                                            opmrk += f"Zie attachment(n) "
 
-                                            for bijlage in bijlagen[item.id]:
-                                                opmrk += f"'{bijlage}'. "
+                                            for attachment in attachments[item.id]:
+                                                opmrk += f"'{attachment}'. "
                                                 
-                                        if opmerkingen[item.id].gebruiker.organisatie:
-                                            betrokken_partij = f"{opmerkingen[item.id].gebruiker.organisatie} "
+                                        if opmerkingen[item.id].user.stakeholder:
+                                            betrokken_partij = f"{opmerkingen[item.id].user.stakeholder} "
                                         else:
-                                            betrokken_partij = f"{opmerkingen[item.id].gebruiker.klantenorganisatie} "
+                                            betrokken_partij = f"{opmerkingen[item.id].user.client} "
                                         
                                         betrokken_str += betrokken_partij
                                     
@@ -382,24 +382,24 @@ class PDFMaker:
                                                 #if reactie.comment:
                                                 #    if len(reactie_str) == 0:
                                                 #        reactie_str += f"Opmerking: "
-                                                #    reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
+                                                #    reactie_str += f""""{reactie.comment}" -{reactie.user}. """
 
-                                                if reactie.id in reactiebijlagen.keys():
+                                                if reactie.id in reactieattachments.keys():
                                                 #    if len(reactie_str) == 0:
                                                 #        reactie_str += f"Opmerking: "
                                                     
-                                                #    reactie_str += f"Zie bijlage(n) "                                                    
+                                                #    reactie_str += f"Zie attachment(n) "                                                    
                                                 
-                                                    if "Zie bijlage" not in opmrk and "Zie bijlage" not in reactie_str:
-                                                        reactie_str += f"Zie bijlage(n): "
+                                                    if "Zie attachment" not in opmrk and "Zie attachment" not in reactie_str:
+                                                        reactie_str += f"Zie attachment(n): "
                                                     
-                                                    for bijlage in reactiebijlagen[reactie.id]:
-                                                        reactie_str += f"'{bijlage.naam}', "
+                                                    for attachment in reactieattachments[reactie.id]:
+                                                        reactie_str += f"'{attachment.name}', "
                                                         
-                                                if reactie.gebruiker.organisatie:
-                                                    betrokken_partij = reactie.gebruiker.organisatie
+                                                if reactie.user.stakeholder:
+                                                    betrokken_partij = reactie.user.stakeholder
                                                 else:
-                                                    betrokken_partij = reactie.gebruiker.klantenorganisatie
+                                                    betrokken_partij = reactie.user.client
                                                     
                                                 if f"{betrokken_partij}" not in betrokken_str:
                                                     betrokken_str += f", {betrokken_partij} "
@@ -411,7 +411,7 @@ class PDFMaker:
                                         if (
                                             len(opmrk)
                                             == len(
-                                                opmerkingen[item.id].datum.strftime(
+                                                opmerkingen[item.id].date.strftime(
                                                     "%Y-%m-%d"
                                                 )
                                             )
@@ -454,23 +454,23 @@ class PDFMaker:
                                             self.regelStyleSwitch,
                                         )
                                         betrokken_str = f""
-                                        opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: "
+                                        opmrk = f"{opmerkingen[item.id].date.strftime('%Y-%m-%d')}: "
                                         #if opmerkingen[item.id].annotation:
-                                        #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
+                                        #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].user}. "
                                         if opmerkingen[item.id].status:
                                             opmrk += f"Status: {opmerkingen[item.id].status}. "
                                         if opmerkingen[item.id].kostenConsequenties:
                                             opmrk += f"Kostenverschil: €{opmerkingen[item.id].kostenConsequenties}. "
-                                        if opmerkingen[item.id].bijlage:
-                                            opmrk += f"Zie bijlage(n) "
+                                        if opmerkingen[item.id].attachment:
+                                            opmrk += f"Zie attachment(n) "
 
-                                            for bijlage in bijlagen[item.id]:
-                                                opmrk += f"'{bijlage}'. "
+                                            for attachment in attachments[item.id]:
+                                                opmrk += f"'{attachment}'. "
                                                 
-                                        if opmerkingen[item.id].gebruiker.organisatie:
-                                            betrokken_partij = f"{opmerkingen[item.id].gebruiker.organisatie} "
+                                        if opmerkingen[item.id].user.stakeholder:
+                                            betrokken_partij = f"{opmerkingen[item.id].user.stakeholder} "
                                         else:
-                                            betrokken_partij = f"{opmerkingen[item.id].gebruiker.klantenorganisatie} "
+                                            betrokken_partij = f"{opmerkingen[item.id].user.client} "
                                         
                                         betrokken_str += betrokken_partij
                                     
@@ -480,26 +480,26 @@ class PDFMaker:
                                                 #if reactie.comment:
                                                 #    if len(reactie_str) == 0:
                                                 #        reactie_str += f"Opmerking: "
-                                                #    reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
+                                                #    reactie_str += f""""{reactie.comment}" -{reactie.user}. """
 
-                                                if reactie.id in reactiebijlagen.keys():
+                                                if reactie.id in reactieattachments.keys():
                                                 #    if len(reactie_str) == 0:
                                                 #        reactie_str += f"Opmerking: "
                                                     
-                                                #    reactie_str += f"Zie bijlage(n) "                                                    
+                                                #    reactie_str += f"Zie attachment(n) "                                                    
                                                 
-                                                    if "Zie bijlage" not in opmrk and "Zie bijlage" not in reactie_str:
-                                                        reactie_str += f"Zie bijlage(n): "
+                                                    if "Zie attachment" not in opmrk and "Zie attachment" not in reactie_str:
+                                                        reactie_str += f"Zie attachment(n): "
                                                     
-                                                    for bijlage in reactiebijlagen[reactie.id]:
-                                                        reactie_str += f"'{bijlage.naam}', "
+                                                    for attachment in reactieattachments[reactie.id]:
+                                                        reactie_str += f"'{attachment.name}', "
 
                                                 opmrk += reactie_str
                                                 
-                                                if reactie.gebruiker.organisatie:
-                                                    betrokken_partij = reactie.gebruiker.organisatie
+                                                if reactie.user.stakeholder:
+                                                    betrokken_partij = reactie.user.stakeholder
                                                 else:
-                                                    betrokken_partij = reactie.gebruiker.klantenorganisatie
+                                                    betrokken_partij = reactie.user.client
                                                     
                                                 if f"{betrokken_partij}" not in betrokken_str:
                                                     betrokken_str += f", {betrokken_partij} "
@@ -509,7 +509,7 @@ class PDFMaker:
                                         if (
                                             len(opmrk)
                                             == len(
-                                                opmerkingen[item.id].datum.strftime(
+                                                opmerkingen[item.id].date.strftime(
                                                     "%Y-%m-%d"
                                                 )
                                             )
@@ -545,7 +545,7 @@ class PDFMaker:
                                         Story.append(p)
 
                 else:
-                    items = [item for item in PVEItems if item.hoofdstuk == hoofdstuk]
+                    items = [item for item in PVEItems if item.chapter == chapter]
 
                     if len(items) > 0:
                         for item in items:
@@ -562,23 +562,23 @@ class PDFMaker:
                                         self.regelStyle,
                                     )
                                     betrokken_str = f""
-                                    opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: "
+                                    opmrk = f"{opmerkingen[item.id].date.strftime('%Y-%m-%d')}: "
                                     #if opmerkingen[item.id].annotation:
-                                    #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
+                                    #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].user}. "
                                     if opmerkingen[item.id].status:
                                         opmrk += f"Status: {opmerkingen[item.id].status}. "
                                     if opmerkingen[item.id].kostenConsequenties:
                                         opmrk += f"Kostenverschil: €{opmerkingen[item.id].kostenConsequenties}. "
-                                    if opmerkingen[item.id].bijlage:
-                                        opmrk += f"Zie bijlage(n) "
+                                    if opmerkingen[item.id].attachment:
+                                        opmrk += f"Zie attachment(n) "
 
-                                        for bijlage in bijlagen[item.id]:
-                                            opmrk += f"'{bijlage}'. "
+                                        for attachment in attachments[item.id]:
+                                            opmrk += f"'{attachment}'. "
                                             
-                                    if opmerkingen[item.id].gebruiker.organisatie:
-                                        betrokken_partij = f"{opmerkingen[item.id].gebruiker.organisatie} "
+                                    if opmerkingen[item.id].user.stakeholder:
+                                        betrokken_partij = f"{opmerkingen[item.id].user.stakeholder} "
                                     else:
-                                        betrokken_partij = f"{opmerkingen[item.id].gebruiker.klantenorganisatie} "
+                                        betrokken_partij = f"{opmerkingen[item.id].user.client} "
                                     
                                     betrokken_str += betrokken_partij
                                 
@@ -588,24 +588,24 @@ class PDFMaker:
                                             #if reactie.comment:
                                             #    if len(reactie_str) == 0:
                                             #        reactie_str += f"Opmerking: "
-                                            #    reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
+                                            #    reactie_str += f""""{reactie.comment}" -{reactie.user}. """
 
-                                            if reactie.id in reactiebijlagen.keys():
+                                            if reactie.id in reactieattachments.keys():
                                             #    if len(reactie_str) == 0:
                                             #        reactie_str += f"Opmerking: "
                                                 
-                                            #    reactie_str += f"Zie bijlage(n) "                                                    
+                                            #    reactie_str += f"Zie attachment(n) "                                                    
                                             
-                                                if "Zie bijlage" not in opmrk and "Zie bijlage" not in reactie_str:
-                                                    reactie_str += f"Zie bijlage(n): "
+                                                if "Zie attachment" not in opmrk and "Zie attachment" not in reactie_str:
+                                                    reactie_str += f"Zie attachment(n): "
                                                 
-                                                for bijlage in reactiebijlagen[reactie.id]:
-                                                    reactie_str += f"'{bijlage.naam}', "
+                                                for attachment in reactieattachments[reactie.id]:
+                                                    reactie_str += f"'{attachment.name}', "
                                                     
-                                            if reactie.gebruiker.organisatie:
-                                                betrokken_partij = reactie.gebruiker.organisatie
+                                            if reactie.user.stakeholder:
+                                                betrokken_partij = reactie.user.stakeholder
                                             else:
-                                                betrokken_partij = reactie.gebruiker.klantenorganisatie
+                                                betrokken_partij = reactie.user.client
                                                 
                                             if f"{betrokken_partij}" not in betrokken_str:
                                                 betrokken_str += f", {betrokken_partij} "
@@ -617,7 +617,7 @@ class PDFMaker:
                                     if (
                                         len(opmrk)
                                         == len(
-                                            opmerkingen[item.id].datum.strftime(
+                                            opmerkingen[item.id].date.strftime(
                                                 "%Y-%m-%d"
                                             )
                                         )
@@ -656,18 +656,18 @@ class PDFMaker:
                                         self.regelStyleSwitch,
                                     )
 
-                                    opmrk = f"{opmerkingen[item.id].datum.strftime('%Y-%m-%d')}: "
+                                    opmrk = f"{opmerkingen[item.id].date.strftime('%Y-%m-%d')}: "
                                     #if opmerkingen[item.id].annotation:
-                                    #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].gebruiker}. "
+                                    #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].user}. "
                                     if opmerkingen[item.id].status:
                                         opmrk += f"Status: {opmerkingen[item.id].status}. "
                                     if opmerkingen[item.id].kostenConsequenties:
                                         opmrk += f"Kostenverschil: €{opmerkingen[item.id].kostenConsequenties}. "
-                                    if opmerkingen[item.id].bijlage:
-                                        opmrk += f"Zie bijlage(n) "
+                                    if opmerkingen[item.id].attachment:
+                                        opmrk += f"Zie attachment(n) "
 
-                                        for bijlage in bijlagen[item.id]:
-                                            opmrk += f"'{bijlage}'. "
+                                        for attachment in attachments[item.id]:
+                                            opmrk += f"'{attachment}'. "
 
                                     if item.id in reacties:
                                         for reactie in reacties[item.id]:
@@ -675,25 +675,25 @@ class PDFMaker:
                                             #if reactie.comment:
                                             #    if len(reactie_str) == 0:
                                             #        reactie_str += f"Opmerking: "
-                                            #    reactie_str += f""""{reactie.comment}" -{reactie.gebruiker}. """
+                                            #    reactie_str += f""""{reactie.comment}" -{reactie.user}. """
 
-                                            if reactie.id in reactiebijlagen.keys():
+                                            if reactie.id in reactieattachments.keys():
                                             #    if len(reactie_str) == 0:
                                             #        reactie_str += f"Opmerking: "
                                                 
-                                            #    reactie_str += f"Zie bijlage(n) "
+                                            #    reactie_str += f"Zie attachment(n) "
                                         
-                                                if "Zie bijlage" not in opmrk and "Zie bijlage" not in reactie_str:
-                                                    reactie_str += f"Zie bijlage(n): "
-                                                for bijlage in reactiebijlagen[reactie.id]:
-                                                    reactie_str += f"'{bijlage.naam}', "
+                                                if "Zie attachment" not in opmrk and "Zie attachment" not in reactie_str:
+                                                    reactie_str += f"Zie attachment(n): "
+                                                for attachment in reactieattachments[reactie.id]:
+                                                    reactie_str += f"'{attachment.name}', "
 
                                             opmrk += reactie_str
 
                                     if (
                                         len(opmrk)
                                         == len(
-                                            opmerkingen[item.id].datum.strftime(
+                                            opmerkingen[item.id].date.strftime(
                                                 "%Y-%m-%d"
                                             )
                                         )

@@ -29,8 +29,8 @@ function map_init(map, options) {
 
 	{% for project in projects %}
 	marker = new L.marker([{{ project.plaats.y|unlocalize }}, {{ project.plaats.x|unlocalize }}]).bindPopup(`
-    <h3><b><a href='{% url 'projectview' project.id %}'>{{ project.naam }}</a></b></h3>
-    <p>Klant: <i>{{ project.belegger }}</i></p>
+    <h3><b><a href='{% url 'projectview' project.id %}'>{{ project.name }}</a></b></h3>
+    <p>Klant: <i>{{ project.client }}</i></p>
     <p>Aangemaakt op: <i>{{ project.datum_aangemaakt }}</i></p>
     {% if project.projectmanager %}<p>Projectmanager: <i>{{ project.projectmanager }}</i></p>{% else %}<p>Projectmanager: <i>Geen</i></p>{% endif %}
     <p>Contractstatus: <i>{{ project.statuscontract }}</i></p>

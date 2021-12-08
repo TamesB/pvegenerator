@@ -6,10 +6,10 @@ from . import views
 
 # Urls for the specific app
 urlpatterns = [
-    path("generate/<int:client_pk>/<int:versie_pk>", views.GeneratePVEView, name="generate"),
+    path("generate/<int:client_pk>/<int:version_pk>", views.GeneratePVEView, name="generate"),
     path("download/<str:filename>", views.download_file, name="download"),
     path(
-        "download/b/<str:zipFilename>", views.download_bijlagen, name="downloadbijlagen"
+        "download/b/<str:zipFilename>", views.download_attachments, name="downloadattachments"
     ),
-    path("compare/<int:versie_pk>", views.compareFormView, name="compare"),
+    path("compare/<int:version_pk>", views.compareFormView, name="compare"),
 ]
