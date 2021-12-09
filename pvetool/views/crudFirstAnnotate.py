@@ -93,13 +93,8 @@ def AddComment(request, client_pk, pk):
             else:
                 chapters_false[item.chapter] = False
             
-
     chapters_ordered = models.PVEHoofdstuk.objects.filter(version__pk=items.first().version.pk).order_by("id")
-    
-    items_jej = models.PVEItem.objects.filter(version__pk=items.first().version.pk, chapter__chapter="1 ALGEMEEN")
-    for item in items_jej:
-        item.chapter = models.PVEHoofdstuk.objects.get(id=792)
-        item.save()    
+               
     for chapter in chapters_ordered:
         if chapter in chapters_false.keys():
             chapters[chapter] = chapters_false[chapter]
@@ -111,6 +106,7 @@ def AddComment(request, client_pk, pk):
     for chapter in chapters.keys():
         items_per_chapter_count = project.item.select_related("chapter").filter(chapter=chapter).count()
         items_per_chapter[chapter.id] += items_per_chapter_count
+    
     
     for annotation in project.annotation.select_related("item").select_related("item__chapter").select_related(
         "status"

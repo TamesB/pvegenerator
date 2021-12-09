@@ -310,7 +310,7 @@ class PDFMaker:
         # get pve version
         version = models.PVEVersie.objects.get(id=version_pk)
 
-        chapters = models.PVEHoofdstuk.objects.prefetch_related("paragraph").filter(version=version).order_by("id")
+        chapters = models.PVEHoofdstuk.objects.prefetch_related("paragraph").filter(version__pk=version.pk).order_by("id")
 
         # Excel tabel simulasie
         for chapter in chapters:
@@ -329,7 +329,7 @@ class PDFMaker:
                             for item in PVEItems
                             if item.chapter == chapter
                             and item.paragraph == paragraph
-                        ]
+                        ]                            
 
                         if len(items) > 0:
                             Story.append(Spacer(self.LeftPadding, 0))
@@ -546,6 +546,13 @@ class PDFMaker:
 
                 else:
                     items = [item for item in PVEItems if item.chapter == chapter]
+                    
+                    for item in items:
+                        if item.chapter.chapter == "1 ALGEMEEN":
+                            print(item)
+                
+                    if chapter.id == 682:
+                        print(items)
 
                     if len(items) > 0:
                         for item in items:

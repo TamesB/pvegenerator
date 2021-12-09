@@ -283,6 +283,8 @@ def ConnectPVE(request, client_pk, pk, version_pk):
                 .select_related("chapter")
                 .filter(basisregel=True)
             )
+            
+            print(basic_PVE)
 
             basic_PVE = basic_PVE.union(
                 Bouwsoort1.item.select_related("chapter")
@@ -515,7 +517,7 @@ def download_pve(request, client_pk, pk):
         .filter(projects__id__contains=pk)
         .order_by("id")
     )
-
+    
     # make pdf
     parameters = []
 
