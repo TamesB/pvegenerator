@@ -23,7 +23,7 @@
         <p class="description">Voeg de basisinformatie toe aan uw nieuwe project.</p>
         <form action="{% url 'plusproject_syn' client_pk %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <label class="formtitle" for="{{ form.name.id_for_label }}"><p>Projectname:</p></label>
+            <label class="formtitle" for="{{ form.name.id_for_label }}"><p>Projectnaam:</p></label>
             <p class="formbox">{{ form.name }}</p>
             <label class="formtitle" for="{{ form.nummer.id_for_label }}"><p>Projectnummer:</p></label>
             <p class="formbox">{{ form.nummer }}</p>

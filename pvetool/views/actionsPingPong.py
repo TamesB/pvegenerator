@@ -8,7 +8,7 @@ from project.models import Project, PVEItemAnnotation, Beleggers
 from pvetool.forms import FirstFreezeForm
 from pvetool.models import CommentReply, FrozenComments
 from pvetool.views.utils import GetAWSURL
-
+from pvetool.views import hardcoded_values
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def FirstFreeze(request, client_pk, pk):
@@ -52,7 +52,7 @@ def FirstFreeze(request, client_pk, pk):
                 frozencomments.level = 1
                 frozencomments.save()
                 changed_comments = project.annotation.select_related("item").all()
-
+                
                 changed_items_ids = [comment.item.id for comment in changed_comments]
                 unchanged_items = project.item.exclude(id__in=changed_items_ids)
                 # add all initially changed comments to it
@@ -168,15 +168,60 @@ def SendReplies(request, client_pk, pk):
 
         if form.is_valid():
             if form.cleaned_data["confirm"]:
-                project.frozenLevel = project.frozenLevel + 1
-                project.save()
-
                 commentphase = (
                     FrozenComments.objects.filter(project=project)
                     .prefetch_related("accepted_comments")
                     .order_by("-level")
                     .first()
                 )
+                
+                comments = (
+                    CommentReply.objects.select_related("onComment").select_related("onComment__item").select_related("onComment__item__chapter").select_related("onComment__item__paragraph")
+                    .select_related("status")
+                    .filter(commentphase=commentphase)
+                )
+                # check if accepted comments have no attachments/comments
+                # check if some statuses that require comments/attachments, have no comments/attachments yet
+                false_comments = []
+                
+                for comment in comments:
+                    if not comment.accept:
+                        if comment.status:
+                            # if new status and reply has no attachments/comment
+                            if comment.status.status in hardcoded_values.allowed_comments():
+                                if not comment.comment and not comment.attachmenttoreply.all():
+                                    false_comments.append(comment)
+                        # if not accepted, no statuschange and no comments/attachments/cost change
+                        else:
+                            if not comment.comment and not comment.attachment and not comment.consequentCosts:
+                                false_comments.append(comment)
+                    # if accepted, and reply has comment/attachment/changedstatus (for the hackers out there)
+                    else:
+                        if comment.comment or comment.attachment or comment.status:
+                            false_comments.append(comment)
+                            
+                if false_comments:
+
+                    string_list = []
+                    for comment in false_comments:
+                        string = f"{comment.onComment.item.chapter.chapter}: "
+                        
+                        if comment.onComment.item.paragraph:
+                            string += f"{comment.onComment.item.paragraph.paragraph}: "
+                        
+                        string += f"{comment.onComment.item.inhoud} "
+                        string_list.append(string)
+
+                    
+                    messages.warning(request, f"""Een aantal regels met een opmerkingsplicht hebben nog geen opmerkingen. Check de volgende regels:
+                                   {" / ".join([string for string in string_list])}.
+                                   """)
+                    
+                    return redirect("commentscheck_syn", client_pk=client_pk, proj_id=pk)
+
+                project.frozenLevel = project.frozenLevel + 1
+                project.save()
+
                 current_accepted_comments_ids = [
                     comment.id for comment in commentphase.accepted_comments.all()
                 ]

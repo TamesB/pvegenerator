@@ -105,6 +105,8 @@ MIDDLEWARE = [
     "htmlmin.middleware.MarkRequestMiddleware",
 ]
 
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
 HTML_MINIFY = True
 
 ROOT_URLCONF = "PVE.urls"

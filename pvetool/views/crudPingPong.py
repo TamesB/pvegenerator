@@ -10,7 +10,7 @@ from project.models import Project, PVEItemAnnotation, Beleggers
 from pvetool import forms
 from pvetool.models import BijlageToReply, CommentReply, FrozenComments
 from pvetool.views.utils import GetAWSURL
-
+from pvetool.views import hardcoded_values
 # this function checks if the client exists, whether the user is authenticated to the client, project is of the client,
 # the project is not in first annotate stage, the project contains a pve,
 # whether the user is permitted to the project,
@@ -484,6 +484,20 @@ def DetailReplyPong(request, client_pk, project_pk, item_pk, type):
         if reply.attachmenttoreply.exists():
             attachments = reply.attachmenttoreply.all()
     
+    context["comment_allowed"] = False
+    context["attachment_allowed"] = False
+    
+    # manual input as to what statuses allow comments / attachments    
+    if reply:
+        if reply.status:
+            if reply.status.status in hardcoded_values.allowed_comments():
+                context["comment_allowed"] = True
+            if reply.status.status in hardcoded_values.allowed_attachments():
+                context["attachment_allowed"] = True
+        elif not reply.accept:
+            context["comment_allowed"] = True
+            context["attachment_allowed"] = True
+
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
     context["item_pk"] = item_pk
@@ -878,8 +892,25 @@ def AddStatusPong(request, client_pk, project_pk, item_pk, type):
 
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
+            if form.cleaned_data["status"] == annotation.status:
+                messages.warning(request, "Kan niet veranderen naar dezelfde status.")
+                return redirect(
+                    "detailpongaccept",
+                    client_pk=client_pk,
+                    project_pk=project_pk,
+                    item_pk=item_pk,
+                    type=type,
+                )
+
             if reply:
+                if form.cleaned_data["status"] not in hardcoded_values.allowed_comments():
+                    reply.comment = None
+                if form.cleaned_data["status"] not in hardcoded_values.allowed_attachments():
+                    reply.attachment = False
+                    reply.attachmenttoreply.all().delete()
+                    
                 reply.status = form.cleaned_data["status"]
+                
                 reply.save()
             else:
                 reply = CommentReply()

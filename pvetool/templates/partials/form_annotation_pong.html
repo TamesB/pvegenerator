@@ -5,7 +5,7 @@
     <form hx-target="this" hx-swap="outerHTML" id="form-{{ item_pk }}" class="ui form" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
         <div>
-        <p><label for="{{ form.annotation.id_for_label }}"><b>Uw reactie:</b></label><p>
+        <p><label for="{{ form.annotation.id_for_label }}"><b>Uw opmerking:</b></label><p>
         <p class="pong_annotate_formbox">{{ form.annotation }}</p>
         </div>
         <button hx-get="{% url 'detailpongreply' client_pk project_pk item_pk type %}" hx-trigger="click, keyup[key=='Escape'] from:textarea"style="float: left;" class="ui basic icon button"><i class="icon undo alternate"></i></button>

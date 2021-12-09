@@ -14,7 +14,7 @@ from users.models import CustomUser, Invitation, Organisatie
 class LoginForm(forms.Form):
     attrs = {"type": "password"}
 
-    username = forms.CharField(label="Gebruikersname of e-mail", max_length=100)
+    username = forms.CharField(label="Gebruikersnaam of e-mail", max_length=100)
     password = forms.CharField(
         label="Wachtwoord", max_length=100, widget=forms.TextInput(attrs=attrs)
     )
@@ -140,7 +140,7 @@ class PVEParameterForm(ModelForm):
 
 class KoppelDerdeUserForm(ModelForm):
     stakeholder = forms.ModelChoiceField(
-        queryset=Organisatie.objects.none(), label="Organisatie:"
+        queryset=Organisatie.objects.none(), label="Stakeholder:"
     )
     project = forms.ModelChoiceField(
         queryset=Project.objects.none(), label="Project:"
@@ -163,7 +163,7 @@ class PlusAccountForm(ModelForm):
 
     rang = forms.ChoiceField(choices=type_choices)
     stakeholder = forms.ModelChoiceField(
-        queryset=Organisatie.objects.none(), label="Organisatie (optioneel):", required=False
+        queryset=Organisatie.objects.none(), label="Stakeholder (optioneel):", required=False
     )
     project = forms.ModelChoiceField(
         queryset=Project.objects.none(), label="Project (optioneel):", required=False
@@ -180,7 +180,7 @@ class PlusAccountForm(ModelForm):
 
 class PlusDerdeToProjectForm(ModelForm):
     stakeholder = forms.ModelChoiceField(
-        queryset=Organisatie.objects.none(), label="Organisatie (optioneel):", required=False
+        queryset=Organisatie.objects.none(), label="Stakeholder (optioneel):", required=False
     )
 
     class Meta:
@@ -212,7 +212,7 @@ class PVEItemAnnotationForm(forms.Form):
         label="annotation", max_length=1000, widget=forms.Textarea, required=False
     )
     consequentCosts = forms.DecimalField(
-        label="(Optioneel) Kosten Consequenties", required=False
+        label="(Optioneel) Kosten", required=False
     )
 
     def __init__(self, *args, **kwargs):
@@ -227,7 +227,7 @@ class BijlageToAnnotationForm(ModelForm):
         labels = {
             "ann": "Opmerking:",
             "attachment": "Bijlage:",
-            "name": "Bijlagename:"
+            "name": "Bijlagenaam (optioneel):"
         }
         widgets = {"ann": forms.HiddenInput()}
         
@@ -240,7 +240,7 @@ class FirstAnnotationForm(forms.Form):
 
 class FirstKostenverschilForm(forms.Form):
     kostenverschil = forms.DecimalField(
-        label="Kosten Consequenties", required=True
+        label="Kosten", required=True
     )
 
 class FirstStatusForm(forms.Form):
@@ -252,7 +252,7 @@ class FirstBijlageForm(ModelForm):
     class Meta:
         model = BijlageToAnnotation
         fields = ("attachment", "ann", "name")
-        labels = {"attachment": "", "ann": "", "name": "Bijlagename (optioneel):"}
+        labels = {"attachment": "", "ann": "", "name": "Bijlagenaam (optioneel):"}
         widgets = {"ann": forms.HiddenInput()}
         
     def __init__(self, *args, **kwargs):
@@ -264,7 +264,7 @@ class PongBijlageForm(ModelForm):
     class Meta:
         model = BijlageToReply
         fields = ("attachment", "reply", "name")
-        labels = {"attachment": "", "reply": "", "name": "Bijlagename (optioneel):"}
+        labels = {"attachment": "", "reply": "", "name": "Bijlagenaam (optioneel):"}
         widgets = {"reply": forms.HiddenInput()}
         
     def __init__(self, *args, **kwargs):
@@ -339,7 +339,7 @@ class StartProjectForm(ModelForm):
         )
         geom = forms.PointField()
         labels = {
-            "name": "Projectname:",
+            "name": "Projectnaam:",
             "nummer": "Projectnummer:",
             "plaats": "Plaats:",
             "vhe": "Aantal verhuureenheden:",

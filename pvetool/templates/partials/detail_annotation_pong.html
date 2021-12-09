@@ -21,7 +21,7 @@
                 <span><p style="color:#b69b00;">{{ current_reply.comment }} <span><button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic icon button">
                 <i class="icon edit"></i></button></span>
                 <span><a hx-delete="{% url 'deletereplypong' client_pk project_pk item_pk type %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></p></span>
-            {% elif current_reply.accept is False %}
+            {% elif comment_allowed is True %}
                 <button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic icon button"><i class="icon plus"></i></button>
             {% endif %}
         </div>
@@ -38,7 +38,7 @@
                 {% endfor %}
                 </span>
                 {% endif %}
-                {% if current_reply.accept is False %}
+                {% if attachment_allowed is True %}
                 <button hx-get="{% url 'addattachmentpong' client_pk project_pk item_pk 0 type 1 0 %}" class="ui basic icon button"><i class="icon plus"></i></button>
                 {% endif %}
             </p>
