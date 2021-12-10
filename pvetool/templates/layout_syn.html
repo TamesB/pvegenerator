@@ -12,6 +12,7 @@
         <link rel="stylesheet" type="text/css" href="{% static 'Semantic-UI-Alert.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'pvetool/w3.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'pvetool/tooltip.css' %}">
+        <script src="https://unpkg.com/feather-icons"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
               {% block head %}{% endblock %}
               {% block topscripts %}{% endblock %}
@@ -19,22 +20,22 @@
     </head>
     <body>
         <div id="main">
+              <div class="header">
+
+                <img src="{{ logo_url }}" class="logo_bg"></a>
+
+                <ul class="menu_right">
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'logout_syn' client_pk %}">Afmelden</a></li>
+                    <li><a href="{% url 'dashboard_syn' client_pk %}">Ingelogd als {{ request.user }}</a></li>
+                {% else %}
+                    <li><a href="#">Afgemeld</a></li>
+                {% endif %}
+                </ul>
+            </div>
             <div class="layerOneInner">
-                <div class="header">
-
-                    <img src="{{ logo_url }}" class="logo_bg"></a>
-
-                    <ul class="menu_right">
-                    {% if user.is_authenticated %}
-                        <li><a href="{% url 'logout_syn' client_pk %}">Afmelden</a></li>
-                        <li><a href="{% url 'dashboard_syn' client_pk %}">Ingelogd als {{ request.user }}</a></li>
-                    {% else %}
-                        <li><a href="#">Afgemeld</a></li>
-                    {% endif %}
-                    </ul>
-                </div>
-                <div class="menu_left">{% block menu %}{% endblock %}</div> 
-                <div class="article">
+                <div class="menu_left" id="menu_left">{% block menu %}{% endblock %}</div> 
+                <div class="article" id ="article">
                 <div class="loader" style="display: none;"></div>
                 <div class="article_content">
                 {% block main %}{% endblock %}
@@ -68,6 +69,10 @@
       document.body.addEventListener("htmx:configRequest", (event) => {
         event.detail.headers["X-CSRFToken"] = "{{ csrf_token }}";
       });
+    </script>
+    <script src="{% static 'pvetool/menu.js' %}"></script>
+    <script>      
+      feather.replace()
     </script>
         {% block scripts %}{% endblock %}
     </body>

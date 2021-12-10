@@ -9,6 +9,7 @@ html {
   margin: 0;
   font-size: 0px;
   line-height: 0em;
+  overflow: hidden;
 }
 
 .centered_div {
@@ -117,75 +118,50 @@ html {
 }
 
 #main {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: nowrap;
-      flex-wrap: nowrap;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
   line-height: 0em;
+  height: 100vh;
+  width: 100vw;
 }
 
-#main .layerOneInner {
-  width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  height: 100%;
-}
-
-#main .layerOneInner .header {
+#main .header {
   font-weight: bold;
   width: 100%;
   color: black;
   height: 10vh;
-  max-height: 10vh;
+  max-height: 9vh;
   background-color: #ffffff;
 }
 
-#main .layerOneInner .header .logo_bg {
+#main .header .logo_bg {
   float: left;
-  height: 100%;
-  padding-left: 1vw;
-  padding-top: 1vw;
-  padding-bottom: 1vw;
-  min-height: 90px;
+  height: 50%;
+  padding-left: 0.5em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  min-height: 70px;
 }
 
-#main .layerOneInner .header .menu_right {
+#main .header .menu_right {
   padding: 1vw;
   padding-top: 2.5vh;
   font-family: "Montserrat";
 }
 
-#main .layerOneInner .header .menu_right ul {
+#main .header .menu_right ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   overflow: hidden;
 }
 
-#main .layerOneInner .header .menu_right li {
+#main .header .menu_right li {
   display: inline;
   float: right;
   border-right: 0.1vw solid #99beb9;
   padding: 0.5vw;
 }
 
-#main .layerOneInner .header .menu_right li a {
+#main .header .menu_right li a {
   display: block;
   padding: 0;
   font-size: 1.5vh;
@@ -193,44 +169,59 @@ html {
   cursor: pointer;
 }
 
-#main .layerOneInner .header .menu_right li::before {
+#main .header .menu_right li::before {
   content: "";
 }
 
 @media screen and (max-width: 768px) {
-  #main .layerOneInner .header {
+  #main .header {
     visibility: hidden;
   }
 }
 
-#main .layerOneInner .midwidth_form {
+#main .midwidth_form {
   width: 50%;
 }
 
 @media screen and (max-width: 768px) {
-  #main .layerOneInner .midwidth_form {
+  #main .midwidth_form {
     width: 90%;
   }
 }
 
+#main .layerOneInner {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  height: 90vh;
+}
+
 #main .layerOneInner .menu_left {
-  left: 0;
+  clear: left;
   text-align: center;
   font-family: "Montserrat";
   font-weight: bold;
   font-size: 1.5em;
-  width: 3vw;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 3%;
+          flex: 0 0 3%;
   background-image: -webkit-gradient(linear, right bottom, left top, from(#0078ae), to(#66acd1));
   background-image: linear-gradient(bottom right, #0078ae, #66acd1);
   top: 10vh;
   height: 100%;
   max-height: 90vh;
-  position: absolute;
-  -webkit-transition: 0.1s ease;
-  transition: 0.1s ease;
+  -webkit-transition: 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
   overflow-x: hidden;
   overflow-y: auto;
-  z-index: 3;
   min-width: 40px;
 }
 
@@ -241,6 +232,7 @@ html {
   margin-left: 0.5vw;
   margin-top: 1.5vh;
   z-index: 3;
+  cursor: pointer;
 }
 
 #main .layerOneInner .menu_left a {
@@ -250,7 +242,10 @@ html {
   margin-bottom: 4vh;
   text-decoration: none;
   cursor: pointer;
-  visibility: hidden;
+}
+
+#main .layerOneInner .menu_left a p {
+  display: none;
 }
 
 #main .layerOneInner .menu_left a:hover {
@@ -279,8 +274,11 @@ html {
 }
 
 #main .layerOneInner .menu_left .hori-menu-logout .links a {
-  visibility: hidden;
   width: 50%;
+}
+
+#main .layerOneInner .menu_left .hori-menu-logout .links a p {
+  display: none;
 }
 
 #main .layerOneInner .menu_left .hori-menu-logout .links a:first-child {
@@ -292,16 +290,6 @@ html {
 #main .layerOneInner .menu_left .hori-menu-logout .links a:last-child {
   padding-right: 5vw;
   text-align: right;
-}
-
-#main .layerOneInner .menu_left:hover {
-  width: 17.5vw;
-  min-width: 200px;
-  z-index: 1000;
-}
-
-#main .layerOneInner .menu_left:hover a {
-  visibility: visible;
 }
 
 @media screen and (max-width: 768px) {
@@ -321,8 +309,8 @@ html {
     min-width: 100%;
     max-height: 4vh;
     position: absolute;
-    -webkit-transition: 0.1s ease;
-    transition: 0.1s ease;
+    -webkit-transition: 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
+    transition: 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
     overflow-x: hidden;
     z-index: 3;
     min-height: 40px;
@@ -375,7 +363,6 @@ html {
     text-align: right;
   }
   #main .layerOneInner .menu_left:hover {
-    min-width: 100vw;
     min-height: 100%;
     padding-top: 5vh;
     padding-bottom: 5vh;
@@ -395,21 +382,21 @@ html {
 #main .layerOneInner .article {
   font-family: "Montserrat";
   height: 100%;
-  width: 100%;
   float: center;
   text-align: center;
   background-image: -webkit-gradient(linear, left top, right bottom, from(#ffffff), to(#d1d1d1));
   background-image: linear-gradient(top left, #ffffff, #d1d1d1);
-  position: absolute;
-  top: 10vh;
   max-height: 90vh;
   overflow-y: auto;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 97%;
+          flex: 0 0 97%;
 }
 
 #main .layerOneInner .article .article_content {
   margin-top: 3vh;
-  margin-left: 10vw;
-  margin-right: 7vw;
+  margin-left: 5vw;
+  margin-right: 5vw;
 }
 
 #main .layerOneInner .article .article_content .flex-container {

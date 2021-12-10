@@ -9,6 +9,7 @@ html {
   margin: 0;
   font-size: 0px;
   line-height: 0em;
+  overflow: hidden;
 }
 
 .centered_div {
@@ -100,98 +101,95 @@ html {
 }
 
 #main {
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
   line-height: 0em;
+  height: 100vh;
+  width: 100vw;
 
+  .header {
+    font-weight: bold;
+    width: 100%;
+    color: hsl(0, 0%, 0%);
+    height: 10vh;
+    max-height: 9vh;
+    background-color: #ffffff;
+
+    .logo_bg {
+      float: left;
+      height: 50%;
+      padding-left: 0.5em;
+      padding-top: 0.5em;
+      padding-bottom: 0.5em;
+      min-height: 70px;
+    }
+
+    .menu_right {
+      padding: 1vw;
+      padding-top: 2.5vh;
+      font-family: "Montserrat";
+
+      ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      li {
+        display: inline;
+        float: right;
+        border-right: 0.1vw solid #99beb9;
+        padding: 0.5vw;
+      }
+
+      li a {
+        display: block;
+        padding: 0;
+        font-size: 1.5vh;
+        color: black;
+        cursor: pointer;
+      }
+      li::before {
+        content: "";
+      }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .header {
+      visibility: hidden;
+    }
+  }
+  .midwidth_form {
+    width: 50%;
+  }
+
+  @media screen and (max-width: 768px) {
+    .midwidth_form {
+      width: 90%;
+    }
+  }
   .layerOneInner {
     width: 100%;
     display: flex;
-    flex-direction: column;
-    height: 100%;
+    flex-direction: row;
+    justify-content: space-evenly;
+    height: 90vh;
 
-    .header {
-      font-weight: bold;
-      width: 100%;
-      color: hsl(0, 0%, 0%);
-      height: 10vh;
-      max-height: 10vh;
-      background-color: #ffffff;
 
-      .logo_bg {
-        float: left;
-        height: 100%;
-        padding-left: 1vw;
-        padding-top: 1vw;
-        padding-bottom: 1vw;
-        min-height: 90px;
-      }
-
-      .menu_right {
-        padding: 1vw;
-        padding-top: 2.5vh;
-        font-family: "Montserrat";
-
-        ul {
-          list-style-type: none;
-          margin: 0;
-          padding: 0;
-          overflow: hidden;
-        }
-
-        li {
-          display: inline;
-          float: right;
-          border-right: 0.1vw solid #99beb9;
-          padding: 0.5vw;
-        }
-
-        li a {
-          display: block;
-          padding: 0;
-          font-size: 1.5vh;
-          color: black;
-          cursor: pointer;
-        }
-        li::before {
-          content: "";
-        }
-      }
-    }
-
-    @media screen and (max-width: 768px) {
-      .header {
-        visibility: hidden;
-      }
-    }
-    .midwidth_form {
-      width: 50%;
-    }
-
-    @media screen and (max-width: 768px) {
-      .midwidth_form {
-        width: 90%;
-      }
-    }
     .menu_left {
-      left: 0;
+      clear: left;
       text-align: center;
       font-family: "Montserrat";
       font-weight: bold;
       font-size: 1.5em;
-      width: 3vw;
+      flex: 0 0 3%;
       background-image: linear-gradient(bottom right, #0078ae, #66acd1);
       top: 10vh;
       height: 100%;
       max-height: 90vh;
-      position: absolute;
-      transition: 0.1s ease;
+      transition: 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
       overflow-x: hidden;
       overflow-y: auto;
-      z-index: 3;
       min-width: 40px;
 
       .hamburger {
@@ -201,6 +199,7 @@ html {
         margin-left: 0.5vw;
         margin-top: 1.5vh;
         z-index: 3;
+        cursor: pointer;
       }
 
       a {
@@ -210,7 +209,10 @@ html {
         margin-bottom: 4vh;
         text-decoration: none;
         cursor: pointer;
-        visibility: hidden;
+
+        p {
+          display: none;
+        }
       }
 
       a:hover {
@@ -231,8 +233,11 @@ html {
           display: flex;
           width: 100%;
           a {
-            visibility: hidden;
             width: 50%;
+
+            p {
+              display: none;
+            }
           }
           a:first-child {
             border-right: 0.3vw solid white;
@@ -247,16 +252,6 @@ html {
       }
     }
 
-    .menu_left:hover {
-      width: 17.5vw;
-      min-width: 200px;
-      z-index: 1000;
-
-      a {
-        visibility: visible;
-      }
-    }
-
     @media screen and (max-width: 768px) {
       .menu_left {
         display: flex;
@@ -268,7 +263,7 @@ html {
         min-width: 100%;
         max-height: 4vh;
         position: absolute;
-        transition: 0.1s ease;
+        transition: 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
         overflow-x: hidden;
         z-index: 3;
         min-height: 40px;
@@ -319,7 +314,6 @@ html {
       }
 
       .menu_left:hover {
-        min-width: 100vw;
         min-height: 100%;
         padding-top: 5vh;
         padding-bottom: 5vh;
@@ -343,19 +337,17 @@ html {
     .article {
       font-family: "Montserrat";
       height: 100%;
-      width: 100%;
       float: center;
       text-align: center;
       background-image: linear-gradient(top left, #ffffff, #d1d1d1);
-      position: absolute;
-      top: 10vh;
       max-height: 90vh;
       overflow-y: auto;
+      flex: 0 0 97%;
 
       .article_content {
         margin-top: 3vh;
-        margin-left: 10vw;
-        margin-right: 7vw;
+        margin-left: 5vw;
+        margin-right: 5vw;
 
         .flex-container {
           display: flex;
