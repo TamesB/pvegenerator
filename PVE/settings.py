@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     #"template_profiler_panel",
     "cached_modelforms",
     "jsignature",
+    'django_feather',
 ]
 
 #

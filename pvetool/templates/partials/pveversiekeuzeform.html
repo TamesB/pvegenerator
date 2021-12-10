@@ -5,9 +5,10 @@
     <form hx-target="this" hx-swap="outerHTML" class="ui form" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
         {{ form }}
-        <button hx-post="{% url 'kiespveversie' client_pk project.id %}" type="submit" class="ui icon green button"><i class="icon plus"></i></button>
+        <button hx-post="{% url 'kiespveversie' client_pk project.id %}" type="submit" class="ui icon basic button"><i data-feather="plus" style="stroke: #0085B7"></i></button>
     </form>  
 
+    {% include 'partials/_render_icons.html' %}
 
 {% endblock %}
 

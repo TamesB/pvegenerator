@@ -27,7 +27,7 @@
 
 <div class="profile_box">
   <div class="profile_content">
-    <div class="profile_left"><img class="round-profile" src="{% static 'pvetool/img/plusproject.png' %}"></img></div>
+    <div class="profile_left"><img src="{% static 'pvetool/svg/map-blue-big.svg' %}"></img></div>
     <div class="profile_right">
       <table>
         {% if project.bouwsoort1 %}
@@ -92,8 +92,8 @@
         {% if not derden %}
           {% if request.user.type_user == "SOG" %}
             <div class="actie_item" onClick="javascript:location.href='{% url 'sogaddderden' client_pk project.id %}'">
-              <img class="actie-img" src="{% static 'pvetool/img/accountsderden.png' %}"></img>
-              <p class="subtext">+ Derden</p>
+              <img class="actie-img" src="{% static 'pvetool/svg/user-plus-blue-big.svg' %}"></img>
+              <p class="subtext">Derden</p>
             </div>
             {% else %}
             <i>Nog geen derden</i>
@@ -101,8 +101,8 @@
         {% else %}
           {% if request.user.type_user == project.first_annotate %}
             <div class="actie_item" onClick="javascript:location.href='{% url 'plusopmerking_syn' client_pk project.id %}'">
-              <img class="actie-img" src="{% static 'pvetool/img/opmerking.png' %}"></img>
-              <p class="subtext">+ Statussen</p>
+              <img class="actie-img" src="{% static 'pvetool/svg/edit-3-blue-big.svg' %}"></img>
+              <p class="subtext">Statussen</p>
             </div>
           {% endif %}
         {% endif %}
@@ -114,21 +114,21 @@
           {% if project.frozenLevel|divisibleby:2 %}
             {% if request.user.type_user == project.first_annotate %}
               <div class="actie_item" onClick="javascript:location.href='{% url 'commentscheck_syn' client_pk project.id %}'">
-                <img class="actie-img" src="{% static 'pvetool/img/accountsderden.png' %}"></img>
+                <img class="actie-img" src="{% static 'pvetool/svg/edit-3-blue-big.svg' %}"></img>
                 <p class="subtext">Checklist</p>
               </div>
             {% endif %}
           {% else %}
             {% if request.user.type_user != project.first_annotate %}
               <div class="actie_item" onClick="javascript:location.href='{% url 'commentscheck_syn' client_pk project.id %}'">
-                <img class="actie-img" src="{% static 'pvetool/img/accountsderden.png' %}"></img>
+                <img class="actie-img" src="{% static 'pvetool/svg/edit-3-blue-big.svg' %}"></img>
                 <p class="subtext">Checklist</p>
               </div>
             {% endif %}
           {% endif %}
           {% if freeze_ready %}
             <div class="actie_item" onClick="javascript:location.href='{% url 'finalfreeze_syn' client_pk project.id %}'">
-              <img class="actie-img" src="{% static 'pvetool/img/accountsderden.png' %}">
+              <img class="actie-img" src="{% static 'pvetool/svg/users-blue-big.svg' %}">
               </img>
               <p class="subtext">
                 Freeze
@@ -136,7 +136,7 @@
             </div>
           {% else %}
             <div class="opacity_disabled" onClick="javascript:location.href='#'">
-              <img class="actie-img" src="{% static 'pvetool/img/accountsderden.png' %}"></img>
+              <img class="actie-img" src="{% static 'pvetool/svg/users-blue-big.svg' %}"></img>
               <p class="subtext">Freeze</p>
             </div>
           {% endif %}
@@ -152,14 +152,14 @@
     {% if project.pveconnected %}
       <div class="actie_item">
       <div class="inner_actie" hx-swap="outerHTML" hx-target="this" hx-get="{% url 'download_pve_syn' client_pk project.id %}">
-        <img class="actie-img" src="{% static 'pvetool/img/download.png' %}"></img>
+        <img class="actie-img" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img>
         <p class="subtext">PvE</p>
       </div>
       </div>
       {% else %}
       {% if request.user.type_user == "SB" or request.user.type_user == "B" %}
       <div class="actie_item" onClick="javascript:location.href='{% url 'kiespveversie' client_pk project.id %}'">
-        <img class="actie-img" src="{% static 'pvetool/img/opmerking.png' %}"></img>
+        <img class="actie-img" src="{% static 'pvetool/svg/edit-3-blue-big.svg' %}"></img>
         <p class="subtext">Voeg PvE Toe</p>
       </div>
       {% else %}

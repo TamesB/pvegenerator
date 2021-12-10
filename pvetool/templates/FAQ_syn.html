@@ -12,7 +12,8 @@
 <form class="opmerking_form">
 {% csrf_token %}
 
-<div class="general_title"><img src="{% static 'pvetool/img/accountsderden.png'%}" class="title_img"></img><p>Veelgestelde vragen</p></div>
+<div class="general_title"><img src="{% static 'pvetool/svg/users-blue-big.svg' %}" class="title_img"></img>
+  <p>Veelgestelde vragen</p></div>
 
 {% if faqquery %}
 <div class="item_opmerking_list">

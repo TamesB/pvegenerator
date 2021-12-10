@@ -15,7 +15,8 @@
   <div class="active section">Genereer PvE</div>
 </div>
 
-<div class="general_title"><img src="{% static 'pvetool/img/genereer.png'%}" class="title_img"></img><p>Genereer PVE (Versie: {{ version.version }})</p></div>
+<div class="general_title"><img src="{% static 'pvetool/svg/book-open-blue-big.svg' %}" class="title_img"></img>
+    <p>Genereer PVE (Versie: {{ version.version }})</p></div>
 <div class="generator_form">
     <form action="{% url 'generate_syn' client_pk version_pk %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}

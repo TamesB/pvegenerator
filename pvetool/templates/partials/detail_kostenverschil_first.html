@@ -2,15 +2,16 @@
 <span hx-target="this" hx-swap="outerHTML">
 {% if annotation.consequentCosts %}
     <b>€{{ annotation.consequentCosts }}
-    <span><button hx-get="{% url 'addkostenverschilfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
-    <span><a hx-delete="{% url 'deletekostenverschilfirst' client_pk project_pk item_pk %}"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></b>
+    <span><button hx-get="{% url 'addkostenverschilfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i data-feather="edit-3" style="stroke: #0085B7"></i></button></span>
+    <span><a hx-delete="{% url 'deletekostenverschilfirst' client_pk project_pk item_pk %}"><button class="ui icon basic red button"><i data-feather="x" style="stroke: red;"></i></button></a></span></b>
 {% else %}
     <p><b>€ 0</b></p>
 {% if annotation.status %}
-    <button hx-get="{% url 'addkostenverschilfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i class="icon edit"></i></button>
+    <button hx-get="{% url 'addkostenverschilfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i data-feather="edit-3" style="stroke: #0085B7"></i></button>
 {% endif %}
 {% endif %}
 </span>
+{% include 'partials/_render_icons.html' %}
 {% endblock %}{% block scripts %}
 {% include 'partials/messages.html' %}
 {% endblock %}

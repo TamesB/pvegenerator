@@ -12,6 +12,10 @@ html {
   overflow: hidden;
 }
 
+
+p {
+  margin: 0 0 0.1em;
+}
 .centered_div {
   display: flex;
   width: 100vw;
@@ -564,7 +568,7 @@ html {
               margin-bottom: 2vh;
               margin-left: 1vw;
 
-              img {
+              .round_profile {
                 max-width: 10vw;
                 border-radius: 50%;
                 min-width: 150px;
@@ -983,7 +987,7 @@ html {
             background: rgb(178, 219, 221);
             background: linear-gradient(
               0deg,
-              #00a4a5 10%,
+              #0078ae 10%,
               rgba(247, 247, 248, 1) 10%
             );
 
@@ -1244,6 +1248,7 @@ html {
                   flex: 0 0 55%;
                   text-align: left;
                   overflow: auto;
+
 
                   p {
                     margin: 0;
@@ -1601,7 +1606,7 @@ html {
                   justify-self: center;
                   float: center;
                   display: flex;
-                  max-width: 100%;
+                  max-width: 50%;
                   width: 80%;
                   border-radius: 1.6vh;
                 }
@@ -1630,7 +1635,7 @@ html {
                     justify-self: center;
                     float: center;
                     display: flex;
-                    max-width: 100%;
+                    max-width: 50%;
                     width: 80%;
                     border-radius: 1.6vh;
                   }
@@ -1699,7 +1704,7 @@ html {
                   justify-self: center;
                   float: center;
                   display: flex;
-                  max-width: 100%;
+                  max-width: 50%;
                   width: 80%;
                   border-radius: 1.6vh;
                 }
@@ -1733,7 +1738,7 @@ html {
             background: #f7f7f7;
             background: linear-gradient(
               180deg,
-              #00a4a5 15%,
+              #0078ae 15%,
               rgba(247, 247, 248, 1) 15%
             );
 
@@ -2102,7 +2107,7 @@ html {
           box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
           background: linear-gradient(
             180deg,
-            #00a4a5 95px,
+            #0078ae 95px,
             rgba(247, 247, 248, 1) 95px
           );
           overflow-y: auto;

@@ -12,6 +12,6 @@
             <span><button hx-post="{% url 'parameterchoicedelete' version_pk type_id parameter.id %}"
           hx-prompt="Vul 'VERWIJDEREN' in om parameterchoice {{ parameter.parameter }} te verwijderen."
           hx-target="closest tr"
-            class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
+            class="ui icon basic red button"><i data-feather="x" style="stroke: red;"></i></button></span>
           </div>
 {% endblock %}

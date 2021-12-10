@@ -16,7 +16,8 @@
 </div>
 
 <div class="opmerking_project_list">
-    <div class="general_title"><img src="{% static 'pvetool/img/accountsderden.png'%}" class="title_img"></img><p>Stakeholders <a href="{% url 'addorganisatie_syn' client_pk %}"><button class="ui icon green button"><i class="icon plus"></i>Maak Stakeholder Aan</button></a></p> </div>
+  <div class="general_title"><img src="{% static 'pvetool/svg/layers-blue-big.svg' %}" class="title_img"></img>
+    <p>Stakeholders <a href="{% url 'addorganisatie_syn' client_pk %}"><button class="ui icon green button"><i class="icon plus"></i>Maak Stakeholder Aan</button></a></p> </div>
 <input type="text" class="searchable_table_input" id="myInput" onkeyup="searchableLookup()" placeholder="Zoek op stakeholder.." title="Typ een stakeholder in">
 
 <div class="base_info_table">
@@ -40,7 +41,7 @@
                       hx-target="closest tr"
                       hx-swap="outerHTML"
           hx-prompt="Vul 'VERWIJDEREN' in om stakeholder {{ stakeholder.name }} te verwijderen."
-          class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
+          class="ui icon basic red button"><i data-feather="x" style="stroke: red;"></i></button></span>
               </td>
         </tr>
         {% endfor %}

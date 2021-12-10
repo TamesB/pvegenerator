@@ -21,7 +21,7 @@
         hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
         class="ui basic icon button"
       >
-        <i class="icon edit"></i></button
+      <i data-feather="edit-3" style="stroke: #0085B7"></i></button
     ></span>
     <span
       ><a
@@ -37,7 +37,7 @@
       hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
       class="ui basic icon button"
     >
-      <i class="icon edit"></i>
+    <i data-feather="edit-3" style="stroke: #0085B7"></i>
     </button>
   </p>
   {% endif %}
@@ -47,9 +47,10 @@
       hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
       class="ui basic icon button"
     >
-      <i class="icon edit"></i>
+    <i data-feather="edit-3" style="stroke: #0085B7"></i>
     </button>
   </p>
   {% endif %} {% endif %} {% endif %}
 </span>
+{% include 'partials/_render_icons.html' %}
 {% endblock %}

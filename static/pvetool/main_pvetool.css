@@ -12,6 +12,10 @@ html {
   overflow: hidden;
 }
 
+p {
+  margin: 0 0 0.1em;
+}
+
 .centered_div {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -643,7 +647,7 @@ html {
   margin-left: 1vw;
 }
 
-#main .layerOneInner .article .article_content .profile_box .profile_content .profile_left img {
+#main .layerOneInner .article .article_content .profile_box .profile_content .profile_left .round_profile {
   max-width: 10vw;
   border-radius: 50%;
   min-width: 150px;
@@ -1097,8 +1101,8 @@ html {
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   border-radius: 1.6em;
   background: #b2dbdd;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(10%, #00a4a5), color-stop(10%, #f7f7f8));
-  background: linear-gradient(0deg, #00a4a5 10%, #f7f7f8 10%);
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(10%, #0078ae), color-stop(10%, #f7f7f8));
+  background: linear-gradient(0deg, #0078ae 10%, #f7f7f8 10%);
 }
 
 #main .layerOneInner .article .article_content .invite-container .box .title {
@@ -1845,7 +1849,7 @@ html {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  max-width: 100%;
+  max-width: 50%;
   width: 80%;
   border-radius: 1.6vh;
 }
@@ -1889,7 +1893,7 @@ html {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  max-width: 100%;
+  max-width: 50%;
   width: 80%;
   border-radius: 1.6vh;
 }
@@ -1971,7 +1975,7 @@ html {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  max-width: 100%;
+  max-width: 50%;
   width: 80%;
   border-radius: 1.6vh;
 }
@@ -2004,8 +2008,8 @@ html {
   font-size: 1.5vh;
   border: #f7f7f7;
   background: #f7f7f7;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(15%, #00a4a5), color-stop(15%, #f7f7f8));
-  background: linear-gradient(180deg, #00a4a5 15%, #f7f7f8 15%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(15%, #0078ae), color-stop(15%, #f7f7f8));
+  background: linear-gradient(180deg, #0078ae 15%, #f7f7f8 15%);
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .messages_box .chat-title {
@@ -2397,7 +2401,7 @@ html {
   text-align: left;
   -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
   box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  background: linear-gradient(180deg, #00a4a5 95px, #f7f7f8 95px);
+  background: linear-gradient(180deg, #0078ae 95px, #f7f7f8 95px);
   overflow-y: auto;
 }
 

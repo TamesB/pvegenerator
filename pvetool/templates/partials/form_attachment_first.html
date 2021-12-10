@@ -11,10 +11,11 @@
         <p class="first_annotate_formbox">{{ form.name }}</p>
         <p class="first_annotate_formbox" hidden>{{ form.ann }}</p>
         </div>
-        <button hx-get="{% url 'detailfirstannotation' client_pk project_pk item_pk %}" hx-trigger="click" style="float: left;" class="ui basic icon button"><i class="icon undo alternate"></i></button>
-        <span style="float:right;"><button hx-post="{% url 'addattachmentfirst' client_pk project_pk item_pk annotation_pk attachment_id %}" hx-trigger="click" type="submit" class="ui icon green button"><i class="check icon"></i></button>
+        <button hx-get="{% url 'detailfirstannotation' client_pk project_pk item_pk %}" hx-trigger="click" style="float: left;" class="ui basic icon button"><i data-feather="corner-down-left" style="stroke: #0085B7"></i></button>
+        <span style="float:right;"><button hx-post="{% url 'addattachmentfirst' client_pk project_pk item_pk annotation_pk attachment_id %}" hx-trigger="click" type="submit" class="ui icon basic button"><i data-feather="check" style="stroke: #0085B7"></i></button>
         </span>
     </form>
+    {% include 'partials/_render_icons.html' %}
 {% endblock %}
 
 {% block scripts %}

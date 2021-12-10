@@ -3,14 +3,15 @@
 {% if annotation.status %}
     <div class="status_added" id="status-{{ item.id }}">
     <p>{{ annotation.status }}
-    <span><button hx-get="{% url 'addstatusfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i class="icon edit"></i></button></span>
-        <span><a hx-delete="{% url 'deletestatusfirst' client_pk project_pk item_pk %}" hx-target="#item-{{ item_pk }}" hx-swap="outerHTML"><button class="ui icon basic red button"><i class="icon delete"></i></button></a></span></p>
+    <span><button hx-get="{% url 'addstatusfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i data-feather="edit-3" style="stroke: #0085B7"></i></button></span>
+        <span><a hx-delete="{% url 'deletestatusfirst' client_pk project_pk item_pk %}" hx-target="#item-{{ item_pk }}" hx-swap="outerHTML"><button class="ui icon basic red button"><i data-feather="x" style="stroke: red;"></i></button></a></span></p>
 {% else %}
 <span><p><i>Geen status</i></p></span>
     <div class="status_not_added" id="status-{{ item.id }}">
-    <button hx-get="{% url 'addstatusfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i class="icon edit"></i></button>
+    <button hx-get="{% url 'addstatusfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i data-feather="edit-3" style="stroke: #0085B7"></i></button>
 {% endif %}
 </span>
+{% include 'partials/_render_icons.html' %}
 {% endblock %}{% block scripts %}
 {% include 'partials/messages.html' %}
 {% endblock %}

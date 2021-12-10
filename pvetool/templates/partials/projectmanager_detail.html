@@ -6,10 +6,11 @@
 <div hx-target="this" hx-swap="outerHTML">
 {% if project.projectmanager %}
     {{ project.projectmanager }}
-<button hx-get="{% url 'addprojmanagertoproject_syn' client_pk project.id %}" class="ui icon basic button"><i class="icon edit"></i></button>
+<button hx-get="{% url 'addprojmanagertoproject_syn' client_pk project.id %}" class="ui icon basic button"><i data-feather="edit-3" style="stroke: #0085B7"></i></button>
 {% else %}
-<button hx-get="{% url 'addprojmanagertoproject_syn' client_pk project.id %}" class="ui icon basic button"><i class="icon plus"></i></button>
+<button hx-get="{% url 'addprojmanagertoproject_syn' client_pk project.id %}" class="ui icon basic button"><i data-feather="check" style="stroke: #0085B7"></i></button>
 {% endif %}
 </div>
+{% include 'partials/_render_icons.html' %}
 
 {% endblock %}

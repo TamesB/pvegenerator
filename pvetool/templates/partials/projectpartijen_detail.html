@@ -7,7 +7,8 @@
 {% if project.organisaties.all %}
     {% for stakeholder in project.organisaties.all %}{{ stakeholder }}, {% endfor %}
     {% endif %}
-<button hx-get="{% url 'projectaddpartijform' client_pk project.id %}" class="ui icon basic button"><i class="icon plus"></i></button>
+<button hx-get="{% url 'projectaddpartijform' client_pk project.id %}" class="ui icon basic button"><i data-feather="plus" style="stroke: #0085B7"></i></button>
 </div>
+{% include 'partials/_render_icons.html' %}
 
 {% endblock %}

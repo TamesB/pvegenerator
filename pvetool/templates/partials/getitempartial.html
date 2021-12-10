@@ -51,7 +51,7 @@
         {% if annotationattachments %}
             {% for attachment in annotationattachments %}
             {% if attachment.attachment %}
-            <span><i><a href="{% url 'downloadattachmentaanopmerking_syn' client_pk project_pk annotation.id attachment.id %}" target="_blank">{{ attachment }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a></i></span>
+            <span><i><a href="{% url 'downloadattachmentaanopmerking_syn' client_pk project_pk annotation.id attachment.id %}" target="_blank">{{ attachment }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a></i></span>
             {% endif %}
             {% endfor %}
         {% endif %}
@@ -86,7 +86,7 @@
             <p><i>
             {% for attachment in attachments|get_item:reply.id %}
             <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk attachment.reply.id attachment.id %}" target="_blank">
-            {{ attachment }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img>
+            {{ attachment }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img>
             </a>
             {% endfor %}
         </i></p></span>
@@ -97,4 +97,5 @@
     {% endif %}
     {% endfor %}
 </div>
+{% include 'partials/_render_icons.html' %}
 {% endblock %}

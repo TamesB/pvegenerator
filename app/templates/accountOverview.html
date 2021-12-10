@@ -50,7 +50,7 @@
 					<span><button hx-post="#"
 						hx-prompt="Vul 'VERWIJDEREN' in om de user {{ user.username }} te verwijderen."
 						hx-target="closest tr"
-						class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></span>
+						class="ui icon basic red button"><i data-feather="x" style="stroke: red;"></i></button></span>
 					</td>
 				</tr>
 				{% endfor %}
@@ -67,4 +67,5 @@
 <p>Nog geen users (?)</p>
 {% endif %}
 {% block modal %}{% endblock %} 
+<script>feather.replace()</script>
 {% endblock %}

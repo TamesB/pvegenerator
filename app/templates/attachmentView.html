@@ -10,7 +10,7 @@
 	<a href="#"><button class="ui icon basic button"><i class="icon edit"></i></button></a>
 </div>
 <div class="d-inline" style="float: right;">
-	<span><a href="#"><button class="ui icon basic red button"><i class="icon trash alternate outline"></i></button></a></span>
+	<span><a href="#"><button class="ui icon basic red button"><i data-feather="x" style="stroke: red;"></i></button></a></span>
 </div>
 <br><br>
 
@@ -43,4 +43,5 @@
 
 {% block modal %}{% endblock %}
 
+<script>feather.replace()</script>
 {% endblock %}

@@ -19,7 +19,8 @@
   <div class="active section">First Freeze</div>
 </div>
 
-<div class="general_title"><img src="{% static 'pvetool/img/accountsderden.png' %}" class="title_img"></img><p>Bevries PvE</p></div>
+<div class="general_title"><img src="{% static 'pvetool/svg/edit-3-blue-big.svg' %}" class="title_img"></img>
+    <p>Bevries PvE</p></div>
 <div class="invite-container">
     <div class="box">
             <p class="description">Alle PvE regels hebben een status en zijn geaccepteerd. Bevestig dat u het ping-pong proces wil bevriezen en het PvE wil finaliseren. Iedereen van het project krijgt een e-mail met een link naar het downloaden van het Programma van Eisen met alle opmerkingen en attachments per regel.</p>
@@ -32,4 +33,8 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script>feather.js</script>
 {% endblock %}

@@ -13,7 +13,7 @@
     {{ item }}{% if attachments %} 
     {% for attachment in attachments %}
     <p>Bijlage: <a href="{% url 'downloadattachment' client_pk item.id %}" target="_blank">
-    <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img>
+    <img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img>
     </a></p>
     {% endfor %}
     {% endif %}
@@ -30,6 +30,7 @@
     <span hx-get="{% url 'detailfirstkostenverschil' client_pk project_pk item.id %}" hx-swap="outerHTML" hx-target="this" hx-trigger="load"></span>
 </div>
 </div>
+{% include 'partials/_render_icons.html' %}
 {% endblock %}
 {% block scripts %}
 {% include 'partials/messages.html' %}

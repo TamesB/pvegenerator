@@ -8,10 +8,11 @@
     {% endif %}</p>
     {% csrf_token %}
         {{ form }}
-        <button hx-get="{% url 'getprojectpartijen' client_pk project.id %}" style="float: left;" class="ui basic button">Terug</button>
-        <button hx-post="{% url 'projectaddpartijform' client_pk project.id %}" type="submit" class="ui icon green button"><i class="icon plus"></i></button>
+        <button hx-get="{% url 'getprojectpartijen' client_pk project.id %}" style="float: left;" class="ui icon basic button"><i data-feather="corner-down-left" style="stroke: #0085B7"></i></button>
+        <button hx-post="{% url 'projectaddpartijform' client_pk project.id %}" type="submit" class="ui icon basic button"><i data-feather="plus" style="stroke: #0085B7"></i></button>
 
     </form>  
+    {% include 'partials/_render_icons.html' %}
 
 {% endblock %}
 
