@@ -554,6 +554,9 @@ def GeneratePVEView(request, client_pk, version_pk):
             # and render the result page
             context = {}
             context["itemsPVE"] = basic_PVE
+            context["version_pk"] = version_pk
+            context["client_pk"] = client_pk
+            context["logo_url"] = logo_url
             context["filename"] = filename
             context["zipFilename"] = zipFilename
             return render(request, "PVEResult_syn.html", context)
