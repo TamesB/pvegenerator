@@ -278,7 +278,7 @@ class AddOrganisatieForm(forms.Form):
 
     class Meta:
         labels = {
-            "name": "Organisatiename:",
+            "name": "Stakeholder naam:",
         }
 
 

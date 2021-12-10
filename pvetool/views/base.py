@@ -136,7 +136,7 @@ def BeheerdersAcceptUitnodiging(request, client_pk, key):
             send_mail(
                 f"{client.name} PvE Tool - Uw Logingegevens",
                 f"""Reeds heeft u zich aangemeld bij de PvE tool.
-                Voor het vervolgens inloggen op de tool is uw usersname: {user.username}
+                Voor het vervolgens inloggen op de tool is uw gebruikersnaam: {user.username}
                 en het wachtwoord wat u heeft aangegeven bij het aanmelden.""",
                 "admin@pvegenerator.net",
                 [f"{invitation.invitee}"],
@@ -146,7 +146,7 @@ def BeheerdersAcceptUitnodiging(request, client_pk, key):
                 login(request, user)
                 messages.warning(
                     request,
-                    f"Account aangemaakt met usersname: {user.username}. Uw logingegevens zijn naar u gemaild.",
+                    f"Account aangemaakt met gebruikersnaam: {user.username}. Uw logingegevens zijn naar u gemaild.",
                 )
                 return redirect("dashboard_syn", client_pk=client_pk)
         else:

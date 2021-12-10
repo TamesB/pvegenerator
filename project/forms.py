@@ -31,7 +31,7 @@ class StartProjectForm(ModelForm):
         labels = {
             "client": "Belegger:",
             "projectmanager": "Projectmanager:",
-            "name": "Projectname:",
+            "name": "Projectnaam:",
             "nummer": "Projectnummer:",
             "plaats": "Plaats:",
             "vhe": "Aantal verhuureenheden:",

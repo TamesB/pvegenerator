@@ -22,7 +22,7 @@
 <div class="invite-container">
     <div class="box">
     {% if qs %}
-        <p class="description">Kies de PvE version die u wil verbinden aan het project.</p>
+        <p class="description">Kies de PvE versie die u wil verbinden aan het project.</p>
         <form action="{% url 'kiespveversie' client_pk pk %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <label class="formtitle" for="{{ form.pve_versie.id_for_label }}"><p>Versie:</p></label>

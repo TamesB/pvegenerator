@@ -24,7 +24,7 @@
         <p class="description">Voeg een projectmanager toe aan de website, of nodig een derde uit.</p>
         <form action="{% url 'plusaccount_syn' client_pk %}" method="post">
             {% csrf_token %}
-            <label class="formtitle" for="{{ form.rang.id_for_label }}"><p>Rang user:</p></label>
+            <label class="formtitle" for="{{ form.rang.id_for_label }}"><p>Rang gebruiker:</p></label>
             <p class="formbox">{{ form.rang }}</p>
             <label class="formtitle" for="{{ form.project.id_for_label }}"><p>Voor project (optioneel):</p></label>
             <p class="formbox">{{ form.project }}</p>

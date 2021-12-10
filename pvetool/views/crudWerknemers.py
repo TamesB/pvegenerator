@@ -267,7 +267,7 @@ def AcceptInvite(request, client_pk, key):
             send_mail(
                 f"{ client.name } Projecten - Uw Logingegevens",
                 f"""Reeds heeft u zich aangemeld bij de PvE tool.
-                Voor het vervolgens inloggen op de tool is uw usersname: {user.username}
+                Voor het vervolgens inloggen op de tool is uw gebruikersnaam: {user.username}
                 en het wachtwoord wat u heeft aangegeven bij het aanmelden.""",
                 "admin@pvegenerator.net",
                 [f"{invitation.invitee}"],
