@@ -14,7 +14,7 @@
 {% if current_reply %}
 {% if current_reply.accept is False %}
 {% if current_reply.status %}
-    <p style="color:#b69b00">Voorgesteld: {{ current_reply.status }}
+    <p style="color:#0085B7">Voorgesteld: {{ current_reply.status }}
     <span><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic icon button"><i data-feather="edit-3" style="stroke: #0085B7"></i></i></button></span>
         <span><a hx-delete="{% url 'deletestatuspong' client_pk project_pk item_pk type %}" hx-target="#item-{{ item_pk}}"><button class="ui icon basic red button"><i data-feather="x" style="stroke: red;"></i></button></a></span></p>
 {% else %}

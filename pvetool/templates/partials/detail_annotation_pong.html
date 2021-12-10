@@ -5,7 +5,7 @@
     {% if current_reply %}
     <div class="reaction_on_rule">
         <div class="party">
-            <p style="color:#b69b00;"><i>{% if request.user.stakeholder %}{{ request.user.stakeholder }}{% else %}{{ request.user.client }}{% endif %}</i></p>
+            <p style="color:#0085B7;"><i>{% if request.user.stakeholder %}{{ request.user.stakeholder }}{% else %}{{ request.user.client }}{% endif %}</i></p>
         </div>
         <div class="accept">
             {% if current_reply.accept is False %}<i class="icon times"></i>{% else %}<i class="icon check"></i>{% endif %}
@@ -13,12 +13,12 @@
 
         <div class="statuschange">
             {% if current_reply.status %}
-            <p style="color:#b69b00;">{{ current_reply.status }}</p>
+            <p style="color:#0085B7;">{{ current_reply.status }}</p>
             {% endif %}
         </div>
         <div class="comment">
             {% if current_reply.comment %}
-                <span><p style="color:#b69b00;">{{ current_reply.comment }} <span><button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic icon button">
+                <span><p style="color:#0085B7;">{{ current_reply.comment }} <span><button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic icon button">
                     <i data-feather="edit-3" style="stroke: #0085B7"></i></button></span>
                 <span><a hx-delete="{% url 'deletereplypong' client_pk project_pk item_pk type %}"><button class="ui icon basic red button"><i data-feather="x" style="stroke: red;"></i></button></a></span></p></span>
             {% elif comment_allowed is True %}
@@ -26,9 +26,9 @@
             {% endif %}
         </div>
         <div class="attachments">
-            <p style="color:#b69b00;">
+            <p style="color:#0085B7;">
                 {% if attachments %}
-                <span style="color:#b69b00;">
+                <span style="color:#0085B7;">
                 {% for attachment in attachments %}
                 {% if attachment.attachment %}
                 <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk current_reply.id attachment.id %}" target="_blank">{{ attachment }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/img/download.png' %}"></img></a>

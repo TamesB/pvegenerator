@@ -23,19 +23,19 @@
 
     <div class="reaction_on_rule">
         <div class="party">
-            <p style="color:#b69b00;"><i>{% if request.user.stakeholder %}{{ request.user.stakeholder }}{% else %}{{ request.user.client }}{% endif %}</i></p>
+            <p style="color:#0085B7;"><i>{% if request.user.stakeholder %}{{ request.user.stakeholder }}{% else %}{{ request.user.client }}{% endif %}</i></p>
         </div>
         <div class="accept">
             <p></p>
         </div>
         <div class="statuschange">
             {% if annotation.firststatus %}
-            <p style="color:#b69b00;">{{ annotation.firststatus }}</p>
+            <p style="color:#0085B7;">{{ annotation.firststatus }}</p>
             {% endif %}
         </div>
         <div class="comment">
             {% if annotation.annotation %}
-                <span><p style="color:#b69b00;">{{ annotation.annotation }} <span><button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic icon button">
+                <span><p style="color:#0085B7;">{{ annotation.annotation }} <span><button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic icon button">
                     <i data-feather="edit-3" style="stroke: #0085B7"></i></button></span>
                 <span><a hx-delete="{% url 'deleteannotationfirst' client_pk project_pk item_pk %}"><button class="ui icon basic red button"><i data-feather="x" style="stroke: red;"></i></button></a></span></p></span>
             {% elif annotation.status %}
@@ -46,7 +46,7 @@
             <p>
                 {% if annotation %}
                 {% if attachments %}
-                <span style="color:#b69b00;">
+                <span style="color:#0085B7;">
                 {% for attachment in attachments %}
                 {% if attachment.attachment %}
                 <a href="{% url 'downloadattachmentaanopmerking_syn' client_pk project_pk annotation.id attachment.id %}" target="_blank">{{ attachment }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>
