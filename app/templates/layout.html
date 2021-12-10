@@ -14,6 +14,7 @@
         {% leaflet_css %}
         {% leaflet_js %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+<script src="{% static 'pvetool/feathers.js' %}"></script>
 
         {% block head %}{% endblock %}
         <title>PvE Generator</title>
@@ -73,6 +74,10 @@
 
    });
    </script>
+   <script>      
+    feather.replace()
+  </script>
+
             {% block scripts %}{% endblock %}
     </body>
 </html>
