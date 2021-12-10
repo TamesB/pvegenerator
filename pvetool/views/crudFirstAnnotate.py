@@ -12,7 +12,7 @@ from pvetool.forms import (
     FirstKostenverschilForm,
 )
 from pvetool.views.utils import GetAWSURL
-
+from pvetool.views import hardcoded_values
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def AddCommentOverview(request, client_pk):
@@ -333,6 +333,17 @@ def DetailAnnotationFirst(request, client_pk, project_pk, item_pk):
         ).first()
         if annotation.attachmentobject.exists():
             attachments = annotation.attachmentobject.all()
+            
+    context["comment_allowed"] = False
+    context["attachment_allowed"] = False
+    
+    # manual input as to what statuses allow comments / attachments    
+    if annotation:
+        if annotation.status:
+            if annotation.status.status in hardcoded_values.allowed_comments():
+                context["comment_allowed"] = True
+            if annotation.status.status in hardcoded_values.allowed_attachments():
+                context["attachment_allowed"] = True
 
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
@@ -491,6 +502,11 @@ def AddStatusFirst(request, client_pk, project_pk, item_pk):
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
             if annotation:
+                if form.cleaned_data["status"] not in hardcoded_values.allowed_comments():
+                    annotation.annotation = None
+                if form.cleaned_data["status"] not in hardcoded_values.allowed_attachments():
+                    annotation.attachment = False
+
                 annotation.status = form.cleaned_data["status"]
                 annotation.firststatus = form.cleaned_data["status"]
                 annotation.save()
