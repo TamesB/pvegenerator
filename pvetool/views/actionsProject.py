@@ -124,8 +124,25 @@ def ViewProject(request, client_pk, pk):
             freeze_ready = True
 
         context["freeze_ready"] = freeze_ready
+        
+    # calculating total costs of whole project, depending if costs are of each VHE or of whole project per rule.
+    totale_kosten = 0
+    if PVEItemAnnotation.objects.filter(
+        project=project
+    ):
+        cost_qs = PVEItemAnnotation.objects.filter(project=project, consequentCosts__isnull=False)
+        
+        for obj in cost_qs:
+            if obj.costtype:
+                if obj.costtype.type == "per VHE":
+                    totale_kosten += (obj.consequentCosts * decimal.Decimal(project.vhe))
+                else:
+                    totale_kosten += obj.consequentCosts
+            else:
+                totale_kosten += obj.consequentCosts
 
     context["project"] = project
+    context["totale_kosten"] = totale_kosten
     context["medewerkers"] = medewerkers
     context["derden"] = derden
     context["client_pk"] = client_pk

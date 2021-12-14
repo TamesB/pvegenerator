@@ -16,3 +16,16 @@
     </form>
     {% include 'partials/_render_icons.html' %}
 {% endblock %}
+
+{% block scripts %}
+
+<script type="text/javascript">
+    var selectobject = document.getElementById("id_costtype");
+    for (var i=0; i<selectobject.length; i++) {
+        if (!selectobject.options[i].value)
+            selectobject.remove(i);
+    }
+    
+</script>
+
+{% endblock %}

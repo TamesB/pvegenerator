@@ -58,7 +58,7 @@
 
 {% if project.frozenLevel == 0 %}
   <div class="project_progress_bar">
-    <label for="file"><p>Status: Eerste statusaanwijzing ({{ comment_count }}/{{ pve_item_count}} voltooid)</p></label>
+    <label for="file"><p>Status: Eerste statusaanwijzing ({{ comment_count }}/{{ pve_item_count}} voltooid) (Kostenverschil: &#8364;{{ totale_kosten }})</p></label>
     <span><div class="ui blue progress" data-percent="{{ done_percentage }}" id="example1"><div class="bar"></div></div>
     </span>
   </div>
@@ -66,14 +66,14 @@
 {% if not project.fullyFrozen %}
   {% if project.frozenLevel >= 1 %}
     <div class="project_progress_bar">
-      <label for="file"><p>Status: Checklist afwerking ({{ frozencomments_accepted }}/{{ frozencomments_total }} akkoord)</p></label>
+      <label for="file"><p>Status: Checklist afwerking ({{ frozencomments_accepted }}/{{ frozencomments_total }} akkoord) (Kostenverschil: &#8364;{{ totale_kosten }})</p></label>
       <span><div class="ui blue progress" data-percent="{{ frozencomments_percentage }}" id="example1"><div class="bar"></div></div>
       </span>
     </div>
   {% endif %}
 {% else %}
   <div class="project_progress_bar">
-    <label for="file"><p>Status: Bevroren</p></label>
+    <label for="file"><p>Status: Bevroren (Kostenverschil: &#8364;{{ totale_kosten }})</p></label>
     <span><div class="ui blue progress" data-percent="100" id="example1"><div class="bar"></div></div>
     </span>
   </div>

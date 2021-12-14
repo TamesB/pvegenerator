@@ -646,7 +646,7 @@ def AcceptItemPong(request, client_pk, project_pk, item_pk, type):
             accept=True,
         )
         current_reply.save()
-    print(current_reply)
+
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
     context["item_pk"] = item_pk
@@ -984,7 +984,7 @@ def AddKostenverschilPong(request, client_pk, project_pk, item_pk, type):
             commentphase=current_phase,
         ).first()
         form = forms.FirstKostenverschilForm(
-            request.POST or None, initial={"kostenverschil": reply.consequentCosts}
+            request.POST or None, initial={"kostenverschil": reply.consequentCosts, "costtype": reply.costtype}
         )
     else:
         form = forms.FirstKostenverschilForm(request.POST or None)
