@@ -161,6 +161,14 @@ p {
   @media screen and (max-width: 768px) {
     .header {
       visibility: hidden;
+      height: 0;
+      max-height: 0;
+
+      .logo_bg {
+        min-height: 0;
+      }
+
+
     }
   }
   .midwidth_form {
@@ -258,6 +266,7 @@ p {
 
     @media screen and (max-width: 768px) {
       .menu_left {
+        overflow: hidden;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -283,13 +292,16 @@ p {
         a {
           color: white;
           display: block;
-          margin-top: 0.5vh;
-          margin-bottom: 0.5vh;
+          margin-top: 4vh;
+          margin-bottom: 4vh;
           text-decoration: none;
           cursor: pointer;
-          visibility: hidden;
+  
+          p {
+            display: none;
+          }
         }
-
+  
         .hori-menu-logout {
           display: flex;
           justify-content: center;
@@ -328,11 +340,23 @@ p {
         }
         a {
           visibility: visible;
+
+          p {
+            display: block;
+          }
         }
 
         .hori-menu-logout {
           a {
             visibility: visible;
+
+            .links {
+              display: flex;
+
+              a {
+                visibility: visible;
+              }
+            }
           }
         }
       }
@@ -1277,11 +1301,11 @@ p {
                         }
                       }
                       .comment {
-                        flex: 0 0 26%;
+                        flex: 0 0 24%;
                       }
 
                       .attachments {
-                        flex: 0 0 25%;
+                        flex: 0 0 20%;
 
                         a {
                           color: black;
@@ -1289,7 +1313,11 @@ p {
                       }
 
                       .statuschange {
-                        flex: 0 0 25%;
+                        flex: 0 0 20%;
+                      }
+
+                      .costs {
+                        flex: 0 0 12%;
                       }
                     }
                   }
@@ -2183,6 +2211,8 @@ p {
         .article_content {
           margin-left: 3em;
           margin-right: 3em;
+          max-height: 100vh;
+          flex: 0 0 100%;
         }
       }
       @media screen and (max-width: 660px) {
@@ -2199,6 +2229,12 @@ p {
         max-height: 100vh;
         padding-top: 5vh;
       }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .layerOneInner {
+      height: 100vh;
     }
   }
 }

@@ -4,7 +4,7 @@ from django.db.models import Q, Sum
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
-
+import decimal
 from app import models
 from project.models import Project, PVEItemAnnotation, Beleggers
 from pvetool import forms
@@ -150,14 +150,22 @@ def CheckComments(request, client_pk, proj_id):
     for comment in todo_comments:
         todo_hfst_count[comment.item.chapter.id] += 1
 
+    # calculating total costs of whole project, depending if costs are of each VHE or of whole project per rule.
     totale_kosten = 0
     if PVEItemAnnotation.objects.filter(
         project=project
-    ).aggregate(Sum("consequentCosts"))["consequentCosts__sum"]:
-        totale_kosten += PVEItemAnnotation.objects.filter(
-            project=project
-        ).aggregate(Sum("consequentCosts"))["consequentCosts__sum"]
-
+    ):
+        cost_qs = PVEItemAnnotation.objects.filter(project=project, consequentCosts__isnull=False)
+        
+        for obj in cost_qs:
+            if obj.costtype:
+                if obj.costtype.type == "per VHE":
+                    totale_kosten += (obj.consequentCosts * decimal.Decimal(project.vhe))
+                else:
+                    totale_kosten += obj.consequentCosts
+            else:
+                totale_kosten += obj.consequentCosts
+                
     context["chapters_non_accept"] = chapters_non_accept
     context["chapters_accept"] = chapters_accept
     context["chapters_todo"] = chapters_todo
@@ -985,10 +993,12 @@ def AddKostenverschilPong(request, client_pk, project_pk, item_pk, type):
         if form.is_valid():
             if reply:
                 reply.consequentCosts = form.cleaned_data["kostenverschil"]
+                reply.costtype = form.cleaned_data["costtype"]
                 reply.save()
             else:
                 reply = CommentReply()
                 reply.consequentCosts = form.cleaned_data["kostenverschil"]
+                reply.costtype = form.cleaned_data["costtype"]
                 reply.onComment = annotation
                 reply.commentphase = current_phase
                 reply.user = request.user
@@ -1217,6 +1227,7 @@ def DeleteKostenverschilPong(request, client_pk, project_pk, item_pk, type):
             commentphase=current_phase,
         ).first()
         reply.consequentCosts = None
+        reply.costtype = None
         reply.save()
         messages.warning(request, "Kostenverschil verwijderd.")
         return redirect(

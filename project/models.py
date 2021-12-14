@@ -170,6 +170,11 @@ class Project(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+class CostType(models.Model):
+    type = models.CharField(max_length=255, blank=True, null=True)
+    
+    def __str__(self):
+        return self.type
 
 class PVEItemAnnotation(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, default=None, related_name="annotation")
@@ -188,7 +193,7 @@ class PVEItemAnnotation(models.Model):
     consequentCosts = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True, default=None
     )
-    costs_per_unit = models.BooleanField(default=False, blank=True, null=True)
+    costtype = models.ForeignKey(CostType, blank=True, null=True, on_delete=models.SET_NULL)
     attachment = models.BooleanField(default=False, blank=True, null=True)
     init_accepted = models.BooleanField(default=False, blank=True, null=True)
 
@@ -197,6 +202,7 @@ class PVEItemAnnotation(models.Model):
 
     class Meta:
         ordering = ["-date"]
+
 
 class BijlageToAnnotation(models.Model):
     ann = models.ForeignKey(PVEItemAnnotation, on_delete=models.CASCADE, default=None, related_name="attachmentobject")

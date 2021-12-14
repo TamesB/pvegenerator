@@ -55,7 +55,7 @@ def ManageWerknemers(request, client_pk):
     context = {}
     context["werknemers"] = (
         client.employee.all()
-        .filter(Q(type_user="SD") | Q(type_user="SOG"))
+        .filter((Q(type_user="SD") | Q(type_user="SOG")) & (Q(client=client)))
         .order_by("-last_visit")
     )
     context["client_pk"] = client_pk

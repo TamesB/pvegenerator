@@ -7,7 +7,8 @@ from .models import (
     ContractStatus,
     Project,
     PVEItemAnnotation,
-    Abbonement
+    Abbonement,
+    CostType
 )
 
 
@@ -30,3 +31,4 @@ admin.site.register(ContractStatus)
 admin.site.register(Beleggers)
 admin.site.register(PVEItemAnnotation)
 admin.site.register(BijlageToAnnotation)
+admin.site.register(CostType)

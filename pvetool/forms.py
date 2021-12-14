@@ -6,7 +6,7 @@ from django.contrib.gis import forms
 from django.forms import ModelForm
 
 from app.models import Bouwsoort, Doelgroep, PVEItem, TypeObject, PVEVersie
-from project.models import BijlageToAnnotation, Project
+from project.models import BijlageToAnnotation, Project, CostType
 from pvetool.models import BijlageToReply, CommentStatus
 from users.models import CustomUser, Invitation, Organisatie
 
@@ -242,7 +242,18 @@ class FirstKostenverschilForm(forms.Form):
     kostenverschil = forms.DecimalField(
         label="Kosten", required=True
     )
-
+    
+    costtype = forms.ModelChoiceField(
+        queryset=CostType.objects.all(), label=""
+    )
+    class Meta:
+        layout = [
+            (
+                "Two Fields",
+                ("Field", "kostenverschil"),
+                ("Field", "costtype"),
+            ),
+        ]
 class FirstStatusForm(forms.Form):
     status = CachedModelChoiceField(
         objects=lambda: CommentStatus.objects.all()

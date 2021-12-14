@@ -362,7 +362,7 @@ class PDFMaker:
                                         if opmerkingen[item.id].status:
                                             opmrk += f"Status: {opmerkingen[item.id].status}. "
                                         if opmerkingen[item.id].consequentCosts:
-                                            opmrk += f"Kostenverschil: €{opmerkingen[item.id].consequentCosts}. "
+                                            opmrk += f"Kostenverschil: €{opmerkingen[item.id].consequentCosts} {opmerkingen[item.id].costtype}. "
                                         if opmerkingen[item.id].attachment:
                                             opmrk += f"Zie attachment(n) "
 
@@ -460,7 +460,7 @@ class PDFMaker:
                                         if opmerkingen[item.id].status:
                                             opmrk += f"Status: {opmerkingen[item.id].status}. "
                                         if opmerkingen[item.id].consequentCosts:
-                                            opmrk += f"Kostenverschil: €{opmerkingen[item.id].consequentCosts}. "
+                                            opmrk += f"Kostenverschil: €{opmerkingen[item.id].consequentCosts} {opmerkingen[item.id].costtype}. "
                                         if opmerkingen[item.id].attachment:
                                             opmrk += f"Zie attachment(n) "
 
@@ -575,7 +575,7 @@ class PDFMaker:
                                     if opmerkingen[item.id].status:
                                         opmrk += f"Status: {opmerkingen[item.id].status}. "
                                     if opmerkingen[item.id].consequentCosts:
-                                        opmrk += f"Kostenverschil: €{opmerkingen[item.id].consequentCosts}. "
+                                        opmrk += f"Kostenverschil: €{opmerkingen[item.id].consequentCosts} {opmerkingen[item.id].costtype}. "
                                     if opmerkingen[item.id].attachment:
                                         opmrk += f"Zie attachment(n) "
 
@@ -669,7 +669,7 @@ class PDFMaker:
                                     if opmerkingen[item.id].status:
                                         opmrk += f"Status: {opmerkingen[item.id].status}. "
                                     if opmerkingen[item.id].consequentCosts:
-                                        opmrk += f"Kostenverschil: €{opmerkingen[item.id].consequentCosts}. "
+                                        opmrk += f"Kostenverschil: €{opmerkingen[item.id].consequentCosts} {opmerkingen[item.id].costtype}."
                                     if opmerkingen[item.id].attachment:
                                         opmrk += f"Zie attachment(n) "
 

@@ -13,7 +13,7 @@ from pvetool import forms
 from pvetool.models import BijlageToReply, CommentReply, FrozenComments
 from utils import createBijlageZip, writePdf
 from pvetool.views.utils import GetAWSURL
-
+import decimal
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def ViewProjectOverview(request, client_pk):
@@ -553,8 +553,18 @@ def download_pve(request, client_pk, pk):
 
     for opmerking in comments:
         opmerkingen[opmerking.item.id] = opmerking
+        
+        # add to total costs
         if opmerking.consequentCosts:
-            kostenverschil += opmerking.consequentCosts
+            if opmerking.costtype:
+                if opmerking.costtype.type == "per VHE":
+                    kostenverschil += decimal.Decimal(project.vhe) * opmerking.consequentCosts
+                else:
+                    kostenverschil += opmerking.consequentCosts
+            else:
+                kostenverschil += opmerking.consequentCosts
+                
+        # add attachments
         if opmerking.attachment:
             attachmentsqs = BijlageToAnnotation.objects.filter(ann=opmerking)
             for attachment in attachmentsqs:
@@ -563,7 +573,7 @@ def download_pve(request, client_pk, pk):
                         attachments[opmerking.item.id].append(attachment)
                     else:
                         attachments[opmerking.item.id] = [attachment]
-    print(attachments)
+
     replies = (
         CommentReply.objects.select_related("user")
         .select_related("onComment")

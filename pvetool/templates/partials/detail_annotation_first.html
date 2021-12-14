@@ -10,13 +10,16 @@
             <p><b>Akk.</b></p>
         </div>
         <div class="statuschange">
-            <p><b>Statusverandering</b></p>
+            <p><b>Status</b></p>
         </div>
         <div class="comment">
             <p><b>Opmerking</b></p>
         </div>
         <div class="attachments">
             <p><b>Bijlagen</b></p>
+        </div>
+        <div class="costs">
+            <p><b>Kosten</b></p>
         </div>
 
     </div>
@@ -65,6 +68,12 @@
                 {% endif %}
             </p>
         </div>
+        <div class="costs">
+            {% if annotation.consequentCosts %}
+            <p style="color:#0085B7;">€ {{ annotation.consequentCosts }} {% if annotation.costtype %}{{ annotation.costtype }}{% endif %}</p>
+            {% endif %}
+        </div>
+
     </div>
     {% endif %}
 </span>

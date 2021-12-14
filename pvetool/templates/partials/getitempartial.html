@@ -19,7 +19,7 @@
             <p><b>Akk.</b></p>
         </div>
         <div class="statuschange">
-            <p><b>Statusverandering</b></p>
+            <p><b>Status</b></p>
         </div>
         <div class="comment">
             <p><b>Opmerking</b></p>
@@ -27,7 +27,9 @@
         <div class="attachments">
             <p><b>Bijlage(n)</b></p>
         </div>
-
+        <div class="costs">
+            <p><b>Kosten</b></p>
+        </div>
     </div>
     {% endif %}
     {% if annotation.annotation or annotation.attachment or annotation.firststatus %}
@@ -56,7 +58,13 @@
             {% endfor %}
         {% endif %}
         </div>
-
+        <div class="costs">
+            <p>
+                {% if annotation.consequentCosts %}
+                    € {{ annotation.consequentCosts }} {% if annotation.costtype %}{{ annotation.costtype }}{% endif %}
+                {% endif %}
+            </p>
+        </div>
     </div>
     {% endif %}
 
@@ -91,6 +99,13 @@
             {% endfor %}
         </i></p></span>
             {% endif %}
+        </div>
+        <div class="costs">
+            <p>
+                {% if reply.consequentCosts %}
+                    € {{ reply.consequentCosts }} {% if reply.costtype %}{{ reply.costtype }}{% endif %}
+                {% endif %}
+            </p>
         </div>
 
     </div>

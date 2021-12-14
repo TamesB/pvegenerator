@@ -570,10 +570,12 @@ def AddKostenverschilFirst(request, client_pk, project_pk, item_pk):
         if form.is_valid():
             if annotation:
                 annotation.consequentCosts = form.cleaned_data["kostenverschil"]
+                annotation.costtype = form.cleaned_data["costtype"]
                 annotation.save()
             else:
                 annotation = PVEItemAnnotation()
                 annotation.consequentCosts = form.cleaned_data["kostenverschil"]
+                annotation.costtype = form.cleaned_data["costtype"]
                 annotation.project = project
                 annotation.item = models.PVEItem.objects.get(id=item_pk)
                 annotation.user = request.user
@@ -678,6 +680,7 @@ def DeleteKostenverschilFirst(request, client_pk, project_pk, item_pk):
 
     if annotation:
         annotation.consequentCosts = None
+        annotation.costtype = None
         annotation.save()
         messages.warning(request, "Kostenverschil verwijderd.")
         return redirect(

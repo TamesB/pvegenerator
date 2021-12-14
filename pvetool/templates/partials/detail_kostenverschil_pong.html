@@ -3,11 +3,11 @@
   {% if last_reply.consequentCosts %}
   <p>
     <b
-      >€{{ last_reply.consequentCosts }}</b
+      >€{{ last_reply.consequentCosts }} {% if last_reply.costtype %}{{ last_reply.costtype }}{% endif %}</b
     >
   </p>
   {% elif annotation.consequentCosts %}
-  <p><b>€{{ annotation.consequentCosts }}</b></p>
+  <p><b>€{{ annotation.consequentCosts }} {% if annotation.costtype %}{{ annotation.costtype }}{% endif %}</b></p>
   {% else %}
   <p><b>€ 0</b></p>
   {% endif %} 
@@ -15,7 +15,7 @@
   {% if current_reply %} {% if current_reply.accept is False %} {% if current_reply.consequentCosts %}
   <p style="color:#0085B7;">
   <b
-    >Voorgesteld: €{{ current_reply.consequentCosts }}
+    >Voorgesteld: €{{ current_reply.consequentCosts }} {% if current_reply.costtype %}{{ current_reply.costtype }}{% endif %}
     <span
       ><button
         hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"

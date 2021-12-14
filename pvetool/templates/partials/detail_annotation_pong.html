@@ -43,6 +43,14 @@
                 {% endif %}
             </p>
         </div>
+
+        <div class="costs">
+            <p style="color:#0085B7;">
+                {% if current_reply.consequentCosts %}
+                    € {{ current_reply.consequentCosts }} {% if current_reply.costtype %}{{ current_reply.costtype }}{% endif %}
+                {% endif %}
+            </p>
+        </div>
     </div>
     {% endif %}
 </div>

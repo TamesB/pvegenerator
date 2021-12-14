@@ -1,7 +1,7 @@
 
 from django.db import models
 
-from project.models import Project, PVEItemAnnotation
+from project.models import Project, PVEItemAnnotation, CostType
 from users.models import CustomUser
 
 
@@ -73,6 +73,7 @@ class CommentReply(models.Model):
     consequentCosts = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True, default=None
     )
+    costtype = models.ForeignKey(CostType, on_delete=models.SET_NULL, blank=True, null=True, related_name='reply')
     status = models.ForeignKey(
         CommentStatus, on_delete=models.SET_NULL, null=True, blank=True, related_name='reply'
     )
