@@ -286,6 +286,10 @@ def OrganisatieRemoveFromProject(request, client_pk, organisatie_pk, project_pk)
 
     if stakeholder in project.organisaties.all():
         project.organisaties.remove(stakeholder)
+        
+    for user in stakeholder.users.all():
+        if user in project.permitted.all():
+            project.permitted.remove(user)
 
     messages.warning(request, f"Project { project.name } verwijderd uit stakeholder { stakeholder.name }")
     return HttpResponse("")
@@ -320,6 +324,10 @@ def GebruikerRemoveFromOrganisatie(request, client_pk, organisatie_pk, user_pk):
 
     if user in stakeholder.users.all():
         stakeholder.users.remove(user)
+        
+    for project in stakeholder.projecten.all():
+        if project in user.projectspermitted.all():
+            user.projectspermitted.remove(project)
 
     if stakeholder == user.stakeholder:
         user.stakeholder = None

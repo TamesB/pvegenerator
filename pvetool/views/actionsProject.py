@@ -144,6 +144,7 @@ def ViewProject(request, client_pk, pk):
     context["project"] = project
     context["totale_kosten"] = totale_kosten
     context["medewerkers"] = medewerkers
+    context["stakeholders"] = project.organisaties.all()
     context["derden"] = derden
     context["client_pk"] = client_pk
     context["client"] = client

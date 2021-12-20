@@ -178,8 +178,8 @@
           <td><p class="contcontent">{% if project.projectmanager %}{{ project.projectmanager }}{% else %}Nog geen projectmanager.{% endif %}</p></td>
         </tr>
         <tr>
-          <td><p class="conttitle">Derden: </p></td>
-          <td><p class="contcontent">{% for medewerker in derden %}{{ medewerker }}, {% endfor%}</p></td>
+          <td><p class="conttitle">Stakeholders: </p></td>
+          <td><p class="contcontent">{% for stakeholder in stakeholders %}{{ stakeholder }}, {% endfor%}</p></td>
         </tr>
         <tr>
           <td><p class="conttitle">Status Contract: </p></td>
