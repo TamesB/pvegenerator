@@ -383,25 +383,38 @@ def SOGAddDerdenToProj(request, client_pk, pk):
 
     if request.method == "POST":
         form = forms.SOGAddDerdenForm(request.POST)
+        form.fields["stakeholder"].queryset = Organisatie.objects.filter(
+            client=client
+        ).all()
+ 
         # check whether it's valid:
         if form.is_valid():
-            permitted = form.cleaned_data["permitted"]
-            project.permitted.add(*permitted)
+            stakeholders = form.cleaned_data["stakeholder"]
+            
+            # voeg stakeholder toe aan project
+            project.organisaties.add(*stakeholders)
 
-            if permitted:
-                users = [user for user in permitted]
+            # and vice versa
+            for stakeholder in stakeholders:
+                stakeholder.projecten.add(project)
 
-                for user in users:
-                    send_mail(
-                        f"{ client.name } Projecten - Uitnodiging voor project {project}",
-                        f"""{ request.user } heeft u uitgenodigd om mee te werken aan het project { project } van { client.name }.
-                        
-                        U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
-                        Link: https://pvegenerator.net/pvetool/{ client_pk }/project/{project.id}""",
-                        "admin@pvegenerator.net",
-                        [f"{user.email}"],
-                        fail_silently=False,
-                    )
+            if stakeholders:
+                stakeholder_users = [stakeholder.users.all() for stakeholder in stakeholders]
+
+                for user_list in stakeholder_users:
+                    project.permitted.add(*user_list)
+                    
+                    for user in user_list:
+                        send_mail(
+                            f"{ client.name } Projecten - Uitnodiging voor project {project}",
+                            f"""{ request.user } heeft u uitgenodigd om mee te werken aan het project { project } van { client.name }.
+                            
+                            U heeft nu toegang tot dit project. Klik op de link om rechtstreeks het project in te gaan.
+                            Link: https://pvegenerator.net/pvetool/{ client_pk }/project/{project.id}""",
+                            "admin@pvegenerator.net",
+                            [f"{user.email}"],
+                            fail_silently=False,
+                        )
 
             return redirect("dashboard_syn", client_pk=client_pk)
         else:
@@ -409,8 +422,8 @@ def SOGAddDerdenToProj(request, client_pk, pk):
 
     # form
     form = forms.SOGAddDerdenForm()
-    form.fields["permitted"].queryset = CustomUser.objects.filter(
-        type_user="SD", client=client
+    form.fields["stakeholder"].queryset = Organisatie.objects.filter(
+        client=client
     ).all()
 
     context = {}

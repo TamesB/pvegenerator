@@ -432,7 +432,7 @@ def ConnectPVE(request, client_pk, pk, version_pk):
                 request,
                 f"Parameters van het Programma van Eisen van project {project.name} zijn toegevoegd. U kunt het PvE downloaden vanaf de projecthomepagina.",
             )
-            return redirect("manageprojecten_syn", client_pk=client_pk)
+            return redirect("viewproject_syn", client_pk=client_pk, pk=project.id)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 

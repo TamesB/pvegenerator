@@ -142,9 +142,12 @@ class KoppelDerdeUserForm(ModelForm):
     stakeholder = forms.ModelChoiceField(
         queryset=Organisatie.objects.none(), label="Stakeholder:"
     )
-    project = forms.ModelChoiceField(
-        queryset=Project.objects.none(), label="Project:"
-    )
+    
+    widgets = {
+        "stakeholder": forms.Select(
+            attrs={"class": "ui dropdown"},
+        ),
+    }
     class Meta:
         model = Invitation
         fields = {
@@ -153,8 +156,6 @@ class KoppelDerdeUserForm(ModelForm):
         labels = {
             "invitee": "E-Mail:",
         }
-
-
 class PlusAccountForm(ModelForm):
     type_choices = (
         ("SOG", "Projectmanager"),
@@ -165,9 +166,6 @@ class PlusAccountForm(ModelForm):
     stakeholder = forms.ModelChoiceField(
         queryset=Organisatie.objects.none(), label="Stakeholder (optioneel):", required=False
     )
-    project = forms.ModelChoiceField(
-        queryset=Project.objects.none(), label="Project (optioneel):", required=False
-    )
     class Meta:
         model = Invitation
         fields = {
@@ -177,6 +175,10 @@ class PlusAccountForm(ModelForm):
             "rang": "Rang user:",
             "invitee": "E-Mail:",
         }
+        
+    def __init__(self, *args, **kwargs):
+        super(PlusAccountForm, self).__init__(*args, **kwargs)
+        self.fields["stakeholder"].required = False
 
 class PlusDerdeToProjectForm(ModelForm):
     stakeholder = forms.ModelChoiceField(
@@ -390,15 +392,20 @@ class InviteProjectStartForm(forms.Form):
         }
 
 class SOGAddDerdenForm(forms.Form):
-    permitted = forms.ModelMultipleChoiceField(
-        queryset=CustomUser.objects.none(), label="Handmatig Derden Toevoegen:"
+    stakeholder = forms.ModelMultipleChoiceField(
+        queryset=Organisatie.objects.none(), label="Stakeholders:"
     )
+    
     class Meta:
         widgets = {
-            "permitted": forms.SelectMultiple(
+            "stakeholder": forms.SelectMultiple(
                 attrs={"class": "ui dropdown"},
             ),
         }
+            
+    def __init__(self, *args, **kwargs):
+        super(SOGAddDerdenForm, self).__init__(*args, **kwargs)
+        self.fields["stakeholder"].required = True
 
 class FirstFreezeForm(forms.Form):
     confirm = forms.BooleanField()

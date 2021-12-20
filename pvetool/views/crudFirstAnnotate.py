@@ -77,6 +77,8 @@ def AddComment(request, client_pk, pk):
         return redirect("logout_syn", client_pk=client_pk)
 
     if not project.item.exists():
+        if request.user == project.projectmanager:
+            return redirect("kiespveversie", client_pk=client_pk, pk=pk)
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user not in project.permitted.all():

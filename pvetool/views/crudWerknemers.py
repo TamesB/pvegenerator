@@ -134,7 +134,7 @@ def AddAccount(request, client_pk):
                     f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor een of meerdere projecten van { client.name }.
                     
                     Klik op de uitnodigingslink om rechtstreeks de tool in te gaan.
-                    Link: https://pvegenerator.net/pvetool/invite/{invitation.key}
+                    Link: https://pvegenerator.net/pvetool/{ client_pk }/invite/{invitation.key}
                     
                     Deze link is 10 dagen geldig.""",
                     "admin@pvegenerator.net",
@@ -152,7 +152,7 @@ def AddAccount(request, client_pk):
                     3. Check de projectpagina's en volg de To Do stappen om commentaar te leveren op de regels.
 
                     Klik op de uitnodigingslink om rechtstreeks de tool in te gaan.
-                    Link: https://pvegenerator.net/pvetool/invite/{invitation.key}
+                    Link: https://pvegenerator.net/pvetool/{ client_pk }/invite/{invitation.key}
                     
                     Deze link is 10 dagen geldig.""",
                     "admin@pvegenerator.net",
@@ -168,16 +168,11 @@ def AddAccount(request, client_pk):
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
-    projecten = Project.objects.filter(
-        permitted__username__iregex=r"\y{0}\y".format(request.user.username)
-    )
-
     if request.user.type_user in staff_users:
         form = forms.PlusAccountForm()
     else:
         form = forms.KoppelDerdeUserForm()
 
-    form.fields["project"].queryset = Project.objects.filter(client=client)
     form.fields["stakeholder"].queryset = Organisatie.objects.filter(
         client=client
     )

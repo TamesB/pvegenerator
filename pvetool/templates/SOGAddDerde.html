@@ -10,15 +10,17 @@
 
 {% block main %}
 <div class="general_title"><img src="{% static 'pvetool/svg/user-plus-blue-big.svg' %}" class="title_img"></img>
-    <p>Voeg derden toe aan project {{ project.name }}</p></div>
+    <p>Voeg stakeholders toe aan project {{ project.name }}</p></div>
 <div class="invite-container">
     <div class="box">
-        <p class="description">Voeg de derden toe die bemachtigt worden het PvE te checken. Er wordt een e-mail naar iedereen gestuurd behorend tot het project. Als de gewenste derde nog niet bestaat kan u ze uitnodigen via <a href="{% url 'plusaccount_syn' client_pk %}"><button class="ui icon green button"><i class="icon plus"></i>Nodig derde uit</button></a></p>
+        <p class="description">Voeg de stakeholders toe die bemachtigt worden het PvE te checken. Er wordt een e-mail naar iedereen gestuurd behorend tot het project. Als de gewenste derde nog niet bestaat in de stakeholdergroep kan u ze uitnodigen via <a href="{% url 'plusaccount_syn' client_pk %}"><button class="ui icon green button"><i class="icon plus"></i>Nodig derde uit</button></a></p>
         <form action="{% url 'sogaddderden' client_pk project.id %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <p class="formbox">{{ form.permitted }}</p>        
+            <label class="formtitle" for="{{ form.stakeholder.id_for_label }}"><p>Stakeholders (CTRL+Linkermuisknop voor meerdere selecteren):</p></label>
+            <p class="formbox">{{ form.stakeholder }}</p>        
             <input type="submit" class="button" value="Nodig uit">
         </form>    
     </div>
 </div>
+
 {% endblock %}
