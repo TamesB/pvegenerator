@@ -355,10 +355,12 @@ def DetailAnnotationFirst(request, client_pk, project_pk, item_pk):
     if annotation:
         if annotation.status:
             requirement_obj = CommentRequirement.objects.get(version__pk=project.pve_versie.pk)
-            
-            if annotation.status.status in requirement_obj.comment_allowed.all():
+            comment_allowed = [obj.status for obj in requirement_obj.comment_allowed.all()]
+            attachment_allowed = [obj.status for obj in requirement_obj.attachment_allowed.all()]
+
+            if annotation.status.status in comment_allowed:
                 context["comment_allowed"] = True
-            if annotation.status.status in requirement_obj.attachment_allowed.all():
+            if annotation.status.status in attachment_allowed:
                 context["attachment_allowed"] = True
 
     context["client_pk"] = client_pk
