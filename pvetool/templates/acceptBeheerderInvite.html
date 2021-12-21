@@ -19,38 +19,26 @@
     </head>
     <body>
         <div id="main">
-            <div class="layerOneInner">
-                <div class="header">
-
-                    <img src="{{ logo_url }}" class="logo_bg"></a>
-
-                    <ul class="menu_right">
-                    {% if user.is_authenticated %}
-                        <li><a href="{% url 'logout_syn' client_pk %}">Afmelden</a></li>
-                        <li><a href="{% url 'dashboard_syn' client_pk %}">Ingelogd als {{ request.user }}</a></li>
-                    {% else %}
-                        <li><a href="#">&nbsp;</a></li>
-                    {% endif %}
-                    </ul>
-                </div>
-                <div class="article">
+          <div class="layerOneInner" style="min-height: 100%;">
+            <div class="menu_left" style="min-height: 100%;" id="menu_left">{% block menu %}{% endblock %}</div> 
+            <div class="article" style="min-height: 100%;">
                 <div class="loader" style="display: none;"></div>
-                <div class="article_content">
+                <div class="article_content" style="min-height: 100%;">
                 <div class="invite-container">
-    <div class="box">
-        <p class="title">Uitnodiging voor de PvE Tool</p>
-        <p class="description">Maak uw wachtwoord aan, en u wordt als beheerder doorverwezen naar uw subwebsite. Vanaf daar kan u werknemers uitnodigen en projecten starten.</p>
-    <form action="{% url 'acceptuitnodigingbeheerder' client_pk key %}" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div>
-            <label for="{{ form.password1.id_for_label }}">Wachtwoord:</label>
-            <p class="formbox">{{ form.password1 }}</p></div>
-       <div>     <label for="{{ form.password2.id_for_label }}">Herhaal wachtwoord:</label>
-            <p class="formbox">{{ form.password2 }}</p></div>
-            <input type="submit" class="button" value="Registreer">
-        </form>    
-    </div>
-</div>
+                  <div class="box">
+                      <p class="title">Uitnodiging voor de PvE Tool</p>
+                      <p class="description">Maak uw wachtwoord aan, en u wordt als beheerder doorverwezen naar uw subwebsite. Vanaf daar kan u werknemers uitnodigen en projecten starten.</p>
+                  <form action="{% url 'acceptuitnodigingbeheerder' client_pk key %}" method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div>
+                          <label for="{{ form.password1.id_for_label }}">Wachtwoord:</label>
+                          <p class="formbox">{{ form.password1 }}</p></div>
+                    <div>     <label for="{{ form.password2.id_for_label }}">Herhaal wachtwoord:</label>
+                          <p class="formbox">{{ form.password2 }}</p></div>
+                          <input type="submit" class="button" value="Registreer">
+                      </form>    
+                  </div>
+              </div>  
                 {% block modal %}{% endblock %}
                 </div>
                 </div> 

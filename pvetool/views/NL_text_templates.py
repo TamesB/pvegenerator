@@ -3,8 +3,13 @@ DEFAULT_ERROR = "Er is iets fout gegaan. Neem contact op met de systeembeheerder
 PROJECT = "project"
 USER = "gebruiker"
 EMPLOYEE = "medewerker"
+
+# the stakeholder model is called "organisatie".
 STAKEHOLDER = "stakeholder"
+
+# the client model is called "beleggers"
 CLIENT = "klant"
+
 ANNOTATION = "opmerking"
 REPLY = "reactie"
 STATUS = "status"

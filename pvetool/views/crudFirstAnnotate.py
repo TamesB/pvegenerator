@@ -14,6 +14,17 @@ from pvetool.forms import (
 from pvetool.views.utils import GetAWSURL
 from pvetool.views import hardcoded_values
 
+# the URL map for whether a chapter has paragraphs or not
+has_paragraphs = {
+    False: 0
+}
+
+# further maps from URLsafe values to boolean values
+exists = {
+    True: 1,
+    False: 0
+}
+
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def AddCommentOverview(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -207,7 +218,7 @@ def GetItemsFirstAnnotate(request, client_pk, pk, chapter_pk, paragraph_id):
     if not project.item.exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    if paragraph_id == 0:
+    if paragraph_id == has_paragraphs[False]:
         pve_items = (
             project.item.select_related("chapter")
             .select_related("paragraph")

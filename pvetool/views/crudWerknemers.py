@@ -103,68 +103,71 @@ def AddAccount(request, client_pk):
             form = forms.KoppelDerdeUserForm(request.POST)
         # check validity
         if form.is_valid():
-            invitation = Invitation()
-            invitation.inviter = request.user
-            invitation.invitee = form.cleaned_data["invitee"]
-            invitation.rang = form.cleaned_data["rang"]
-            invitation.client = client
-
-            if form.cleaned_data["project"]:
-                invitation.project = form.cleaned_data["project"]
-            if form.cleaned_data["stakeholder"]:
-                invitation.stakeholder = form.cleaned_data["stakeholder"]
-
-            # Als pvetool beheerder invitatie doet kan hij ook rang geven (projectmanager/derde)
-            manager = False
-
-            if request.user.type_user in staff_users:
-                if form.cleaned_data["rang"] == "SOG":
-                    manager = True
-
-            expiry_length = 10
-            expire_date = timezone.now() + timezone.timedelta(expiry_length)
-            invitation.expires = expire_date
-            invitation.key = secrets.token_urlsafe(30)
-            invitation.save()
-            project = form.cleaned_data["project"]
-
-            if manager:
-                send_mail(
-                    f"{ client.name } Projecten - Uitnodiging voor de PvE tool",
-                    f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor een of meerdere projecten van { client.name }.
-                    
-                    Klik op de uitnodigingslink om rechtstreeks de tool in te gaan.
-                    Link: https://pvegenerator.net/pvetool/{ client_pk }/invite/{invitation.key}
-                    
-                    Deze link is 10 dagen geldig.""",
-                    "admin@pvegenerator.net",
-                    [f'{form.cleaned_data["invitee"]}'],
-                    fail_silently=False,
+            if form.cleaned_data["rang"] == "SOG" and form.cleaned_data["stakeholder"]:
+                messages.warning(
+                    request,
+                    f"Projectmanagers kunnen niet tot stakeholders behoren.",
                 )
             else:
-                send_mail(
-                    f"{ client.name } Projecten - Uitnodiging voor de PvE tool",
-                    f"""{ request.user } nodigt u uit voor het commentaar leveren en het checken van het Programma van Eisen voor een of meerdere projecten van { client.name }.
-                    
-                    Uw stappenplan:
-                    1. Volg de link hieronder en maak een wachtwoord aan. Uw usersname wordt naar u gemaild.
-                    2. Check uw projecten op de dashboard of bij "Mijn Projecten" in het uitschuifmenu links.
-                    3. Check de projectpagina's en volg de To Do stappen om commentaar te leveren op de regels.
+                invitation = Invitation()
+                invitation.inviter = request.user
+                invitation.invitee = form.cleaned_data["invitee"]
+                invitation.rang = form.cleaned_data["rang"]
+                invitation.client = client
 
-                    Klik op de uitnodigingslink om rechtstreeks de tool in te gaan.
-                    Link: https://pvegenerator.net/pvetool/{ client_pk }/invite/{invitation.key}
-                    
-                    Deze link is 10 dagen geldig.""",
-                    "admin@pvegenerator.net",
-                    [f'{form.cleaned_data["invitee"]}'],
-                    fail_silently=False,
+                if form.cleaned_data["stakeholder"]:
+                    invitation.stakeholder = form.cleaned_data["stakeholder"]
+
+                # Als pvetool beheerder invitatie doet kan hij ook rang geven (projectmanager/derde)
+                manager = False
+
+                if request.user.type_user in staff_users:
+                    if form.cleaned_data["rang"] == "SOG":
+                        manager = True
+
+                expiry_length = 10
+                expire_date = timezone.now() + timezone.timedelta(expiry_length)
+                invitation.expires = expire_date
+                invitation.key = secrets.token_urlsafe(30)
+                invitation.save()
+
+                if manager:
+                    send_mail(
+                        f"{ client.name } Projecten - Uitnodiging voor de PvE tool",
+                        f"""{ request.user } heeft u uitgenodigd om projectmanager te zijn voor een of meerdere projecten van { client.name }.
+                        
+                        Klik op de uitnodigingslink om rechtstreeks de tool in te gaan.
+                        Link: https://pvegenerator.net/pvetool/{ client_pk }/invite/{invitation.key}
+                        
+                        Deze link is 10 dagen geldig.""",
+                        "admin@pvegenerator.net",
+                        [f'{form.cleaned_data["invitee"]}'],
+                        fail_silently=False,
+                    )
+                else:
+                    send_mail(
+                        f"{ client.name } Projecten - Uitnodiging voor de PvE tool",
+                        f"""{ request.user } nodigt u uit voor het commentaar leveren en het checken van het Programma van Eisen voor een of meerdere projecten van { client.name }.
+                        
+                        Uw stappenplan:
+                        1. Volg de link hieronder en maak een wachtwoord aan. Uw usersname wordt naar u gemaild.
+                        2. Check uw projecten op de dashboard of bij "Mijn Projecten" in het uitschuifmenu links.
+                        3. Check de projectpagina's en volg de To Do stappen om commentaar te leveren op de regels.
+
+                        Klik op de uitnodigingslink om rechtstreeks de tool in te gaan.
+                        Link: https://pvegenerator.net/pvetool/{ client_pk }/invite/{invitation.key}
+                        
+                        Deze link is 10 dagen geldig.""",
+                        "admin@pvegenerator.net",
+                        [f'{form.cleaned_data["invitee"]}'],
+                        fail_silently=False,
+                    )
+
+                messages.warning(
+                    request,
+                    f"Uitnodiging verstuurd naar { form.cleaned_data['invitee'] }. De uitnodiging zal verlopen in { expiry_length } dagen.)",
                 )
-
-            messages.warning(
-                request,
-                f"Uitnodiging verstuurd naar { form.cleaned_data['invitee'] }. De uitnodiging zal verlopen in { expiry_length } dagen.)",
-            )
-            return redirect("dashboard_syn", client_pk=client_pk)
+                return redirect("dashboard_syn", client_pk=client_pk)
         else:
             messages.warning(request, "Vul de verplichte velden in.")
 
@@ -198,15 +201,16 @@ def AcceptInvite(request, client_pk, key):
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
-
-    if request.user.client:
-        if (
-            request.user.client.id != client.id
-            and request.user.type_user != "B"
-        ):
+        
+    if not request.user.is_anonymous:
+        if request.user.client:
+            if (
+                request.user.client.id != client.id
+                and request.user.type_user != "B"
+            ):
+                return redirect("logout_syn", client_pk=client_pk)
+        else:
             return redirect("logout_syn", client_pk=client_pk)
-    else:
-        return redirect("logout_syn", client_pk=client_pk)
 
     if not key or not Invitation.objects.filter(key=key):
         return redirect("logout_syn", client_pk=client_pk)
@@ -223,6 +227,11 @@ def AcceptInvite(request, client_pk, key):
             # strip the email by its first part to automatically create a username
             sep = "@"
             username = invitation.invitee.split(sep, 1)[0]
+            second_arg_email = invitation.invitee.split(sep, 1)[1].split(".")[0]
+            
+            if CustomUser.objects.filter(username=username).exists():
+                username = username + second_arg_email
+                
             user = CustomUser.objects.create_user(
                 username, password=form.cleaned_data["password1"]
             )
@@ -230,7 +239,7 @@ def AcceptInvite(request, client_pk, key):
             if invitation.stakeholder:
                 user.stakeholder = invitation.stakeholder
             if invitation.client:
-                user.client = invitation.clienteorganisatie
+                user.client = invitation.client
 
             user.save()
 
@@ -256,6 +265,10 @@ def AcceptInvite(request, client_pk, key):
                 stakeholder = invitation.stakeholder
                 stakeholder.users.add(user)
                 stakeholder.save()
+                
+                if stakeholder.projecten.all():
+                    for project in stakeholder.projecten.all():
+                        project.permitted.add(user)
 
             invitation.delete()
 
@@ -325,7 +338,7 @@ def InviteUsersToProject(request, client_pk, pk):
         form = forms.InviteProjectStartForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            organisaties = form.cleaned_data["organisaties"]
+            stakeholders = form.cleaned_data["organisaties"]
             projectmanager = form.cleaned_data["projectmanager"]
             permitted = form.cleaned_data["permitted"]
 
@@ -334,15 +347,15 @@ def InviteUsersToProject(request, client_pk, pk):
                     return redirect("logout_syn", client_pk=client_pk)
 
             project.projectmanager = projectmanager
-            project.organisaties.add(*organisaties)
+            project.organisaties.add(*stakeholders)
             project.permitted.add(*permitted)
             project.save()
 
-            if organisaties:
-                organisaties = [stakeholder for stakeholder in organisaties]
+            if stakeholders:
+                stakeholders = [stakeholder for stakeholder in stakeholders]
                 users = []
 
-                for stakeholder in organisaties:
+                for stakeholder in stakeholders:
                     userSet = [user for user in stakeholder.users.all()]
                     users.append(userSet)
                     stakeholder.projecten.add(project)

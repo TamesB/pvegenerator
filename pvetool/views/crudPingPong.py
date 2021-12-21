@@ -11,6 +11,25 @@ from pvetool import forms
 from pvetool.models import BijlageToReply, CommentReply, FrozenComments
 from pvetool.views.utils import GetAWSURL
 from pvetool.views import hardcoded_values
+
+# The URL map for specific tabs of comments in the pingpongprocess.
+type_map = {
+    "TODO_COMMENTS": 0,
+    "CHANGED_COMMENTS": 1,
+    "ACCEPTED_COMMENTS": 2,
+}
+
+# the URL map for whether a chapter has paragraphs or not
+has_paragraphs = {
+    False: 0
+}
+
+# further maps from URLsafe values to boolean values
+exists = {
+    True: 1,
+    False: 0
+}
+
 # this function checks if the client exists, whether the user is authenticated to the client, project is of the client,
 # the project is not in first annotate stage, the project contains a pve,
 # whether the user is permitted to the project,
@@ -216,7 +235,7 @@ def GetParagravenPingPong(request, client_pk, pk, chapter_pk, type, accept):
 
     comments = None
 
-    if type == 1:
+    if type == type_map["CHANGED_COMMENTS"]:
         comments = (
             current_phase.comments.select_related("status")
             .select_related("item")
@@ -226,7 +245,7 @@ def GetParagravenPingPong(request, client_pk, pk, chapter_pk, type, accept):
             .order_by("item__id")
             .all()
         )
-    if type == 2:
+    if type == type_map["ACCEPTED_COMMENTS"]:
         comments = (
             current_phase.accepted_comments.select_related("status")
             .select_related("item")
@@ -236,7 +255,7 @@ def GetParagravenPingPong(request, client_pk, pk, chapter_pk, type, accept):
             .order_by("item__id")
             .all()
         )
-    if type == 0:
+    if type == type_map["TODO_COMMENTS"]:
         comments = (
             current_phase.todo_comments.select_related("status")
             .select_related("item")
@@ -268,7 +287,7 @@ def GetParagravenPingPong(request, client_pk, pk, chapter_pk, type, accept):
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
-def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraph_id, type, accept):
+def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraph_id, type, accept):    
     context = {}
 
     project, current_phase = passed_commentcheck_guardclauses(request, client_pk, pk)
@@ -278,8 +297,8 @@ def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraph_id, type, acc
 
     comments = None
 
-    if type == 1:
-        if paragraph_id == 0:
+    if type == type_map["CHANGED_COMMENTS"]:
+        if paragraph_id == has_paragraphs[False]:
             comments = (
                 current_phase.comments.select_related("status")
                 .select_related("item")
@@ -300,8 +319,8 @@ def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraph_id, type, acc
                 .order_by("item__id")
                 .all()
             )
-    if type == 2:
-        if paragraph_id == 0:
+    if type == type_map["ACCEPTED_COMMENTS"]:
+        if paragraph_id == has_paragraphs[False]:
             comments = (
                 current_phase.accepted_comments.select_related("status")
                 .select_related("item")
@@ -322,8 +341,8 @@ def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraph_id, type, acc
                 .order_by("item__id")
                 .all()
             )
-    if type == 0:
-        if paragraph_id == 0:
+    if type == type_map["TODO_COMMENTS"]:
+        if paragraph_id == has_paragraphs[False]:
             comments = (
                 current_phase.todo_comments.select_related("status")
                 .select_related("item")
@@ -791,7 +810,7 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type,
         ).first()
         
     # create reply only once with GET/POST request
-    if annotation_pk == 0 and not CommentReply.objects.filter(
+    if annotation_pk == exists[False] and not CommentReply.objects.filter(
             onComment__id=annotation.id,
             onComment__item__id=item_pk,
             commentphase=current_phase,
@@ -806,7 +825,7 @@ def AddBijlagePong(request, client_pk, project_pk, item_pk, annotation_pk, type,
         ).first()
     
     # seperate forms because we want to create a reply only once (GET)
-    if BijlageToReply.objects.filter(id=attachment_id).exists() and new == 0 and attachment_id != 0:
+    if BijlageToReply.objects.filter(id=attachment_id).exists() and new == exists[False] and attachment_id != exists[False]:
         attachmentmodel = BijlageToReply.objects.filter(id=attachment_id).first()
         form = forms.PongBijlageForm(
             request.POST or None, request.FILES or None, instance=attachmentmodel

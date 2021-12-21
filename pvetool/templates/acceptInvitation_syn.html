@@ -11,11 +11,11 @@
         <p class="description">Maak uw wachtwoord aan, en u wordt doorgewezen naar de lijst van projecten waar u aan toegewezen bent. Uw logingegevens worden naar u gemaild.</p>
     <form action="{% url 'acceptinvite_syn' client_pk key %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-            <label for="{{ form.password1.id_for_label }}">Wachtwoord:</label>
+            <p><label for="{{ form.password1.id_for_label }}">Wachtwoord:</label></p>
             <p class="formbox">{{ form.password1 }}</p>
-            <label for="{{ form.password2.id_for_label }}">Herhaal wachtwoord:</label>
+            <p><label for="{{ form.password2.id_for_label }}">Herhaal wachtwoord:</label></p>
             <p class="formbox">{{ form.password2 }}</p>
-            <input type="submit" class="button" value="Registreer">
+            <p><input type="submit" class="button" value="Registreer"></p>
         </form>    
     </div>
 </div>

@@ -302,8 +302,6 @@ def ConnectPVE(request, client_pk, pk, version_pk):
                 .filter(basisregel=True)
             )
             
-            print(basic_PVE)
-
             basic_PVE = basic_PVE.union(
                 Bouwsoort1.item.select_related("chapter")
                 .select_related("paragraph")
@@ -555,12 +553,12 @@ def download_pve(request, client_pk, pk):
     filename = f"PvE-{fileExt}"
     zipFilename = f"PvE_Compleet-{fileExt}"
 
-    # Opmerkingen in kleur naast de regels
-    opmerkingen = {}
+    # annotations in kleur naast de regels
+    annotations = {}
     attachments = {}
-    reacties = {}
+    replies = {}
     reactieattachments = {}
-    kostenverschil = 0
+    costs = 0
 
     comments = (
         PVEItemAnnotation.objects.select_related("item")
@@ -569,28 +567,28 @@ def download_pve(request, client_pk, pk):
         .filter(project=project)
     )
 
-    for opmerking in comments:
-        opmerkingen[opmerking.item.id] = opmerking
+    for annotation in comments:
+        annotations[annotation.item.id] = annotation
         
         # add to total costs
-        if opmerking.consequentCosts:
-            if opmerking.costtype:
-                if opmerking.costtype.type == "per VHE":
-                    kostenverschil += decimal.Decimal(project.vhe) * opmerking.consequentCosts
+        if annotation.consequentCosts:
+            if annotation.costtype:
+                if annotation.costtype.type == "per VHE":
+                    costs += decimal.Decimal(project.vhe) * annotation.consequentCosts
                 else:
-                    kostenverschil += opmerking.consequentCosts
+                    costs += annotation.consequentCosts
             else:
-                kostenverschil += opmerking.consequentCosts
+                costs += annotation.consequentCosts
                 
         # add attachments
-        if opmerking.attachment:
-            attachmentsqs = BijlageToAnnotation.objects.filter(ann=opmerking)
+        if annotation.attachment:
+            attachmentsqs = BijlageToAnnotation.objects.filter(ann=annotation)
             for attachment in attachmentsqs:
                 if attachment.attachment:
-                    if opmerking.item.id in attachments.keys():
-                        attachments[opmerking.item.id].append(attachment)
+                    if annotation.item.id in attachments.keys():
+                        attachments[annotation.item.id].append(attachment)
                     else:
-                        attachments[opmerking.item.id] = [attachment]
+                        attachments[annotation.item.id] = [attachment]
 
     replies = (
         CommentReply.objects.select_related("user")
@@ -602,10 +600,10 @@ def download_pve(request, client_pk, pk):
     )
 
     for reply in replies:
-        if reply.onComment.item.id in reacties.keys():
-            reacties[reply.onComment.item.id].append(reply)
+        if reply.onComment.item.id in replies.keys():
+            replies[reply.onComment.item.id].append(reply)
         else:
-            reacties[reply.onComment.item.id] = [reply]
+            replies[reply.onComment.item.id] = [reply]
         if reply.attachment:
             attachmentsqs = BijlageToReply.objects.filter(reply=reply)
             for attachment in attachmentsqs:
@@ -634,14 +632,14 @@ def download_pve(request, client_pk, pk):
         pdfmaker.Topright = f"CONCEPT SNAPSHOT {date.strftime('%d')}-{date.strftime('%m')}-{date.strftime('%Y')}"
         pdfmaker.TopRightPadding = 75
 
-    pdfmaker.kostenverschil = kostenverschil
+    pdfmaker.kostenverschil = costs
     pdfmaker.makepdf(
         filename,
         basic_PVE,
         version.id,
-        opmerkingen,
+        annotations,
         attachments,
-        reacties,
+        replies,
         reactieattachments,
         parameters,
         geaccepteerde_regels_ids,
