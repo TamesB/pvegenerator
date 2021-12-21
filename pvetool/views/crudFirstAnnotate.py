@@ -13,6 +13,7 @@ from pvetool.forms import (
 )
 from pvetool.views.utils import GetAWSURL
 from pvetool.views import hardcoded_values
+from pvetool.models import CommentRequirement
 
 # the URL map for whether a chapter has paragraphs or not
 has_paragraphs = {
@@ -353,9 +354,11 @@ def DetailAnnotationFirst(request, client_pk, project_pk, item_pk):
     # manual input as to what statuses allow comments / attachments    
     if annotation:
         if annotation.status:
-            if annotation.status.status in hardcoded_values.allowed_comments():
+            requirement_obj = CommentRequirement.objects.get(version__pk=project.pve_versie.pk)
+            
+            if annotation.status.status in requirement_obj.comment_allowed.all():
                 context["comment_allowed"] = True
-            if annotation.status.status in hardcoded_values.allowed_attachments():
+            if annotation.status.status in requirement_obj.attachment_allowed.all():
                 context["attachment_allowed"] = True
 
     context["client_pk"] = client_pk
@@ -515,9 +518,13 @@ def AddStatusFirst(request, client_pk, project_pk, item_pk):
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
             if annotation:
-                if form.cleaned_data["status"] not in hardcoded_values.allowed_comments():
+                requirement_obj = CommentRequirement.objects.get(version__pk=project.pve_versie.pk)
+                comment_allowed = [obj.status for obj in requirement_obj.comment_allowed.all()]
+                attachment_allowed = [obj.status for obj in requirement_obj.attachment_allowed.all()]
+                
+                if form.cleaned_data["status"] not in comment_allowed:
                     annotation.annotation = None
-                if form.cleaned_data["status"] not in hardcoded_values.allowed_attachments():
+                if form.cleaned_data["status"] not in attachment_allowed:
                     annotation.attachment = False
 
                 annotation.status = form.cleaned_data["status"]

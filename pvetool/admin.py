@@ -6,7 +6,8 @@ from pvetool.models import (
     CommentReply,
     CommentStatus,
     FrozenComments,
-    Room
+    Room,
+    CommentRequirement
 )
 
 # Register your models here.
@@ -16,3 +17,4 @@ admin.site.register(CommentStatus)
 admin.site.register(FrozenComments)
 admin.site.register(CommentReply)
 admin.site.register(BijlageToReply)
+admin.site.register(CommentRequirement)

@@ -8,7 +8,7 @@ import decimal
 from app import models
 from project.models import Project, PVEItemAnnotation, Beleggers
 from pvetool import forms
-from pvetool.models import BijlageToReply, CommentReply, FrozenComments
+from pvetool.models import BijlageToReply, CommentReply, FrozenComments, CommentRequirement
 from pvetool.views.utils import GetAWSURL
 from pvetool.views import hardcoded_values
 
@@ -517,9 +517,13 @@ def DetailReplyPong(request, client_pk, project_pk, item_pk, type):
     # manual input as to what statuses allow comments / attachments    
     if reply:
         if reply.status:
-            if reply.status.status in hardcoded_values.allowed_comments():
+            requirement_obj = CommentRequirement.objects.get(version__pk=project.pve_versie.pk)
+            comment_allowed = [obj.status for obj in requirement_obj.comment_allowed.all()]
+            attachment_allowed = [obj.status for obj in requirement_obj.attachment_allowed.all()]
+
+            if reply.status.status in comment_allowed:
                 context["comment_allowed"] = True
-            if reply.status.status in hardcoded_values.allowed_attachments():
+            if reply.status.status in attachment_allowed:
                 context["attachment_allowed"] = True
         elif not reply.accept:
             context["comment_allowed"] = True
@@ -930,9 +934,13 @@ def AddStatusPong(request, client_pk, project_pk, item_pk, type):
                 )
 
             if reply:
-                if form.cleaned_data["status"] not in hardcoded_values.allowed_comments():
+                requirement_obj = CommentRequirement.objects.get(version__pk=project.pve_versie.pk)
+                comment_allowed = [obj.status for obj in requirement_obj.comment_allowed.all()]
+                attachment_allowed = [obj.status for obj in requirement_obj.attachment_allowed.all()]
+
+                if form.cleaned_data["status"] not in comment_allowed:
                     reply.comment = None
-                if form.cleaned_data["status"] not in hardcoded_values.allowed_attachments():
+                if form.cleaned_data["status"] not in attachment_allowed:
                     reply.attachment = False
                     reply.attachmenttoreply.all().delete()
                     

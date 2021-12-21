@@ -165,6 +165,12 @@ urlpatterns = [
         views.deleteparameterchoiceView,
         name="parameterchoicedelete",
     ),
+    path(
+        "commentpermissions/<int:version_pk>",
+        views.EditCommentPermissionsOverview,
+        name="editcommentpermissionsoverview",
+    ),
+    
     path("heatmap", views.projectHeatmap, name="projectheatmap"),
     path("accounts", views.AccountOverview, name="accountoverview"),
 ]

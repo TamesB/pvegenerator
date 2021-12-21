@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from project.models import Project, PVEItemAnnotation, Beleggers
 from pvetool.forms import FirstFreezeForm
-from pvetool.models import CommentReply, FrozenComments
+from pvetool.models import CommentReply, FrozenComments, CommentRequirement
 from pvetool.views.utils import GetAWSURL
 from pvetool.views import hardcoded_values
 
@@ -42,6 +42,7 @@ def FirstFreeze(request, client_pk, pk):
 
         if form.is_valid():
             if form.cleaned_data["confirm"]:
+                requirement_obj = CommentRequirement.objects.get(version__pk=project.pve_versie.pk)
                 
                 changed_comments = project.annotation.select_related("item").all()
 
@@ -53,7 +54,7 @@ def FirstFreeze(request, client_pk, pk):
                     if not comment.accept:
                         if comment.status:
                             # if new status and reply has no attachments/comment
-                            if comment.status.status in hardcoded_values.allowed_comments():
+                            if comment.status in requirement_obj.comment_allowed.all():
                                 if not comment.annotation and not comment.attachmentobject.all():
                                     false_comments.append(comment)
                         # if not accepted, no statuschange and no comments/attachments/cost change

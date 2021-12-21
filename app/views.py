@@ -16,6 +16,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.core.mail import send_mail
 from pvetool.views.utils import GetAWSURL
+from pvetool.models import CommentRequirement
 from project.models import Beleggers, Project, BeheerdersUitnodiging
 from utils import writeExcel
 from users.models import CustomUser
@@ -561,6 +562,16 @@ def AddPvEVersie(request, client_pk):
                 for i, j in zip(new_attachments, cur_items_obj):
                     i.items.clear()
                     i.items.add(*j)
+                    
+                # copy the comment permissions
+                old_comment_requirements = CommentRequirement.objects.get(version__id=version_copy.id)
+                
+                new_comment_requirements = CommentRequirement()
+                new_comment_requirements.version = new_version_obj
+                new_comment_requirements.comment_allowed.add(*[obj for obj in old_comment_requirements.comment_allowed.all()])
+                new_comment_requirements.comment_required.add(*[obj for obj in old_comment_requirements.comment_required.all()])
+                new_comment_requirements.attachment_allowed(*[obj for obj in old_comment_requirements.attachment_allowed.all()])
+                new_comment_requirements.save()
 
             return redirect("pveversietable", client_pk=client_pk)
 
@@ -1665,3 +1676,13 @@ def AccountOverview(request):
     context = {}
     context["clients"] = clients
     return render(request, "accountOverview.html", context)
+
+
+@staff_member_required(login_url=reverse_lazy("logout"))
+def EditCommentPermissionsOverview(request, version_pk):
+    qs = CommentRequirement.objects.get(version__id=version_pk)
+    context = {}
+    context["version_pk"] = version_pk
+    context["version"] = models.PVEVersie.objects.get(id=version_pk)
+    context["qs"] = qs
+    return render(request, "editCommentPermissionsOverview.html", context)

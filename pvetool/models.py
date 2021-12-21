@@ -3,7 +3,7 @@ from django.db import models
 
 from project.models import Project, PVEItemAnnotation, CostType
 from users.models import CustomUser
-
+from app.models import PVEVersie
 
 class Room(models.Model):
     """Represents chat rooms that users can join"""
@@ -92,3 +92,12 @@ class BijlageToReply(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+    
+class CommentRequirement(models.Model):
+    version = models.ForeignKey(PVEVersie, on_delete=models.SET_NULL, null=True)
+    comment_allowed = models.ManyToManyField(CommentStatus, related_name="comment_allowed")
+    comment_required = models.ManyToManyField(CommentStatus, related_name="comment_required")
+    attachment_allowed = models.ManyToManyField(CommentStatus, related_name="attachment_allowed")
+    
+    def __str__(self):
+        return f"{self.version}: Comment allowed: {self.comment_allowed}, Attachment allowed: {self.attachment_allowed}, Comment required: {self.comment_required}"
