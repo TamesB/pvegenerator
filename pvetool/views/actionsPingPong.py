@@ -78,7 +78,7 @@ def FirstFreeze(request, client_pk, pk):
                                    {" / ".join([string for string in string_list])}.
                                    """)
                     
-                    return redirect("plusopmerking_syn", client_pk=client_pk, proj_id=pk)
+                    return redirect("plusopmerking_syn", client_pk=client_pk, pk=pk)
 
                 # freeze opmerkingen op niveau 1
                 project.frozenLevel = 1

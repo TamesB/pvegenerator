@@ -15,149 +15,155 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.core.mail import send_mail
+from django.views import View
+from django.views.generic import FormView, TemplateView
 from pvetool.views.utils import GetAWSURL
 from pvetool.models import CommentRequirement
 from project.models import Beleggers, Project, BeheerdersUitnodiging
 from utils import writeExcel
 from users.models import CustomUser
-from . import forms, models
+from . import forms, models, mixins
 import secrets
 from django.utils import timezone
 import time
-
-def LoginPageView(request):
-    # cant see lander page if already logged in
-    if request.user:
-        if request.user.is_authenticated:
-            return redirect("dashboard")
-
-    form = forms.LoginForm(request.POST or None)
-
-    if request.method == "POST":
+class LoginPageView(View):
+    form_class = forms.LoginForm
+    template_name = "login.html"
+    
+        
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_anonymous:
+            if request.user.is_authenticated:
+                return redirect("dashboard")
+        
+        return render(request, self.template_name, context={"form": self.form_class})
+    
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST or None)
         if form.is_valid():
-            (username, password) = (
-                form.cleaned_data["username"],
-                form.cleaned_data["password"],
-            )
-            
-            if "@" in username:
-                email = username.split("@")
-                email = email[0]
-
-                user_check = CustomUser.objects.filter(username=email)
-
+            if "@" in form.cleaned_data["username"]:
+                email = form.cleaned_data["username"].split("@")[0]
+                user_check = CustomUser.objects.filter(username__iexact=email)
+                
                 if user_check.exists():
                     user_check = user_check.first()
-                    user = authenticate(request, username=email, password=password)
+                    
+                    user = authenticate(request, username=email, password=form.cleaned_data["password"])
                 else:
                     messages.warning(request, "Foute login credentials.")
             else:
-                user = authenticate(request, username=username, password=password)
-
-            if user is not None:
+                user = authenticate(request, username=form.cleaned_data["username"], password=form.cleaned_data["password"])
+            
+            if user:
                 login(request, user)
                 return redirect("dashboard")
             else:
                 messages.warning(request, "Foute login credentials.")
         else:
             messages.warning(request, "Vul de verplichte velden in.")
-
-    # render the page
-    context = {}
-    context["form"] = forms.LoginForm()
-
-    return render(request, "login.html", context)
-
-
-def LogoutView(request):
-    logout(request)
-    return redirect("login")
-
-@staff_member_required(login_url=reverse_lazy("logout"))
-def DashboardView(request):
-        
-    hour = datetime.datetime.utcnow().hour + 2  # UTC + 2 = CEST
-
-    greeting = ""
-    if hour > 3 and hour < 12:
-        greeting = "Goedemorgen"
-    if hour >= 12 and hour < 18:
-        greeting = "Goedemiddag"
-    if hour >= 18 and hour <= 24:
-        greeting = "Goedenavond"
-    if hour <= 3 and hour >= 0:
-        greeting = "Goedenacht"
-
-    if greeting == "":
-        greeting = "Goedendag"
-
-    context = {}
-    context["greeting"] = greeting
-
-    pve_activities = models.Activity.objects.filter(activity_type="PvE")[0:5]
-    project_activities = models.Activity.objects.filter(activity_type="P")[0:5]
-    client_activities = models.Activity.objects.filter(activity_type="K")[0:5]     
+            
+        return render(request, self.template_name, context={"form": self.form_class})
     
-    context["project_activities"] = project_activities
-    context["client_activities"] = client_activities
-    context["pve_activities"] = pve_activities
-
-    if pve_activities.count() > 5:
-        context["pve_activities"] = pve_activities[0:4]
-    if client_activities.count() > 5:
-        context["client_activities"] = client_activities[0:4]
-    if project_activities.count() > 5:
-        context["project_activities"] = project_activities[0:4]
-
-    if Project.objects.filter(permitted__username__contains=request.user.username):
-        projects = Project.objects.filter(
-            permitted__username__contains=request.user.username
-        )
-        context["projects"] = projects
-
-    if request.user.type_user == "B":
-        return render(request, "adminDashboard.html", context)
-
-
-    return render(request, "dashboard.html", context)
-
-@staff_member_required(login_url=reverse_lazy("logout"))
-def KlantOverzicht(request):
-    clients = Beleggers.objects.all()
-
-    context = {}
-    context["clients"] = clients
-    return render(request, 'clientsOverzicht.html', context)
-
-@staff_member_required(login_url=reverse_lazy("logout"))
-def KlantVerwijderen(request, client_pk):
-    client = Beleggers.objects.get(id=client_pk)
-    name = client.name
-
-    if request.headers["HX-Prompt"] == "VERWIJDEREN":
-        client.delete()
-        messages.warning(request, f"Klant: {name} succesvol verwijderd!")
-        return HttpResponse("")
-    else:
-        messages.warning(request, f"Onjuiste invulling. Probeer het opnieuw.")
-        return HttpResponse("")
-
-@staff_member_required(login_url=reverse_lazy("logout"))
-def GetLogo(request, client_pk):
-    client = Beleggers.objects.get(id=client_pk)
-        
-    logo_url = None
     
-    if client.logo:
-        logo_url = GetAWSURL(client)
+class LogoutView(View):
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect("login")
+    
+class DashboardView(mixins.LogoutIfNotStaffMixin, TemplateView):
+    template_name = "adminDashboard.html"
+    
+    def get(self, request, *args, **kwargs):        
+        return render(request, self.template_name, context=self.get_context_data(request))
+    
+    def get_context_data(self, request, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["greeting"] = self.get_greeting()
+        context["pve_activities"], context["client_activities"], context["project_activities"] = self.get_activities()
+        return context    
+    
+    def get_greeting(self):
+        hour = datetime.datetime.utcnow().hour + 2  # UTC + 2 = CEST
 
-    context = {}
-    context["client"] = client
-    context["client_pk"] = client_pk
-    context["logo_url"] = logo_url
-    return render(request, "partials/getlogoclient.html", context)
+        greeting = ""
+        if hour > 3 and hour < 12:
+            greeting = "Goedemorgen"
+        if hour >= 12 and hour < 18:
+            greeting = "Goedemiddag"
+        if hour >= 18 and hour <= 24:
+            greeting = "Goedenavond"
+        if hour <= 3 and hour >= 0:
+            greeting = "Goedenacht"
 
-@staff_member_required(login_url=reverse_lazy("logout"))
+        if greeting == "":
+            greeting = "Goedendag"
+            
+        return greeting
+
+    def get_activities(self):
+        pve_activities = models.Activity.objects.filter(activity_type="PvE")[0:5]
+        project_activities = models.Activity.objects.filter(activity_type="P")[0:5]
+        client_activities = models.Activity.objects.filter(activity_type="K")[0:5]     
+        
+        if pve_activities.count() > 5:
+            pve_activities = pve_activities[0:4]
+        if client_activities.count() > 5:
+            client_activities = client_activities[0:4]
+        if project_activities.count() > 5:
+            project_activities = project_activities[0:4]
+            
+        return pve_activities, client_activities, project_activities
+    
+class KlantOverzicht(mixins.LogoutIfNotStaffMixin, TemplateView):
+    template_name = "clientsOverzicht.html"
+    
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, context=self.get_context_data())
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["clients"] = self.clients()
+        return context
+    
+    def clients(self):
+        return Beleggers.objects.all()
+        
+class KlantVerwijderen(mixins.LogoutIfNotStaffMixin, TemplateView):    
+    def post(self, request, *args, **kwargs):
+        if request.headers["HX-Prompt"] == "VERWIJDEREN":
+            client = self.client()
+            messages.warning(request, f"Klant: {client.name} succesvol verwijderd!")
+            client.delete()
+            return HttpResponse("")
+        else:
+            messages.warning(request, f"Onjuiste invulling. Probeer het opnieuw.")
+            return HttpResponse("")
+    
+    def client(self, **kwargs):
+        return Beleggers.objects.get(pk=self.kwargs['client_pk'])
+
+class GetLogo(mixins.LogoutIfNotStaffMixin, TemplateView):
+    template_name = 'partials/getlogoclient.html'
+    
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, context=self.get_context_data())
+    
+    def get_context_data(self, **kwargs):
+        context = super(GetLogo, self).get_context_data(**kwargs)
+        context['client'], context['logo_url'] = self.get_logo()
+        context["client_pk"] = self.kwargs['client_pk']
+        return context
+        
+    def get_logo(self, **kwargs):
+        client = Beleggers.objects.get(id=self.kwargs['client_pk'])
+
+        logo_url = None
+        
+        if client.logo:
+            logo_url = GetAWSURL(client)
+            
+        return client, logo_url
+
 def LogoKlantForm(request, client_pk):
     client = Beleggers.objects.get(id=client_pk)
 

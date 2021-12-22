@@ -177,20 +177,6 @@ window.addEventListener("load",function(){
 
 },false);
 
-{% for message in messages %}
-$(document).ready(function() {
-$.uiAlert({
-textHead: 'Info', // header
-text: '{{ message }}', // Text
-bgcolor: '#55a9ee', // background-color
-textcolor: '#fff', // color
-position: 'bottom-left',// position . top And bottom ||  left / center / right
-icon: 'info circle', // icon in semantic-UI
-time: 8, // time
-  })
-});
-{% endfor %}
-
 </script>
 
 {% include 'partials/messages.html' %}

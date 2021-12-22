@@ -6,16 +6,16 @@ from . import views
 
 # Urls for the specific app
 urlpatterns = [
-    path("", views.LoginPageView, name="login"),
-    path("dashboard", views.DashboardView, name="dashboard"),
-    path("clients", views.KlantOverzicht, name="clientoverzicht"),
+    path("", views.LoginPageView.as_view(), name="login"),
+    path("dashboard", views.DashboardView.as_view(), name="dashboard"),
+    path("clients", views.KlantOverzicht.as_view(), name="clientoverzicht"),
     path("clients/add", views.KlantToevoegen, name="clienttoevoegen"),
-    path("clients/<int:client_pk>/delete", views.KlantVerwijderen, name="clientverwijderen"),
-    path("clients/logo/<int:client_pk>", views.GetLogo, name="logoclientdetail"),
+    path("clients/<int:client_pk>/delete", views.KlantVerwijderen.as_view(), name="clientverwijderen"),
+    path("clients/logo/<int:client_pk>", views.GetLogo.as_view(), name="logoclientdetail"),
     path("clients/logo/<int:client_pk>/add", views.LogoKlantForm, name="logoclientform"),
     path("clients/beheerder/<int:client_pk>", views.GetBeheerderKlant, name="getbeheerderclient"),
     path("clients/beheerder/<int:client_pk>/add", views.BeheerderKlantForm, name="beheerderclientform"),
-    path("logout", views.LogoutView, name="logout"),
+    path("logout", views.LogoutView.as_view(), name="logout"),
 
     path(
         "clientsversie",
