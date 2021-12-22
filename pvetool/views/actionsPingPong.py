@@ -51,19 +51,14 @@ def FirstFreeze(request, client_pk, pk):
                 false_comments = []
                 
                 for comment in changed_comments:
-                    if not comment.accept:
-                        if comment.status:
-                            # if new status and reply has no attachments/comment
-                            if comment.status in requirement_obj.comment_allowed.all():
-                                if not comment.annotation and not comment.attachmentobject.all():
-                                    false_comments.append(comment)
-                        # if not accepted, no statuschange and no comments/attachments/cost change
-                        else:
-                            if not comment.annotation and not comment.attachment and not comment.consequentCosts:
+                    if comment.status:
+                        # if new status and reply has no attachments/comment
+                        if comment.status in requirement_obj.comment_allowed.all():
+                            if not comment.annotation and not comment.attachmentobject.all():
                                 false_comments.append(comment)
-                    # if accepted, and reply has comment/attachment/changedstatus (for the hackers out there)
+                    # if not accepted, no statuschange and no comments/attachments/cost change
                     else:
-                        if comment.annotation or comment.attachment or comment.status:
+                        if not comment.annotation and not comment.attachment and not comment.consequentCosts:
                             false_comments.append(comment)
                             
                 if false_comments:
