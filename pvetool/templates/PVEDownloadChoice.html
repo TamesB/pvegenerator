@@ -1,0 +1,37 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+
+{% block menu %}
+{% include 'MenuTypes.html' %}
+{% endblock %}
+
+{% block main %}
+
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+    <a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
+      <i class="right chevron icon divider"></i>
+      <a class="section" href="{% url 'viewprojectoverview_syn' client_pk %}">Mijn Projecten</a>
+      <i class="right chevron icon divider"></i>
+      <a class="section" href="{% url 'viewproject_syn' client_pk pk %}">Project: {{ project.name }}</a>
+      <i class="right chevron icon divider"></i>
+      <div class="active section">Statuskeuze</div>
+    </div>
+<div class="general_title"><img src="{% static 'pvetool/svg/user-plus-blue-big.svg' %}" class="title_img"></img>
+    <p>Kies statussen...</p></div>
+<div class="invite-container">
+    <div class="box">
+        <p class="description">Kies de regels met de volgende status(sen) die u wil genereren.</p>
+        <form action="{% url 'pvelastdownload' client_pk pk %}" method="post">
+            {% csrf_token %}
+            <label class="formtitle" for="{{ form.statuses.id_for_label }}"><p>Status(sen) (CTRL+Linkermuisknop voor meerdere kiezen):</p></label>
+            <p class="formbox">{{ form.statuses }}</p>
+            <input type="submit" class="button" value="Genereer">
+        </form>    
+    </div>
+</div>
+
+{% endblock %}

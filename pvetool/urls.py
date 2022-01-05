@@ -158,4 +158,8 @@ urlpatterns = [
     
     # final freeze after every comment is accepted.
     path("<int:client_pk>/project/<int:pk>/finalfreeze", actionsPingPong.FinalFreeze, name="finalfreeze_syn"),
+
+    # Choose the accepted statuses and generate a PvE with these choices.
+    path("<int:client_pk>/project/<int:pk>/lastpvechoice", actionsProject.final_pve_download_choice, name="pvelastdownload"),
+
 ]

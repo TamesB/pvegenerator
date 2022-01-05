@@ -1,0 +1,41 @@
+{% extends "layout_syn.html" %}
+
+{% load semanticui %}
+{% load static %}
+{% load custom_tags %}
+
+{% block menu %}
+{% include 'MenuTypes.html' %}
+{% endblock %}
+
+{% block main %}
+<div class="ui breadcrumb" style="margin-bottom:3vh;">
+<a class="section" href="{% url 'dashboard_syn' client_pk %}">Dashboard</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewprojectoverview_syn' client_pk %}">Mijn Projecten</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'viewproject_syn' client_pk pk %}">Project: {{ project.name }}</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="{% url 'pvelastdownload' client_pk pk %}">Kies statussen</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">PvE Download</div>
+</div>
+
+<div class="generate_result_box">
+    <div class="box">
+        <h1>PvE met statussen: {% for status in statuses %}{{ status.status }}, {% endfor %}</h1>
+        {% if itemsPVE %}
+        <form action="{% url 'download' filename %}" target="_blank">
+            <input class="button" type="submit" value="Open als PDF" />
+        </form>
+        {% if zipFilename %}
+        <form action="{% url 'downloadattachments' zipFilename %}" target="_blank">
+            <input class="button" type="submit" value="Download PvE + Bijlagen (.zip)" />
+        </form>
+        {% endif %}
+        {% else %}
+        <p>Geen regels met deze parameters. Bewerk de parameters of neem contact op met de systeembeheerder.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -10,7 +10,7 @@ from django.urls import reverse_lazy
 from app import models
 from project.models import BijlageToAnnotation, Project, PVEItemAnnotation, Beleggers
 from pvetool import forms
-from pvetool.models import BijlageToReply, CommentReply, FrozenComments
+from pvetool.models import BijlageToReply, CommentReply, FrozenComments, CommentStatus
 from utils import createBijlageZip, writePdf
 from pvetool.views.utils import GetAWSURL
 import decimal
@@ -598,12 +598,13 @@ def download_pve(request, client_pk, pk):
         .exclude(commentphase=project.phase.first())
         .order_by("date")
     )
-
+    replies_dict = {}
+    
     for reply in replies:
-        if reply.onComment.item.id in replies.keys():
-            replies[reply.onComment.item.id].append(reply)
+        if reply.onComment.item.id in replies_dict.keys():
+            replies_dict[reply.onComment.item.id].append(reply)
         else:
-            replies[reply.onComment.item.id] = [reply]
+            replies_dict[reply.onComment.item.id] = [reply]
         if reply.attachment:
             attachmentsqs = BijlageToReply.objects.filter(reply=reply)
             for attachment in attachmentsqs:
@@ -639,7 +640,7 @@ def download_pve(request, client_pk, pk):
         version.id,
         annotations,
         attachments,
-        replies,
+        replies_dict,
         reactieattachments,
         parameters,
         geaccepteerde_regels_ids,
@@ -689,3 +690,210 @@ def download_pve(request, client_pk, pk):
     else:
         return render(request, "PVEResult_syn.html", context)
         
+        
+@login_required(login_url=reverse_lazy("login_syn",  args={1,},))
+def final_pve_download_choice(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    client = Beleggers.objects.filter(pk=client_pk).first()
+    logo_url = None
+    if client.logo:
+        logo_url = GetAWSURL(client)
+
+    if request.user.client:
+        if (
+            request.user.client.id != client.id
+            and request.user.type_user != "B"
+        ):
+            return redirect("logout_syn", client_pk=client_pk)
+    else:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if request.user.type_user != "B":
+        if not Project.objects.filter(
+            id=pk, permitted__username__iregex=r"\y{0}\y".format(request.user.username)
+        ).exists():
+            raise Http404("404")
+
+    project = get_object_or_404(Project, id=pk)
+    if project.client != client:
+        return redirect("logout_syn", client_pk=client_pk)
+
+    # project has to be fully frozen before doing this.
+    if not project.fullyFrozen:
+        return redirect("logout_syn", client_pk=client_pk)
+    
+    form = forms.FinalPvEDownloadChoices(request.POST or None)
+    form.fields["statuses"].queryset = CommentStatus.objects.all()
+    
+    context = {}
+    context["client_pk"] = client_pk
+    context["pk"] = pk
+    context["form"] = form
+    context["logo_url"] = logo_url
+    
+    if request.method == "GET":
+        return render(request, "PVEDownloadChoice.html", context)
+
+    if request.method == "POST":
+        if form.is_valid():
+            version = project.pve_versie
+            statuses = form.cleaned_data["statuses"]
+            
+            annotations_list = []
+            
+            for status in statuses:
+                annotations = status.annotation.all().select_related("item").select_related("item__chapter").select_related("item__paragraph").select_related("status").select_related("user").filter(project=project)
+                annotations_list += annotations
+                
+            basic_PVE = [annotation.item for annotation in annotations_list]
+
+            # make pdf
+            parameters = []
+
+            parameters += (f"Project: {project.name}. ", f"Status(sen): {', '.join([status.status for status in statuses])}")
+
+            date = datetime.datetime.now()
+
+            fileExt = "%s%s%s%s%s%s" % (
+                date.strftime("%H"),
+                date.strftime("%M"),
+                date.strftime("%S"),
+                date.strftime("%d"),
+                date.strftime("%m"),
+                date.strftime("%Y"),
+            )
+
+            filename = f"PvE-{fileExt}"
+            zipFilename = f"PvE_Compleet-{fileExt}"
+
+            # annotations in kleur naast de regels
+            annotations = {}
+            attachments = {}
+            replies = {}
+            reactieattachments = {}
+            costs = 0
+
+            comments = annotations_list
+            
+            for annotation in comments:
+                annotations[annotation.item.id] = annotation
+                
+                # add to total costs
+                if annotation.consequentCosts:
+                    if annotation.costtype:
+                        if annotation.costtype.type == "per VHE":
+                            costs += decimal.Decimal(project.vhe) * annotation.consequentCosts
+                        else:
+                            costs += annotation.consequentCosts
+                    else:
+                        costs += annotation.consequentCosts
+                        
+                # add attachments
+                if annotation.attachment:
+                    attachmentsqs = BijlageToAnnotation.objects.filter(ann=annotation)
+                    for attachment in attachmentsqs:
+                        if attachment.attachment:
+                            if annotation.item.id in attachments.keys():
+                                attachments[annotation.item.id].append(attachment)
+                            else:
+                                attachments[annotation.item.id] = [attachment]
+
+            replies = (
+                CommentReply.objects.select_related("user")
+                .select_related("onComment")
+                .select_related("onComment__item")
+                .filter(onComment__in=comments)
+                .exclude(commentphase=project.phase.first())
+                .order_by("date")
+            )
+            replies_dict = {}
+            
+            for reply in replies:
+                if reply.onComment.item.id in replies_dict.keys():
+                    replies_dict[reply.onComment.item.id].append(reply)
+                else:
+                    replies_dict[reply.onComment.item.id] = [reply]
+                if reply.attachment:
+                    attachmentsqs = BijlageToReply.objects.filter(reply=reply)
+                    for attachment in attachmentsqs:
+                        if attachment.attachment:
+                            if reply.id in reactieattachments.keys():
+                                reactieattachments[reply.id].append(attachment)
+                            else:
+                                reactieattachments[reply.id] = [attachment]
+
+            geaccepteerde_regels_ids = []
+
+            if project.frozenLevel > 0:
+                commentphase = FrozenComments.objects.filter(
+                    project=project, level=project.frozenLevel
+                ).first()
+                geaccepteerde_regels_ids = [
+                    accepted_id.id for accepted_id in commentphase.accepted_comments.all()
+                ]
+
+            pdfmaker = writePdf.PDFMaker(version.version, logo_url)
+
+            # verander CONCEPT naar DEFINITIEF als het project volbevroren is.
+            if project.fullyFrozen:
+                pdfmaker.Topright = "DEFINITIEF"
+            else:
+                pdfmaker.Topright = f"CONCEPT SNAPSHOT {date.strftime('%d')}-{date.strftime('%m')}-{date.strftime('%Y')}"
+                pdfmaker.TopRightPadding = 75
+
+            pdfmaker.kostenverschil = costs
+            pdfmaker.makepdf(
+                filename,
+                basic_PVE,
+                version.id,
+                annotations,
+                attachments,
+                replies_dict,
+                reactieattachments,
+                parameters,
+                geaccepteerde_regels_ids,
+            )
+
+            # get attachments
+            attachments_models = models.ItemBijlages.objects.all()
+            attachmentspve = []
+
+            for attachment_model in attachments_models:
+                for item in attachment_model.items.all():
+                    if item in basic_PVE:
+                        attachmentspve.append(attachment_model)
+
+            attachmentspve = list(set(attachmentspve))
+
+            if BijlageToAnnotation.objects.filter(ann__in=comments).exists():
+                attachments_ann = BijlageToAnnotation.objects.filter(ann__in=comments)
+                for item in attachments_ann:
+                    if item.attachment:
+                        attachmentspve.append(item)
+
+            if BijlageToReply.objects.filter(reply__onComment__in=comments).exists():
+                replyattachments = BijlageToReply.objects.filter(reply__onComment__in=comments)
+                for attachment in replyattachments:
+                    if attachment.attachment:
+                        attachmentspve.append(attachment)
+
+            if attachmentspve:
+                zipmaker = createBijlageZip.ZipMaker()
+                zipmaker.makeZip(zipFilename, filename, attachmentspve)
+            else:
+                zipFilename = False
+
+            # and render the result page
+            context = {}
+            context["itemsPVE"] = basic_PVE
+            context["statuses"] = statuses
+            context["filename"] = filename
+            context["zipFilename"] = zipFilename
+            context["project"] = project
+            context["pk"] = pk
+            context["client_pk"] = client_pk
+            context["client"] = client
+            context["logo_url"] = logo_url
+            return render(request, "PVEFinalResult.html", context)

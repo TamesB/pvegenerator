@@ -449,3 +449,19 @@ class BijlageToReplyForm(ModelForm):
             "attachment": "Bijlage:",
         }
         widgets = {"reply": forms.HiddenInput()}
+
+class FinalPvEDownloadChoices(forms.Form):
+    statuses = forms.ModelMultipleChoiceField(
+        queryset=CommentStatus.objects.none(), label="Status(sen):"
+    )
+    
+    class Meta:
+        widgets = {
+            "statuses": forms.SelectMultiple(
+                attrs={"class": "ui dropdown"},
+            ),
+        }
+            
+    def __init__(self, *args, **kwargs):
+        super(FinalPvEDownloadChoices, self).__init__(*args, **kwargs)
+        self.fields["statuses"].required = True
