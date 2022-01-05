@@ -8,7 +8,7 @@ import decimal
 from app import models
 from project.models import Project, PVEItemAnnotation, Beleggers
 from pvetool import forms
-from pvetool.models import BijlageToReply, CommentReply, FrozenComments, CommentRequirement
+from pvetool.models import BijlageToReply, CommentReply, FrozenComments, CommentRequirement, CommentStatus
 from pvetool.views.utils import GetAWSURL
 from pvetool.views import hardcoded_values
 
@@ -125,24 +125,79 @@ def CheckComments(request, client_pk, proj_id):
         .all()
     )
 
-    chapters_non_accept = make_chapters(non_accepted_comments)
+    # accepted comments and todo comments are tabs. Get chapters and replies of these.
     chapters_accept = make_chapters(accepted_comments)
     chapters_todo = make_chapters(todo_comments)
 
-    non_accepted_hfst_replies = {chapter.id: 0 for chapter in chapters_non_accept}
     accepted_hfst_replies = {chapter.id: 0 for chapter in chapters_accept}
     todo_hfst_replies = {chapter.id: 0 for chapter in chapters_todo}
 
-    non_accepted_replies = current_phase.reply.select_related("onComment__item__chapter").filter(onComment__in=non_accepted_comments)
     accepted_replies = current_phase.reply.select_related("onComment__item__chapter").filter(onComment__in=accepted_comments)
     todo_replies = current_phase.reply.select_related("onComment__item__chapter").filter(onComment__in=todo_comments)
     
-    for reply in non_accepted_replies:
-        chapter = reply.onComment.item.chapter.id
-        if chapter in non_accepted_hfst_replies:
-            non_accepted_hfst_replies[chapter] += 1
+    # Get all the possible statuses
+    status_objs = CommentStatus.objects.all()
+    
+    status_tabs = []
+    
+    # reduce some statuses to a single status (preserve tab space on-screen)
+    for status in status_objs:
+        if status.status in hardcoded_values.later_status_category():
+            if hardcoded_values.later_status_category_name() not in status_tabs:
+                status_tabs.append(hardcoded_values.later_status_category_name())
         else:
-            non_accepted_hfst_replies[chapter] = 1
+            status_tabs.append(status.status)
+    
+    # create chapters and replies for each status
+    chapters_statuses = {status:None for status in status_tabs}
+    replies_statuses = {status:None for status in status_tabs}
+    status_hfst_replies = {status:None for status in status_tabs}
+    status_hfst_count = {status:None for status in status_tabs}
+    
+    non_accepted_comments_breakdown = {status:None for status in status_tabs}
+    
+    # set these comments/make these chapters
+    for status in status_objs:
+        
+        # reduce some statuses to a single status
+        status_obj = status
+        status = status.status
+        
+        if status in hardcoded_values.later_status_category():
+            status = hardcoded_values.later_status_category_name()
+        
+        # calculate comments
+        if non_accepted_comments_breakdown[status]:
+            non_accepted_comments_breakdown[status].union(non_accepted_comments.filter(status=status_obj))
+        else:
+            non_accepted_comments_breakdown[status] = non_accepted_comments.filter(status=status_obj)
+            
+        # calculate chapters
+        if chapters_statuses[status]:
+            chapters_statuses[status] = {**chapters_statuses[status], **make_chapters(non_accepted_comments_breakdown[status])}
+        else:
+            chapters_statuses[status] = make_chapters(non_accepted_comments_breakdown[status])
+        
+        # calculate replies to these comments
+        if replies_statuses[status]:
+            replies_statuses[status].union(current_phase.reply.select_related("onComment__item__chapter").filter(onComment__in=non_accepted_comments_breakdown[status]))
+        else:
+            replies_statuses[status] = current_phase.reply.select_related("onComment__item__chapter").filter(onComment__in=non_accepted_comments_breakdown[status])
+            
+        # calculate number of replies replies per chapter
+        if status_hfst_replies[status]:
+            status_hfst_replies[status] = {**status_hfst_replies[status], **{chapter.id: 0 for chapter in chapters_statuses[status]}}
+        else: 
+            status_hfst_replies[status] = {chapter.id: 0 for chapter in chapters_statuses[status]}
+
+    # count amount of replies for each statustab and each chapter
+    for status in status_tabs:
+        for reply in replies_statuses[status]:
+            chapter = reply.onComment.item.chapter.id
+            if chapter in status_hfst_replies[status].keys():
+                status_hfst_replies[status][chapter] += 1
+            else:
+                status_hfst_replies[status][chapter] = 1
             
     for reply in accepted_replies:
         chapter = reply.onComment.item.chapter.id
@@ -158,12 +213,23 @@ def CheckComments(request, client_pk, proj_id):
         else:
             todo_hfst_replies[chapter] = 1
 
-    non_accepted_hfst_count = {chapter.id: 0 for chapter in chapters_non_accept}
+    # count amount of comments per chapter
+    for status in status_tabs:
+        status_hfst_count[status] = {chapter.id: 0 for chapter in chapters_statuses[status]}
+    
     accepted_hfst_count = {chapter.id: 0 for chapter in chapters_accept}
     todo_hfst_count = {chapter.id: 0 for chapter in chapters_todo}
 
     for comment in non_accepted_comments:
-        non_accepted_hfst_count[comment.item.chapter.id] += 1
+        status = comment.status.status
+        if status in hardcoded_values.later_status_category():
+            status = hardcoded_values.later_status_category_name()
+        
+        try:
+            status_hfst_count[status][comment.item.chapter.id] += 1
+        except KeyError:
+            status_hfst_count[status][comment.item.chapter.id] = 1
+        
     for comment in accepted_comments:
         accepted_hfst_count[comment.item.chapter.id] += 1
     for comment in todo_comments:
@@ -185,19 +251,33 @@ def CheckComments(request, client_pk, proj_id):
             else:
                 totale_kosten += obj.consequentCosts
                 
-    context["chapters_non_accept"] = chapters_non_accept
+    #counting for each dict
+    non_accepted_comments_breakdown_count = {}
+    replies_statuses_count = {}
+    
+    for status in non_accepted_comments_breakdown.keys():
+        non_accepted_comments_breakdown_count[status] = len(non_accepted_comments_breakdown[status])
+    for status in replies_statuses.keys():
+        replies_statuses_count[status] = len(replies_statuses[status])
+                
+    context["status_objs"] = status_objs
+    context["status_tabs"] = status_tabs
+    context["status_to_id"] = hardcoded_values.status_to_id()
+    context["chapters_statuses"] = chapters_statuses #chapters_non_accept
     context["chapters_accept"] = chapters_accept
     context["chapters_todo"] = chapters_todo
-    context["non_accepted_hfst_replies"] = non_accepted_hfst_replies
+    context["status_hfst_replies"] = status_hfst_replies #non_accepted_hfst_replies
     context["accepted_hfst_replies"] = accepted_hfst_replies
     context["todo_hfst_replies"] = todo_hfst_replies
-    context["non_accepted_hfst_count"] = non_accepted_hfst_count
+    context["status_hfst_count"] = status_hfst_count #non_accepted_hfst_count
     context["accepted_hfst_count"] = accepted_hfst_count
     context["todo_hfst_count"] = todo_hfst_count
     context["accepted_comments"] = accepted_comments
     context["todo_comments"] = todo_comments
-    context["non_accepted_comments"] = non_accepted_comments
-    context["non_accepted_replies"] = non_accepted_replies
+    context["non_accepted_comments_breakdown"] = non_accepted_comments_breakdown #non_accepted_comments
+    context["non_accepted_comments_breakdown_count"] = non_accepted_comments_breakdown_count #non_accepted_comments
+    context["replies_statuses"] = replies_statuses #non_accepted_replies
+    context["replies_statuses_count"] = replies_statuses_count #non_accepted_replies
     context["accepted_replies"] = accepted_replies
     context["todo_replies"] = todo_replies
     context["project"] = project
@@ -225,7 +305,7 @@ def make_chapters(comments):
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
-def GetParagravenPingPong(request, client_pk, pk, chapter_pk, type, accept):
+def GetParagravenPingPong(request, client_pk, pk, chapter_pk, type, accept, status_id):
     context = {}
 
     project, current_phase = passed_commentcheck_guardclauses(request, client_pk, pk)
@@ -236,12 +316,18 @@ def GetParagravenPingPong(request, client_pk, pk, chapter_pk, type, accept):
     comments = None
 
     if type == type_map["CHANGED_COMMENTS"]:
+        if status_id in hardcoded_values.later_status_category() or status_id == 0:
+            query_status = hardcoded_values.status_id_later_status()
+        else:
+            query_status = [status_id]
+        
         comments = (
             current_phase.comments.select_related("status")
             .select_related("item")
             .select_related("item__chapter")
             .select_related("item__paragraph")
             .filter(item__chapter__id=chapter_pk)
+            .filter(status__id__in=query_status)
             .order_by("item__id")
             .all()
         )
@@ -277,6 +363,7 @@ def GetParagravenPingPong(request, client_pk, pk, chapter_pk, type, accept):
             paragraphs_ids.append(item.paragraph.id)
     
     context["comments"] = comments
+    context["status_id"] = status_id
     context["items"] = items
     context["type"] = type
     context["paragraphs"] = paragraphs
@@ -287,7 +374,7 @@ def GetParagravenPingPong(request, client_pk, pk, chapter_pk, type, accept):
 
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
-def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraph_id, type, accept):    
+def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraph_id, type, accept, status_id):    
     context = {}
 
     project, current_phase = passed_commentcheck_guardclauses(request, client_pk, pk)
@@ -298,6 +385,11 @@ def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraph_id, type, acc
     comments = None
 
     if type == type_map["CHANGED_COMMENTS"]:
+        if status_id in hardcoded_values.later_status_category() or status_id == 0:
+            query_status = hardcoded_values.status_id_later_status()
+        else:
+            query_status = [status_id]
+
         if paragraph_id == has_paragraphs[False]:
             comments = (
                 current_phase.comments.select_related("status")
@@ -305,6 +397,7 @@ def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraph_id, type, acc
                 .select_related("item__chapter")
                 .select_related("item__paragraph")
                 .filter(item__chapter__id=chapter_pk)
+                .filter(status__id__in=query_status)
                 .order_by("item__id")
                 .all()
             )
@@ -316,6 +409,7 @@ def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraph_id, type, acc
                 .select_related("item__paragraph")
                 .filter(item__chapter__id=chapter_pk)
                 .filter(item__paragraph__id=paragraph_id)
+                .filter(status__id__in=query_status)
                 .order_by("item__id")
                 .all()
             )

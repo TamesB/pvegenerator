@@ -29,7 +29,6 @@ import time
 class LoginPageView(View):
     form_class = forms.LoginForm
     template_name = "login.html"
-    
         
     def get(self, request, *args, **kwargs):
         if not request.user.is_anonymous:
@@ -132,8 +131,13 @@ class KlantVerwijderen(mixins.LogoutIfNotStaffMixin, TemplateView):
     def post(self, request, *args, **kwargs):
         if request.headers["HX-Prompt"] == "VERWIJDEREN":
             client = self.client()
-            messages.warning(request, f"Klant: {client.name} succesvol verwijderd!")
-            client.delete()
+            
+            try:
+                client.delete()
+                messages.warning(request, f"Klant: {client.name} succesvol verwijderd!")
+            except Exception:
+                messages.warning(request, f"Klant: {client.name} fout met verwijderen. Probeer het opnieuw.")
+                
             return HttpResponse("")
         else:
             messages.warning(request, f"Onjuiste invulling. Probeer het opnieuw.")
@@ -715,7 +719,6 @@ def PVEeditchapterView(request, version_pk, pk):
             PVEchapter.chapter = form.cleaned_data["chapter"]
             PVEchapter.save()
             return redirect("chapterview", version_pk=version_pk)
-
 
     chapters = version.chapter.all()
 

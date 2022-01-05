@@ -26,3 +26,11 @@ def previous_one(indexable, i):
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+@register.filter
+def get_item_nested_dict(dictionary, key):
+    return dictionary.get(key).items()
+
+@register.filter
+def get_item_double_nested_dict(dictionary, key):
+    return dictionary.get(key).items()

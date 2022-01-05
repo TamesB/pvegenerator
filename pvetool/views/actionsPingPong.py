@@ -60,7 +60,8 @@ def FirstFreeze(request, client_pk, pk):
                     else:
                         if not comment.annotation and not comment.attachment and not comment.consequentCosts:
                             false_comments.append(comment)
-                            
+                
+                # create a string of all false comment items
                 if false_comments:
 
                     string_list = []

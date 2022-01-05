@@ -121,8 +121,8 @@ urlpatterns = [
 
     # Ping pong process
     path("<int:client_pk>/project/<int:proj_id>/check", crudPingPong.CheckComments, name="commentscheck_syn"),
-    path("<int:client_pk>/getparagraphspingpong/<int:pk>/<int:chapter_pk>/<int:type>/<int:accept>", crudPingPong.GetParagravenPingPong, name="getparagraphspingpong"),
-    path("<int:client_pk>/getitemspingpong/<int:pk>/<int:chapter_pk>/<int:paragraph_id>/<int:type>/<int:accept>", crudPingPong.GetItemsPingPong, name="getitemspingpong"),
+    path("<int:client_pk>/getparagraphspingpong/<int:pk>/<int:chapter_pk>/<int:type>/<int:accept>/<int:status_id>", crudPingPong.GetParagravenPingPong, name="getparagraphspingpong"),
+    path("<int:client_pk>/getitemspingpong/<int:pk>/<int:chapter_pk>/<int:paragraph_id>/<int:type>/<int:accept>/<int:status_id>", crudPingPong.GetItemsPingPong, name="getitemspingpong"),
     
     # first acceptation process per rule
     path("<int:client_pk>/detailpong/<int:project_pk>/<int:item_pk>/<int:type>", crudPingPong.DetailAcceptPong, name="detailpongaccept"),

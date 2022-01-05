@@ -6,8 +6,8 @@
 
 {% block main %}
 {% for paragraph in paragraphs %}
-    <button type="button" hx-get="{% url 'getitemspingpong' client_pk project.id paragraph.chapter.id paragraph.id type accept %}" hx-target="#paragraph_content-{{ type }}-{{ paragraph.chapter.id }}-{{ paragraph.id }}" hx-swap="innerHTML" hx-trigger="click once" class="paragraph"><p>{{ paragraph.paragraph }} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
-    <div class="paragraph_content" id="paragraph_content-{{ type }}-{{ paragraph.chapter.id }}-{{ paragraph.id }}">
+    <button type="button" hx-get="{% url 'getitemspingpong' client_pk project.id paragraph.chapter.id paragraph.id type accept status_id %}" hx-target="#paragraph_content-{{ type }}-{{ paragraph.chapter.id }}-{{ paragraph.id }}-{{ status_id }}" hx-swap="innerHTML" hx-trigger="click once" class="paragraph"><p>{{ paragraph.paragraph }} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></p></button>
+    <div class="paragraph_content" id="paragraph_content-{{ type }}-{{ paragraph.chapter.id }}-{{ paragraph.id }}-{{ status_id }}">
     </div>
 {% endfor %}
 {% endblock %}
