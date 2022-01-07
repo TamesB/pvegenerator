@@ -2,9 +2,14 @@ import datetime
 import os.path
 
 import xlsxwriter
+from xlsxwriter.worksheet import (
+    Worksheet, cell_number_tuple, cell_string_tuple)
+from typing import Optional
+
 from django.conf import settings
 
 from app import models
+from PIL import ImageFont
 
 
 class ExcelMaker:
@@ -33,6 +38,8 @@ class ExcelMaker:
 
         # Add a bold format to use to highlight cells.
         bold = workbook.add_format({"bold": True})
+        bold_rotate = workbook.add_format({"bold": True})
+        bold_rotate.set_rotation(60)
 
         row = 0
         column = 0
@@ -50,31 +57,29 @@ class ExcelMaker:
 
         # Titel row
         column = 1
-        worksheet.write(row, column, "BASIS PVE", bold)
+        worksheet.write(row, column, "BASIS PVE", bold_rotate)
         column += 1
 
         for bouwsrt in Bouwsoorten:
-            worksheet.write(row, column, bouwsrt.parameter, bold)
+            worksheet.write(row, column, bouwsrt.parameter, bold_rotate)
             column += 1
 
         for typeobj in TypeObjecten:
-            worksheet.write(row, column, typeobj.parameter, bold)
+            worksheet.write(row, column, typeobj.parameter, bold_rotate)
             column += 1
 
         for doelgrp in Doelgroepen:
-            worksheet.write(row, column, doelgrp.parameter, bold)
+            worksheet.write(row, column, doelgrp.parameter, bold_rotate)
             column += 1
-
+            
         row += 1
         column = 0
 
         chapters = list(set([item.chapter for item in PVEItems.order_by("id")]))
-        chapternamen = [chapter.chapter for chapter in chapters]
 
         # Run door de items heen
         cell_format = workbook.add_format()
         cell_format.set_text_wrap()
-        print("start")
 
         bouwsoorten_item = {item.id:[i for i in item.Bouwsoort.all()] for item in PVEItems}
         typeobjecten_item = {item.id:[i for i in item.TypeObject.all()] for item in PVEItems}
@@ -84,9 +89,9 @@ class ExcelMaker:
         paragraphs_hfst = {chapter.id:[paragraph for paragraph in paragraphs if paragraph.chapter and paragraph.chapter == chapter] for chapter in chapters}
 
         for chapter in chapters:
-            print(f"chapter: {chapter}")
             items = [item for item in PVEItems if item.chapter == chapter]
             worksheet.write(row, column, chapter.chapter, bold)
+
             row += 1
 
             paragraphs = paragraphs_hfst[chapter.id]
@@ -171,5 +176,49 @@ class ExcelMaker:
 
                     row += 1
                     column = 0
+                            
+        for _ in range(len(worksheet.table.items())):
+            self.set_column_autowidth(worksheet, _)
+                    
         workbook.close()
         return filename
+
+
+    def get_column_width(self, worksheet: Worksheet, column: int) -> Optional[int]:
+        """Get the max column width in a `Worksheet` column."""
+        strings = getattr(worksheet, '_ts_all_strings', None)
+        if strings is None:
+            strings = worksheet._ts_all_strings = sorted(
+                worksheet.str_table.string_table,
+                key=worksheet.str_table.string_table.__getitem__)
+        lengths = set()
+        for row_id, colums_dict in worksheet.table.items():  # type: int, dict
+            data = colums_dict.get(column)
+            if not data:
+                continue
+            if type(data) is cell_string_tuple:
+                iter_length = len(strings[data.string])
+                if not iter_length:
+                    continue
+                lengths.add(iter_length)
+                continue
+            if type(data) is cell_number_tuple:
+                iter_length = len(str(data.number))
+                if not iter_length:
+                    continue
+                lengths.add(iter_length)
+        if not lengths:
+            return None
+        return max(lengths)
+
+
+    def set_column_autowidth(self, worksheet: Worksheet, column: int):
+        """
+        Set the width automatically on a column in the `Worksheet`.
+        !!! Make sure you run this function AFTER having all cells filled in
+        the worksheet!
+        """
+        maxwidth = self.get_column_width(worksheet=worksheet, column=column)
+        if maxwidth is None:
+            return
+        worksheet.set_column(first_col=column, last_col=column, width=int(float(maxwidth) / 5))

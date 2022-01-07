@@ -27,7 +27,7 @@ class PDFMaker:
 
         self.version = version
         self.Topleft = f"PVE SAREF {self.version}"
-        self.BijlageDisclaimer = f"Bijlages van regels zijn in het mapje BasisBijlages, attachments van opmerkingen in het mapje OpmerkingBijlages."
+        self.BijlageDisclaimer = f"Bijlages van regels zijn in het mapje BasisBijlages, attachments van annotations in het mapje OpmerkingBijlages."
         self.GeaccepteerdDisclaimer = f"Geaccepteerde statussen zijn in het groen."
         self.NietGeaccepteerdDisclaimer = (
             f"Niet geaccepteerde statussen zijn in het rood."
@@ -83,11 +83,11 @@ class PDFMaker:
             leftIndent=30,
         )
 
-        self.regelStyle = ParagraphStyle(
+        self.ruleStyle = ParagraphStyle(
             name="Normal", fontName="Calibri", fontSize=8, leftIndent=60
         )
 
-        self.regelStyleSwitch = ParagraphStyle(
+        self.ruleStyleSwitch = ParagraphStyle(
             backColor=colors.Color(red=218 / 255, green=237 / 255, blue=242 / 255),
             name="Normal",
             fontName="Calibri",
@@ -95,21 +95,21 @@ class PDFMaker:
             leftIndent=60,
         )
 
-        self.regelStyleOpmrk = ParagraphStyle(
+        self.ruleStyle = ParagraphStyle(
             name="Normal",
             fontName="Calibri",
             fontSize=8,
             leftIndent=60,
             textColor=colors.red,
         )
-        self.regelStyleOpmrkGreen = ParagraphStyle(
+        self.ruleStyleGreen = ParagraphStyle(
             name="Normal",
             fontName="Calibri",
             fontSize=8,
             leftIndent=60,
             textColor=colors.green,
         )
-        self.regelStyleOpmrkOrange = ParagraphStyle(
+        self.ruleStyleOrange = ParagraphStyle(
             name="Normal",
             fontName="Calibri",
             fontSize=8,
@@ -117,7 +117,7 @@ class PDFMaker:
             textColor=colors.orange,
         )
 
-        self.regelStyleSwitchOpmrk = ParagraphStyle(
+        self.ruleStyleSwitch = ParagraphStyle(
             backColor=colors.Color(red=218 / 255, green=237 / 255, blue=242 / 255),
             name="Normal",
             fontName="Calibri",
@@ -125,7 +125,7 @@ class PDFMaker:
             leftIndent=60,
             textColor=colors.red,
         )
-        self.regelStyleSwitchOpmrkGreen = ParagraphStyle(
+        self.ruleStyleSwitchGreen = ParagraphStyle(
             backColor=colors.Color(red=218 / 255, green=237 / 255, blue=242 / 255),
             name="Normal",
             fontName="Calibri",
@@ -133,7 +133,7 @@ class PDFMaker:
             leftIndent=60,
             textColor=colors.green,
         )
-        self.regelStyleSwitchOpmrkOrange = ParagraphStyle(
+        self.ruleStyleSwitchOrange = ParagraphStyle(
             backColor=colors.Color(red=218 / 255, green=237 / 255, blue=242 / 255),
             name="Normal",
             fontName="Calibri",
@@ -142,9 +142,10 @@ class PDFMaker:
             textColor=colors.orange,
         )
 
+        
     def myFirstPage(self, canvas, doc):
         canvas.saveState()
-        # eerste pagina: opmerkingen, logo, etc aan de top. Datum en paginanr onderaan.
+        # eerste pagina: annotations, logo, etc aan de top. Datum en paginanr onderaan.
         canvas.setTitle(f"Programma van Eisen - {self.bedrijfsname}")
         canvas.setAuthor(f"{self.bedrijfsname} / Tames Boon")
         # titelbox (OPMERKINGEN)
@@ -278,16 +279,163 @@ class PDFMaker:
         )
 
         canvas.restoreState()
+        
+    def generateRuleBasicInfo(self, annotations, item):
+        parties_involved_str = f""
+        
+        # add basic info (time, status, costs, attachments)
+        total_string = f"{annotations[item.id].date.strftime('%Y-%m-%d')}: "
+        if annotations[item.id].status:
+            total_string += f"Status: {annotations[item.id].status}. "
+        if annotations[item.id].consequentCosts:
+            total_string += f"Kostenverschil: €{annotations[item.id].consequentCosts} {annotations[item.id].costtype}. "
+        if annotations[item.id].attachment:
+            total_string += f"Zie bijlage(n) "
+
+            for attachment in attachments[item.id]:
+                total_string += f"'{attachment}'. "
+                
+        # add the party of the first replier to the party-string, with its initial
+        if annotations[item.id].user.stakeholder:
+            party_involved = f"{annotations[item.id].user.stakeholder} "
+        else:
+            party_involved = f"{annotations[item.id].user.client} "
+        
+        parties_involved_str += f""", {party_involved} ({f"{party_involved}"[0]})"""
+        return parties_involved_str, total_string
+
+    def generateRepliesToRule(self, annotations, item, replies, replyAttachments, total_string, parties_involved_str):
+        # if the item has replies
+        all_replies = ""
+        if item.id in replies:
+            # for each reply
+            for reply in replies[item.id]:
+                # add the repliers party to the party-string
+                if reply.user.stakeholder:
+                    party_involved = reply.user.stakeholder
+                else:
+                    party_involved = reply.user.client
+                    
+                # if the party isnt in the string yet, add the party and its initial
+                if f"{party_involved}" not in parties_involved_str:
+                    parties_involved_str += f""", {party_involved} ({f"{party_involved}"[0]})"""
+
+                # initiate comment with the party initial, and "empty string" for comparison
+                single_comment = f"""{f"{party_involved}"[0]}: """
+                empty_string = f"""{f"{party_involved}"[0]}: """
+                
+                # if it has a comment, add the first letter of the party and the comment
+                if reply.comment:
+                    single_comment += f""""{reply.comment}". """
+
+                # if the party accepted the status
+                if reply.accept:
+                    single_comment += "<i>akkoord.</i> "
+                    
+                # if the reply has attachments
+                if reply.id in replyAttachments.keys():
+                
+                    # if the string doesnt have attachment initiation yet, add it
+                    if "Zie bijlage(n)" not in total_string and "Zie bijlage" not in single_comment:
+                        single_comment += f"Zie bijlage(n): "
+                    
+                    # add all the attachments to the string
+                    for attachment in replyAttachments[reply.id]:
+                        single_comment += f"'{attachment.name}', "
+                
+                # check if anything is added.
+                if single_comment != empty_string:
+                    # ensure newline to next comment if there is any added
+                    if "<br />" not in single_comment:
+                        single_comment += "<br />"
+                        
+                # otherwise just delete the string (not useful anyways)
+                else:
+                    single_comment = ""
+
+                all_replies += single_comment
+        
+        # add the announcement for all parties involved, and the parties. After that, add all replies
+        total_string += f"Betrokken partijen: {parties_involved_str}<br />"
+        total_string += all_replies
+        
+        # if there isnt any replies, change to empty string.
+        if (
+            len(total_string)
+            == len(
+                annotations[item.id].date.strftime(
+                    "%Y-%m-%d"
+                )
+            )
+            + 2
+        ):
+            total_string = ""
+        
+        return total_string
+
+    def styleParagraph(self, annotations, accepted_comment_ids, total_string, Story, item_added, item):
+        # blue or white background?
+        styleGreen = self.ruleStyleGreen
+        ruleStyle = self.ruleStyle
+        
+        if (item_added % 2) != 0:
+            styleGreen = self.ruleStyleSwitchGreen
+            ruleStyle = self.ruleStyleSwitch
+
+        # color the text green if the rule is accepted
+        if (
+            annotations[item.id].id
+            in accepted_comment_ids
+        ):
+            j = Paragraph(
+                f"{total_string}".replace("\n", "<br />\n"),
+                styleGreen,
+            )
+        else:
+            j = Paragraph(
+                f"{total_string}".replace("\n", "<br />\n"),
+                ruleStyle,
+            )
+
+        return j
+    
+    def writeReplies(self, Story, item, content, annotations, replies, attachments, replyAttachments, accepted_comment_ids, item_added):
+        # determine the background color
+        style = self.ruleStyle
+        
+        if (item_added % 2) != 0:
+            style = self.ruleStyleSwitch
+
+        # create paragraph of the item, replacing pythonic linebreak with html linebreak
+        p = Paragraph(
+            content.replace("\n", "<br />\n"),
+            style,
+        )
+        
+        # if the item has replies
+        if item.id in annotations:
+            
+            # create the text of the replies
+            parties_involved_str, total_string = self.generateRuleBasicInfo(annotations, item)
+            total_string = self.generateRepliesToRule(annotations, item, replies, replyAttachments, total_string, parties_involved_str)
+            j = self.styleParagraph(annotations, accepted_comment_ids, total_string, Story, item_added, item)
+            
+            # write the item (p) and replies (j)
+            Story.append(p)
+            Story.append(j)
+        else:
+            # only write the item if no replies
+            Story.append(p)
 
     def makepdf(
         self,
         filename,
         PVEItems,
         version_pk,
-        opmerkingen,
+        annotations,
         attachments,
-        reacties,
-        reactieattachments,
+        replies,
+        replyAttachments,
         parameters,
         accepted_comment_ids,
     ):
@@ -312,7 +460,7 @@ class PDFMaker:
 
         chapters = models.PVEHoofdstuk.objects.prefetch_related("paragraph").filter(version__pk=version.pk).order_by("id")
 
-        # Excel tabel simulasie
+        # Go through the chapters
         for chapter in chapters:
 
             items_exist = [item for item in PVEItems if item.chapter == chapter]
@@ -322,7 +470,9 @@ class PDFMaker:
 
                 paragraphs = [_ for _ in chapter.paragraph.all()]
 
+                # spacing difference of paragraphs
                 if paragraphs:
+                    # go through each paragraph
                     for paragraph in paragraphs:
                         items = [
                             item
@@ -331,6 +481,7 @@ class PDFMaker:
                             and item.paragraph == paragraph
                         ]                            
 
+                        # if items exist within this paragraph, write the paragraph title first
                         if len(items) > 0:
                             Story.append(Spacer(self.LeftPadding, 0))
                             p = Paragraph(
@@ -338,398 +489,35 @@ class PDFMaker:
                             )
                             Story.append(p)
 
+                            # write each item
                             for item in items:
-
                                 Story.append(Spacer(self.LeftPadding, 0))
 
-                                # basis pve regels
-                                inhoud = "%s" % item.inhoud
-                                inhoud = inhoud
+                                # basis pve rules
+                                content = "%s" % item.inhoud
+                                content = content
 
-                                if (item_added % 2) == 0:
-                                    item_added += 1
-
-                                    # opmerkingen en alles printen
-                                    if item.id in opmerkingen:
-                                        p = Paragraph(
-                                            f"{inhoud}".replace("\n", "<br />\n"),
-                                            self.regelStyle,
-                                        )
-                                        betrokken_str = f""
-                                        opmrk = f"{opmerkingen[item.id].date.strftime('%Y-%m-%d')}: "
-                                        #if opmerkingen[item.id].annotation:
-                                        #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].user}. "
-                                        if opmerkingen[item.id].status:
-                                            opmrk += f"Status: {opmerkingen[item.id].status}. "
-                                        if opmerkingen[item.id].consequentCosts:
-                                            opmrk += f"Kostenverschil: €{opmerkingen[item.id].consequentCosts} {opmerkingen[item.id].costtype}. "
-                                        if opmerkingen[item.id].attachment:
-                                            opmrk += f"Zie attachment(n) "
-
-                                            for attachment in attachments[item.id]:
-                                                opmrk += f"'{attachment}'. "
-                                                
-                                        if opmerkingen[item.id].user.stakeholder:
-                                            betrokken_partij = f"{opmerkingen[item.id].user.stakeholder} "
-                                        else:
-                                            betrokken_partij = f"{opmerkingen[item.id].user.client} "
-                                        
-                                        betrokken_str += betrokken_partij
+                                item_added += 1
                                     
-                                        if item.id in reacties:
-                                            for reactie in reacties[item.id]:
-                                                reactie_str = f""
-                                                #if reactie.comment:
-                                                #    if len(reactie_str) == 0:
-                                                #        reactie_str += f"Opmerking: "
-                                                #    reactie_str += f""""{reactie.comment}" -{reactie.user}. """
+                                # write replies of this item
+                                self.writeReplies(Story, item, content, annotations, replies, attachments, replyAttachments, accepted_comment_ids, item_added)
 
-                                                if reactie.id in reactieattachments.keys():
-                                                #    if len(reactie_str) == 0:
-                                                #        reactie_str += f"Opmerking: "
-                                                    
-                                                #    reactie_str += f"Zie attachment(n) "                                                    
-                                                
-                                                    if "Zie attachment" not in opmrk and "Zie attachment" not in reactie_str:
-                                                        reactie_str += f"Zie attachment(n): "
-                                                    
-                                                    for attachment in reactieattachments[reactie.id]:
-                                                        reactie_str += f"'{attachment.name}', "
-                                                        
-                                                if reactie.user.stakeholder:
-                                                    betrokken_partij = reactie.user.stakeholder
-                                                else:
-                                                    betrokken_partij = reactie.user.client
-                                                    
-                                                if f"{betrokken_partij}" not in betrokken_str:
-                                                    betrokken_str += f", {betrokken_partij} "
-
-                                                opmrk += reactie_str
-                                                                                        
-                                        opmrk += f"Betrokken partijen: {betrokken_str}"
-                                     
-                                        if (
-                                            len(opmrk)
-                                            == len(
-                                                opmerkingen[item.id].date.strftime(
-                                                    "%Y-%m-%d"
-                                                )
-                                            )
-                                            + 2
-                                        ):
-                                            opmrk = ""
-
-                                        opmrk = opmrk + "<br />"
-
-                                        # kleur geaccepteerde aanvullingen/opmerkingen als groen
-                                        if (
-                                            opmerkingen[item.id].id
-                                            in accepted_comment_ids
-                                        ):
-                                            j = Paragraph(
-                                                f"{opmrk}".replace("\n", "<br />\n"),
-                                                self.regelStyleOpmrkGreen,
-                                            )
-                                        else:
-                                            j = Paragraph(
-                                                f"{opmrk}".replace("\n", "<br />\n"),
-                                                self.regelStyleOpmrk,
-                                            )
-
-                                        Story.append(p)
-                                        Story.append(j)
-                                    else:
-                                        p = Paragraph(
-                                            inhoud.replace("\n", "<br />\n"),
-                                            self.regelStyle,
-                                        )
-                                        Story.append(p)
-
-                                else:
-                                    item_added += 1
-                                    # opmerkingen en alles printen
-                                    if item.id in opmerkingen:
-                                        p = Paragraph(
-                                            f"{inhoud}".replace("\n", "<br />\n"),
-                                            self.regelStyleSwitch,
-                                        )
-                                        betrokken_str = f""
-                                        opmrk = f"{opmerkingen[item.id].date.strftime('%Y-%m-%d')}: "
-                                        #if opmerkingen[item.id].annotation:
-                                        #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].user}. "
-                                        if opmerkingen[item.id].status:
-                                            opmrk += f"Status: {opmerkingen[item.id].status}. "
-                                        if opmerkingen[item.id].consequentCosts:
-                                            opmrk += f"Kostenverschil: €{opmerkingen[item.id].consequentCosts} {opmerkingen[item.id].costtype}. "
-                                        if opmerkingen[item.id].attachment:
-                                            opmrk += f"Zie attachment(n) "
-
-                                            for attachment in attachments[item.id]:
-                                                opmrk += f"'{attachment}'. "
-                                                
-                                        if opmerkingen[item.id].user.stakeholder:
-                                            betrokken_partij = f"{opmerkingen[item.id].user.stakeholder} "
-                                        else:
-                                            betrokken_partij = f"{opmerkingen[item.id].user.client} "
-                                        
-                                        betrokken_str += betrokken_partij
-                                    
-                                        if item.id in reacties:
-                                            for reactie in reacties[item.id]:
-                                                reactie_str = f""
-                                                #if reactie.comment:
-                                                #    if len(reactie_str) == 0:
-                                                #        reactie_str += f"Opmerking: "
-                                                #    reactie_str += f""""{reactie.comment}" -{reactie.user}. """
-
-                                                if reactie.id in reactieattachments.keys():
-                                                #    if len(reactie_str) == 0:
-                                                #        reactie_str += f"Opmerking: "
-                                                    
-                                                #    reactie_str += f"Zie attachment(n) "                                                    
-                                                
-                                                    if "Zie attachment" not in opmrk and "Zie attachment" not in reactie_str:
-                                                        reactie_str += f"Zie attachment(n): "
-                                                    
-                                                    for attachment in reactieattachments[reactie.id]:
-                                                        reactie_str += f"'{attachment.name}', "
-
-                                                opmrk += reactie_str
-                                                
-                                                if reactie.user.stakeholder:
-                                                    betrokken_partij = reactie.user.stakeholder
-                                                else:
-                                                    betrokken_partij = reactie.user.client
-                                                    
-                                                if f"{betrokken_partij}" not in betrokken_str:
-                                                    betrokken_str += f", {betrokken_partij} "
-                                            
-                                        opmrk += f"Betrokken partijen: {betrokken_str}"
-
-                                        if (
-                                            len(opmrk)
-                                            == len(
-                                                opmerkingen[item.id].date.strftime(
-                                                    "%Y-%m-%d"
-                                                )
-                                            )
-                                            + 2
-                                        ):
-                                            opmrk = ""
-
-                                        opmrk = opmrk + "<br />"
-
-                                        # kleur aanvullingen/opmerkingen als groen
-                                        if (
-                                            opmerkingen[item.id].id
-                                            in accepted_comment_ids
-                                        ):
-                                            j = Paragraph(
-                                                f"{opmrk}".replace("\n", "<br />\n"),
-                                                self.regelStyleSwitchOpmrkGreen,
-                                            )
-                                        else:
-                                            j = Paragraph(
-                                                f"{opmrk}".replace("\n", "<br />\n"),
-                                                self.regelStyleSwitchOpmrk,
-                                            )
-
-                                        Story.append(p)
-                                        Story.append(j)
-
-                                    else:
-                                        p = Paragraph(
-                                            inhoud.replace("\n", "<br />\n"),
-                                            self.regelStyleSwitch,
-                                        )
-                                        Story.append(p)
-
+                # otherwise directly write items
                 else:
                     items = [item for item in PVEItems if item.chapter == chapter]
                     
-                    for item in items:
-                        if item.chapter.chapter == "1 ALGEMEEN":
-                            print(item)
-                
-                    if chapter.id == 682:
-                        print(items)
-
                     if len(items) > 0:
                         for item in items:
 
                             Story.append(Spacer(self.LeftPadding, 0))
-                            inhoud = "%s" % item.inhoud
+                            content = "%s" % item.inhoud
+                            item_added += 1
+                            
+                            # write replies of this item
+                            self.writeReplies(Story, item, content, annotations, replies, attachments, replyAttachments, accepted_comment_ids, item_added)
+                            
 
-                            if (item_added % 2) == 0:
-                                item_added += 1
-                                # opmerkingen en alles printen
-                                if item.id in opmerkingen:
-                                    p = Paragraph(
-                                        f"{inhoud}".replace("\n", "<br />\n"),
-                                        self.regelStyle,
-                                    )
-                                    betrokken_str = f""
-                                    opmrk = f"{opmerkingen[item.id].date.strftime('%Y-%m-%d')}: "
-                                    #if opmerkingen[item.id].annotation:
-                                    #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].user}. "
-                                    if opmerkingen[item.id].status:
-                                        opmrk += f"Status: {opmerkingen[item.id].status}. "
-                                    if opmerkingen[item.id].consequentCosts:
-                                        opmrk += f"Kostenverschil: €{opmerkingen[item.id].consequentCosts} {opmerkingen[item.id].costtype}. "
-                                    if opmerkingen[item.id].attachment:
-                                        opmrk += f"Zie attachment(n) "
-
-                                        for attachment in attachments[item.id]:
-                                            opmrk += f"'{attachment}'. "
-                                            
-                                    if opmerkingen[item.id].user.stakeholder:
-                                        betrokken_partij = f"{opmerkingen[item.id].user.stakeholder} "
-                                    else:
-                                        betrokken_partij = f"{opmerkingen[item.id].user.client} "
-                                    
-                                    betrokken_str += betrokken_partij
-                                
-                                    if item.id in reacties:
-                                        for reactie in reacties[item.id]:
-                                            reactie_str = f""
-                                            #if reactie.comment:
-                                            #    if len(reactie_str) == 0:
-                                            #        reactie_str += f"Opmerking: "
-                                            #    reactie_str += f""""{reactie.comment}" -{reactie.user}. """
-
-                                            if reactie.id in reactieattachments.keys():
-                                            #    if len(reactie_str) == 0:
-                                            #        reactie_str += f"Opmerking: "
-                                                
-                                            #    reactie_str += f"Zie attachment(n) "                                                    
-                                            
-                                                if "Zie attachment" not in opmrk and "Zie attachment" not in reactie_str:
-                                                    reactie_str += f"Zie attachment(n): "
-                                                
-                                                for attachment in reactieattachments[reactie.id]:
-                                                    reactie_str += f"'{attachment.name}', "
-                                                    
-                                            if reactie.user.stakeholder:
-                                                betrokken_partij = reactie.user.stakeholder
-                                            else:
-                                                betrokken_partij = reactie.user.client
-                                                
-                                            if f"{betrokken_partij}" not in betrokken_str:
-                                                betrokken_str += f", {betrokken_partij} "
-
-                                            opmrk += reactie_str
-                                              
-                                    opmrk += f"Betrokken partijen: {betrokken_str}"
-
-                                    if (
-                                        len(opmrk)
-                                        == len(
-                                            opmerkingen[item.id].date.strftime(
-                                                "%Y-%m-%d"
-                                            )
-                                        )
-                                        + 2
-                                    ):
-                                        opmrk = ""
-
-                                    opmrk = opmrk + "<br />"
-
-                                    if opmerkingen[item.id].id in accepted_comment_ids:
-                                        j = Paragraph(
-                                            f"{opmrk}".replace("\n", "<br />\n"),
-                                            self.regelStyleOpmrkGreen,
-                                        )
-                                    else:
-                                        j = Paragraph(
-                                            f"{opmrk}".replace("\n", "<br />\n"),
-                                            self.regelStyleOpmrk,
-                                        )
-
-                                    Story.append(p)
-                                    Story.append(j)
-
-                                else:
-                                    p = Paragraph(
-                                        inhoud.replace("\n", "<br />\n"),
-                                        self.regelStyle,
-                                    )
-                                    Story.append(p)
-                            else:
-                                item_added += 1
-                                # opmerkingen en alles printen
-                                if item.id in opmerkingen:
-                                    p = Paragraph(
-                                        f"{inhoud}".replace("\n", "<br />\n"),
-                                        self.regelStyleSwitch,
-                                    )
-
-                                    opmrk = f"{opmerkingen[item.id].date.strftime('%Y-%m-%d')}: "
-                                    #if opmerkingen[item.id].annotation:
-                                    #    opmrk += f"Aanvulling: '{opmerkingen[item.id].annotation}' -{opmerkingen[item.id].user}. "
-                                    if opmerkingen[item.id].status:
-                                        opmrk += f"Status: {opmerkingen[item.id].status}. "
-                                    if opmerkingen[item.id].consequentCosts:
-                                        opmrk += f"Kostenverschil: €{opmerkingen[item.id].consequentCosts} {opmerkingen[item.id].costtype}."
-                                    if opmerkingen[item.id].attachment:
-                                        opmrk += f"Zie attachment(n) "
-
-                                        for attachment in attachments[item.id]:
-                                            opmrk += f"'{attachment}'. "
-
-                                    if item.id in reacties:
-                                        for reactie in reacties[item.id]:
-                                            reactie_str = f""
-                                            #if reactie.comment:
-                                            #    if len(reactie_str) == 0:
-                                            #        reactie_str += f"Opmerking: "
-                                            #    reactie_str += f""""{reactie.comment}" -{reactie.user}. """
-
-                                            if reactie.id in reactieattachments.keys():
-                                            #    if len(reactie_str) == 0:
-                                            #        reactie_str += f"Opmerking: "
-                                                
-                                            #    reactie_str += f"Zie attachment(n) "
-                                        
-                                                if "Zie attachment" not in opmrk and "Zie attachment" not in reactie_str:
-                                                    reactie_str += f"Zie attachment(n): "
-                                                for attachment in reactieattachments[reactie.id]:
-                                                    reactie_str += f"'{attachment.name}', "
-
-                                            opmrk += reactie_str
-
-                                    if (
-                                        len(opmrk)
-                                        == len(
-                                            opmerkingen[item.id].date.strftime(
-                                                "%Y-%m-%d"
-                                            )
-                                        )
-                                        + 2
-                                    ):
-                                        opmrk = ""
-
-                                    opmrk = opmrk + "<br />"
-
-                                    if opmerkingen[item.id].id in accepted_comment_ids:
-                                        j = Paragraph(
-                                            f"{opmrk}".replace("\n", "<br />\n"),
-                                            self.regelStyleSwitchOpmrkGreen,
-                                        )
-                                    else:
-                                        j = Paragraph(
-                                            f"{opmrk}".replace("\n", "<br />\n"),
-                                            self.regelStyleSwitchOpmrk,
-                                        )
-
-                                    Story.append(p)
-                                    Story.append(j)
-
-                                else:
-                                    p = Paragraph(
-                                        inhoud.replace("\n", "<br />\n"),
-                                        self.regelStyleSwitch,
-                                    )
-                                    Story.append(p)
 
         self.Centered = " / ".join(parameters)
         doc.build(Story, onFirstPage=self.myFirstPage, onLaterPages=self.myLaterPages)
+
