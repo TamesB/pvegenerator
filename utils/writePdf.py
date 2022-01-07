@@ -117,7 +117,7 @@ class PDFMaker:
             textColor=colors.orange,
         )
 
-        self.ruleStyleSwitch = ParagraphStyle(
+        self.ruleStyleSwitchRed = ParagraphStyle(
             backColor=colors.Color(red=218 / 255, green=237 / 255, blue=242 / 255),
             name="Normal",
             fontName="Calibri",
@@ -380,7 +380,7 @@ class PDFMaker:
         
         if (item_added % 2) != 0:
             styleGreen = self.ruleStyleSwitchGreen
-            ruleStyle = self.ruleStyleSwitch
+            ruleStyle = self.ruleStyleSwitchRed
 
         # color the text green if the rule is accepted
         if (
