@@ -95,7 +95,7 @@ class PDFMaker:
             leftIndent=60,
         )
 
-        self.ruleStyle = ParagraphStyle(
+        self.ruleStyleRed = ParagraphStyle(
             name="Normal",
             fontName="Calibri",
             fontSize=8,
@@ -280,7 +280,7 @@ class PDFMaker:
 
         canvas.restoreState()
         
-    def generateRuleBasicInfo(self, annotations, item):
+    def generateRuleBasicInfo(self, annotations, item, attachments):
         parties_involved_str = f""
         
         # add basic info (time, status, costs, attachments)
@@ -376,7 +376,7 @@ class PDFMaker:
     def styleParagraph(self, annotations, accepted_comment_ids, total_string, Story, item_added, item):
         # blue or white background?
         styleGreen = self.ruleStyleGreen
-        ruleStyle = self.ruleStyle
+        ruleStyle = self.ruleStyleRed
         
         if (item_added % 2) != 0:
             styleGreen = self.ruleStyleSwitchGreen
@@ -416,7 +416,7 @@ class PDFMaker:
         if item.id in annotations:
             
             # create the text of the replies
-            parties_involved_str, total_string = self.generateRuleBasicInfo(annotations, item)
+            parties_involved_str, total_string = self.generateRuleBasicInfo(annotations, item, attachments)
             total_string = self.generateRepliesToRule(annotations, item, replies, replyAttachments, total_string, parties_involved_str)
             j = self.styleParagraph(annotations, accepted_comment_ids, total_string, Story, item_added, item)
             
