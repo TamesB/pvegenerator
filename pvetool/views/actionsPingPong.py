@@ -206,6 +206,8 @@ def SendReplies(request, client_pk, pk):
 
         if form.is_valid():
             if form.cleaned_data["confirm"]:
+                requirement_obj = CommentRequirement.objects.get(version__pk=project.pve_versie.pk)
+                
                 commentphase = (
                     FrozenComments.objects.filter(project=project)
                     .prefetch_related("accepted_comments")
