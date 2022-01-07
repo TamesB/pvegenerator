@@ -225,8 +225,8 @@ def SendReplies(request, client_pk, pk):
                 for comment in comments:
                     if not comment.accept:
                         if comment.status:
-                            # if new status and reply has no attachments/comment
-                            if comment.status.status in hardcoded_values.allowed_comments():
+                                # if new status and reply has no attachments/comment
+                            if comment.status in requirement_obj.comment_allowed.all():
                                 if not comment.comment and not comment.attachmenttoreply.all():
                                     false_comments.append(comment)
                         # if not accepted, no statuschange and no comments/attachments/cost change
