@@ -39,7 +39,7 @@ class ExcelMaker:
         # Add a bold format to use to highlight cells.
         bold = workbook.add_format({"bold": True})
         bold_rotate = workbook.add_format({"bold": True})
-        bold_rotate.set_rotation(60)
+        bold_rotate.set_rotation(45)
 
         row = 0
         column = 0
@@ -74,7 +74,7 @@ class ExcelMaker:
             
         row += 1
         column = 0
-
+        worksheet.freeze_panes(1, 1)
         chapters = list(set([item.chapter for item in PVEItems.order_by("id")]))
 
         # Run door de items heen
@@ -221,4 +221,9 @@ class ExcelMaker:
         maxwidth = self.get_column_width(worksheet=worksheet, column=column)
         if maxwidth is None:
             return
-        worksheet.set_column(first_col=column, last_col=column, width=int(float(maxwidth) / 5))
+        
+        maxwidth = int(float(maxwidth) / 5)
+        if maxwidth < 3:
+            maxwidth = 3
+            
+        worksheet.set_column(first_col=column, last_col=column, width=maxwidth)
