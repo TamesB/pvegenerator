@@ -1269,7 +1269,7 @@ def parameterchoicesView(request, version_pk):
     context["doelgroepen"] = version.doelgroep.all()
     context["version_pk"] = version_pk
     context["version"] = version
-    return render(request, "parameterchoices.html", context)
+    return render(request, "parameterchoice.html", context)
 
 
 @staff_member_required(login_url=reverse_lazy("logout"))
@@ -1573,7 +1573,7 @@ def attachmentsView(request, version_pk):
     context["attachments"] = models.ItemBijlages.objects.filter(version__id=version_pk)
     context["version_pk"] = version_pk
     context["version"] = models.PVEVersie.objects.get(pk=version_pk)
-    return render(request, "attachmentsView.html", context)
+    return render(request, "attachmentView.html", context)
 
 
 @staff_member_required(login_url=reverse_lazy("logout"))

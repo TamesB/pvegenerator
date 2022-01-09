@@ -3,6 +3,10 @@
 $small: 300px;
 $medium: 900px;
 
+.ui.icon.basic.button {
+    padding: 0;
+}
+
 .landing-flex {
     display: flex;
     width: 100vw;

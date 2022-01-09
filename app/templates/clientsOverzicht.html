@@ -51,8 +51,11 @@
 </div>
 
 {% else %}
-<p>Geen clients! <input class="ui primary button d-inline" onclick="window.location.href='{% url 'clienttoevoegen' %}';" type="button" value="Voeg er een toe"></p>{% endif %}
+<p>Geen klanten! <input class="ui primary button d-inline" onclick="window.location.href='{% url 'clienttoevoegen' %}';" type="button" value="Voeg er een toe"></p>{% endif %}
 {% endlanguage %}
+<script>
+	feather.replace()
+  </script>
 {% block modal %}{% endblock %}
 
 {% endblock %}

@@ -13,5 +13,10 @@
           hx-prompt="Vul 'VERWIJDEREN' in om parameterchoice {{ parameter.parameter }} te verwijderen."
           hx-target="closest tr"
             class="ui icon basic red button"><i data-feather="x" style="stroke: red;"></i></button></span>
-          </div>
+        </div>
+{% endblock %}
+{% block scripts %}
+<script>
+  feather.replace()
+</script>
 {% endblock %}
