@@ -5,7 +5,7 @@
 {% block main %}
 <input type="button" class="ui primary button d-inline" onclick="javascript:history.back();" value="< Terug" />
 
-<h1 class="ui header">Voeg attachment toe</h1>
+<h1 class="ui header">Voeg bijlage toe</h1>
 
 <form action="{% url 'addattachment' version_pk %}" class="ui form" method="POST" enctype="multipart/form-data">
     {% csrf_token %}

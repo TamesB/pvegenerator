@@ -14,17 +14,17 @@
     {% if attachment %}
     <span><a href="{% url 'downloadattachment' attachment.id %}" target="_blank"><button class="ui basic button"><i class="icon download"></i>{{ attachment.attachment }}</button></a></span>
     {% else %}
-    <p>Geen attachment bij deze regel.<p>
+    <p>Geen bijlage bij deze regel.<p>
     {% endif %}
     <div class="ui divider"></div>
-    <h3 class="ui header">Bijname</h3>
+    <h3 class="ui header">Bijnaam</h3>
     <p style="word-wrap: break-word;">{{ attachment.name|linebreaks }}</p>
     <div class="ui divider"></div>
     <h3 class="ui header">Behoort tot regels:</h3>
     {% if items %}
     {% for item in items %}<p style="word-wrap: break-word;">{{ item.chapter }}:{% if item.paragraph %} {{ item.paragraph }}:{% endif %} {{ item.inhoud }}</p>{% endfor %}
     {% else %}
-      <p><b>Deze attachment behoort nog niet tot een regel.</b></p>
+      <p><b>Deze bijlage behoort nog niet tot een regel.</b></p>
     {% endif %}
   </div>
   <div class="actions" style="margin-bottom: 1em;">

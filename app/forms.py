@@ -23,7 +23,7 @@ from .models import (
 class LoginForm(forms.Form):
     attrs = {"type": "password"}
 
-    username = forms.CharField(label="Gebruikersname", max_length=100)
+    username = forms.CharField(label="Gebruikersnaam", max_length=100)
     password = forms.CharField(
         label="Wachtwoord", max_length=100, widget=forms.TextInput(attrs=attrs)
     )
@@ -64,13 +64,13 @@ class BeleggerForm(ModelForm):
             ("Text", '<h2 class="ui dividing header">Beheerder</h2>'),
             (
                 "Text",
-                "<i>Vul de e-mail van de beheerder van de client in. Een e-mail wordt naar hen gestuurd voor toegang naar de gegenereerde sub-website.</i>",
+                "<i>Vul de e-mail van de beheerder van de klant in. Een e-mail wordt naar hen gestuurd voor toegang naar de gegenereerde sub-website.</i>",
             ),
             ("Field", "email"),
             ("Text", '<h2 class="ui dividing header">Klantenlogo</h2>'),
             (
                 "Text",
-                "<i>Upload hier de logo van de client. Deze logo wordt gebruikt voor hun subwebsite en PvE's.</i><br>",
+                "<i>Upload hier de logo van de klant. Deze logo wordt gebruikt voor hun subwebsite en PvE's.</i><br>",
             ),
             ("Field", "logo"),
         ]
@@ -120,13 +120,13 @@ class attachmentEditForm(forms.Form):
             ("Text", '<h2 class="ui dividing header">Items</h2>'),
             (
                 "Text",
-                "<i>Voeg hier een of meerdere regels toe waar de attachment tot behoort</i>",
+                "<i>Voeg hier een of meerdere regels toe waar de bijlage tot behoort</i>",
             ),
             ("Field", "items"),
-            ("Text", '<h2 class="ui dividing header">Bijname (optioneel)</h2>'),
+            ("Text", '<h2 class="ui dividing header">Bijnaam (optioneel)</h2>'),
             (
                 "Text",
-                "<i>Voeg hier de bijname toe van de attachment. Deze name wordt gebruikt in het PvE en als bestandsname bij het downloaden van het PvE.</i><br>",
+                "<i>Voeg hier de bijnaam toe van de bijlage. Deze naam wordt gebruikt in het PvE en als bestandsnaam bij het downloaden van het PvE.</i><br>",
             ),
             ("Field", "name"),
         ]
@@ -170,7 +170,7 @@ class ParagraafForm(ModelForm):
 
 class PVEItemEditForm(ModelForm):
     attachment = forms.FileField(required=False)
-    BestaandeBijlage = forms.ModelChoiceField(
+    existing_attachment = forms.ModelChoiceField(
         queryset=ItemBijlages.objects.none(), label="Bestaande Bijlage(s)", required=False
     )
     Bouwsoort = forms.ModelMultipleChoiceField(
@@ -187,7 +187,7 @@ class PVEItemEditForm(ModelForm):
         "Bouwsoort": forms.SelectMultiple(
             attrs={"class": "ui dropdown", "multiple": ""}
         ),
-        "BestaandeBijlage": forms.SelectMultiple(
+        "existing_attachment": forms.SelectMultiple(
             attrs={"class": "ui dropdown", "multiple": ""}
         ),
         "TypeObject": forms.SelectMultiple(
@@ -235,10 +235,10 @@ class PVEItemEditForm(ModelForm):
             ("Field", "inhoud"),
             (
                 "Text",
-                "<i>Upload een nieuwe attachment, of kies een existing attachment.</i><br>",
+                "<i>Upload een nieuwe bijlage, of kies een bestaande bijlage.</i><br>",
             ),
             ("Field", "attachment"),
-            ("Field", "BestaandeBijlage"),
+            ("Field", "existing_attachment"),
             ("Text", '<h2 class="ui dividing header">Parameters</h2>'),
             (
                 "Text",
@@ -275,4 +275,4 @@ class PVEItemEditForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(PVEItemEditForm, self).__init__(*args, **kwargs)
         self.fields['attachment'].required = False
-        self.fields['BestaandeBijlage'].required = False
+        self.fields['existing_attachment'].required = False
