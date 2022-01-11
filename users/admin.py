@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.utils.translation import ugettext_lazy as _
 
 from users.forms import CustomUserChangeForm, CustomUserCreationForm
 from users.models import (
@@ -20,10 +19,10 @@ class CustomUserAdmin(UserAdmin):
     # that reference the removed 'username' field
     fieldsets = (
         (None, {"fields": ("username", "password")}),
-        (_("Personal info"), {"fields": ("first_name", "last_name")}),
-        (_("Permissions"), {"fields": ("type_user", "is_staff", "is_superuser")}),
-        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
-        (_("Klantenorganisatie"), {"fields": ("client", "stakeholder")}),
+        (("Personal info"), {"fields": ("first_name", "last_name")}),
+        (("Permissions"), {"fields": ("type_user", "is_staff", "is_superuser")}),
+        (("Important dates"), {"fields": ("last_login", "date_joined")}),
+        (("Klantenorganisatie"), {"fields": ("client", "stakeholder")}),
     )
     add_fieldsets = (
         (

@@ -79,7 +79,6 @@ INSTALLED_APPS = [
     "simple_history",
     #"debug_toolbar",
     #"template_profiler_panel",
-    "cached_modelforms",
     "jsignature",
     'django_feather',
 ]
