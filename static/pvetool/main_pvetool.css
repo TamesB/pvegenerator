@@ -1561,10 +1561,6 @@ a {
   background-color: #daedf2;
 }
 
-#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content:hover {
-  opacity: 0.7;
-}
-
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container {
   display: -webkit-box;
   display: -ms-flexbox;
