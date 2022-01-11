@@ -205,8 +205,7 @@ class CheckboxInput(forms.CheckboxInput):
 
 class PVEItemAnnotationForm(forms.Form):
     item_id = forms.IntegerField(label="item_id")
-    status = CachedModelChoiceField(
-        objects=lambda: CommentStatus.objects.all()
+    status = forms.ModelChoiceField(queryset=CommentStatus.objects.all()
     )
     annotation = forms.CharField(
         label="annotation", max_length=1000, widget=forms.Textarea, required=False
@@ -255,8 +254,7 @@ class FirstKostenverschilForm(forms.Form):
             ),
         ]
 class FirstStatusForm(forms.Form):
-    status = CachedModelChoiceField(
-        objects=lambda: CommentStatus.objects.all()
+    status = forms.ModelChoiceField(queryset=CommentStatus.objects.all()
     )
 
 class FirstBijlageForm(ModelForm):
@@ -418,8 +416,7 @@ class CommentReplyForm(forms.Form):
     CHOICES = [("True", "Ja"), ("False", "Nee")]
 
     comment_id = forms.IntegerField(label="comment_id")
-    status = CachedModelChoiceField(
-        objects=lambda: CommentStatus.objects.all()
+    status = forms.ModelChoiceField(queryset=CommentStatus.objects.all()
     )
     annotation = forms.CharField(
         label="annotation", max_length=1000, widget=forms.Textarea, required=False
