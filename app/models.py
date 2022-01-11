@@ -58,7 +58,6 @@ class Doelgroep(models.Model):
     class Meta:
         ordering = ['id']
 
-
 class PVEOnderdeel(models.Model):
     # ALG/TO
     name = models.CharField(max_length=256)
