@@ -1,21 +1,16 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8d0da7dd10d46a3803f4f972b1288348dbc6542243127bdf30415a0e4fb75ce0"
+            "sha256": "55213b7107941c96c259e75741f9016f05b8d1689b4dac37f7ac8ccd57f8da13"
         },
         "pipfile-spec": 6,
         "requires": {
-            "python_version": "3.10"
+            "python_version": "3.9"
         },
         "sources": [
             {
                 "name": "pypi",
                 "url": "https://pypi.org/simple",
-                "verify_ssl": true
-            },
-            {
-                "name": "pypi-17",
-                "url": "https://pypi.org/simple/",
                 "verify_ssl": true
             }
         ]
@@ -84,14 +79,6 @@
             ],
             "index": "pypi",
             "version": "==4.0.1"
-        },
-        "django-cached-modelforms": {
-            "hashes": [
-                "sha256:b46d15e91b592c0fd29638f5420a39242acaffb964d7ed4d6a6d0debaf4fb695",
-                "sha256:c742227dc4fafd9fd2a75a946dfdfe38a3348504f62791fe96db52bb24e271d3"
-            ],
-            "index": "pypi",
-            "version": "==0.2.3"
         },
         "django-csp": {
             "hashes": [
