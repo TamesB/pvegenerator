@@ -84,6 +84,7 @@ INSTALLED_APPS = [
 ]
 
 #
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 SITE_ID = 1
 
