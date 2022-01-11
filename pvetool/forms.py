@@ -1,6 +1,4 @@
 # Author: Tames Boon
-
-from cached_modelforms import CachedModelChoiceField
 from django import forms
 from django.contrib.gis import forms
 from django.forms import ModelForm
