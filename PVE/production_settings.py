@@ -15,6 +15,8 @@ SECURE_HSTS_PRELOAD = True
 ##############
 
 # for more security
+USE_X_FORWARDED_HOST = True
+
 CSRF_COOKIE_SECURE = True
 CSRF_USE_SESSIONS = True
 CSRF_COOKIE_HTTPONLY = True
