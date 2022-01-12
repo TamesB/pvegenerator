@@ -38,14 +38,26 @@ class WriteExcelProject:
 
         # Add a bold format to use to highlight cells.
         bold = workbook.add_format({"bold": True})
+        bold.set_text_wrap()
+
+        bold_red = workbook.add_format({"bold": True})
+        bold_red.set_bg_color("red")
+        bold_yellow = workbook.add_format({"bold": True})
+        bold_yellow.set_bg_color("yellow")
+        bold_green = workbook.add_format({"bold": True})
+        bold_green.set_bg_color("green")
+
         bold_chapter = workbook.add_format({"bold": True, 'bg_color': "#0078ae"})
         bold_chapter.set_font_color('white')
         bold_paragraph = workbook.add_format({"bold": True, 'bg_color': "#66acd1"})
         bold_paragraph.set_font_color("#204d77")
+        bold_chapter.set_text_wrap()
+        bold_paragraph.set_text_wrap()
 
         bold_rotate = workbook.add_format({"bold": True})
         bold_rotate.set_rotation(30)
-        
+        bold_rotate.set_text_wrap()
+
         # Titel row
         column = 0
         row = 0
@@ -69,6 +81,10 @@ class WriteExcelProject:
         cell_format_blue = workbook.add_format()
         cell_format_blue.set_bg_color("#daedf2")
         cell_format_blue.set_text_wrap()
+
+        accepted_cell = workbook.add_format()
+        accepted_cell.set_bg_color("green")
+        accepted_cell.set_text_wrap()
 
         paragraphs = list(set([item.paragraph for item in items if item.paragraph]))
         paragraphs_hfst = {chapter.id:[paragraph for paragraph in paragraphs if paragraph.chapter and paragraph.chapter == chapter] for chapter in chapters}
@@ -122,7 +138,19 @@ class WriteExcelProject:
                         if item.id in annotations.keys():
                             if annotations[item.id].status:
                                 column = 1
-                                worksheet.write(row, column, f"{annotations[item.id].status}", bold)
+                                
+                                if "n.v.t." in f"{annotations[item.id].status}":
+                                    style = bold_red
+                                if "akkoord" in f"{annotations[item.id].status}":
+                                    style = bold_green
+                                if "niet akkoord" in f"{annotations[item.id].status}":
+                                    style = bold_red
+                                if "uitwerken" in f"{annotations[item.id].status}":
+                                    style = bold_yellow
+                                if "n.t.b." in f"{annotations[item.id].status}":
+                                    style = bold_yellow
+                                    
+                                worksheet.write(row, column, f"{annotations[item.id].status}", style)
                             if annotations[item.id].annotation:
                                 column = 3
                                 worksheet.write(row, column, f"{annotations[item.id].annotation}", bold)
@@ -148,7 +176,18 @@ class WriteExcelProject:
                     if item.id in annotations.keys():
                         if annotations[item.id].status:
                             column = 1
-                            worksheet.write(row, column, f"{annotations[item.id].status}", bold)
+                            if "n.v.t." in f"{annotations[item.id].status}":
+                                style = bold_red
+                            if "akkoord" in f"{annotations[item.id].status}":
+                                style = bold_green
+                            if "niet akkoord" in f"{annotations[item.id].status}":
+                                style = bold_red
+                            if "uitwerken" in f"{annotations[item.id].status}":
+                                style = bold_yellow
+                            if "n.t.b." in f"{annotations[item.id].status}":
+                                style = bold_yellow
+
+                            worksheet.write(row, column, f"{annotations[item.id].status}", style)
                         if annotations[item.id].annotation:
                             column = 3
                             worksheet.write(row, column, f"{annotations[item.id].annotation}", bold)
@@ -182,7 +221,9 @@ class WriteExcelProject:
                     row = itemId_to_row[reply.onComment.item.id]
                     if reply.comment:
                         worksheet.write(row, column, f"{reply.comment}", bold)
-                
+                    if reply.accept:
+                        worksheet.write(row, column, f"akkoord.", accepted_cell)
+
                 column += 1
 
         for _ in range(len(worksheet.table.items())):
@@ -231,12 +272,10 @@ class WriteExcelProject:
             return
         
         maxwidth = int(float(maxwidth) / 5)
-        if maxwidth < 5:
-            maxwidth = 5
+        if maxwidth < 20:
+            maxwidth = 20
             
         if column == 1:
             maxwidth = 25
-        if column == 2:
-            maxwidth = 15
-            
+
         worksheet.set_column(first_col=column, last_col=column, width=maxwidth)
