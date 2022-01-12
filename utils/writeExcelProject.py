@@ -223,16 +223,17 @@ class WriteExcelProject:
         column = 4
         row = 0
         
-        phases = project.phase.all()
+        phases = project.phase.all().order_by("id")
         for phase in phases:
             replies = phase.reply.select_related("onComment__item").all()
-            if replies:
 
-                stakeholder = replies.first().user.stakeholder if replies.first().user.stakeholder else replies.first().user.client
+            if replies:
+                first_reply = replies.first()
+                stakeholder = first_reply.user.stakeholder if first_reply.user.stakeholder else first_reply.user.client
 
                 # write the name of the organisation that has this commentphase
                 row = 0
-                worksheet.write(row, column, f"{stakeholder.name} ({replies.first().date.strftime('%Y-%m-%d')})", bold_rotate)
+                worksheet.write(row, column, f"{stakeholder.name} ({first_reply.date.strftime('%Y-%m-%d')})", bold_rotate)
                 row += 1
                 
                 for reply in replies:
