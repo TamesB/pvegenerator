@@ -245,7 +245,7 @@ class WriteExcelProject:
                     if reply.comment:
                         comment_string += f"Opmerking: {reply.comment}. "
                     if reply.accept:
-                        comment_string = f"akkoord."
+                        comment_string = f"."
                     
                     if comment_string != "":
                         if reply.accept:
