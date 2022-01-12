@@ -243,7 +243,7 @@ class WriteExcelProject:
                     if reply.status:
                         comment_string += f"Nieuwe status: {reply.status}. "
                     if reply.comment:
-                        comment_string += f"Opmerking: {reply.status}. "
+                        comment_string += f"Opmerking: {reply.comment}. "
                     if reply.accept:
                         comment_string = f"akkoord."
                     
