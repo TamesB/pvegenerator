@@ -11,7 +11,6 @@ from pyproj import Transformer
 
 from app.models import Bouwsoort, Doelgroep, PVEItem, TypeObject, ActieveVersie
 from generator.forms import PVEParameterForm
-from utils import createBijlageZip, writePdf
 
 from . import forms, models
 

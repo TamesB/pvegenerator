@@ -624,7 +624,7 @@ def download_pve(request, client_pk, pk):
             accepted_id.id for accepted_id in commentphase.accepted_comments.all()
         ]
 
-    pdfmaker = writePdf.PDFMaker(version.version, logo_url)
+    pdfmaker = writePdf.PDFMaker(version.version, logo_url, project)
 
     # verander CONCEPT naar DEFINITIEF als het project volbevroren is.
     if project.fullyFrozen:
@@ -834,7 +834,7 @@ def final_pve_download_choice(request, client_pk, pk):
                     accepted_id.id for accepted_id in commentphase.accepted_comments.all()
                 ]
 
-            pdfmaker = writePdf.PDFMaker(version.version, logo_url)
+            pdfmaker = writePdf.PDFMaker(version.version, logo_url, project)
 
             # verander CONCEPT naar DEFINITIEF als het project volbevroren is.
             if project.fullyFrozen:

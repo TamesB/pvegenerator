@@ -469,11 +469,44 @@ def GetItemsPingPong(request, client_pk, pk, chapter_pk, paragraph_id, type, acc
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def FirstAcceptStepPong(request, client_pk, project_pk, item_pk, type):
+    # guard clauses to check if user is allowerd to comment
+    project, current_phase = passed_commentcheck_guardclauses(
+        request, client_pk, project_pk
+    )
+
+    # check last replier to see if user is allowed to accept the last reply 
+    # (can't accept their own replies, the other party has to do that. You can however change your mind and disagree with your own comment)
+    # here we fetch either the last reply or the last annotation if no replies exist
+    if CommentReply.objects.filter(Q(onComment__item__id=item_pk) & ~Q(commentphase=current_phase) & Q(commentphase__project__id=current_phase.project.id)).exists():
+        last_reply = CommentReply.objects.filter(
+            Q(onComment__item__id=item_pk) & ~Q(commentphase=current_phase) & Q(commentphase__project__id=current_phase.project.id)
+        ).order_by("-id").first()
+    elif PVEItemAnnotation.objects.filter(
+        project__id=project_pk, item__id=item_pk
+    ).exists():
+        last_reply = PVEItemAnnotation.objects.filter(
+            project__id=project_pk, item__id=item_pk
+        ).first()
+        
+    # check last reply for either client or stakeholder
+    if last_reply.user.stakeholder:
+        last_reply_organisation = last_reply.user.stakeholder
+    elif last_reply.user.client:
+        last_reply_organisation = last_reply.user.client
+        
+    # same with browsing user
+    if request.user.stakeholder:
+        current_reply_organisation = request.user.stakeholder
+    elif request.user.client:
+        current_reply_organisation = request.user.client
+        
     context = {}
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
     context["type"] = type
     context["item_pk"] = item_pk
+    context["last_reply_organisation"] = last_reply_organisation
+    context["current_reply_organisation"] = current_reply_organisation
     return render(request, "partials/firstacceptsteppong.html", context)
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))

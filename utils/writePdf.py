@@ -14,19 +14,39 @@ from PIL import Image
 import numpy as np
 
 class PDFMaker:
-    def __init__(self, version, logo_url):
+    def __init__(self, version, logo_url, project):
         self.date = datetime.datetime.now()
 
         self.bedrijfsname = "PVETool"
+        self.project = project
+        
+        self.stakeholders = None
+        if project:
+            self.stakeholders = project.organisaties.all()
+            self.stakeholderDisclaimer = f"Betrokken partijen: {project.client.name} (hierna genoteerd als; {project.client.name[0]}), "
+            
+            
+            for stakeholder in self.stakeholders:
+                if f"(hierna genoteerd als; {stakeholder.name[0]})" in self.stakeholderDisclaimer:
+                    self.stakeholderDisclaimer += f"{stakeholder.name} (hierna genoteerd als; {stakeholder.name[0:1]}), "
+                else:
+                    self.stakeholderDisclaimer += f"{stakeholder.name} (hierna genoteerd als; {stakeholder.name[0]}), "
 
+            self.stakeholderDisclaimer = self.stakeholderDisclaimer[:-2]
+        
         self.defaultPageSize = letter
         self.PAGE_HEIGHT = self.defaultPageSize[1]
         self.PAGE_WIDTH = self.defaultPageSize[0]
         self.styles = getSampleStyleSheet()
 
         self.version = version
-        self.Topleft = f"PVE SAREF {self.version}"
-        self.BijlageDisclaimer = f"Bijlages van regels zijn in het mapje BasisBijlages, attachments van annotations in het mapje OpmerkingBijlages."
+        self.Topleft = f"PVE versie {self.version}"
+        self.IntroDisclaimer = ""
+        if self.project:
+            self.IntroDisclaimer = f"Een voortgangs snapshot van het PvE overeenkomst van project {self.project.name} van {self.project.client.name}. De gebruikte PvE versie is {self.version}."
+        if self.project.fullyFrozen:
+            self.IntroDisclaimer = f"De voltooide versie van het PvE overeenkomst van project {self.project.name} van {self.project.client.name}. De gebruikte PvE versie is {self.version}."
+        self.BijlageDisclaimer = f"Bijlages van regels zijn te vinden in het mapje BasisBijlages, bijlagen van opmerkingen zijn te vinden in het mapje OpmerkingBijlages (beide in het .zip bestand aangeboden bij de download)."
         self.GeaccepteerdDisclaimer = f"Geaccepteerde statussen zijn in het groen."
         self.NietGeaccepteerdDisclaimer = (
             f"Niet geaccepteerde statussen zijn in het rood."
@@ -194,31 +214,46 @@ class PDFMaker:
             self.OpmerkingBoxPadding + self.OpmerkingBoxHeight + 2,
             f"PROGRAMMA VAN EISEN {self.version}",
         )
-        #   rode kleur voor disclaimer
-        canvas.drawString(
-            self.LeftPadding + 4,
-            self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 2) + 8,
-            f"Huidige kostenverschil: €{self.kostenverschil},-",
-        )
-        canvas.drawString(
-            self.LeftPadding + 4,
-            self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 2) - 2,
-            self.BijlageDisclaimer,
-        )
-        canvas.setFillColorRGB(0, 128, 0)
+
+        if self.project:
+            canvas.drawString(
+                self.LeftPadding + 4,
+                self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 2) + 8,
+                self.IntroDisclaimer,
+            )
+
+            canvas.drawString(
+                self.LeftPadding + 4,
+                self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 2) - 2,
+                f"Huidige totale kostenverschil: €{self.kostenverschil},-",
+            )
+
         canvas.drawString(
             self.LeftPadding + 4,
             self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 2) - 12,
-            self.GeaccepteerdDisclaimer,
+            self.BijlageDisclaimer,
         )
-        canvas.setFillColorRGB(255, 0, 0)
-        canvas.drawString(
-            self.LeftPadding + 4,
-            self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 2) - 22,
-            self.NietGeaccepteerdDisclaimer,
-        )
+        
+        if self.project:
+            canvas.setFillColorRGB(0, 128, 0)
+            canvas.drawString(
+                self.LeftPadding + 4,
+                self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 2) - 22,
+                self.GeaccepteerdDisclaimer,
+            )
+            canvas.setFillColorRGB(255, 0, 0)
+            canvas.drawString(
+                self.LeftPadding + 4,
+                self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 2) - 32,
+                self.NietGeaccepteerdDisclaimer,
+            )
+            canvas.setFillColorRGB(0, 0, 0)
+            canvas.drawString(
+                self.LeftPadding + 4,
+                self.OpmerkingBoxPadding + (self.OpmerkingBoxHeight / 2) - 42,
+                self.stakeholderDisclaimer,
+            )
 
-        canvas.setFillColorRGB(0, 0, 0)
         # Blauwe Box voordat PVE begint
         canvas.setFillColorRGB(75 / 255, 172 / 255, 198 / 255)
         canvas.setStrokeColorRGB(75 / 255, 172 / 255, 198 / 255)
@@ -280,10 +315,16 @@ class PDFMaker:
         canvas.restoreState()
         
     def generateRuleBasicInfo(self, annotations, item, attachments):
-        parties_involved_str = f""
+        # add the party of the first replier to the party-string, with its initial
+        if annotations[item.id].user.stakeholder:
+            party_involved = f"{annotations[item.id].user.stakeholder} "
+        else:
+            party_involved = f"{annotations[item.id].user.client} "
+            
+        # add the first time, and the party initial. Empty string for comparison after if anything is added.
+        total_string = f"<i>({annotations[item.id].date.strftime('%Y-%m-%d')})</i> <b>{ party_involved[0] }:</b> "
+        empty_string = f"<i>({annotations[item.id].date.strftime('%Y-%m-%d')})</i> <b>{ party_involved[0] }:</b> "
         
-        # add basic info (time, status, costs, attachments)
-        total_string = f"{annotations[item.id].date.strftime('%Y-%m-%d')}: "
         if annotations[item.id].status:
             total_string += f"Status: {annotations[item.id].status}. "
         if annotations[item.id].consequentCosts:
@@ -293,17 +334,18 @@ class PDFMaker:
 
             for attachment in attachments[item.id]:
                 total_string += f"'{attachment}'. "
-                
-        # add the party of the first replier to the party-string, with its initial
-        if annotations[item.id].user.stakeholder:
-            party_involved = f"{annotations[item.id].user.stakeholder} "
-        else:
-            party_involved = f"{annotations[item.id].user.client} "
         
-        parties_involved_str += f""", {party_involved} ({f"{party_involved}"[0]})"""
-        return parties_involved_str, total_string
+        # just don't show anything if there are no statuses/costs/attachments
+        if total_string != empty_string:
+            # ensure newline to next comment if there is any added
+            if "<br />" not in total_string:
+                total_string += "<br />"
+        else:
+            total_string = ""
+        
+        return total_string
 
-    def generateRepliesToRule(self, annotations, item, replies, replyAttachments, total_string, parties_involved_str):
+    def generateRepliesToRule(self, annotations, item, replies, replyAttachments, total_string):
         # if the item has replies
         all_replies = ""
         if item.id in replies:
@@ -311,17 +353,13 @@ class PDFMaker:
             for reply in replies[item.id]:
                 # add the repliers party to the party-string
                 if reply.user.stakeholder:
-                    party_involved = reply.user.stakeholder
+                    party_involved = f"{reply.user.stakeholder}"
                 else:
-                    party_involved = reply.user.client
+                    party_involved = f"{reply.user.client}"
                     
-                # if the party isnt in the string yet, add the party and its initial
-                if f"{party_involved}" not in parties_involved_str:
-                    parties_involved_str += f""", {party_involved} ({f"{party_involved}"[0]})"""
-
                 # initiate comment with the party initial, and "empty string" for comparison
-                single_comment = f"""{f"{party_involved}"[0]}: """
-                empty_string = f"""{f"{party_involved}"[0]}: """
+                single_comment = f"""<i>({reply.date.strftime('%Y-%m-%d')})</i> <b>{ party_involved[0] }:</b> """
+                empty_string = f"""<i>({reply.date.strftime('%Y-%m-%d')})</i> <b>{ party_involved[0] }:</b> """
                 
                 # if it has a comment, add the first letter of the party and the comment
                 if reply.comment:
@@ -354,8 +392,7 @@ class PDFMaker:
 
                 all_replies += single_comment
         
-        # add the announcement for all parties involved, and the parties. After that, add all replies
-        total_string += f"Betrokken partijen: {parties_involved_str}<br />"
+        # add all replies
         total_string += all_replies
         
         # if there isnt any replies, change to empty string.
@@ -415,8 +452,8 @@ class PDFMaker:
         if item.id in annotations:
             
             # create the text of the replies
-            parties_involved_str, total_string = self.generateRuleBasicInfo(annotations, item, attachments)
-            total_string = self.generateRepliesToRule(annotations, item, replies, replyAttachments, total_string, parties_involved_str)
+            total_string = self.generateRuleBasicInfo(annotations, item, attachments)
+            total_string = self.generateRepliesToRule(annotations, item, replies, replyAttachments, total_string)
             j = self.styleParagraph(annotations, accepted_comment_ids, total_string, Story, item_added, item)
             
             # write the item (p) and replies (j)

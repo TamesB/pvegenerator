@@ -231,7 +231,7 @@ def GeneratePVEView(request, client_pk, version_pk):
             reactieattachments = {}
 
             version_name = pve_versie.version
-            pdfmaker = writePdf.PDFMaker(version_name, logo_url)
+            pdfmaker = writePdf.PDFMaker(version_name, logo_url, None)
             pdfmaker.makepdf(
                 filename,
                 basic_PVE,
