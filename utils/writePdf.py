@@ -330,8 +330,9 @@ class PDFMaker:
             total_string += f"<b>Status: {annotations[item.id].status}. </b>"
         if annotations[item.id].consequentCosts:
             total_string += f"<b>Kostenverschil: €{annotations[item.id].consequentCosts} {annotations[item.id].costtype}. </b>"
-            
-        total_string += "<br />Opmerkingsverloop: "
+        
+        start_comments = "<br />Opmerkingsverloop: "
+        total_string += start_comments
         
         # now we add annotations and attachments added specifically by the first replier.
         second_string = f"<i>({annotations[item.id].date.strftime('%Y-%m-%d')})</i> <b>{ party_involved[0] }:</b> "
@@ -352,7 +353,7 @@ class PDFMaker:
             total_string += second_string
             
         # just don't show anything if there are no statuses/costs/attachments
-        if total_string == empty_string:
+        if total_string == (empty_string + start_comments):
             total_string = ""
         
         return total_string
