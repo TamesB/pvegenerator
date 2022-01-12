@@ -3,7 +3,7 @@
   class="ui primary button d-inline"
   hx-get="{% url 'dashboard' %}" hx-target="body" hx-swap="innerHTML"
   >< Dashboard</button>
-<h1 class="ui header center aligned">PvE version overview</h1>
+<h1 class="ui header center aligned">PvE versie overview</h1>
 {% if clients %}
 <br /><br />
 <div>
@@ -11,12 +11,12 @@
   <div id="versietable-{{ key.id }}" hx-swap="innerHTML" hx-trigger="load" hx-get="{% url 'pveversietable' key.id %}"></div>
   <div id="newline-{{ key.id }}"></div>
   <br>
-  <button hx-get="{% url 'addpveversieform' key.id %}" hx-target="#newline-{{ key.id }}" class="ui green button">Voeg version toe</button>
+  <button hx-get="{% url 'addpveversieform' key.id %}" hx-target="#newline-{{ key.id }}" class="ui green button">Voeg versie toe</button>
   <div class="ui divider"></div>
   {% endfor %}
-  {% else %}
-  {% endif %} {% block modal %}{% endblock %} {% endblock %}
+  {% endif %} {% block modal %}{% endblock %}
 </div>
 <script>
   feather.replace()
 </script>
+{% endblock %}

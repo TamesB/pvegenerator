@@ -589,7 +589,7 @@ def AddPvEVersie(request, client_pk):
     context["form"] = form
     context["key"] = client_pk
     context["client"] = client
-    return render(request, "partials/addpveversieform.html", context)
+    return render(request, "partials/addpveversionform.html", context)
 
 @staff_member_required(login_url=reverse_lazy('logout'))
 def BeleggerVersieTable(request, client_pk):
