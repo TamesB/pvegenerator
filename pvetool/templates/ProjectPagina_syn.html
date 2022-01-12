@@ -162,11 +162,18 @@
         <div class="actie_item" onClick="javascript:location.href='{% url 'pvelastdownload' client_pk project.id %}'">
           <div class="inner_actie">
             <img class="actie-img" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img>
-            <p class="subtext">PvE</p>
+            <p class="subtext">PvE PDF</p>
           </div>
           </div>
         {% endif %}
-      
+
+      <div class="actie_item" onClick="window.open('{% url 'downloadexcelproject' client_pk project.id %}', '_blank');">
+        <div class="inner_actie">
+          <img class="actie-img" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img>
+          <p class="subtext">PvE Excel</p>
+        </div>
+        </div>
+
       {% else %}
       {% if request.user.type_user == "SB" or request.user.type_user == "B" %}
       <div class="actie_item" onClick="javascript:location.href='{% url 'kiespveversie' client_pk project.id %}'">

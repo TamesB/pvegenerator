@@ -94,7 +94,12 @@ urlpatterns = [
     path("<int:client_pk>/project/<int:pk>/pve", actionsProject.download_pve, name="download_pve_syn"),
     path("<int:client_pk>/project/<int:pk>/<int:version_pk>/addpve", actionsProject.ConnectPVE, name="connectpve_syn"),
     path("<int:client_pk>/project/<int:pk>/addpvepartial", actionsProject.KiesPVE, name="kiespveversie"),
-
+    path(
+        "<int:client_pk>/project/<int:pk>/dlexcel",
+        utils.DownloadExcelProject,
+        name="downloadexcelproject",
+    ),
+    
     # first annotate crud
     path("<int:client_pk>/comment", crudFirstAnnotate.AddCommentOverview, name="plusopmerkingOverview_syn"),
     path("<int:client_pk>/project/<int:pk>/comment/add", crudFirstAnnotate.AddComment, name="plusopmerking_syn"),

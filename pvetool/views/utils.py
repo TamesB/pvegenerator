@@ -5,11 +5,17 @@ import botocore
 from botocore.exceptions import ClientError
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+
+from app.models import Beleggers
+from project.models import Project
 
 from project.models import BijlageToAnnotation
 from pvetool.models import BijlageToReply
 
+from utils.writeExcelProject import WriteExcelProject
 
 @login_required(login_url="login_syn")
 def DownloadAnnotationAttachment(request, client_pk, projid, annid, attachment_id):
@@ -108,3 +114,33 @@ def DownloadReplyAttachment(request, client_pk, pk, reply_id, attachment_id):
 
     # The response contains the presigned URL
     return HttpResponseRedirect(response)
+
+@login_required(login_url=reverse_lazy("logout"))
+def DownloadExcelProject(request, client_pk, pk):
+    if not Beleggers.objects.filter(pk=client_pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+
+    if not Project.objects.filter(pk=pk).exists():
+        return redirect("logout_syn", client_pk=client_pk)
+    
+    project = Project.objects.get(pk=pk)
+    
+    worksheet = WriteExcelProject()
+    excelFilename = worksheet.linewriter(project)
+    print(excelFilename)
+    excelFilename = f"/{excelFilename}.xlsx"
+
+    fl_path = settings.EXPORTS_ROOT
+    try:
+        fl = open(fl_path + excelFilename, "rb")
+    except OSError:
+        raise Http404("404")
+
+    print(fl)
+    response = HttpResponse(
+        fl,
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    response["Content-Disposition"] = "inline; filename=%s" % excelFilename
+
+    return response
