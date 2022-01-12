@@ -56,7 +56,6 @@ class WriteExcelProject:
 
         bold_rotate = workbook.add_format({"bold": True})
         bold_rotate.set_rotation(30)
-        bold_rotate.set_text_wrap()
 
         # Titel row
         column = 0
