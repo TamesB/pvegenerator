@@ -10,7 +10,6 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
 from urllib.request import urlopen
 import io
 from app import models
-from reportlab.lib.utils import ImageReader
 from PIL import Image
 import numpy as np
 
