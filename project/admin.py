@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.contrib.gis.admin import GeoModelAdmin
+from django.contrib.admin import ModelAdmin
 
 from .models import (
     Beleggers,
@@ -13,7 +13,7 @@ from .models import (
 
 
 # Register your models here.
-class CustomGeoAdmin(GeoModelAdmin):
+class CustomGeoAdmin(ModelAdmin):
     options = {
         "layers": ["google.hybrid"],
         "overlayStyle": {

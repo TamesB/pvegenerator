@@ -9,8 +9,6 @@ from typing import Optional
 from django.conf import settings
 
 from app import models
-from PIL import ImageFont
-
 
 class ExcelMaker:
     def linewriter(self, PVEItems):
