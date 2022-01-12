@@ -473,6 +473,9 @@ def FirstAcceptStepPong(request, client_pk, project_pk, item_pk, type):
     project, current_phase = passed_commentcheck_guardclauses(
         request, client_pk, project_pk
     )
+    
+    if not project:
+        return redirect("logout_syn", client_pk=client_pk)
 
     # check last replier to see if user is allowed to accept the last reply 
     # (can't accept their own replies, the other party has to do that. You can however change your mind and disagree with your own comment)

@@ -46,7 +46,7 @@ class PDFMaker:
             self.IntroDisclaimer = f"Een voortgangs snapshot van het PvE overeenkomst van project {self.project.name} van {self.project.client.name}. De gebruikte PvE versie is {self.version}."
         if self.project.fullyFrozen:
             self.IntroDisclaimer = f"De voltooide versie van het PvE overeenkomst van project {self.project.name} van {self.project.client.name}. De gebruikte PvE versie is {self.version}."
-        self.BijlageDisclaimer = f"Bijlages van regels zijn te vinden in het mapje BasisBijlages, bijlagen van opmerkingen zijn te vinden in het mapje OpmerkingBijlages (beide in het .zip bestand aangeboden bij de download)."
+        self.BijlageDisclaimer = f"Bijlages van regels zijn te vinden in het mapje BasisBijlages, bijlagen van opmerkingen zijn te vinden in het mapje OpmerkingBijlages."
         self.GeaccepteerdDisclaimer = f"Geaccepteerde statussen zijn in het groen."
         self.NietGeaccepteerdDisclaimer = (
             f"Niet geaccepteerde statussen zijn in het rood."
@@ -322,25 +322,35 @@ class PDFMaker:
             party_involved = f"{annotations[item.id].user.client} "
             
         # add the first time, and the party initial. Empty string for comparison after if anything is added.
-        total_string = f"<i>({annotations[item.id].date.strftime('%Y-%m-%d')})</i> <b>{ party_involved[0] }:</b> "
-        empty_string = f"<i>({annotations[item.id].date.strftime('%Y-%m-%d')})</i> <b>{ party_involved[0] }:</b> "
+        total_string = f""
+        empty_string = f""
         
+        # here we add the basic info (status and costs)
         if annotations[item.id].status:
             total_string += f"Status: {annotations[item.id].status}. "
         if annotations[item.id].consequentCosts:
             total_string += f"Kostenverschil: €{annotations[item.id].consequentCosts} {annotations[item.id].costtype}. "
+            
+        total_string += "<br />"
+        
+        # now we add annotations and attachments added specifically by the first replier.
+        second_string = f"<i>({annotations[item.id].date.strftime('%Y-%m-%d')})</i> <b>{ party_involved[0] }:</b> "
+        empty_second_string = f"<i>({annotations[item.id].date.strftime('%Y-%m-%d')})</i> <b>{ party_involved[0] }:</b> "
+        
+        if annotations[item.id].annotation:
+            second_string += f""""{annotations[item.id].annotation}"""""
         if annotations[item.id].attachment:
-            total_string += f"Zie bijlage(n) "
+            second_string += f"Zie bijlage(n) "
 
             for attachment in attachments[item.id]:
-                total_string += f"'{attachment}'. "
+                second_string += f"'{attachment}'. "
         
+        if second_string != empty_second_string:
+            second_string += "<br />"
+            total_string += second_string
+            
         # just don't show anything if there are no statuses/costs/attachments
-        if total_string != empty_string:
-            # ensure newline to next comment if there is any added
-            if "<br />" not in total_string:
-                total_string += "<br />"
-        else:
+        if total_string == empty_string:
             total_string = ""
         
         return total_string

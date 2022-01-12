@@ -837,7 +837,6 @@ a {
 
 #main .layerOneInner .article .article_content .formbox select {
   width: 100%;
-  height: 4vh;
 }
 
 #main .layerOneInner .article .article_content .formbox textarea {
@@ -1178,7 +1177,6 @@ a {
       align-self: center;
   margin-top: 1vh;
   width: 50%;
-  height: 3vh;
 }
 
 #main .layerOneInner .article .article_content .invite-container .box form .formbox select .dropdown {
