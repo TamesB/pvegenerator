@@ -5,7 +5,6 @@ root = environ.Path(__file__)
 env = environ.Env()
 environ.Env.read_env()
 
-CSRF_TRUSTED_ORIGINS = [os.environ["CSRF_TRUSTED_ORIGIN1"], os.environ["CSRF_TRUSTED_ORIGIN2"], os.environ["CSRF_TRUSTED_ORIGIN3"], 'https://*.127.0.0.1']
 print(os.environ["CSRF_TRUSTED_ORIGIN1"], os.environ["CSRF_TRUSTED_ORIGIN2"], os.environ["CSRF_TRUSTED_ORIGIN3"])
 ## that requests over HTTP are redirected to HTTPS. also can config this in webserver
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

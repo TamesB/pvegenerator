@@ -256,6 +256,8 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER")
 SERVER_EMAIL = os.getenv("EMAIL_HOST_USER")
 
+CSRF_TRUSTED_ORIGINS = [os.environ["CSRF_TRUSTED_ORIGIN1"], os.environ["CSRF_TRUSTED_ORIGIN2"], os.environ["CSRF_TRUSTED_ORIGIN3"], 'https://*.127.0.0.1']
+
 django.setup()
 
 # Heroku settings
