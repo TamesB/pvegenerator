@@ -5,6 +5,8 @@ root = environ.Path(__file__)
 env = environ.Env()
 environ.Env.read_env()
 
+CSRF_TRUSTED_ORIGINS = [os.environ["CSRF_TRUSTED_ORIGIN1"], os.environ["CSRF_TRUSTED_ORIGIN2"], os.environ["CSRF_TRUSTED_ORIGIN3"], 'https://*.127.0.0.1']
+
 ## that requests over HTTP are redirected to HTTPS. also can config this in webserver
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = True
@@ -22,7 +24,6 @@ CSRF_USE_SESSIONS = True
 CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = "Strict"
-CSRF_TRUSTED_ORIGINS = [os.environ["CSRF_TRUSTED_ORIGIN1"], os.environ["CSRF_TRUSTED_ORIGIN2"], os.environ["CSRF_TRUSTED_ORIGIN3"], 'https://*.127.0.0.1']
 
 # CSP_DEFAULT_SRC = ("'none'",)
 # CSP_STYLE_SRC = ("'self'", 'ajax.googleapis.com', 'fonts.googleapis.com', 'sha256-Y7kgPWQdS/jgNu5itxfRoU6O5xEw/w7EBBi5d7MG+28=', 'sha256-biLFinpqYMtWHmXfkA1BPeCY0/fNt46SAZ+BBk5YUog=')
