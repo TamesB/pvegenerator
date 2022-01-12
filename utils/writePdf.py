@@ -44,8 +44,8 @@ class PDFMaker:
         self.IntroDisclaimer = ""
         if self.project:
             self.IntroDisclaimer = f"Een voortgangs snapshot van het PvE overeenkomst van project {self.project.name} van {self.project.client.name}. De gebruikte PvE versie is {self.version}."
-        if self.project.fullyFrozen:
-            self.IntroDisclaimer = f"De voltooide versie van het PvE overeenkomst van project {self.project.name} van {self.project.client.name}. De gebruikte PvE versie is {self.version}."
+            if self.project.fullyFrozen:
+                self.IntroDisclaimer = f"De voltooide versie van het PvE overeenkomst van project {self.project.name} van {self.project.client.name}. De gebruikte PvE versie is {self.version}."
         self.BijlageDisclaimer = f"Bijlages van regels zijn te vinden in het mapje BasisBijlages, bijlagen van opmerkingen zijn te vinden in het mapje OpmerkingBijlages."
         self.GeaccepteerdDisclaimer = f"Geaccepteerde statussen zijn in het groen."
         self.NietGeaccepteerdDisclaimer = (
