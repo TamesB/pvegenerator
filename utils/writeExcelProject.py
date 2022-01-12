@@ -150,9 +150,18 @@ class WriteExcelProject:
                                     style = bold_yellow
                                     
                                 worksheet.write(row, column, f"{annotations[item.id].status}", style)
+                            
+                            comment_string = ""
+                            
+                            if annotations[item.id].firststatus:
+                                comment_string += f"Nieuwe status: {annotations[item.id].firststatus}. "
                             if annotations[item.id].annotation:
+                                comment_string += f"Opmerking: {annotations[item.id].annotation}."
+                                
+                            if comment_string != "":
                                 column = 3
-                                worksheet.write(row, column, f"{annotations[item.id].annotation}", bold)
+                                worksheet.write(row, column, comment_string, bold)
+
                                 
                         if item.id in consequentCosts.keys():
                             column = 2
@@ -175,6 +184,7 @@ class WriteExcelProject:
                     if item.id in annotations.keys():
                         if annotations[item.id].status:
                             column = 1
+                            
                             if "n.v.t." in f"{annotations[item.id].status}":
                                 style = bold_red
                             if "akkoord" in f"{annotations[item.id].status}":
@@ -185,11 +195,20 @@ class WriteExcelProject:
                                 style = bold_yellow
                             if "n.t.b." in f"{annotations[item.id].status}":
                                 style = bold_yellow
-
+                                
                             worksheet.write(row, column, f"{annotations[item.id].status}", style)
+                        
+                        comment_string = ""
+                        
+                        if annotations[item.id].firststatus:
+                            comment_string += f"Nieuwe status: {annotations[item.id].firststatus}. "
                         if annotations[item.id].annotation:
+                            comment_string += f"Opmerking: {annotations[item.id].annotation}."
+                            
+                        if comment_string != "":
                             column = 3
-                            worksheet.write(row, column, f"{annotations[item.id].annotation}", bold)
+                            worksheet.write(row, column, comment_string, bold)
+
                             
                     if item.id in consequentCosts.keys():
                         column = 2
@@ -218,10 +237,21 @@ class WriteExcelProject:
                 
                 for reply in replies:
                     row = itemId_to_row[reply.onComment.item.id]
+                    
+                    comment_string = ""
+                    
+                    if reply.status:
+                        comment_string += f"Nieuwe status: {reply.status}. "
                     if reply.comment:
-                        worksheet.write(row, column, f"{reply.comment}", bold)
+                        comment_string += f"Opmerking: {reply.status}. "
                     if reply.accept:
-                        worksheet.write(row, column, f"akkoord.", accepted_cell)
+                        comment_string = f"akkoord."
+                    
+                    if comment_string != "":
+                        if reply.accept:
+                            worksheet.write(row, column, comment_string, accepted_cell)
+                        else:
+                            worksheet.write(row, column, comment_string, bold)
 
                 column += 1
 
