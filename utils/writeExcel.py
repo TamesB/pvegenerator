@@ -36,6 +36,11 @@ class ExcelMaker:
 
         # Add a bold format to use to highlight cells.
         bold = workbook.add_format({"bold": True})
+        bold_chapter = workbook.add_format({"bold": True, 'bg_color': "#0078ae"})
+        bold_chapter.set_font_color('white')
+        bold_paragraph = workbook.add_format({"bold": True, 'bg_color': "#66acd1"})
+        bold_paragraph.set_font_color("#204d77")
+
         bold_rotate = workbook.add_format({"bold": True})
         bold_rotate.set_rotation(45)
 
@@ -79,6 +84,10 @@ class ExcelMaker:
         cell_format = workbook.add_format()
         cell_format.set_text_wrap()
 
+        cell_format_blue = workbook.add_format()
+        cell_format_blue.set_bg_color("#daedf2")
+        cell_format_blue.set_text_wrap()
+
         bouwsoorten_item = {item.id:[i for i in item.Bouwsoort.all()] for item in PVEItems}
         typeobjecten_item = {item.id:[i for i in item.TypeObject.all()] for item in PVEItems}
         doelgroepen_item = {item.id:[i for i in item.Doelgroep.all()] for item in PVEItems}
@@ -88,7 +97,7 @@ class ExcelMaker:
 
         for chapter in chapters:
             items = [item for item in PVEItems if item.chapter == chapter]
-            worksheet.write(row, column, chapter.chapter, bold)
+            worksheet.write(row, column, chapter.chapter, bold_chapter)
 
             row += 1
 
@@ -102,54 +111,62 @@ class ExcelMaker:
                         if item.paragraph == paragraph
                     ]
                     
-                    worksheet.write(row, column, paragraph.paragraph, bold)
+                    worksheet.write(row, column, paragraph.paragraph, bold_paragraph)
                     row += 1
 
                     for item in items_spec:
+                        using_format = cell_format
+                        if row % 2 == 0:
+                            using_format = cell_format_blue
+                            
                         inhoud = "%s" % item.inhoud
-                        worksheet.write(row, column, inhoud, cell_format)
+                        worksheet.write(row, column, inhoud, using_format)
                         column += 1
 
                         if item.basisregel:
                             worksheet.write(row, column, "x")
                             column += 1
-                        else:
-                            column += 1
+                        else: 
+                            column +=1
 
                         for bouwsrt in Bouwsoorten:
                             if bouwsrt in bouwsoorten_item[item.id]:
                                 worksheet.write(row, column, "x")
                                 column += 1
-                            else:
-                                column += 1
+                            else: 
+                                column +=1
 
                         for typeobj in TypeObjecten:
                             if typeobj in typeobjecten_item[item.id]:
                                 worksheet.write(row, column, "x")
                                 column += 1
-                            else:
-                                column += 1
+                            else: 
+                                column +=1
 
                         for doelgrp in Doelgroepen:
                             if doelgrp in doelgroepen_item[item.id]:
                                 worksheet.write(row, column, "x")
                                 column += 1
-                            else:
-                                column += 1
+                            else: 
+                                column +=1
 
                         row += 1
                         column = 0
             else:
                 for item in items:
+                    using_format = cell_format
+                    if row % 2 == 0:
+                        using_format = cell_format_blue
+
                     inhoud = "%s" % item.inhoud
-                    worksheet.write(row, column, inhoud, cell_format)
+                    worksheet.write(row, column, inhoud, using_format)
                     column += 1
 
                     if item.basisregel:
                         worksheet.write(row, column, "x")
                         column += 1
-                    else:
-                        column += 1
+                    else: 
+                        column +=1
 
                     for bouwsrt in Bouwsoorten:
                         if bouwsrt in bouwsoorten_item[item.id]:

@@ -270,10 +270,15 @@ def DeletePVEVersie(request, client_pk, version_pk):
 @staff_member_required(login_url=reverse_lazy("logout"))
 def PVEVersieDetail(request, version_pk):
     version = models.PVEVersie.objects.get(id=version_pk)
-
+    
+    downloadable = False
+    if version.chapter.exists():
+        downloadable = True
+        
     context = {}
     context["item"] = version
     context["version_pk"] = version_pk
+    context["downloadable"] = downloadable
     return render(request, "partials/getpveversion.html", context)
 
 @staff_member_required(login_url=reverse_lazy("logout"))

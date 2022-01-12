@@ -9,6 +9,9 @@
               type="button"
               value="Open"
             />
+            {% if downloadable %}
+            <a href="{% url 'worksheetdownload' item.id %}"><button class="ui basic button"><i class="icon file excel outline"></i>Excel</button></a>
+            {% endif %}
             <div class="d-inline" hx-get="{% url 'getpveactivity' item.id %}" hx-trigger="load" hx-swap="outerHTML"></div>
 					  <span><button hx-post="{% url 'deletepveversie' item.client.id item.id %}"
                       hx-target="closest tr"
