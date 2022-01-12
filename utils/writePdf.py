@@ -322,23 +322,25 @@ class PDFMaker:
             party_involved = f"{annotations[item.id].user.client} "
             
         # add the first time, and the party initial. Empty string for comparison after if anything is added.
-        total_string = f""
-        empty_string = f""
+        total_string = f"<b>Totaal:</b> "
+        empty_string = f"<b>Totaal:</b> "
         
         # here we add the basic info (status and costs)
         if annotations[item.id].status:
-            total_string += f"Status: {annotations[item.id].status}. "
+            total_string += f"<b>Status: {annotations[item.id].status}. </b>"
         if annotations[item.id].consequentCosts:
-            total_string += f"Kostenverschil: €{annotations[item.id].consequentCosts} {annotations[item.id].costtype}. "
+            total_string += f"<b>Kostenverschil: €{annotations[item.id].consequentCosts} {annotations[item.id].costtype}. </b>"
             
-        total_string += "<br />"
+        total_string += "<br />Opmerkingsverloop: "
         
         # now we add annotations and attachments added specifically by the first replier.
         second_string = f"<i>({annotations[item.id].date.strftime('%Y-%m-%d')})</i> <b>{ party_involved[0] }:</b> "
         empty_second_string = f"<i>({annotations[item.id].date.strftime('%Y-%m-%d')})</i> <b>{ party_involved[0] }:</b> "
         
+        if annotations[item.id].firststatus:
+            second_string += f"Nieuwe status: {annotations[item.id].firststatus}. "
         if annotations[item.id].annotation:
-            second_string += f""""{annotations[item.id].annotation}"""""
+            second_string += f""""{annotations[item.id].annotation}". """
         if annotations[item.id].attachment:
             second_string += f"Zie bijlage(n) "
 
@@ -370,6 +372,9 @@ class PDFMaker:
                 # initiate comment with the party initial, and "empty string" for comparison
                 single_comment = f"""<i>({reply.date.strftime('%Y-%m-%d')})</i> <b>{ party_involved[0] }:</b> """
                 empty_string = f"""<i>({reply.date.strftime('%Y-%m-%d')})</i> <b>{ party_involved[0] }:</b> """
+                
+                if reply.status:
+                    single_comment += f"Nieuwe status: {reply.status}. "
                 
                 # if it has a comment, add the first letter of the party and the comment
                 if reply.comment:
