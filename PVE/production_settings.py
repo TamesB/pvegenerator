@@ -28,4 +28,4 @@ CSRF_TRUSTED_ORIGINS = [env.str("CSRF_TRUSTED_ORIGIN1"), env.str("CSRF_TRUSTED_O
 # CSP_FONT_SRC = ("'self'", 'ajax.googleapis.com', 'fonts.gstatic.com', 'fonts.googleapis.com')
 # CSP_IMG_SRC = ("'self'",)
 
-ALLOWED_HOSTS = [os.environ["HOST1"]]
+ALLOWED_HOSTS = [os.environ["HOST1"], os.environ["HOST2"]]
