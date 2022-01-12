@@ -232,7 +232,7 @@ class WriteExcelProject:
 
                 # write the name of the organisation that has this commentphase
                 row = 0
-                worksheet.write(row, column, f"{stakeholder.name}", bold_rotate)
+                worksheet.write(row, column, f"{stakeholder.name} ({replies.first().date.strftime('%Y-%m-%d')})", bold_rotate)
                 row += 1
                 
                 for reply in replies:
