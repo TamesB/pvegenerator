@@ -124,10 +124,15 @@ def DownloadExcelProject(request, client_pk, pk):
         return redirect("logout_syn", client_pk=client_pk)
     
     project = Project.objects.get(pk=pk)
+    client = project.client
     
+    logo_url = None
+    if client.logo:
+        logo_obj = client.logo
+        
+
     worksheet = WriteExcelProject()
-    excelFilename = worksheet.linewriter(project)
-    print(excelFilename)
+    excelFilename = worksheet.linewriter(project, logo_obj)
     excelFilename = f"/{excelFilename}.xlsx"
 
     fl_path = settings.EXPORTS_ROOT

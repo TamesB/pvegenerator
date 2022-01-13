@@ -9,9 +9,12 @@ from typing import Optional
 from django.conf import settings
 from app import models
 from project.models import PVEItemAnnotation
-
+from PIL import Image
+from urllib.request import urlopen
+import numpy as np
+import io
 class WriteExcelProject:
-    def linewriter(self, project):
+    def linewriter(self, project, logo_filename_path):
         #hierboven version_pk als je hele version wil uitdraaien
         #PVEItems = [i for i in models.PVEItem.objects.prefetch_related("Bouwsoort").prefetch_related("TypeObject").prefetch_related("Doelgroep").select_related("chapter").select_related("paragraph").filter(version__id=version_pk)]
 
@@ -42,10 +45,16 @@ class WriteExcelProject:
 
         bold_red = workbook.add_format({"bold": True})
         bold_red.set_bg_color("red")
+        bold_red.set_border(1)
+        bold_red.set_border_color("#231F20")
         bold_yellow = workbook.add_format({"bold": True})
         bold_yellow.set_bg_color("yellow")
+        bold_yellow.set_border(1)
+        bold_yellow.set_border_color("#231F20")
         bold_green = workbook.add_format({"bold": True})
         bold_green.set_bg_color("green")
+        bold_green.set_border(1)
+        bold_green.set_border_color("#231F20")
 
         bold_chapter = workbook.add_format({"bold": True, 'bg_color': "#0078ae"})
         bold_chapter.set_font_color('white')
@@ -54,20 +63,13 @@ class WriteExcelProject:
         bold_chapter.set_text_wrap()
         bold_paragraph.set_text_wrap()
 
-        bold_rotate = workbook.add_format({"bold": True})
+        bold_rotate = workbook.add_format({"bold": True, 'bg_color': "#0078ae"})
+        bold_rotate.set_font_color('white')
         bold_rotate.set_rotation(30)
 
-        # Titel row
         column = 0
         row = 0
         
-        worksheet.write(row, column, f"PvE - Project: { project.name }", bold_rotate)
-        column += 1
-        worksheet.write(row, column, "Status", bold_rotate)
-        column += 1
-        worksheet.write(row, column, "Kosten", bold_rotate)
-
-        column = 0
         worksheet.freeze_panes(1, 1)
         worksheet.freeze_panes(1, 2)
         worksheet.freeze_panes(1, 3)
@@ -80,10 +82,14 @@ class WriteExcelProject:
         cell_format_blue = workbook.add_format()
         cell_format_blue.set_bg_color("#daedf2")
         cell_format_blue.set_text_wrap()
-
+        
         accepted_cell = workbook.add_format()
         accepted_cell.set_bg_color("green")
         accepted_cell.set_text_wrap()
+
+        grey_bg = workbook.add_format({'bold': True, 'bg_color': '#D3D3D3'})
+        grey_bg.set_border(1)
+        grey_bg.set_border_color("#231F20")
 
         paragraphs = list(set([item.paragraph for item in items if item.paragraph]))
         paragraphs_hfst = {chapter.id:[paragraph for paragraph in paragraphs if paragraph.chapter and paragraph.chapter == chapter] for chapter in chapters}
@@ -107,6 +113,7 @@ class WriteExcelProject:
         itemId_to_row = {}
         
         row += 1
+        max_row = row
         # start with writing just the PvE and the statuses
         for chapter in chapters:
             worksheet.write(row, column, chapter.chapter, bold_chapter)
@@ -165,7 +172,7 @@ class WriteExcelProject:
                                 
                         if item.id in consequentCosts.keys():
                             column = 2
-                            worksheet.write(row, column, f"{consequentCosts[item.id]}", bold)
+                            worksheet.write(row, column, f"{consequentCosts[item.id]}", grey_bg)
                             
                         column = 0
                         
@@ -212,29 +219,37 @@ class WriteExcelProject:
                             
                     if item.id in consequentCosts.keys():
                         column = 2
-                        worksheet.write(row, column, f"{consequentCosts[item.id]}", bold)
+                        worksheet.write(row, column, f"{consequentCosts[item.id]}", grey_bg)
                         
                     column = 0
                     
                     itemId_to_row[item.id] = row
                     row += 1
+            
+            # for length of table
+            if row > max_row:
+                max_row = row
         
         # write the comments
         column = 4
         row = 0
         
         phases = project.phase.all().order_by("id")
+        max_col = column
+        header_list = []
+        
         for phase in phases:
             replies = phase.reply.select_related("onComment__item").all()
+            first_reply = replies.first()
+            
+            if first_reply:
+                stakeholder = first_reply.user.stakeholder if first_reply.user.stakeholder else first_reply.user.client
+                header = f"{stakeholder.name} ({first_reply.date.strftime('%Y-%m-%d %H:%M')})"                    
+                header_list.append(header)
 
             if replies:
-                first_reply = replies.first()
-                stakeholder = first_reply.user.stakeholder if first_reply.user.stakeholder else first_reply.user.client
-
-                # write the name of the organisation that has this commentphase
-                row = 0
-                worksheet.write(row, column, f"{stakeholder.name} ({first_reply.date.strftime('%Y-%m-%d')})", bold_rotate)
-                row += 1
+                
+                row = 1
                 
                 for reply in replies:
                     row = itemId_to_row[reply.onComment.item.id]
@@ -255,13 +270,36 @@ class WriteExcelProject:
                             worksheet.write(row, column, comment_string, bold)
 
                 column += 1
+                
+                if column > max_col:
+                    max_col = column
+                        
+                
+        
+        # make grey bgs and convert PvE, Status and comments to tables
+        worksheet.conditional_format(0, 1, max_row, 2, {'type':'blanks', 'format': grey_bg})
 
+        pve_title =  [f"PvE - Project: { project.name }"]
+        cols_title = ["Status", "Kosten"]
+
+        for col in cols_title:
+            pve_title.append(col)
+            
+        for col in header_list:
+            pve_title.append(col)
+        
+        worksheet.add_table(0, 0, max_row, max_col, {"columns": [{"header": header} for header in pve_title]})
+        
+        # final title style
+        worksheet.set_row(row=0, cell_format=bold_chapter)
+
+        # set autowidth to beautify
         for _ in range(len(worksheet.table.items())):
             self.set_column_autowidth(worksheet, _)
         
         workbook.close()
         return filename
-
+    
 
     def get_column_width(self, worksheet: Worksheet, column: int) -> Optional[int]:
         """Get the max column width in a `Worksheet` column."""
@@ -304,8 +342,14 @@ class WriteExcelProject:
         maxwidth = int(float(maxwidth) / 5)
         if maxwidth < 20:
             maxwidth = 20
+        
+        if column == 0:
+            maxwidth = 100
             
         if column == 1:
             maxwidth = 25
+            
+        if column == 2:
+            maxwidth = 13
 
         worksheet.set_column(first_col=column, last_col=column, width=maxwidth)
