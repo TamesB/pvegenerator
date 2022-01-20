@@ -40,7 +40,8 @@
           <td><p>{{ werknemer.last_visit }}</p></td>
           <td><p>{% if werknemer.type_user == "SD"%}Derde{% endif %}{% if werknemer.type_user == "SOG"%}{{ client.name }} Projectmanager{% endif %}</p></td>
           <td><p>{% if werknemer.stakeholder %}{{ werknemer.stakeholder }}{% else %}<i>Geen</i>{% endif %}</p></td>
-          <td><p>{% if werknemer.stakeholder.projecten.all %}{% for project in werknemer.stakeholder.projecten.all %}{{ project }}, {% endfor %}{% elif werknemer.projectmanager.all %}{% for project in werknemer.projectmanager.all %}{{ project }}, {% endfor %}{% endif %}</p></td>
+          <td><p>{% if werknemer.stakeholder.projecten.all %}{% for project in werknemer.stakeholder.projecten.all %}{{ project }}, {% endfor %}
+            {% elif werknemer.projectmanager.all %}{% for project in werknemer.projectmanager.all %}{{ project }}, {% endfor %}{% endif %}</p></td>
           <td><p><a href="#"><button class="ui icon basic button"><i class="icon edit"></i></button></a></p></td>
           {% endlanguage %}
         </tr>

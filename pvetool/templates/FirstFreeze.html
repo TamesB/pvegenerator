@@ -25,7 +25,8 @@
     <p>Doorsturen</p></div>
 <div class="invite-container">
     <div class="box">
-            <p class="description">Stuur uw eerste statusaanwijzing en afwijkingen door aan de stakeholders om het PvE verder op te merken. Regels waar nog geen status/opmerking aan is toegevoegd worden genoteerd als TODO voor de andere stakeholder.</p>
+            <p class="description">Stuur uw eerste statusaanwijzing en afwijkingen door aan de stakeholders om het PvE verder op te merken. 
+                Regels waar nog geen status/opmerking aan is toegevoegd worden genoteerd als TODO voor de andere stakeholder.</p>
         <form action="{% url 'firstfreeze_syn' client_pk pk %}" method="post">
             {% csrf_token %}
             <p>

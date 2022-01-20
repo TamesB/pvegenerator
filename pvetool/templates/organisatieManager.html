@@ -33,7 +33,12 @@
             {% for stakeholder in organisaties %}
         <tr class="table_content" hx-target="this" hx-swap="outerHTML">
           <td><p>{{ stakeholder.name }}</p></td>
-          <td><p>{% if stakeholder.projecten.all %}{% for project in stakeholder.projecten.all %}<span>{{ project }} <a hx-post="{% url 'organisatieremovefromproject' client_pk stakeholder.id project.id %}" hx-confirm="Weet u het zeker?" hx-target="closest span" hx-swap="outerHTML"><i class="icon times"></i></a>,</span>{% endfor %}{% else %}<i>Geen</i>{% endif %}</p></td>
+          <td><p>{% if stakeholder.projecten.all %}
+            {% for project in stakeholder.projecten.all %}
+            <span>{{ project }} <a hx-post="{% url 'organisatieremovefromproject' client_pk stakeholder.id project.id %}" hx-confirm="Weet u het zeker?" hx-target="closest span" hx-swap="outerHTML">
+              <i class="icon times"></i></a>,</span>
+              {% endfor %}
+              {% else %}<i>Geen</i>{% endif %}</p></td>
         <td>
         <p>{% include 'partials/organisatie_detail.html' %}</p></td>
         <td>

@@ -1242,6 +1242,18 @@ a {
   min-width: 660px;
 }
 
+#main .layerOneInner .article .article_content .opmerking_form .ui.top.attached.tabular.menu {
+  overflow: hidden;
+  overflow-x: scroll;
+  -webkit-transform: rotateX(180deg);
+          transform: rotateX(180deg);
+}
+
+#main .layerOneInner .article .article_content .opmerking_form .ui.top.attached.tabular.menu * {
+  -webkit-transform: rotateX(180deg);
+          transform: rotateX(180deg);
+}
+
 #main .layerOneInner .article .article_content .opmerking_form .general_title .submit_button {
   font-family: "Montserrat";
   padding: 0;
@@ -2498,14 +2510,20 @@ a {
   #main .layerOneInner .article .article_content {
     margin-left: 0.5em;
     margin-right: 0.5em;
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 100%;
+            flex: 0 0 100%;
   }
 }
 
 @media screen and (max-width: 768px) {
   #main .layerOneInner .article {
     top: 0;
-    max-height: 100vh;
-    padding-top: 5vh;
+    max-height: 95vh;
+    padding-top: 0vh;
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 100%;
+            flex: 0 0 100%;
   }
 }
 

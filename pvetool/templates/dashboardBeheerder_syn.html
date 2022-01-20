@@ -44,7 +44,8 @@
           <td><p>{{ project.vhe }}</p></td>
           <td><p>{{ project.statuscontract }}</p></td>
           <td><p>{% if project.projectmanager %}{{ project.projectmanager }}{% else %}<i>Nog niet toegevoegd.</i>{% endif %}</p></td>
-          <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><i data-feather="download" style="stroke: #0085B7;"></i></a>{% else %}<i>Niet toegevoegd</i>{% endif %}</p></td>
+          <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><i data-feather="download" style="stroke: #0085B7;"></i></a>
+            {% else %}<i>Niet toegevoegd</i>{% endif %}</p></td>
         </tr>
         {% endfor %}
         {% else %}

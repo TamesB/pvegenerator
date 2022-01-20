@@ -25,7 +25,16 @@
         <tr class="table_content">
             <td class="inhoud_box"><p>{{ key }}</p></td>
             {% for comment in value %}
-                <td class="voldoening"><p>{% if forloop.counter0 == 0 %}<b>{{ comment }}</b>{% else %}{{ comment }}{% endif %}{% if comment.attachment %}<a href="{% url 'downloadattachmentaanopmerking_syn' client_pk project.id comment.id %}" style="float:right;" target="_blank"><i>Bijlage: </i><button class="ui icon basic button"><i class="icon download"></i></button></a>{% endif %}</p></td>
+                <td class="voldoening">
+                    <p>{% if forloop.counter0 == 0 %}
+                        <b>{{ comment }}</b>
+                        {% else %}
+                        {{ comment }}
+                        {% endif %}
+                        {% if comment.attachment %}
+                        <a href="{% url 'downloadattachmentaanopmerking_syn' client_pk project.id comment.id %}" style="float:right;" target="_blank">
+                            <i>Bijlage: </i><button class="ui icon basic button"><i class="icon download"></i></button></a>
+                        {% endif %}</p></td>
             {% endfor %}
         </tr>
         {% endfor %}

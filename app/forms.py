@@ -21,16 +21,21 @@ from .models import (
 
 
 class LoginForm(forms.Form):
-    attrs = {"type": "password"}
-
-    username = forms.CharField(label="Gebruikersnaam", max_length=100)
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Gebruikersnaam",
+                "class": "form-control"
+            }
+        ))
     password = forms.CharField(
-        label="Wachtwoord", max_length=100, widget=forms.TextInput(attrs=attrs)
-    )
+        widget=forms.PasswordInput(
+            attrs={
+                "placeholder": "Wachtwoord",
+                "class": "form-control"
+            }
+        ))
 
-    widgets = {
-        "password": forms.PasswordInput(),
-    }
 
 
 class KiesParameterForm(forms.Form):

@@ -1124,6 +1124,16 @@ a {
           .ui.tab {
             min-width: 660px;
           }
+          .ui.top.attached.tabular.menu {
+            overflow: hidden;
+            overflow-x: scroll;
+            transform: rotateX(180deg);
+          }
+    
+          .ui.top.attached.tabular.menu * {
+            transform: rotateX(180deg);
+          }
+    
           .general_title {
             .submit_button {
               font-family: "Montserrat";
@@ -2208,6 +2218,7 @@ a {
         .article_content {
           margin-left: 0.5em;
           margin-right: 0.5em;
+          flex: 0 0 100%;
         }
       }
     }
@@ -2215,8 +2226,9 @@ a {
     @media screen and (max-width: 768px) {
       .article {
         top: 0;
-        max-height: 100vh;
-        padding-top: 5vh;
+        max-height: 95vh;
+        padding-top: 0vh;
+        flex: 0 0 100%;
       }
     }
   }

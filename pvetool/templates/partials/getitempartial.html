@@ -53,7 +53,11 @@
         {% if annotationattachments %}
             {% for attachment in annotationattachments %}
             {% if attachment.attachment %}
-            <span><i><a href="{% url 'downloadattachmentaanopmerking_syn' client_pk project_pk annotation.id attachment.id %}" target="_blank">{{ attachment }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a></i></span>
+            <span><i>
+                <a href="{% url 'downloadattachmentaanopmerking_syn' client_pk project_pk annotation.id attachment.id %}" 
+                target="_blank">
+                {{ attachment }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img>
+            </a></i></span>
             {% endif %}
             {% endfor %}
         {% endif %}

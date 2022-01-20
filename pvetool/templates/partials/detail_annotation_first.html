@@ -38,9 +38,12 @@
         </div>
         <div class="comment">
             {% if annotation.annotation %}
-                <span><p style="color:#0085B7;">{{ annotation.annotation }} <span><button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic icon button">
+                <span><p style="color:#0085B7;">{{ annotation.annotation }} <span>
+                    <button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic icon button">
                     <i data-feather="edit-3" style="stroke: #0085B7"></i></button></span>
-                <span><a hx-delete="{% url 'deleteannotationfirst' client_pk project_pk item_pk %}"><button class="ui icon basic red button"><i data-feather="x" style="stroke: red;"></i></button></a></span></p></span>
+                <span><a hx-delete="{% url 'deleteannotationfirst' client_pk project_pk item_pk %}">
+                    <button class="ui icon basic red button"><i data-feather="x" style="stroke: red;"></i>
+                </button></a></span></p></span>
             {% elif comment_allowed is True %}
                 <button hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i data-feather="plus" style="stroke: #0085B7"></i></button>
             {% endif %}
@@ -52,9 +55,12 @@
                 <span style="color:#0085B7;">
                 {% for attachment in attachments %}
                 {% if attachment.attachment %}
-                <a href="{% url 'downloadattachmentaanopmerking_syn' client_pk project_pk annotation.id attachment.id %}" target="_blank">{{ attachment }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>
-                <span><button hx-get="{% url 'addattachmentfirst' client_pk project_pk item_pk annotation.id attachment.id %}" class="ui basic icon button"><i data-feather="edit-3" style="stroke: #0085B7"></i></button></span>
-                    <span><a hx-delete="{% url 'deleteattachmentfirst' client_pk project_pk annotation.id attachment.id %}"><button class="ui icon basic red button"><i data-feather="x" style="stroke: red;"></i></button></a></span>
+                <a href="{% url 'downloadattachmentaanopmerking_syn' client_pk project_pk annotation.id attachment.id %}" target="_blank">
+                    {{ attachment }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>
+                <span><button hx-get="{% url 'addattachmentfirst' client_pk project_pk item_pk annotation.id attachment.id %}" class="ui basic icon button">
+                    <i data-feather="edit-3" style="stroke: #0085B7"></i></button></span>
+                    <span><a hx-delete="{% url 'deleteattachmentfirst' client_pk project_pk annotation.id attachment.id %}"><button class="ui icon basic red button">
+                        <i data-feather="x" style="stroke: red;"></i></button></a></span>
             
                 {% endif %}
                 {% endfor %}
@@ -62,7 +68,8 @@
                 {% endif %}
 
                 {% if attachment_allowed is True %}
-                <button hx-get="{% url 'addattachmentfirst' client_pk project_pk item_pk annotation.id 0 %}" class="ui basic icon button"><i data-feather="plus" style="stroke: #0085B7"></i></button>
+                <button hx-get="{% url 'addattachmentfirst' client_pk project_pk item_pk annotation.id 0 %}" class="ui basic icon button">
+                    <i data-feather="plus" style="stroke: #0085B7"></i></button>
                 {% endif %}
 
                 {% endif %}

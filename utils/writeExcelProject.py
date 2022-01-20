@@ -13,6 +13,7 @@ from PIL import Image
 from urllib.request import urlopen
 import numpy as np
 import io
+
 class WriteExcelProject:
     def linewriter(self, project, logo_filename_path):
         #hierboven version_pk als je hele version wil uitdraaien

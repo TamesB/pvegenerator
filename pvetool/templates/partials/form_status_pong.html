@@ -9,8 +9,12 @@
         <p class="first_annotate_formbox">{{ form.status }}</p>
         </div>
         <div>
-        <p><button hx-get="{% url 'detailpongstatus' client_pk project_pk item_pk type %}" hx-trigger="click, keyup[key=='Escape'] from:select" style="float: left;" class="ui basic icon button"><i data-feather="corner-down-left" style="stroke: #0085B7"></i></button>
-        <span style="float:right;"><button hx-post="{% url 'addstatuspong' client_pk project_pk item_pk type %}" hx-target="#item-{{ item_pk }}" hx-swap="outerHTML" hx-trigger="click, keyup[key=='Enter'] from:select" type="submit" class="ui basic button icon"><i data-feather="check" style="stroke: #0085B7"></i></button>
+        <p><button hx-get="{% url 'detailpongstatus' client_pk project_pk item_pk type %}" 
+            hx-trigger="click, keyup[key=='Escape'] from:select" style="float: left;" class="ui basic icon button">
+            <i data-feather="corner-down-left" style="stroke: #0085B7"></i></button>
+        <span style="float:right;"><button hx-post="{% url 'addstatuspong' client_pk project_pk item_pk type %}" 
+            hx-target="#item-{{ item_pk }}" hx-swap="outerHTML" hx-trigger="click, keyup[key=='Enter'] from:select" 
+            type="submit" class="ui basic button icon"><i data-feather="check" style="stroke: #0085B7"></i></button>
         </span></p>
         </div>
     </form>

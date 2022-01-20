@@ -18,7 +18,8 @@
 {% if faqquery %}
 <div class="item_opmerking_list">
 {% for faq in faqquery %}
-    <button type="button" class="chapter">{{ faq.vraag }} <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></button>
+    <button type="button" class="chapter">{{ faq.vraag }} 
+      <img class="arrow-down" src="{% static 'pvetool/svg/ArrowDown.svg' %}"></img><img class="arrow-up" src="{% static 'pvetool/svg/ArrowUp.svg' %}"></img></button>
     <div class="chapter_content">
         <p>{{ faq.antwoord }}</p>
     </div>

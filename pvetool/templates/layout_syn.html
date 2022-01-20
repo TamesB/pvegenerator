@@ -14,6 +14,7 @@
         <link rel="stylesheet" type="text/css" href="{% static 'pvetool/tooltip.css' %}">
         <script src="{% static 'pvetool/feathers.js' %}"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="{% static 'pvetool/fadeArticle.js' %}"></script>
               {% block head %}{% endblock %}
               {% block topscripts %}{% endblock %}
         <title>PvE Tool - {{ client }}</title>
@@ -48,7 +49,6 @@
         <script src="{% static 'semantic.min.js' %}"></script>  
       <script type="text/javascript" src="{% static 'Semantic-UI-Alert.js' %}"></script>
         <script src="{% static 'pvetool/main_pvetool.js' %}"></script>
-        <script src="{% static 'pvetool/fadeArticle.js' %}"></script>
         <script src="{% static 'pvetool/tooltip.js' %}"></script>
       <script>
         {% for message in messages %}

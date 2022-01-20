@@ -1,70 +1,67 @@
-<!DOCTYPE html>
-{% load semanticui %}{% load static %}
-<html lang="nl">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="initial-scale=1, width=device-width">
-    <link rel="shortcut icon" type="image/png" href="{% static 'pvetool/favicon.ico' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
-    <style type="text/css">
-      body > .grid {
-        height: 100%;
-      }
-      .image {
-        margin-top: -100px;
-      }
-      .column {
-        max-width: 450px;
-      }
-      @media only screen and (max-width: 600px) {
-        .column {
-          max-width: 80%;
-        }
-      }
-    </style>
-    <title>PvE Tool - Beheer</title>
-  </head>
-  <body>
-    <div class="ui middle aligned center aligned grid">
-      <div class="column">
-        <h2 class="ui medium image">
-          <br>
-          <div class="content">
-            <h2 class="ui header">Programma van Eisen Tool</h2>
-            <h3 class"ui header">Beheer</h3>
-          </div>
-        </h2>
-        <br><br>
-                      {% if messages %}
-        <div class="ui info floating message">
-          <i class="close icon"></i>
-            <div class="header">
-              Info
+{% extends "layouts/base-fullscreen.html" %}
+
+{% block title %} Login {% endblock %}
+
+{% block content %}   
+
+    <div class="auth-wrapper">
+        <div class="auth-content">
+            <div class="auth-bg">
+                <span class="r"></span>
+                <span class="r s"></span>
+                <span class="r s"></span>
+                <span class="r"></span>
             </div>
-              <ul class="list">
-                {% for message in messages %}
-                  <li>{{ message }}</li>
-                {% endfor %}
-              </ul>
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="feather icon-unlock auth-icon"></i>
+                    </div>
+                    <h3 class="mb-4">
+                        PvE Tool<br />Beheer
+                    </h3>
+
+                    <span class="mb-0 text-muted">
+                        {% if msg %}
+                            {{ msg | safe }}
+                        {% else %}
+                        Voer uw inloggegevens in
+                        {% endif %}
+                    </span>
+                    <br />
+                    <br />
+
+                    <form role="form" method="post" action="">
+
+                        {% csrf_token %}                   
+
+                        <div class="input-group mb-3">
+                            {{ form.username }}
+                        </div>
+                        
+                        <div class="input-group mb-4">
+                            {{ form.password }}
+                        </div>
+                        
+                        <div class="form-group text-left">
+                            <div class="checkbox checkbox-fill d-inline">
+                                <input type="checkbox" name="checkbox-fill-1" id="checkbox-fill-a1" checked="">
+                                <label for="checkbox-fill-a1" class="cr"> Sla gegevens op</label>
+                            </div>
+                        </div>
+                        <button type="submit" name="login" class="btn btn-primary shadow-2 mb-4">Login</button>
+
+                    </form>
+
+                    <p class="mb-0 text-muted">Geen account? Neem contact op met de systeembeheerder.</p>
+                    <br />
+                    <p class="mb-2 text-muted">
+                        &copy; <a target="_blank" href="#">Tames Boon</a> 
+                        - <a target="_blank" href="https://www.linkedin.com/in/tames-b-3b5305a9/">LinkedIn</a>.
+                    </p>
+                </div>
+            </div>
         </div>
-        {% endif %}
-        <form action="{% url 'login' %}" class="ui form" method="post">
-            {% csrf_token %}
-            {% render_form form %}
-            <br>
-            <input type="submit" class="ui primary button" value="Login">
-        </form>
-      </div>
     </div>
-    <footer>
-      <div class="ui center aligned">
-          <p class="centered">© 2021 Copyright <a href="mailto:info@tboon.nl">Tames Boon</a></p>
-      </div>
-    </footer>
-    <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
-    <script src="{% static 'semantic.min.js' %}"></script>
-    <script src="{% static 'scripts.js' %}"></script>
-  </body>
-</html>
+
+{% endblock content %}

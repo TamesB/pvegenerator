@@ -8,8 +8,12 @@
             <p><label for="{{ form.kostenverschil.id_for_label }}"><b>Kosten:</b></label><p>
                 <p class="first_annotate_formbox">{{ form.kostenverschil }}</p>
                 <p class="first_annotate_formbox">{{ form.costtype }}</p>
-<button hx-get="{% url 'detailpongkostenverschil' client_pk project_pk item_pk type %}" hx-trigger="click, keyup[key=='Escape'] from:input" style="float: left;" class="ui basic icon button"><i data-feather="corner-down-left" style="stroke: #0085B7"></i></button>
-        <span style="float:right;"><button hx-post="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}" hx-trigger="click, keyup[key=='Enter'] from:input" type="submit" class="ui icon basic button"><i data-feather="check" style="stroke: #0085B7"></i></button>
+<button hx-get="{% url 'detailpongkostenverschil' client_pk project_pk item_pk type %}" 
+hx-trigger="click, keyup[key=='Escape'] from:input" style="float: left;" class="ui basic icon button">
+<i data-feather="corner-down-left" style="stroke: #0085B7"></i></button>
+        <span style="float:right;"><button hx-post="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}" 
+            hx-trigger="click, keyup[key=='Enter'] from:input" type="submit" class="ui icon basic button">
+            <i data-feather="check" style="stroke: #0085B7"></i></button>
         </p>
         </span>
         </div>

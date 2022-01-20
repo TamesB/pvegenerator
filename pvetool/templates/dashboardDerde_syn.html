@@ -97,7 +97,8 @@
             {% endif %}
           {% endif %}
           </p></td> 
-          <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>{% else %}Nog geen PvE{% endif %}</p></td>
+          <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>
+            {% else %}Nog geen PvE{% endif %}</p></td>
         </tr>
         {% endfor %}
       {% else %}
@@ -130,7 +131,9 @@
         {% for project in projects %}
           <tr>
             <td><p>{{ project.name }}</p></td>
-            <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="dimg" style="align-self: right; max-height: 2vh;" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>{% else %}Niet beschikbaar{% endif %}</p></td>
+            <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}">
+              <img class="dimg" style="align-self: right; max-height: 2vh;" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>
+              {% else %}Niet beschikbaar{% endif %}</p></td>
           </tr>
         {% endfor %}
         {% else %}

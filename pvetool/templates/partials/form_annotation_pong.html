@@ -8,8 +8,12 @@
         <p><label for="{{ form.annotation.id_for_label }}"><b>Uw opmerking:</b></label><p>
         <p class="pong_annotate_formbox">{{ form.annotation }}</p>
         </div>
-        <button hx-get="{% url 'detailpongreply' client_pk project_pk item_pk type %}" hx-trigger="click, keyup[key=='Escape'] from:textarea"style="float: left;" class="ui basic icon button"><i data-feather="corner-down-left" style="stroke: #0085B7"></i></button>
-        <span style="float:right;"><button hx-post="{% url 'addreplypong' client_pk project_pk item_pk type %}" hx-trigger="click, keyup[key=='Enter'] from:textarea" type="submit" class="ui icon basic button"><i data-feather="check" style="stroke: #0085B7"></i></button>
+        <button hx-get="{% url 'detailpongreply' client_pk project_pk item_pk type %}" 
+        hx-trigger="click, keyup[key=='Escape'] from:textarea"style="float: left;" class="ui basic icon button">
+        <i data-feather="corner-down-left" style="stroke: #0085B7"></i></button>
+        <span style="float:right;"><button hx-post="{% url 'addreplypong' client_pk project_pk item_pk type %}" 
+            hx-trigger="click, keyup[key=='Enter'] from:textarea" type="submit" class="ui icon basic button">
+            <i data-feather="check" style="stroke: #0085B7"></i></button>
         </span>
     </form>
     {% include 'partials/_render_icons.html' %}
