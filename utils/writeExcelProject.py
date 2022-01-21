@@ -40,22 +40,22 @@ class WriteExcelProject:
         workbook = xlsxwriter.Workbook(f"{path}.xlsx")
         worksheet = workbook.add_worksheet()
 
-        # Add a bold format to use to highlight cells.
-        bold = workbook.add_format({"bold": True})
-        bold.set_text_wrap()
+        # Add a self.bold format to use to highlight cells.
+        self.bold = workbook.add_format({"bold": True})
+        self.bold.set_text_wrap()
 
-        bold_red = workbook.add_format({"bold": True})
-        bold_red.set_bg_color("red")
-        bold_red.set_border(1)
-        bold_red.set_border_color("#231F20")
-        bold_yellow = workbook.add_format({"bold": True})
-        bold_yellow.set_bg_color("yellow")
-        bold_yellow.set_border(1)
-        bold_yellow.set_border_color("#231F20")
-        bold_green = workbook.add_format({"bold": True})
-        bold_green.set_bg_color("green")
-        bold_green.set_border(1)
-        bold_green.set_border_color("#231F20")
+        self.bold_red = workbook.add_format({"bold": True})
+        self.bold_red.set_bg_color("red")
+        self.bold_red.set_border(1)
+        self.bold_red.set_border_color("#231F20")
+        self.bold_yellow = workbook.add_format({"bold": True})
+        self.bold_yellow.set_bg_color("yellow")
+        self.bold_yellow.set_border(1)
+        self.bold_yellow.set_border_color("#231F20")
+        self.bold_green = workbook.add_format({"bold": True})
+        self.bold_green.set_bg_color("green")
+        self.bold_green.set_border(1)
+        self.bold_green.set_border_color("#231F20")
 
         bold_chapter = workbook.add_format({"bold": True, 'bg_color': "#0078ae"})
         bold_chapter.set_font_color('white')
@@ -68,8 +68,8 @@ class WriteExcelProject:
         bold_rotate.set_font_color('white')
         bold_rotate.set_rotation(30)
 
-        column = 0
-        row = 0
+        self.column = 0
+        self.row = 0
         
         worksheet.freeze_panes(1, 1)
         worksheet.freeze_panes(1, 2)
@@ -77,49 +77,56 @@ class WriteExcelProject:
         chapters = list(set([item.chapter for item in items.order_by("id")]))
 
         # Run door de items heen
-        cell_format = workbook.add_format()
-        cell_format.set_text_wrap()
+        self.cell_format = workbook.add_format()
+        self.cell_format.set_text_wrap()
 
-        cell_format_blue = workbook.add_format()
-        cell_format_blue.set_bg_color("#daedf2")
-        cell_format_blue.set_text_wrap()
+        self.cell_format_blue = workbook.add_format()
+        self.cell_format_blue.set_bg_color("#daedf2")
+        self.cell_format_blue.set_text_wrap()
         
         accepted_cell = workbook.add_format()
         accepted_cell.set_bg_color("green")
         accepted_cell.set_text_wrap()
 
-        grey_bg = workbook.add_format({'bold': True, 'bg_color': '#D3D3D3'})
-        grey_bg.set_border(1)
-        grey_bg.set_border_color("#231F20")
+        self.grey_bg = workbook.add_format({'bold': True, 'bg_color': '#D3D3D3'})
+        self.grey_bg.set_border(1)
+        self.grey_bg.set_border_color("#231F20")
 
+        # define paragraphs and map their id's
         paragraphs = list(set([item.paragraph for item in items if item.paragraph]))
         paragraphs_hfst = {chapter.id:[paragraph for paragraph in paragraphs if paragraph.chapter and paragraph.chapter == chapter] for chapter in chapters}
 
-        annotations = {
+        # get the first self.annotations and map their id's
+        self.annotations = {
             annotation.item.id: annotation
             for annotation in PVEItemAnnotation.objects.select_related("status").select_related("item").filter(project=project) if annotation
         }
         
-        column = 3
+        # write the author of the first self.annotations
+        self.column = 4
         ann_objs = PVEItemAnnotation.objects.select_related("status").select_related("item").filter(project=project)
         first_annotate_group = ann_objs.first().user.stakeholder if ann_objs.first().user.stakeholder else ann_objs.first().user.client
-        worksheet.write(row, column, f"{first_annotate_group.name}", bold_rotate)
-        column = 0
+        header_list = []
+        header_list.append(f"{first_annotate_group.name} ({ann_objs.first().date.strftime('%Y-%m-%d %H:%M')})")
         
-        consequentCosts = {
+
+        self.column = 0
+        
+        # map the costs with their id's
+        self.consequentCosts = {
             annotation.item.id: f"€ {annotation.consequentCosts} {annotation.costtype}"
             for annotation in PVEItemAnnotation.objects.select_related("status").select_related("item").filter(project=project) if annotation.consequentCosts
         }
+
+        self.itemId_to_row = {}
         
-        itemId_to_row = {}
-        
-        row += 1
-        max_row = row
+        self.row += 1
+        max_row = self.row
         # start with writing just the PvE and the statuses
         for chapter in chapters:
-            worksheet.write(row, column, chapter.chapter, bold_chapter)
+            worksheet.write(self.row, self.column, chapter.chapter, bold_chapter)
 
-            row += 1
+            self.row += 1
 
             paragraphs = paragraphs_hfst[chapter.id]
 
@@ -131,154 +138,76 @@ class WriteExcelProject:
                         if item.paragraph == paragraph
                     ]
                     
-                    worksheet.write(row, column, f"{paragraph.paragraph}", bold_paragraph)
-                    row += 1
+                    worksheet.write(self.row, self.column, f"{paragraph.paragraph}", bold_paragraph)
+                    self.row += 1
 
                     for item in items_spec:
-                        using_format = cell_format
-                        if row % 2 == 0:
-                            using_format = cell_format_blue
-                            
-                        inhoud = "%s" % item.inhoud
-                        worksheet.write(row, column, inhoud, using_format)
-                        
-                        if item.id in annotations.keys():
-                            if annotations[item.id].status:
-                                column = 1
-                                
-                                if "n.v.t." in f"{annotations[item.id].status}":
-                                    style = bold_red
-                                if "akkoord" in f"{annotations[item.id].status}":
-                                    style = bold_green
-                                if "niet akkoord" in f"{annotations[item.id].status}":
-                                    style = bold_red
-                                if "uitwerken" in f"{annotations[item.id].status}":
-                                    style = bold_yellow
-                                if "n.t.b." in f"{annotations[item.id].status}":
-                                    style = bold_yellow
-                                    
-                                worksheet.write(row, column, f"{annotations[item.id].status}", style)
-                            
-                            comment_string = ""
-                            
-                            if annotations[item.id].firststatus:
-                                comment_string += f"Nieuwe status: {annotations[item.id].firststatus}. "
-                            if annotations[item.id].annotation:
-                                comment_string += f"Opmerking: {annotations[item.id].annotation}."
-                                
-                            if comment_string != "":
-                                column = 3
-                                worksheet.write(row, column, comment_string, bold)
+                        self.writeItemStatusAnnotation(item, worksheet)
 
-                                
-                        if item.id in consequentCosts.keys():
-                            column = 2
-                            worksheet.write(row, column, f"{consequentCosts[item.id]}", grey_bg)
-                            
-                        column = 0
-                        
-                        itemId_to_row[item.id] = row
-                        row += 1
             else:
                 items_chap = [item for item in items if item.chapter == chapter]
                 for item in items_chap:
-                    using_format = cell_format
-                    if row % 2 == 0:
-                        using_format = cell_format_blue
-
-                    inhoud = "%s" % item.inhoud
-                    worksheet.write(row, column, inhoud, using_format)
-                    
-                    if item.id in annotations.keys():
-                        if annotations[item.id].status:
-                            column = 1
-                            
-                            if "n.v.t." in f"{annotations[item.id].status}":
-                                style = bold_red
-                            if "akkoord" in f"{annotations[item.id].status}":
-                                style = bold_green
-                            if "niet akkoord" in f"{annotations[item.id].status}":
-                                style = bold_red
-                            if "uitwerken" in f"{annotations[item.id].status}":
-                                style = bold_yellow
-                            if "n.t.b." in f"{annotations[item.id].status}":
-                                style = bold_yellow
-                                
-                            worksheet.write(row, column, f"{annotations[item.id].status}", style)
-                        
-                        comment_string = ""
-                        
-                        if annotations[item.id].firststatus:
-                            comment_string += f"Nieuwe status: {annotations[item.id].firststatus}. "
-                        if annotations[item.id].annotation:
-                            comment_string += f"Opmerking: {annotations[item.id].annotation}."
-                            
-                        if comment_string != "":
-                            column = 3
-                            worksheet.write(row, column, comment_string, bold)
-
-                            
-                    if item.id in consequentCosts.keys():
-                        column = 2
-                        worksheet.write(row, column, f"{consequentCosts[item.id]}", grey_bg)
-                        
-                    column = 0
-                    
-                    itemId_to_row[item.id] = row
-                    row += 1
+                    self.writeItemStatusAnnotation(item, worksheet)
             
             # for length of table
-            if row > max_row:
-                max_row = row
+            if self.row > max_row:
+                max_row = self.row
         
         # write the comments
-        column = 4
-        row = 0
+        self.column = 4
+        self.row = 0
         
         phases = project.phase.all().order_by("id")
-        max_col = column
-        header_list = []
+        max_col = self.column
         
+        # write each further comment for each commentphase
         for phase in phases:
             replies = phase.reply.select_related("onComment__item").all()
             first_reply = replies.first()
-            
-            if first_reply:
+            print(first_reply.user)
+            # if a reply exists for this commentphase
+            if first_reply.user:
                 stakeholder = first_reply.user.stakeholder if first_reply.user.stakeholder else first_reply.user.client
-                header = f"{stakeholder.name} ({first_reply.date.strftime('%Y-%m-%d %H:%M')})"                    
+                print(stakeholder)
+                header = f"{stakeholder.name} ({first_reply.date.strftime('%Y-%m-%d %H:%M')})"
+                print(header)
                 header_list.append(header)
+                print(header_list)
 
             if replies:
                 
-                row = 1
+                self.row = 1
                 
                 for reply in replies:
-                    row = itemId_to_row[reply.onComment.item.id]
+                    self.row = self.itemId_to_row[reply.onComment.item.id]
                     
                     comment_string = ""
                     
                     if reply.status:
-                        comment_string += f"Nieuwe status: {reply.status}. "
+                        comment_string   += f"Nieuwe status: {reply.status}. "
                     if reply.comment:
                         comment_string += f"Opmerking: {reply.comment}. "
                     if reply.accept:
                         comment_string = f"."
                     
+                    # if the string actually has a comment (either accepted (.) or has new status/comment), post it
                     if comment_string != "":
+                        style = self.bold
+                        # green background if accepted
                         if reply.accept:
-                            worksheet.write(row, column, comment_string, accepted_cell)
-                        else:
-                            worksheet.write(row, column, comment_string, bold)
+                            style = accepted_cell
+                            
+                        worksheet.write(self.row, self.column, comment_string, style)
 
-                column += 1
+                self.column += 1
                 
-                if column > max_col:
-                    max_col = column
-                        
-                
+                if self.column > max_col:
+                    max_col = self.column
+                                            
+        max_col = self.column - 1    
         
         # make grey bgs and convert PvE, Status and comments to tables
-        worksheet.conditional_format(0, 1, max_row, 2, {'type':'blanks', 'format': grey_bg})
+        worksheet.conditional_format(0, 1, max_row, 2, {'type':'blanks', 'format': self.grey_bg})
 
         pve_title =  [f"PvE - Project: { project.name }"]
         cols_title = ["Status", "Kosten"]
@@ -289,6 +218,7 @@ class WriteExcelProject:
         for col in header_list:
             pve_title.append(col)
         
+        print(pve_title)
         worksheet.add_table(0, 0, max_row, max_col, {"columns": [{"header": header} for header in pve_title]})
         
         # final title style
@@ -300,10 +230,56 @@ class WriteExcelProject:
         
         workbook.close()
         return filename
-    
+
+    def writeItemStatusAnnotation(self, item, worksheet):
+        using_format = self.cell_format
+        if self.row % 2 == 0:
+            using_format = self.cell_format_blue
+
+        inhoud = "%s" % item.inhoud
+        worksheet.write(self.row, self.column, inhoud, using_format)
+        
+        if item.id in self.annotations.keys():
+            if self.annotations[item.id].status:
+                self.column = 1
+                
+                if "n.v.t." in f"{self.annotations[item.id].status}":
+                    style = self.bold_red
+                if "akkoord" in f"{self.annotations[item.id].status}":
+                    style = self.bold_green
+                if "niet akkoord" in f"{self.annotations[item.id].status}":
+                    style = self.bold_red
+                if "uitwerken" in f"{self.annotations[item.id].status}":
+                    style = self.bold_yellow
+                if "n.t.b." in f"{self.annotations[item.id].status}":
+                    style = self.bold_yellow
+                    
+                worksheet.write(self.row, self.column, f"{self.annotations[item.id].status}", style)
+            
+            comment_string = ""
+            
+            if self.annotations[item.id].firststatus:
+                comment_string += f"Nieuwe status: {self.annotations[item.id].firststatus}. "
+            if self.annotations[item.id].annotation:
+                comment_string += f"Opmerking: {self.annotations[item.id].annotation}."
+                
+            if comment_string != "":
+                self.column = 3
+                worksheet.write(self.row, self.column, comment_string, self.bold)
+
+                
+        if item.id in self.consequentCosts.keys():
+            self.column = 2
+            worksheet.write(self.row, self.column, f"{self.consequentCosts[item.id]}", self.grey_bg)
+            
+        self.column = 0
+        
+        self.itemId_to_row[item.id] = self.row
+        self.row += 1
+
 
     def get_column_width(self, worksheet: Worksheet, column: int) -> Optional[int]:
-        """Get the max column width in a `Worksheet` column."""
+        """Get the max self.column width in a `Worksheet` self.column."""
         strings = getattr(worksheet, '_ts_all_strings', None)
         if strings is None:
             strings = worksheet._ts_all_strings = sorted(
@@ -332,7 +308,7 @@ class WriteExcelProject:
 
     def set_column_autowidth(self, worksheet: Worksheet, column: int):
         """
-        Set the width automatically on a column in the `Worksheet`.
+        Set the width automatically on a self.column in the `Worksheet`.
         !!! Make sure you run this function AFTER having all cells filled in
         the worksheet!
         """
