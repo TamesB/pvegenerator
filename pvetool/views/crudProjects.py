@@ -95,21 +95,21 @@ def AddProject(request, client_pk):
             project.permitted.add(request.user)
             project.client = client
             project.first_annotate = form.cleaned_data["first_annotate"]
-
-            geolocator = Nominatim(user_agent="tamesbpvegenerator")
-            if (
-                "city"
-                in geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}")
-                .raw["address"]
-                .keys()
-            ):
-                project.plaatsnamen = geolocator.reverse(
-                    f"{project.plaats.y}, {project.plaats.x}"
-                ).raw["address"]["city"]
-            else:
-                project.plaatsnamen = geolocator.reverse(
-                    f"{project.plaats.y}, {project.plaats.x}"
-                ).raw["address"]["town"]
+            project.plaatsnamen = "Amsterdam"
+            #geolocator = Nominatim(user_agent="tamesbpvegenerator")
+            #if (
+            #    "city"
+            #    in geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}")
+            #    .raw["address"]
+            #    .keys()
+            #):
+            #    project.plaatsnamen = geolocator.reverse(
+            #        f"{project.plaats.y}, {project.plaats.x}"
+            #    ).raw["address"]["city"]
+            #else:
+            #    project.plaatsnamen = geolocator.reverse(
+            #        f"{project.plaats.y}, {project.plaats.x}"
+            #    ).raw["address"]["town"]
 
             project.save()
             messages.warning(request, f"Project {project.name} aangemaakt.")
