@@ -6,9 +6,9 @@
         {% load static %}
         {% load leaflet_tags %}
         {{ form.media }}
-        <link rel="shortcut icon" type="image/png" href="{% static 'pvetool/favicon.ico' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'main_styles.css' %}">
+        <link rel="shortcut icon" type="image/png" href="{% static 'beheer/favicon.ico' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'beheer/styles.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'beheer/main_styles.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'Semantic-UI-Alert.css' %}">
         {% leaflet_css %}
@@ -35,7 +35,7 @@
       <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
       <script src="{% static 'semantic.min.js' %}"></script>
       <script type="text/javascript" src="{% static 'Semantic-UI-Alert.js' %}"></script>
-      <script src="{% static 'scripts.js' %}"></script>
+      <script src="{% static 'beheer/scripts.js' %}"></script>
       <script>
         {% for message in messages %}
         function() {

@@ -164,15 +164,11 @@ class WriteExcelProject:
         for phase in phases:
             replies = phase.reply.select_related("onComment__item").all()
             first_reply = replies.first()
-            print(first_reply.user)
             # if a reply exists for this commentphase
-            if first_reply.user:
+            if first_reply:
                 stakeholder = first_reply.user.stakeholder if first_reply.user.stakeholder else first_reply.user.client
-                print(stakeholder)
                 header = f"{stakeholder.name} ({first_reply.date.strftime('%Y-%m-%d %H:%M')})"
-                print(header)
                 header_list.append(header)
-                print(header_list)
 
             if replies:
                 
@@ -286,7 +282,7 @@ class WriteExcelProject:
                 worksheet.str_table.string_table,
                 key=worksheet.str_table.string_table.__getitem__)
         lengths = set()
-        for row_id, colums_dict in worksheet.table.items():  # type: int, dict
+        for _, colums_dict in worksheet.table.items():  # type: int, dict
             data = colums_dict.get(column)
             if not data:
                 continue

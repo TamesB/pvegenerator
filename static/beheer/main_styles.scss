@@ -2,7 +2,18 @@
 
 $small: 300px;
 $medium: 900px;
+$primary-txt-color: #111;
+$secondary-txt-color: #888;
+$off-white-bg: #f4f7fa;
 
+body {
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+    color: $secondary-txt-color;
+    font-weight: 400;
+    background: $off-white-bg;
+    position: relative;
+}
 .ui.icon.basic.button {
     padding: 0.1em;
 }

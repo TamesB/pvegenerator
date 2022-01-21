@@ -1,4 +1,13 @@
 @import url("https://fonts.googleapis.com/css?family=Monsterrat:400,700");
+body {
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  color: #888;
+  font-weight: 400;
+  background: #f4f7fa;
+  position: relative;
+}
+
 .ui.icon.basic.button {
   padding: 0.1em;
 }
