@@ -13,7 +13,6 @@ from users.models import CustomUser, Organisatie
 from django.urls import reverse_lazy
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 
-
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def ManageProjects(request, client_pk):
     if not Beleggers.objects.filter(pk=client_pk).exists():
@@ -96,20 +95,22 @@ def AddProject(request, client_pk):
             project.client = client
             project.first_annotate = form.cleaned_data["first_annotate"]
             project.plaatsnamen = "Amsterdam"
+            
+            # Reverse coordinates to city/town name. Package is always very buggy
             #geolocator = Nominatim(user_agent="tamesbpvegenerator")
             #if (
             #    "city"
             #    in geolocator.reverse(f"{project.plaats.y}, {project.plaats.x}")
-            #    .raw["address"]
+            #    .raw["addressparts"]
             #    .keys()
             #):
             #    project.plaatsnamen = geolocator.reverse(
             #        f"{project.plaats.y}, {project.plaats.x}"
-            #    ).raw["address"]["city"]
+            #    ).raw["addressparts"]["city"]
             #else:
             #    project.plaatsnamen = geolocator.reverse(
             #        f"{project.plaats.y}, {project.plaats.x}"
-            #    ).raw["address"]["town"]
+            #    ).raw["addressparts"]["town"]
 
             project.save()
             messages.warning(request, f"Project {project.name} aangemaakt.")

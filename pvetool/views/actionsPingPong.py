@@ -53,7 +53,7 @@ def FirstFreeze(request, client_pk, pk):
                 for comment in changed_comments:
                     if comment.status:
                         # if new status and reply has no attachments/comment
-                        if comment.status in requirement_obj.comment_allowed.all():
+                        if comment.status in requirement_obj.comment_required.all():
                             if not comment.annotation and not comment.attachmentobject.all():
                                 false_comments.append(comment)
                     # if not accepted, no statuschange and no comments/attachments/cost change
@@ -228,7 +228,7 @@ def SendReplies(request, client_pk, pk):
                     if not comment.accept:
                         if comment.status:
                                 # if new status and reply has no attachments/comment
-                            if comment.status in requirement_obj.comment_allowed.all():
+                            if comment.status in requirement_obj.comment_required.all():
                                 if not comment.comment and not comment.attachmenttoreply.all():
                                     false_comments.append(comment)
                         # if not accepted, no statuschange and no comments/attachments/cost change
