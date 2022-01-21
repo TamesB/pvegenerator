@@ -35,9 +35,9 @@
           {% if project.frozenLevel == 0 %}
             {% if derden_toegevoegd|index:forloop.counter0 %}
               {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
-                <a href="{% url 'plusopmerking_syn' client_pk project.id %}"><button class="ui basic button">Eerste statusaanwijzing<i class="right arrow icon"></i></button></a>
+                <a href="{% url 'plusopmerking_syn' client_pk project.id %}"><button class="ui basic button">CONCEPT v1<i class="right arrow icon"></i></button></a>
               {% else %}
-                <i>Eerste statusaanwijzing</i>
+                <i>CONCEPT v1</i>
               {% endif %}
             {% else %}
               {% if request.user.type_user == "SOG" %}
@@ -48,20 +48,20 @@
             {% endif %}
 
           {% elif project.fullyFrozen %}
-            <i>Voltooid</i>
+            <i>DEFINITIEF</i>
           {% elif project.frozenLevel > 0 %}
             {% if request.user.type_user != first_annotate|index:forloop.counter0 %}
               {% if not project.frozenLevel|divisibleby:2 %}
-                <a href="{% url 'commentscheck_syn' client_pk project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>
+                <a href="{% url 'commentscheck_syn' client_pk project.id %}"><button class="ui basic button">CONCEPT v{{ project.frozenLevel }}<i class="right arrow icon"></i></button></a>
               {% else %}
-                <i>Beurt van andere partij</i>
+                <i>CONCEPT v{{ project.frozenLevel }}</i>
               {% endif %}
             {% else %}
               {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
                 {% if project.frozenLevel|divisibleby:2 %}
-                  <a href="{% url 'commentscheck_syn' client_pk project.id %}"><button class="ui basic button">Uw beurt<i class="right arrow icon"></i></button></a>
+                  <a href="{% url 'commentscheck_syn' client_pk project.id %}"><button class="ui basic button">CONCEPT v{{ project.frozenLevel }}<i class="right arrow icon"></i></button></a>
                 {% else %}
-                  <i>Beurt van andere partij</i>
+                  <i>CONCEPT v{{ project.frozenLevel }}</i>
                 {% endif %}
               {% endif %}
             {% endif %}

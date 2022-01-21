@@ -98,6 +98,9 @@ class CommentRequirement(models.Model):
     comment_allowed = models.ManyToManyField(CommentStatus, related_name="comment_allowed")
     comment_required = models.ManyToManyField(CommentStatus, related_name="comment_required")
     attachment_allowed = models.ManyToManyField(CommentStatus, related_name="attachment_allowed")
+    attachment_required = models.ManyToManyField(CommentStatus, related_name="attachment_required", blank=True)
+    costs_allowed = models.ManyToManyField(CommentStatus, related_name="costs_allowed")
+    costs_required = models.ManyToManyField(CommentStatus, related_name="costs_required")
     
     def __str__(self):
         return f"{self.version}: Comment allowed: {self.comment_allowed}, Attachment allowed: {self.attachment_allowed}, Comment required: {self.comment_required}"

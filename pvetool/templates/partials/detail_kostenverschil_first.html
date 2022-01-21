@@ -7,7 +7,9 @@
 {% else %}
     <p><b>€ 0</b></p>
 {% if annotation.status %}
-    <button hx-get="{% url 'addkostenverschilfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i data-feather="edit-3" style="stroke: #0085B7"></i></button>
+    {% if costs_allowed is True %}
+        <button hx-get="{% url 'addkostenverschilfirst' client_pk project_pk item_pk %}" class="ui basic icon button"><i data-feather="edit-3" style="stroke: #0085B7"></i></button>
+    {% endif %}
 {% endif %}
 {% endif %}
 </span>

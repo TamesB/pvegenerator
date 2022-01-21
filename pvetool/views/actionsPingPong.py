@@ -52,6 +52,10 @@ def FirstFreeze(request, client_pk, pk):
                 
                 for comment in changed_comments:
                     if comment.status:
+                        # if status requires costs and no costs in comment
+                        if comment.status in requirement_obj.costs_required.all():
+                            if not comment.consequentCosts:
+                                false_comments.append(comment)
                         # if new status and reply has no attachments/comment
                         if comment.status in requirement_obj.comment_required.all():
                             if not comment.annotation and not comment.attachmentobject.all():
@@ -227,7 +231,10 @@ def SendReplies(request, client_pk, pk):
                 for comment in comments:
                     if not comment.accept:
                         if comment.status:
-                                # if new status and reply has no attachments/comment
+                            if comment.status in requirement_obj.costs_required.all():
+                                if not comment.consequentCosts:
+                                    false_comments.append(comment)
+                            # if new status is required and reply has no attachments/comment
                             if comment.status in requirement_obj.comment_required.all():
                                 if not comment.comment and not comment.attachmenttoreply.all():
                                     false_comments.append(comment)
@@ -239,7 +246,7 @@ def SendReplies(request, client_pk, pk):
                     else:
                         if comment.comment or comment.attachment or comment.status:
                             false_comments.append(comment)
-                            
+
                 if false_comments:
 
                     string_list = []

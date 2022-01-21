@@ -42,6 +42,7 @@
   </p>
   {% endif %}
   {% endif %} {% endif %} {% else %} {% if type == 0 %} {% if annotation.status or current_reply.status %}
+  {% if costs_allowed is True %}
   <p>
     <button
       hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
@@ -50,6 +51,7 @@
     <i data-feather="edit-3" style="stroke: #0085B7"></i>
     </button>
   </p>
+  {% endif %}
   {% endif %} {% endif %} {% endif %}
 </span>
 {% include 'partials/_render_icons.html' %}
