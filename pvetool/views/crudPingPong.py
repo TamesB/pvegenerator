@@ -259,7 +259,7 @@ def CheckComments(request, client_pk, proj_id):
         non_accepted_comments_breakdown_count[status] = len(non_accepted_comments_breakdown[status])
     for status in replies_statuses.keys():
         replies_statuses_count[status] = len(replies_statuses[status])
-                
+        
     context["status_objs"] = status_objs
     context["status_tabs"] = status_tabs
     context["status_to_id"] = hardcoded_values.status_to_id()

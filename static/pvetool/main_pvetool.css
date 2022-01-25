@@ -375,6 +375,7 @@ a {
     overflow-x: hidden;
     z-index: 3;
     min-height: 40px;
+    font-weight: bold;
   }
   #main .layerOneInner .menu_left .menu_item:last-child {
     padding-bottom: 5vh;
@@ -1353,6 +1354,7 @@ a {
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .chapter {
   background-color: #0078ae;
   color: white;
+  font-weight: bold;
   cursor: pointer;
   padding-top: 1vh;
   padding-bottom: 1vh;
@@ -1384,6 +1386,7 @@ a {
   padding-left: 2vw;
   padding-right: 18px;
   width: 100%;
+  font-weight: bold;
   border: none;
   text-align: left;
   outline: none;
@@ -1835,6 +1838,10 @@ a {
   border-top-right-radius: 1.6vh;
 }
 
+#main .layerOneInner .article .article_content .flex_projectpagina .project_acties .acties_title p {
+  font-size: 16px;
+}
+
 #main .layerOneInner .article .article_content .flex_projectpagina .project_acties .acties {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1887,6 +1894,7 @@ a {
   display: flex;
   max-width: 50%;
   width: 80%;
+  padding: 0.5em;
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .project_acties .acties .actie_item .subtext {
@@ -1942,7 +1950,6 @@ a {
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .project_acties .acties .actie_item .inner_actie .subtext {
-  margin-top: 0.5vh;
   -ms-grid-column-align: center;
       justify-self: center;
   display: block;
@@ -2298,10 +2305,13 @@ a {
   text-align: left;
   float: left;
   padding: 1.6em;
-  font-size: 18px;
   width: 65%;
   padding-right: 2vw;
   color: #0078ae;
+}
+
+#main .layerOneInner .article .article_content .project_progress_bar label p {
+  font-size: 18px;
 }
 
 #main .layerOneInner .article .article_content .project_progress_bar .progress {

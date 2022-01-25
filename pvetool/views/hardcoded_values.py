@@ -4,9 +4,11 @@ def later_status_category():
 def status_id_later_status():
     return [4, 5, 6, 7]
 
+
 def status_to_id():
     return {
-        "n.v.t. (reden in opmerking)": 8,
+        "extra t.o.v. basisprijs": 9,
+        "n.v.t.": 8,
         "uitwerken in UO": 7,
         "uitwerken in TO": 6,
         "uitwerken in DO": 5,

@@ -343,6 +343,7 @@ a {
         overflow-x: hidden;
         z-index: 3;
         min-height: 40px;
+        font-weight: bold;
         .menu_item:last-child {
           padding-bottom: 5vh;
         }
@@ -1279,6 +1280,7 @@ a {
             .chapter {
               background-color: #0078ae;
               color: white;
+              font-weight: bold;
               cursor: pointer;
               padding-top: 1vh;
               padding-bottom: 1vh;
@@ -1311,6 +1313,7 @@ a {
               padding-left: 2vw;
               padding-right: 18px;
               width: 100%;
+              font-weight: bold;
               border: none;
               text-align: left;
               outline: none;
@@ -1684,6 +1687,10 @@ a {
               background-color: #0085b7;
               border-top-left-radius: 1.6vh;
               border-top-right-radius: 1.6vh;
+
+              p {
+                font-size: 16px;
+              }
             }
             .acties {
               display: flex;
@@ -1720,6 +1727,7 @@ a {
                   display: flex;
                   max-width: 50%;
                   width: 80%;
+                  padding: 0.5em;
                 }
 
                 .subtext {
@@ -1764,10 +1772,7 @@ a {
                   }
 
                   .subtext {
-                    margin-top: 0.5vh;
                     justify-self: center;
-                    
-                    
                     display: block;
                   }
 
@@ -2095,10 +2100,13 @@ a {
             text-align: left;
             float: left;
             padding: 1.6em;
-            font-size: 18px;
             width: 65%;
             padding-right: 2vw;
             color: #0078ae;
+
+            p {
+              font-size: 18px;
+            }
           }
 
           .progress {
