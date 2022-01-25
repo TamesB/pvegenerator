@@ -21,13 +21,13 @@
         hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
         class="ui basic icon button"
       >
-      <i data-feather="edit-3" style="stroke: #0085B7"></i></button
+      <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></button
     ></span>
     <span
       ><a
         hx-delete="{% url 'deletekostenverschilpong' client_pk project_pk item_pk type %}"
         ><button class="ui icon basic red button">
-          <i data-feather="x" style="stroke: red;"></i></button></a></span
+          <i class="feather-20" data-feather="x" style="stroke: red;"></i></button></a></span
   ></b>
         </p>
   {% else %}
@@ -37,7 +37,7 @@
       hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
       class="ui basic icon button"
     >
-    <i data-feather="edit-3" style="stroke: #0085B7"></i>
+    <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i>
     </button>
   </p>
   {% endif %}
@@ -48,7 +48,7 @@
       hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
       class="ui basic icon button"
     >
-    <i data-feather="edit-3" style="stroke: #0085B7"></i>
+    <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i>
     </button>
   </p>
   {% endif %}

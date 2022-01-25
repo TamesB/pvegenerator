@@ -75,6 +75,11 @@ a {
   cursor: pointer;
 }
 
+.feather-20 {
+  width: 20px;
+  height: 20px;
+}
+
 .centered_div {
   display: -webkit-box;
   display: -ms-flexbox;

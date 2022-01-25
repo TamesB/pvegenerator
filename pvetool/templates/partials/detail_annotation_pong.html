@@ -20,12 +20,12 @@
             {% if current_reply.comment %}
                 <span><p style="color:#0085B7;">{{ current_reply.comment }} <span>
                     <button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic icon button">
-                    <i data-feather="edit-3" style="stroke: #0085B7"></i></button></span>
+                    <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></button></span>
                 <span><a hx-delete="{% url 'deletereplypong' client_pk project_pk item_pk type %}">
-                    <button class="ui icon basic red button"><i data-feather="x" style="stroke: red;"></i></button></a></span></p></span>
+                    <button class="ui icon basic red button"><i class="feather-20" data-feather="x" style="stroke: red;"></i></button></a></span></p></span>
             {% elif comment_allowed is True %}
                 <button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic icon button">
-                    <i data-feather="plus" style="stroke: #0085B7"></i></button>
+                    <i class="feather-20" data-feather="plus" style="stroke: #0085B7"></i></button>
             {% endif %}
         </div>
         <div class="attachments">
@@ -35,9 +35,9 @@
                 {% for attachment in attachments %}
                 {% if attachment.attachment %}
                 <a href="{% url 'downloadreplyattachment_syn' client_pk project_pk current_reply.id attachment.id %}" target="_blank">
-                    {{ attachment }}<i data-feather="download" style="stroke: #0085B7"></i></a>
+                    {{ attachment }}<i class="feather-20" data-feather="download" style="stroke: #0085B7"></i></a>
                 <span><button hx-get="{% url 'addattachmentpong' client_pk project_pk item_pk annotation.id type 0 attachment.id %}" class="ui basic icon button">
-                    <i data-feather="edit-3" style="stroke: #0085B7"></i></button></span>
+                    <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></button></span>
             
                 {% endif %}
                 {% endfor %}
@@ -45,7 +45,7 @@
                 {% endif %}
                 {% if attachment_allowed is True %}
                 <button hx-get="{% url 'addattachmentpong' client_pk project_pk item_pk 0 type 1 0 %}" class="ui basic icon button">
-                    <i data-feather="plus" style="stroke: #0085B7"></i></button>
+                    <i class="feather-20" data-feather="plus" style="stroke: #0085B7"></i></button>
                 {% endif %}
             </p>
         </div>

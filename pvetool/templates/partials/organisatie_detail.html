@@ -11,7 +11,7 @@
         hx-target="closest span" hx-swap="outerHTML"><i class="icon times"></i></a>, 
     {% endfor %}
 {% endif %}
-<span><a hx-get="{% url 'addusersorganisatie' client_pk stakeholder.id %}"><i data-feather="plus" style="stroke: #0085B7"></i></span></p>
+<span><a hx-get="{% url 'addusersorganisatie' client_pk stakeholder.id %}"><i class="feather-20" data-feather="plus" style="stroke: #0085B7"></i></span></p>
 </div>
 {% include 'partials/_render_icons.html' %}
 

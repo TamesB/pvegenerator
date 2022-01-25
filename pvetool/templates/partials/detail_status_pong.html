@@ -15,22 +15,22 @@
 {% if current_reply.accept is False %}
 {% if current_reply.status %}
     <p style="color:#0085B7">Voorgesteld: {{ current_reply.status }}
-    <span><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" hx-confirm="Let op: Verandering van status verwijderd uw opmerking/bijlagen." class="ui basic icon button"><i data-feather="edit-3" style="stroke: #0085B7"></i></i></button>
+    <span><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" hx-confirm="Let op: Verandering van status verwijderd uw opmerking/bijlagen." class="ui basic icon button"><i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></i></button>
     </span>
         <span><a hx-delete="{% url 'deletestatuspong' client_pk project_pk item_pk type %}" hx-confirm="Weet u het zeker?" hx-target="#item-{{ item_pk}}">
-            <button class="ui icon basic red button"><i data-feather="x" style="stroke: red;"></i></button></a></span></p>
+            <button class="ui icon basic red button"><i class="feather-20" data-feather="x" style="stroke: red;"></i></button></a></span></p>
 {% else %}
     <p><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" 
         hx-confirm="Let op: Status geeft aan of iets wel/niet onderdeel is van het project. 
         'Voldoet' is iets wat gerekend is door derden. 'Voldoet niet' is iets wat niet gerekend is. Vraag bij wijziging eventueel om verrekening. 
         Bij statusverandering wordt uw huidige opmerking/bijlages automatisch verwijderd." class="ui basic icon button">
-        <i data-feather="edit-3" style="stroke: #0085B7"></i></button></p>
+        <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></button></p>
 {% endif %}
 {% endif %}
 {% else %}
 {% if type == 0 %}
     <p><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic icon button">
-        <i data-feather="edit-3" style="stroke: #0085B7"></i></button></p>
+        <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></button></p>
 {% endif %}
 {% endif %}
 </span>

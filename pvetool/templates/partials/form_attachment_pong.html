@@ -13,10 +13,10 @@
         </div>
         <button hx-get="{% url 'detailpongreply' client_pk project_pk item_pk type %}" 
         hx-trigger="click" style="float: left;" class="ui basic icon button">
-        <i data-feather="x" style="stroke: #0085B7"></i></button>
+        <i class="feather-20" data-feather="x" style="stroke: #0085B7"></i></button>
         <span style="float:right;"><button hx-post="{% url 'addattachmentpong' client_pk project_pk item_pk annotation_pk type new attachment_id %}" 
             hx-trigger="click" type="submit" class="ui icon basic button">
-            <i data-feather="check" style="stroke: #0085B7"></i></button>
+            <i class="feather-20" data-feather="check" style="stroke: #0085B7"></i></button>
         </span>
     </form>
     {% include 'partials/_render_icons.html' %}
