@@ -8,6 +8,57 @@ body {
   position: relative;
 }
 
+*:focus {
+  outline: none;
+}
+
+a:hover {
+  outline: none;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #111;
+  font-weight: 400;
+}
+
+h1 {
+  font-size: 48px;
+}
+
+h2 {
+  font-size: 44px;
+}
+
+h3 {
+  font-size: 26px;
+}
+
+h4 {
+  font-size: 20px;
+}
+
+h5 {
+  font-size: 18px;
+}
+
+h6 {
+  font-size: 14px;
+}
+
+p {
+  font-size: 14px;
+}
+
+strong {
+  font-weight: 400;
+}
+
 .ui.icon.basic.button {
   padding: 0.1em;
 }
@@ -44,7 +95,6 @@ body {
 .landing-flex .landing-flex-item p {
   font-family: 'Montserrat';
   font-weight: 900;
-  font-size: 3em;
 }
 
 .landing-flex .landing-flex-item:hover {

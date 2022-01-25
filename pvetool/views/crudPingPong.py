@@ -1050,7 +1050,7 @@ def AddStatusPong(request, client_pk, project_pk, item_pk, type):
         )
     else:
         form = forms.FirstStatusForm(request.POST or None)
-
+    print(form)
     if request.method == "POST" or request.method == "PUT":
         if form.is_valid():
             if form.cleaned_data["status"] == annotation.status:

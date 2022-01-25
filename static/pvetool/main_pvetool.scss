@@ -3,14 +3,66 @@
   src: url(https://fonts.googleapis.com/css?family=Montserrat);
 }
 
-body,
-html {
-  font-family: "Montserrat";
-  margin: 0;
-  font-size: 0px;
-  line-height: 0em;
-  overflow: hidden;
+body {
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  color: #888;
+  font-weight: 400;
+  background: #f4f7fa;
+  position: relative;
 }
+
+*:focus {
+  outline: none;
+}
+
+a:hover {
+  outline: none;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #111;
+  font-weight: 400;
+}
+
+h1 {
+  font-size: 48px;
+}
+
+h2 {
+  font-size: 44px;
+}
+
+h3 {
+  font-size: 26px;
+}
+
+h4 {
+  font-size: 20px;
+}
+
+h5 {
+  font-size: 18px;
+}
+
+h6 {
+  font-size: 14px;
+}
+
+p {
+  font-size: 14px;
+}
+
+strong {
+  font-weight: 400;
+}
+
 
 
 p {
@@ -37,16 +89,15 @@ a {
     height: 30em;
     padding: 8em;
     background: white;
-    -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-    -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-    box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+    -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+    -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+    box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 
     p {
       margin-top: 3em;
       font-family: "Montserrat";
-      font-weight: bold;
+      
       color: black;
-      font-size: 2em;
       text-align: center;
     }
   }
@@ -60,16 +111,17 @@ a {
   background-image: linear-gradient(top left, #ffffff, #d1d1d1);
 
   .login_box {
+    font-weight: bold;
     background: white;
     font-family: "Montserrat";
-    font-weight: bold;
-    font-size: 3vh;
+    
+    
     text-align: center;
     position: fixed; /* or absolute */
     padding: 4vh 4vw;
-    -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-    -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-    box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+    -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+    -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+    box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 
     img {
       padding: 1.5vw 1.5vh;
@@ -79,17 +131,17 @@ a {
 
     .login-button {
       font-family: "Montserrat";
-      font-weight: bold;
-      font-size: 2vh;
+      
+      
       color: white;
       border: none;
       width: 10vw;
       height: 5vh;
       align-items: center;
       background: rgb(4, 172, 172);
-      -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-      -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-      box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+      -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+      -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+    box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
       margin-top: 1em;
       outline: none;
       min-width: 80px;
@@ -115,11 +167,10 @@ a {
   width: 100vw;
 
   .header {
-    font-weight: bold;
+    
     width: 100%;
     color: hsl(0, 0%, 0%);
     height: 10vh;
-    max-height: 9vh;
     background-color: #ffffff;
 
     .logo_bg {
@@ -135,6 +186,7 @@ a {
       padding: 1vw;
       padding-top: 2.5vh;
       font-family: "Montserrat";
+      font-weight: bold;
 
       ul {
         list-style-type: none;
@@ -153,7 +205,7 @@ a {
       li a {
         display: block;
         padding: 0;
-        font-size: 1.5vh;
+        
         color: black;
         cursor: pointer;
       }
@@ -197,8 +249,8 @@ a {
       clear: left;
       text-align: center;
       font-family: "Montserrat";
-      font-weight: bold;
-      font-size: 1.5em;
+      
+      
       flex: 0 0 3%;
       background-image: linear-gradient(bottom right, #0078ae, #66acd1);
       top: 10vh;
@@ -242,7 +294,7 @@ a {
       .hori-menu-logout {
         display: none;
         justify-content: center;
-        font-size: 1.5vh;
+        
         visibility: hidden;
         width: 100%;
 
@@ -310,7 +362,7 @@ a {
         .hori-menu-logout {
           display: flex;
           justify-content: center;
-          font-size: 1.5vh;
+          
           min-height: 3.5vh;
           width: 100%;
 
@@ -386,15 +438,13 @@ a {
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
-          margin-bottom: 3vh;
 
           .flex-item {
             width: 20vw;
-            height: 19vh;
             min-width: 200px;
             min-height: 150px;
-            margin-bottom: 1.5vh;
-            margin-top: 1.5vh;
+            margin-bottom: 1em;
+            margin-top: 1em;
             margin-left: 3vw;
             margin-right: 3vw;
             background: rgb(178, 219, 221);
@@ -403,9 +453,9 @@ a {
               #0085b7 20%,
               rgba(247, 247, 248, 1) 20%
             );
-            -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+            -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+            -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+          box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
             cursor: pointer;
             transition-duration: 0.5s;
             border-bottom-left-radius: 1.6vh;
@@ -413,18 +463,18 @@ a {
 
             max-width: 300px;
             p {
-              font-size: 2vh;
+              
               letter-spacing: 0.1em;
-              margin-top: 1.4vh;
+              margin-top: 0.5em;
               font-weight: bold;
+              
               color: white;
               overflow: hidden;
             }
 
             .flex-img {
-              margin: 2vh;
-              margin-bottom: 3vh;
-              height: 9vh;
+              margin: 1em;
+              margin-bottom: 0.5em;
               min-height: 70px;
             }
           }
@@ -442,9 +492,9 @@ a {
           display: flex;
           justify-content: space-between;
           background: rgb(247, 247, 248);
-          -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-          -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-          box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+          -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+          -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+        box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
           overflow-x: scroll;
           -ms-overflow-style: none; /* IE and Edge */
           scrollbar-width: none;
@@ -458,8 +508,8 @@ a {
             overflow-x: auto;
             .title {
               display: flex;
-              font-size: 2.5vh;
-              font-weight: bold;
+              
+              
               color: white;
               text-align: center;
               align-items: center;
@@ -475,7 +525,7 @@ a {
               display: flex;
               letter-spacing: 0.1vw;
               line-height: 0.15vh;
-              font-size: 1.5vh;
+              
               color: black;
               text-align: center;
             }
@@ -491,9 +541,9 @@ a {
             background-color: #0085b7;
             display: table;
             justify-content: space-between;
-            -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+            -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+            -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+          box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
             width: 100%;
             border-spacing: 0;
             overflow-wrap: break-word;
@@ -514,9 +564,9 @@ a {
             caption {
               margin-top: 1.8vh;
               caption-side: top;
-              font-size: 2vh;
+              
               letter-spacing: 0.1em;
-              font-weight: 900;
+              
               color: white;
             }
 
@@ -530,9 +580,9 @@ a {
             .table_title {
               background-color: #0085b7;
               letter-spacing: 0.1em;
-              font-weight: 900;
+              
               width: 100%;
-              font-size: 2vh;
+              
               color: white;
 
               th {
@@ -573,7 +623,6 @@ a {
           background-position: 10px 10px;
           background-repeat: no-repeat;
           width: 100%;
-          font-size: 16px;
           padding: 12px 20px 12px 40px;
           border: 1px solid #ddd;
           margin-bottom: 12px;
@@ -581,11 +630,11 @@ a {
 
         .profile_box {
           font-family: "Montserrat";
-          font-size: 2vh;
+          
           background: rgb(247, 247, 248);
-          -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-          -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-          box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+          -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+          -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+        box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
           overflow: hidden;
           -ms-overflow-style: none; /* IE and Edge */
           scrollbar-width: none;
@@ -618,18 +667,20 @@ a {
               margin-left: 2vw;
               .profile-title {
                 width: 80%;
-                font-weight: 900;
+                font-weight: bold;
+                
                 margin-right: 3vw;
               }
             }
           }
           .profile_bottom {
+            font-weight: bold;
             text-align: left;
             padding-top: 1vh;
             padding-left: 3vw;
             padding-bottom: 1vh;
             width: 100%;
-            font-weight: bold;
+            
             color: white;
             letter-spacing: 0.2vw;
             background-color: #0085b7;
@@ -647,27 +698,30 @@ a {
         }
 
         .general_title {
+          font-size: 16px;
           background: rgba(247, 247, 248, 1);
-          -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-          -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-          box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+          -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+          -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+        box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 
           .title_img {
-            height: 5vh;
+            height: 40px;
             float: left;
-            margin-top: 1vh;
-            margin-left: 2vw;
-            margin-bottom: 1vh;
+            margin-top: 0.5em;
+            margin-left: 1.5em;
+            margin-bottom: 0.5em;
           }
 
           p,
           label {
-            font-weight: bold;
+
+            font-weight: 700;
+            font-size: 16px;
             text-align: left;
-            padding-top: 2vh;
-            padding-left: 7vw;
-            padding-bottom: 2vh;
-            font-size: 2.5vh;
+            padding-top: 1em;
+            padding-left: 5em;
+            padding-bottom: 1em;
+            
             font-style: bold;
             width: 100%;
             padding-right: 2vw;
@@ -676,6 +730,8 @@ a {
 
           a {
             float: right;
+            position: relative;
+            bottom: 0.5em;
           }
 
           input {
@@ -693,8 +749,8 @@ a {
 
           .submit_button {
             font-family: "Montserrat";
-            padding: 0;
-            font-size: 1.5vh;
+            padding: 0.5em;
+            font-weight: bold;
             height: 2.5em;
             min-width: 90px;
             margin-bottom: 1vh;
@@ -703,13 +759,15 @@ a {
             padding-left: 1vw;
             padding-right: 1vw;
             background-color: #026189;
-            -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+            -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+            -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+          box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
             outline: none;
             border-style: none;
             color: white;
-            font-weight: bold;
+            position: relative;
+            bottom: 0.3em;
+            
             cursor: pointer;
           }
           .submit_button:hover {
@@ -723,9 +781,9 @@ a {
         .margin_title {
           height: 7vh;
           background: rgba(247, 247, 248, 1);
-          -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-          -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-          box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+          -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+          -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+        box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
           margin-bottom: 3vh;
           margin-top: 3vh;
 
@@ -740,11 +798,11 @@ a {
 
           p,
           label {
-            font-weight: bold;
+            
             text-align: left;
             padding-top: 2vh;
             padding-left: 7vw;
-            font-size: 2.5vh;
+            
             font-style: bold;
             width: 100%;
             padding-right: 2vw;
@@ -810,14 +868,14 @@ a {
                   #0078ae 15%,
                   rgba(247, 247, 248, 1) 15%
                 );
-                -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-                -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-                box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+                -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+                -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+              box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 
                 label {
                   font-style: bold;
                   color: rgb(167, 167, 167);
-                  font-size: 2vh;
+                  
                   float: left;
                   margin-bottom: 2vh;
                 }
@@ -845,8 +903,9 @@ a {
 
                 .under_text {
                   margin-bottom: 1vh;
-                  font-size: 2.5vh;
                   font-weight: bold;
+                  font-size: 18px;
+                  
                   color: white;
                 }
               }
@@ -857,19 +916,21 @@ a {
               flex-wrap: wrap;
               margin-left: 10vw;
               margin-right: 7vw;
+              font-weight: bold;
               margin-top: 6vh;
               height: 5vh;
               background: rgba(247, 247, 248, 1);
-              -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-              -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-              box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+              -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+              -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+            box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 
               p {
-                font-weight: bold;
+                
                 text-align: left;
                 padding-top: 1vh;
                 padding-left: 1.5vw;
-                font-size: 2vh;
+                font-size: 16px;
+                
                 font-style: bold;
                 color: #0078ae;
               }
@@ -894,7 +955,7 @@ a {
 
               li {
                 float: left;
-                font-size: 1.5em;
+                
                 margin-left: 1vw;
 
                 input {
@@ -920,12 +981,13 @@ a {
 
             .genereer_button {
               justify-content: space-between;
+              font-weight: bold;
               display: flex;
               flex-wrap: wrap;
               float: left;
-              font-size: 2em;
               color: white;
               font-style: bold;
+              font-size: 16px;
               font-family: "Montserrat";
               margin-left: 10vw;
               text-align: center;
@@ -936,9 +998,9 @@ a {
               height: 2em;
               background-color: #026189;
               border-style: none;
-              -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-              -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-              box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+              -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+              -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+            box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
               cursor: pointer;
               transition-duration: 0.5s;
             }
@@ -961,14 +1023,13 @@ a {
             padding: 3em;
             background: white;
             font-family: "Montserrat";
-            font-weight: bold;
-            font-size: 2em;
+            
             margin-top: 6em;
             margin-bottom: 6em;
             text-align: center;
-            -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+            -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+            -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+          box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 
             .button {
               margin-top: 1em;
@@ -977,14 +1038,13 @@ a {
               height: 3em;
               margin-bottom: 1;
               border-style: none;
-              -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-              -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-              box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+              -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+              -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+            box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
               text-overflow: none;
               color: white;
               font-style: bold;
               font-family: "Montserrat";
-              font-size: 0.5em;
               background-color: #026189;
               min-width: 243px;
             }
@@ -1009,9 +1069,9 @@ a {
             padding-left: 3vw;
             padding-right: 3vw;
             font-family: "Montserrat";
-            -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+            -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+            -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+          box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
             background: rgb(178, 219, 221);
             background: linear-gradient(
               0deg,
@@ -1020,8 +1080,8 @@ a {
             );
 
             .title {
-              font-size: 2vh;
-              font-weight: 900;
+              
+              
             }
 
             .description {
@@ -1035,17 +1095,17 @@ a {
               padding-top: 2vh;
 
               .formtitle {
-                font-weight: 900;
-                font-size: 1.5vh;
+                
+                
               }
               label {
-                font-weight: 900;
-                font-size: 1.3vh;
+                
+                
               }
               .formbox {
                 width: 100%;
                 margin-bottom: 3vh;
-                font-size: 1.5vh;
+                
 
                 input {
                   align-self: center;
@@ -1083,14 +1143,14 @@ a {
                 margin-top: 2vh;
                 background-color: #026189;
                 border-style: none;
-                -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-                -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-                box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+                -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+                -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+              box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
                 outline: none;
                 letter-spacing: 0.1vw;
                 font-family: "Montserrat";
                 color: white;
-                font-weight: 800;
+                
               }
               .button:hover {
                 opacity: 0.7;
@@ -1106,7 +1166,11 @@ a {
           margin-bottom: 4vh;
 
           .general_title {
+            
             margin-bottom: 4vh;
+            p {
+              font-size: 16px;
+            }
           }
 
           .main_content_div {
@@ -1115,7 +1179,7 @@ a {
               .table_title {
                 margin-top: 1vh;
                 color: white;
-                font-size: 2vh;
+                
               }
             }
           }
@@ -1135,22 +1199,25 @@ a {
           }
     
           .general_title {
+            font-size: 16px;
+            font-weight: bold;
+            
             .submit_button {
               font-family: "Montserrat";
               padding: 0;
-              font-size: 1.5vh;
+              
               height: 100%;
               width: 8vw;
               min-width: 90px;
               margin-right: 2vw;
               background-color: #026189;
-              -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-              -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-              box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+              -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+              -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+            box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
               outline: none;
               border-style: none;
               color: white;
-              font-weight: bold;
+              
               cursor: pointer;
             }
             .submit_button:hover {
@@ -1163,6 +1230,7 @@ a {
           }
 
           .titel_plusopmerking {
+            font-weight: bold;
             background-color: #0078ae;
             color: white;
             padding: 18px;
@@ -1170,8 +1238,8 @@ a {
             width: 100%;
             border: none;
             outline: none;
-            font-size: 1.8vh;
-            font-weight: bold;
+            
+            
             display: flex;
             justify-content: space-around;
             align-items: center;
@@ -1213,8 +1281,8 @@ a {
               border: none;
               text-align: left;
               outline: none;
-              font-size: 1.5vh;
-              font-weight: bold;
+              
+              
             }
 
             .chapter:hover {
@@ -1240,8 +1308,8 @@ a {
               border: none;
               text-align: left;
               outline: none;
-              font-size: 1.4vh;
-              font-weight: bold;
+              
+              
             }
 
             .paragraph:hover {
@@ -1268,7 +1336,7 @@ a {
             .item_content {
               .item_deeper {
                 display: flex;
-                font-size: 1.3vh;
+                
                 padding-top: 0.3vh;
                 padding-bottom: 0vh;
                 justify-content: space-between;
@@ -1363,13 +1431,15 @@ a {
                 }
                 .status_added {
                   padding-top: 1vh;
+                  font-weight: bold;
                   flex: 1;
-                  font-weight: 700;
+                  
                 }
                 .status_not_added {
+                  font-weight: bold;
                   padding-top: 1vh;
                   flex: 1;
-                  font-weight: 700;
+                  
                 }
               }
             }
@@ -1405,8 +1475,8 @@ a {
                   label {
                     font-family: "Montserrat";
                     margin-top: 1.5vh;
-                    font-size: 1.5vh;
-                    font-weight: bold;
+                    
+                    
                   }
 
                   .item_label {
@@ -1460,15 +1530,15 @@ a {
                       max-width: 125px;
                       height: 4vh;
                       cursor: pointer;
-                      -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-                      -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-                      box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+                      -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+                      -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+                    box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 
                       font-family: "Montserrat";
-                      font-size: 1.5vh;
+                      
                       margin-top: 0.5vh;
                       text-align: center;
-                      font-weight: bold;
+                      
                       color: white;
 
                       p {
@@ -1484,14 +1554,14 @@ a {
                       max-width: 250px;
                       height: 4vh;
                       float: right;
-                      -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-                      -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-                      box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+                      -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+                      -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+                    box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
                       font-family: "Montserrat";
-                      font-size: 1vh;
+                      
                       margin-top: 0.5vh;
                       text-align: center;
-                      font-weight: bold;
+                      
                       color: white;
                     }
 
@@ -1534,7 +1604,7 @@ a {
           margin-top: 1vh;
           margin-bottom: 0.5vh;
           font-family: "Montserrat";
-          font-weight: bold;
+          
 
           .step-links {
             display: flex;
@@ -1550,17 +1620,16 @@ a {
                 background-color: #00a4a5;
                 display: flex;
                 justify-content: center;
-                -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-                -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-                box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+                -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+                -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+              box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 
                 p {
                   padding-top: 0.8vh;
                   padding-bottom: 1vh;
                   padding-left: 1vw;
                   padding-right: 1vw;
-                  font-size: 26px;
-                  font-weight: bold;
+                  
                 }
               }
             }
@@ -1570,9 +1639,9 @@ a {
               display: flex;
               justify-content: center;
               background-color: #00a4a5;
-              -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-              -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-              box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+              -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+              -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+            box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 
               p {
                 padding-top: 1vh;
@@ -1592,14 +1661,14 @@ a {
             min-height: 40%;
             max-height: 40%;
             background: rgba(247, 247, 248, 1);
-            -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+            -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+            -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+          box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
             border-top-left-radius: 1.6vh;
             border-top-right-radius: 1.6vh;
 
             .acties_title {
-              font-size: 2.5vh;
+              
               font-weight: bold;
               padding-top: 0.5vh;
               color: white;
@@ -1631,9 +1700,9 @@ a {
                 min-width: 100px;
                 max-width: 23%;
                 background: white;
-                -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-                -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-                box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+                -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+                -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+              box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -1651,7 +1720,8 @@ a {
                   margin-top: 0.5vh;
                   justify-self: center;
                   font-weight: bold;
-                  font-size: 1.5vh;
+                  margin: 0.1em;
+                  
                   display: block;
                 }
                 @media screen and (max-width: 1500px) {
@@ -1681,7 +1751,7 @@ a {
                       width: 100%;
 
                       p {
-                        font-size: 1vh;
+                        
                         font-family: "Montserrat";
                       }
                     }
@@ -1690,8 +1760,8 @@ a {
                   .subtext {
                     margin-top: 0.5vh;
                     justify-self: center;
-                    font-weight: bold;
-                    font-size: 1.5vh;
+                    
+                    
                     display: block;
                   }
 
@@ -1726,9 +1796,9 @@ a {
                 min-width: 100px;
                 max-width: 23%;
                 background: white;
-                -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-                -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-                box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+                -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+                -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+              box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -1745,8 +1815,8 @@ a {
                 .subtext {
                   margin-top: 0.5vh;
                   justify-self: center;
-                  font-weight: bold;
-                  font-size: 1.5vh;
+                  
+                  
                   display: block;
                 }
                 @media screen and (max-width: 1500px) {
@@ -1766,7 +1836,7 @@ a {
             float: left;
             display: flex;
             font-family: "Montserrat";
-            font-size: 1.5vh;
+            
             border: #f7f7f7;
             background: #f7f7f7;
             background: linear-gradient(
@@ -1778,10 +1848,10 @@ a {
             .chat-title {
               font-family: "Montserrat";
               margin-top: 2vh;
-              font-size: 2vh;
+              
               padding-bottom: 3vh;
               width: 100%;
-              font-weight: bold;
+              
               color: white;
             }
 
@@ -1802,7 +1872,7 @@ a {
             }
 
             #messages p {
-              font-size: 1.5vh;
+              
               width: 100%;
               padding: 0;
               float: left;
@@ -1823,18 +1893,18 @@ a {
               margin: 2vh 2vh;
               align-content: left;
               box-align: left;
-              font-size: 1.5vh;
+              
             }
 
             .message-container .username {
               display: inline-block;
               margin-right: 2vw;
-              font-weight: bold;
+              
             }
 
             .me,
             .username.me {
-              font-weight: bold;
+              
               color: blue;
             }
 
@@ -1884,9 +1954,9 @@ a {
             max-width: 40%;
             min-height: 40%;
             max-height: 40%;
-            -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+            -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+            -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+          box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
             background: #f7f7f7;
             margin-top: 2vh;
             overflow-x: scroll;
@@ -1897,16 +1967,17 @@ a {
               background: #0085b7;
               min-width: 100%;
               width: 100%;
-              font-size: 2.5vh;
+              
               color: white;
               float: center;
               border-top-left-radius: 1.6vh;
               border-top-right-radius: 1.6vh;
               padding-top: 0.5vh;
               padding-bottom: 0.5vh;
+              font-weight: bold;
 
               p {
-                font-weight: bold;
+                
               }
             }
 
@@ -1926,7 +1997,7 @@ a {
                     margin-bottom: 3px;
 
                     .conttitle {
-                      font-weight: 700;
+                      font-weight: bold;
                     }
                   }
                 }
@@ -1944,9 +2015,9 @@ a {
             max-width: 40%;
             min-height: 40%;
             max-height: 40%;
-            -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+            -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+            -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+          box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
             border-top-left-radius: 1.6vh;
             border-top-right-radius: 1.6vh;
 
@@ -1954,7 +2025,7 @@ a {
               background: #0085b7;
               min-width: 100%;
               width: 100%;
-              font-size: 2.5vh;
+              
               color: white;
               float: center;
               border-top-left-radius: 1.6vh;
@@ -1979,9 +2050,9 @@ a {
             display: flex;
             width: 100%;
             min-height: 45%;
-            -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+            -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+            -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+          box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
           }
         }
         @media screen and (max-width: 770px) {
@@ -2004,23 +2075,21 @@ a {
         }
         .project_progress_bar {
           background: rgba(247, 247, 248, 1);
-          -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-          -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-          box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+          -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+          -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+        box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
           margin-bottom: 2vh;
           margin-top: 2vh;
           display: inline-block;
           width: 100%;
+          font-weight: bold;
 
           label {
-            font-weight: bold;
+            
             text-align: left;
             float: left;
-            padding-top: 2vh;
-            padding-left: 2vw;
-            padding-bottom: 2vh;
-            font-size: 2.5vh;
-            font-style: bold;
+            padding: 1.6em;
+            font-size: 18px;
             width: 65%;
             padding-right: 2vw;
             color: #0078ae;
@@ -2045,9 +2114,9 @@ a {
             padding-left: 2vw;
             padding-right: 2vw;
             text-align: left;
-            -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-            box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+            -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+            -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+          box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
             background: linear-gradient(
               180deg,
               #0078ae 95px,
@@ -2056,8 +2125,8 @@ a {
             overflow-y: auto;
 
             .table_head {
-              font-size: 2vh;
-              font-weight: bold;
+              
+              
               width: 100%;
               padding-bottom: 2vh;
 
@@ -2075,12 +2144,12 @@ a {
             }
 
             .table_content {
-              font-size: 1.5vh;
+              
               word-wrap: break-word;
 
               .inhoud_box {
                 padding-bottom: 1vh;
-                font-size: 1.5vh;
+                
                 max-width: 75px;
                 p {
                   overflow-y: auto;
@@ -2088,7 +2157,7 @@ a {
                   max-height: 75px;
                   .inhopmerking {
                     color: red;
-                    font-weight: bold;
+                    
                   }
                 }
 
@@ -2133,9 +2202,9 @@ a {
           padding-left: 2vw;
           padding-right: 2vw;
           text-align: left;
-          -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-          -moz-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-          box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+          -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+          -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+        box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
           background: linear-gradient(
             180deg,
             #0078ae 95px,
@@ -2144,8 +2213,8 @@ a {
           overflow-y: auto;
 
           .table_head {
-            font-size: 2vh;
-            font-weight: bold;
+            
+            
             width: 100%;
             padding-bottom: 2vh;
 
@@ -2163,12 +2232,10 @@ a {
           }
 
           .table_content {
-            font-size: 1.5vh;
             word-wrap: break-word;
 
             .inhoud_box {
               padding-bottom: 1vh;
-              font-size: 1.5vh;
               max-width: 75px;
               p {
                 overflow-y: auto;
@@ -2176,7 +2243,7 @@ a {
                 max-height: 75px;
                 .inhopmerking {
                   color: red;
-                  font-weight: bold;
+                  
                 }
               }
             }

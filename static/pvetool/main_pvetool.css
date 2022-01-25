@@ -3,13 +3,64 @@
   src: url(https://fonts.googleapis.com/css?family=Montserrat);
 }
 
-body,
-html {
-  font-family: "Montserrat";
-  margin: 0;
-  font-size: 0px;
-  line-height: 0em;
-  overflow: hidden;
+body {
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  color: #888;
+  font-weight: 400;
+  background: #f4f7fa;
+  position: relative;
+}
+
+*:focus {
+  outline: none;
+}
+
+a:hover {
+  outline: none;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #111;
+  font-weight: 400;
+}
+
+h1 {
+  font-size: 48px;
+}
+
+h2 {
+  font-size: 44px;
+}
+
+h3 {
+  font-size: 26px;
+}
+
+h4 {
+  font-size: 20px;
+}
+
+h5 {
+  font-size: 18px;
+}
+
+h6 {
+  font-size: 14px;
+}
+
+p {
+  font-size: 14px;
+}
+
+strong {
+  font-weight: 400;
 }
 
 p {
@@ -45,16 +96,14 @@ a {
   height: 30em;
   padding: 8em;
   background: white;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 }
 
 .centered_div .centered_box p {
   margin-top: 3em;
   font-family: "Montserrat";
-  font-weight: bold;
   color: black;
-  font-size: 2em;
   text-align: center;
 }
 
@@ -75,16 +124,15 @@ a {
 }
 
 .centered_login .login_box {
+  font-weight: bold;
   background: white;
   font-family: "Montserrat";
-  font-weight: bold;
-  font-size: 3vh;
   text-align: center;
   position: fixed;
   /* or absolute */
   padding: 4vh 4vw;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 }
 
 .centered_login .login_box img {
@@ -95,8 +143,6 @@ a {
 
 .centered_login .login_box .login-button {
   font-family: "Montserrat";
-  font-weight: bold;
-  font-size: 2vh;
   color: white;
   border: none;
   width: 10vw;
@@ -105,8 +151,8 @@ a {
       -ms-flex-align: center;
           align-items: center;
   background: #04acac;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   margin-top: 1em;
   outline: none;
   min-width: 80px;
@@ -133,11 +179,9 @@ a {
 }
 
 #main .header {
-  font-weight: bold;
   width: 100%;
   color: black;
   height: 10vh;
-  max-height: 9vh;
   background-color: #ffffff;
 }
 
@@ -154,6 +198,7 @@ a {
   padding: 1vw;
   padding-top: 2.5vh;
   font-family: "Montserrat";
+  font-weight: bold;
 }
 
 #main .header .menu_right ul {
@@ -173,7 +218,6 @@ a {
 #main .header .menu_right li a {
   display: block;
   padding: 0;
-  font-size: 1.5vh;
   color: black;
   cursor: pointer;
 }
@@ -222,8 +266,6 @@ a {
   clear: left;
   text-align: center;
   font-family: "Montserrat";
-  font-weight: bold;
-  font-size: 1.5em;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 3%;
           flex: 0 0 3%;
@@ -275,7 +317,6 @@ a {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  font-size: 1.5vh;
   visibility: hidden;
   width: 100%;
 }
@@ -356,7 +397,6 @@ a {
     -webkit-box-pack: center;
         -ms-flex-pack: center;
             justify-content: center;
-    font-size: 1.5vh;
     min-height: 3.5vh;
     width: 100%;
   }
@@ -436,23 +476,21 @@ a {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  margin-bottom: 3vh;
 }
 
 #main .layerOneInner .article .article_content .flex-container .flex-item {
   width: 20vw;
-  height: 19vh;
   min-width: 200px;
   min-height: 150px;
-  margin-bottom: 1.5vh;
-  margin-top: 1.5vh;
+  margin-bottom: 1em;
+  margin-top: 1em;
   margin-left: 3vw;
   margin-right: 3vw;
   background: #b2dbdd;
   background: -webkit-gradient(linear, left bottom, left top, color-stop(20%, #0085b7), color-stop(20%, #f7f7f8));
   background: linear-gradient(0deg, #0085b7 20%, #f7f7f8 20%);
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   cursor: pointer;
   -webkit-transition-duration: 0.5s;
           transition-duration: 0.5s;
@@ -462,18 +500,16 @@ a {
 }
 
 #main .layerOneInner .article .article_content .flex-container .flex-item p {
-  font-size: 2vh;
   letter-spacing: 0.1em;
-  margin-top: 1.4vh;
+  margin-top: 0.5em;
   font-weight: bold;
   color: white;
   overflow: hidden;
 }
 
 #main .layerOneInner .article .article_content .flex-container .flex-item .flex-img {
-  margin: 2vh;
-  margin-bottom: 3vh;
-  height: 9vh;
+  margin: 1em;
+  margin-bottom: 0.5em;
   min-height: 70px;
 }
 
@@ -496,8 +532,8 @@ a {
       -ms-flex-pack: justify;
           justify-content: space-between;
   background: #f7f7f8;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   overflow-x: scroll;
   -ms-overflow-style: none;
   /* IE and Edge */
@@ -520,8 +556,6 @@ a {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  font-size: 2.5vh;
-  font-weight: bold;
   color: white;
   text-align: center;
   -webkit-box-align: center;
@@ -541,7 +575,6 @@ a {
   display: flex;
   letter-spacing: 0.1vw;
   line-height: 0.15vh;
-  font-size: 1.5vh;
   color: black;
   text-align: center;
 }
@@ -558,8 +591,8 @@ a {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   width: 100%;
   border-spacing: 0;
   overflow-wrap: break-word;
@@ -581,9 +614,7 @@ a {
 #main .layerOneInner .article .article_content .base_info_table table caption {
   margin-top: 1.8vh;
   caption-side: top;
-  font-size: 2vh;
   letter-spacing: 0.1em;
-  font-weight: 900;
   color: white;
 }
 
@@ -597,9 +628,7 @@ a {
 #main .layerOneInner .article .article_content .base_info_table table .table_title {
   background-color: #0085b7;
   letter-spacing: 0.1em;
-  font-weight: 900;
   width: 100%;
-  font-size: 2vh;
   color: white;
 }
 
@@ -640,7 +669,6 @@ a {
   background-position: 10px 10px;
   background-repeat: no-repeat;
   width: 100%;
-  font-size: 16px;
   padding: 12px 20px 12px 40px;
   border: 1px solid #ddd;
   margin-bottom: 12px;
@@ -648,10 +676,9 @@ a {
 
 #main .layerOneInner .article .article_content .profile_box {
   font-family: "Montserrat";
-  font-size: 2vh;
   background: #f7f7f8;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   overflow: hidden;
   -ms-overflow-style: none;
   /* IE and Edge */
@@ -695,17 +722,17 @@ a {
 
 #main .layerOneInner .article .article_content .profile_box .profile_content .profile_right .profile-title {
   width: 80%;
-  font-weight: 900;
+  font-weight: bold;
   margin-right: 3vw;
 }
 
 #main .layerOneInner .article .article_content .profile_box .profile_bottom {
+  font-weight: bold;
   text-align: left;
   padding-top: 1vh;
   padding-left: 3vw;
   padding-bottom: 1vh;
   width: 100%;
-  font-weight: bold;
   color: white;
   letter-spacing: 0.2vw;
   background-color: #0085b7;
@@ -721,27 +748,28 @@ a {
 }
 
 #main .layerOneInner .article .article_content .general_title {
+  font-size: 16px;
   background: #f7f7f8;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 }
 
 #main .layerOneInner .article .article_content .general_title .title_img {
-  height: 5vh;
+  height: 40px;
   float: left;
-  margin-top: 1vh;
-  margin-left: 2vw;
-  margin-bottom: 1vh;
+  margin-top: 0.5em;
+  margin-left: 1.5em;
+  margin-bottom: 0.5em;
 }
 
 #main .layerOneInner .article .article_content .general_title p,
 #main .layerOneInner .article .article_content .general_title label {
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 16px;
   text-align: left;
-  padding-top: 2vh;
-  padding-left: 7vw;
-  padding-bottom: 2vh;
-  font-size: 2.5vh;
+  padding-top: 1em;
+  padding-left: 5em;
+  padding-bottom: 1em;
   font-style: bold;
   width: 100%;
   padding-right: 2vw;
@@ -750,6 +778,8 @@ a {
 
 #main .layerOneInner .article .article_content .general_title a {
   float: right;
+  position: relative;
+  bottom: 0.5em;
 }
 
 #main .layerOneInner .article .article_content .general_title input {
@@ -767,8 +797,8 @@ a {
 
 #main .layerOneInner .article .article_content .general_title .submit_button {
   font-family: "Montserrat";
-  padding: 0;
-  font-size: 1.5vh;
+  padding: 0.5em;
+  font-weight: bold;
   height: 2.5em;
   min-width: 90px;
   margin-bottom: 1vh;
@@ -777,12 +807,13 @@ a {
   padding-left: 1vw;
   padding-right: 1vw;
   background-color: #026189;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   outline: none;
   border-style: none;
   color: white;
-  font-weight: bold;
+  position: relative;
+  bottom: 0.3em;
   cursor: pointer;
 }
 
@@ -798,8 +829,8 @@ a {
 #main .layerOneInner .article .article_content .margin_title {
   height: 7vh;
   background: #f7f7f8;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   margin-bottom: 3vh;
   margin-top: 3vh;
 }
@@ -815,11 +846,9 @@ a {
 
 #main .layerOneInner .article .article_content .margin_title p,
 #main .layerOneInner .article .article_content .margin_title label {
-  font-weight: bold;
   text-align: left;
   padding-top: 2vh;
   padding-left: 7vw;
-  font-size: 2.5vh;
   font-style: bold;
   width: 100%;
   padding-right: 2vw;
@@ -886,14 +915,13 @@ a {
   background: #b2dbdd;
   background: -webkit-gradient(linear, left bottom, left top, color-stop(15%, #0078ae), color-stop(15%, #f7f7f8));
   background: linear-gradient(0deg, #0078ae 15%, #f7f7f8 15%);
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 }
 
 #main .layerOneInner .article .article_content .generator_form form .parameter_container .parameter_item label {
   font-style: bold;
   color: #a7a7a7;
-  font-size: 2vh;
   float: left;
   margin-bottom: 2vh;
 }
@@ -921,8 +949,8 @@ a {
 
 #main .layerOneInner .article .article_content .generator_form form .parameter_container .parameter_item .under_text {
   margin-bottom: 1vh;
-  font-size: 2.5vh;
   font-weight: bold;
+  font-size: 18px;
   color: white;
 }
 
@@ -937,19 +965,19 @@ a {
       flex-wrap: wrap;
   margin-left: 10vw;
   margin-right: 7vw;
+  font-weight: bold;
   margin-top: 6vh;
   height: 5vh;
   background: #f7f7f8;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 }
 
 #main .layerOneInner .article .article_content .generator_form form .specific_items p {
-  font-weight: bold;
   text-align: left;
   padding-top: 1vh;
   padding-left: 1.5vw;
-  font-size: 2vh;
+  font-size: 16px;
   font-style: bold;
   color: #0078ae;
 }
@@ -984,7 +1012,6 @@ a {
 
 #main .layerOneInner .article .article_content .generator_form form .specific_item_list li {
   float: left;
-  font-size: 1.5em;
   margin-left: 1vw;
 }
 
@@ -1013,15 +1040,16 @@ a {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  font-weight: bold;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
   float: left;
-  font-size: 2em;
   color: white;
   font-style: bold;
+  font-size: 16px;
   font-family: "Montserrat";
   margin-left: 10vw;
   text-align: center;
@@ -1032,8 +1060,8 @@ a {
   height: 2em;
   background-color: #026189;
   border-style: none;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   cursor: pointer;
   -webkit-transition-duration: 0.5s;
           transition-duration: 0.5s;
@@ -1066,13 +1094,11 @@ a {
   padding: 3em;
   background: white;
   font-family: "Montserrat";
-  font-weight: bold;
-  font-size: 2em;
   margin-top: 6em;
   margin-bottom: 6em;
   text-align: center;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 }
 
 #main .layerOneInner .article .article_content .generate_result_box .box .button {
@@ -1082,13 +1108,12 @@ a {
   height: 3em;
   margin-bottom: 1;
   border-style: none;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   text-overflow: none;
   color: white;
   font-style: bold;
   font-family: "Montserrat";
-  font-size: 0.5em;
   background-color: #026189;
   min-width: 243px;
 }
@@ -1120,16 +1145,11 @@ a {
   padding-left: 3vw;
   padding-right: 3vw;
   font-family: "Montserrat";
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   background: #b2dbdd;
   background: -webkit-gradient(linear, left bottom, left top, color-stop(10%, #0078ae), color-stop(10%, #f7f7f8));
   background: linear-gradient(0deg, #0078ae 10%, #f7f7f8 10%);
-}
-
-#main .layerOneInner .article .article_content .invite-container .box .title {
-  font-size: 2vh;
-  font-weight: 900;
 }
 
 #main .layerOneInner .article .article_content .invite-container .box .description {
@@ -1146,20 +1166,9 @@ a {
   padding-top: 2vh;
 }
 
-#main .layerOneInner .article .article_content .invite-container .box form .formtitle {
-  font-weight: 900;
-  font-size: 1.5vh;
-}
-
-#main .layerOneInner .article .article_content .invite-container .box form label {
-  font-weight: 900;
-  font-size: 1.3vh;
-}
-
 #main .layerOneInner .article .article_content .invite-container .box form .formbox {
   width: 100%;
   margin-bottom: 3vh;
-  font-size: 1.5vh;
 }
 
 #main .layerOneInner .article .article_content .invite-container .box form .formbox input {
@@ -1202,13 +1211,12 @@ a {
   margin-top: 2vh;
   background-color: #026189;
   border-style: none;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   outline: none;
   letter-spacing: 0.1vw;
   font-family: "Montserrat";
   color: white;
-  font-weight: 800;
 }
 
 #main .layerOneInner .article .article_content .invite-container .box form .button:hover {
@@ -1228,6 +1236,10 @@ a {
   margin-bottom: 4vh;
 }
 
+#main .layerOneInner .article .article_content .opmerking_project_list .general_title p {
+  font-size: 16px;
+}
+
 #main .layerOneInner .article .article_content .opmerking_project_list .main_content_div .project_overview_content {
   width: 100%;
 }
@@ -1235,7 +1247,6 @@ a {
 #main .layerOneInner .article .article_content .opmerking_project_list .main_content_div .project_overview_content .table_title {
   margin-top: 1vh;
   color: white;
-  font-size: 2vh;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .ui.tab {
@@ -1254,21 +1265,24 @@ a {
           transform: rotateX(180deg);
 }
 
+#main .layerOneInner .article .article_content .opmerking_form .general_title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
 #main .layerOneInner .article .article_content .opmerking_form .general_title .submit_button {
   font-family: "Montserrat";
   padding: 0;
-  font-size: 1.5vh;
   height: 100%;
   width: 8vw;
   min-width: 90px;
   margin-right: 2vw;
   background-color: #026189;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   outline: none;
   border-style: none;
   color: white;
-  font-weight: bold;
   cursor: pointer;
 }
 
@@ -1282,6 +1296,7 @@ a {
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .titel_plusopmerking {
+  font-weight: bold;
   background-color: #0078ae;
   color: white;
   padding: 18px;
@@ -1289,8 +1304,6 @@ a {
   width: 100%;
   border: none;
   outline: none;
-  font-size: 1.8vh;
-  font-weight: bold;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1343,8 +1356,6 @@ a {
   border: none;
   text-align: left;
   outline: none;
-  font-size: 1.5vh;
-  font-weight: bold;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .chapter:hover {
@@ -1371,8 +1382,6 @@ a {
   border: none;
   text-align: left;
   outline: none;
-  font-size: 1.4vh;
-  font-weight: bold;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .paragraph:hover {
@@ -1399,7 +1408,6 @@ a {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  font-size: 1.3vh;
   padding-top: 0.3vh;
   padding-bottom: 0vh;
   -webkit-box-pack: justify;
@@ -1549,18 +1557,18 @@ a {
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .status_added {
   padding-top: 1vh;
+  font-weight: bold;
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
-  font-weight: 700;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .status_not_added {
+  font-weight: bold;
   padding-top: 1vh;
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
-  font-weight: 700;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content:nth-child(even) {
@@ -1602,8 +1610,6 @@ a {
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container label {
   font-family: "Montserrat";
   margin-top: 1.5vh;
-  font-size: 1.5vh;
-  font-weight: bold;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .opmerking_form_modal .w3-modal .w3-modal-content .w3-container .item_label {
@@ -1669,13 +1675,11 @@ a {
   max-width: 125px;
   height: 4vh;
   cursor: pointer;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   font-family: "Montserrat";
-  font-size: 1.5vh;
   margin-top: 0.5vh;
   text-align: center;
-  font-weight: bold;
   color: white;
 }
 
@@ -1691,13 +1695,11 @@ a {
   max-width: 250px;
   height: 4vh;
   float: right;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   font-family: "Montserrat";
-  font-size: 1vh;
   margin-top: 0.5vh;
   text-align: center;
-  font-weight: bold;
   color: white;
 }
 
@@ -1733,7 +1735,6 @@ a {
   margin-top: 1vh;
   margin-bottom: 0.5vh;
   font-family: "Montserrat";
-  font-weight: bold;
 }
 
 #main .layerOneInner .article .article_content .pagination .step-links {
@@ -1764,8 +1765,8 @@ a {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 }
 
 #main .layerOneInner .article .article_content .pagination .step-links .previous_next a p {
@@ -1773,8 +1774,6 @@ a {
   padding-bottom: 1vh;
   padding-left: 1vw;
   padding-right: 1vw;
-  font-size: 26px;
-  font-weight: bold;
 }
 
 #main .layerOneInner .article .article_content .pagination .step-links .current {
@@ -1787,8 +1786,8 @@ a {
       -ms-flex-pack: center;
           justify-content: center;
   background-color: #00a4a5;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 }
 
 #main .layerOneInner .article .article_content .pagination .step-links .current p {
@@ -1813,14 +1812,13 @@ a {
   min-height: 40%;
   max-height: 40%;
   background: #f7f7f8;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   border-top-left-radius: 1.6vh;
   border-top-right-radius: 1.6vh;
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .project_acties .acties_title {
-  font-size: 2.5vh;
   font-weight: bold;
   padding-top: 0.5vh;
   color: white;
@@ -1859,8 +1857,8 @@ a {
   min-width: 100px;
   max-width: 23%;
   background: white;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1891,7 +1889,7 @@ a {
   -ms-grid-column-align: center;
       justify-self: center;
   font-weight: bold;
-  font-size: 1.5vh;
+  margin: 0.1em;
   display: block;
 }
 
@@ -1935,7 +1933,6 @@ a {
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .project_acties .acties .actie_item .inner_actie a button p {
-  font-size: 1vh;
   font-family: "Montserrat";
 }
 
@@ -1943,8 +1940,6 @@ a {
   margin-top: 0.5vh;
   -ms-grid-column-align: center;
       justify-self: center;
-  font-weight: bold;
-  font-size: 1.5vh;
   display: block;
 }
 
@@ -1981,8 +1976,8 @@ a {
   min-width: 100px;
   max-width: 23%;
   background: white;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2013,8 +2008,6 @@ a {
   margin-top: 0.5vh;
   -ms-grid-column-align: center;
       justify-self: center;
-  font-weight: bold;
-  font-size: 1.5vh;
   display: block;
 }
 
@@ -2034,7 +2027,6 @@ a {
   display: -ms-flexbox;
   display: flex;
   font-family: "Montserrat";
-  font-size: 1.5vh;
   border: #f7f7f7;
   background: #f7f7f7;
   background: -webkit-gradient(linear, left top, left bottom, color-stop(15%, #0078ae), color-stop(15%, #f7f7f8));
@@ -2044,10 +2036,8 @@ a {
 #main .layerOneInner .article .article_content .flex_projectpagina .messages_box .chat-title {
   font-family: "Montserrat";
   margin-top: 2vh;
-  font-size: 2vh;
   padding-bottom: 3vh;
   width: 100%;
-  font-weight: bold;
   color: white;
 }
 
@@ -2070,7 +2060,6 @@ a {
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .messages_box #messages p {
-  font-size: 1.5vh;
   width: 100%;
   padding: 0;
   float: left;
@@ -2092,18 +2081,15 @@ a {
   -ms-flex-line-pack: left;
       align-content: left;
   box-align: left;
-  font-size: 1.5vh;
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .messages_box .message-container .username {
   display: inline-block;
   margin-right: 2vw;
-  font-weight: bold;
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .messages_box .me,
 #main .layerOneInner .article .article_content .flex_projectpagina .messages_box .username.me {
-  font-weight: bold;
   color: blue;
 }
 
@@ -2173,8 +2159,8 @@ a {
   max-width: 40%;
   min-height: 40%;
   max-height: 40%;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   background: #f7f7f7;
   margin-top: 2vh;
   overflow-x: scroll;
@@ -2186,16 +2172,12 @@ a {
   background: #0085b7;
   min-width: 100%;
   width: 100%;
-  font-size: 2.5vh;
   color: white;
   float: center;
   border-top-left-radius: 1.6vh;
   border-top-right-radius: 1.6vh;
   padding-top: 0.5vh;
   padding-bottom: 0.5vh;
-}
-
-#main .layerOneInner .article .article_content .flex_projectpagina .extra_proj_info .title p {
   font-weight: bold;
 }
 
@@ -2217,7 +2199,7 @@ a {
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .extra_proj_info .content table tbody tr .conttitle {
-  font-weight: 700;
+  font-weight: bold;
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .project_locatie {
@@ -2239,8 +2221,8 @@ a {
   max-width: 40%;
   min-height: 40%;
   max-height: 40%;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   border-top-left-radius: 1.6vh;
   border-top-right-radius: 1.6vh;
 }
@@ -2249,7 +2231,6 @@ a {
   background: #0085b7;
   min-width: 100%;
   width: 100%;
-  font-size: 2.5vh;
   color: white;
   float: center;
   border-top-left-radius: 1.6vh;
@@ -2277,8 +2258,8 @@ a {
   display: flex;
   width: 100%;
   min-height: 45%;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
 }
 
 @media screen and (max-width: 770px) {
@@ -2299,23 +2280,20 @@ a {
 
 #main .layerOneInner .article .article_content .project_progress_bar {
   background: #f7f7f8;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   margin-bottom: 2vh;
   margin-top: 2vh;
   display: inline-block;
   width: 100%;
+  font-weight: bold;
 }
 
 #main .layerOneInner .article .article_content .project_progress_bar label {
-  font-weight: bold;
   text-align: left;
   float: left;
-  padding-top: 2vh;
-  padding-left: 2vw;
-  padding-bottom: 2vh;
-  font-size: 2.5vh;
-  font-style: bold;
+  padding: 1.6em;
+  font-size: 18px;
   width: 65%;
   padding-right: 2vw;
   color: #0078ae;
@@ -2341,15 +2319,13 @@ a {
   padding-left: 2vw;
   padding-right: 2vw;
   text-align: left;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   background: linear-gradient(180deg, #0078ae 95px, #f7f7f8 95px);
   overflow-y: auto;
 }
 
 #main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_head {
-  font-size: 2vh;
-  font-weight: bold;
   width: 100%;
   padding-bottom: 2vh;
 }
@@ -2368,13 +2344,11 @@ a {
 }
 
 #main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_content {
-  font-size: 1.5vh;
   word-wrap: break-word;
 }
 
 #main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_content .inhoud_box {
   padding-bottom: 1vh;
-  font-size: 1.5vh;
   max-width: 75px;
 }
 
@@ -2386,7 +2360,6 @@ a {
 
 #main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_content .inhoud_box p .inhopmerking {
   color: red;
-  font-weight: bold;
 }
 
 #main .layerOneInner .article .article_content .opmerkingtable_wrapper table .table_content .inhoud_box .green {
@@ -2426,15 +2399,13 @@ a {
   padding-left: 2vw;
   padding-right: 2vw;
   text-align: left;
-  -webkit-box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
-  box-shadow: 1vh 1.2vh 1.6vh -0.2vh rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
+  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   background: linear-gradient(180deg, #0078ae 95px, #f7f7f8 95px);
   overflow-y: auto;
 }
 
 #main .layerOneInner .article .article_content .frozencomments_list .table_head {
-  font-size: 2vh;
-  font-weight: bold;
   width: 100%;
   padding-bottom: 2vh;
 }
@@ -2453,13 +2424,11 @@ a {
 }
 
 #main .layerOneInner .article .article_content .frozencomments_list .table_content {
-  font-size: 1.5vh;
   word-wrap: break-word;
 }
 
 #main .layerOneInner .article .article_content .frozencomments_list .table_content .inhoud_box {
   padding-bottom: 1vh;
-  font-size: 1.5vh;
   max-width: 75px;
 }
 
@@ -2471,7 +2440,6 @@ a {
 
 #main .layerOneInner .article .article_content .frozencomments_list .table_content .inhoud_box p .inhopmerking {
   color: red;
-  font-weight: bold;
 }
 
 #main .layerOneInner .article .article_content .frozencomments_list .table_content .voldoening {
