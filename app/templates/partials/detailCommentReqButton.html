@@ -1,0 +1,20 @@
+{% block main %}  
+    <span hx-target="this" hx-swap="outerHTML">
+        {% if active %}
+            <button
+            hx-post="{% url 'makeReqInactive' version_pk status_str type %}"
+            class="ui basic green icon button d-inline"
+            type="button"><i data-feather="check" style="stroke: green;"></i></button>
+        {% else %}
+            <button
+            hx-post="{% url 'makeReqActive' version_pk status_str type %}"
+                class="ui basic red icon button d-inline"
+                type="button"><i data-feather="x" style="stroke: red;"></i></button>
+        {% endif %}
+    </span>
+{% endblock %}
+
+{% block scripts %}
+    <script>feather.replace()</script>
+    {% include "partials/messages_beheer.html" %}
+{% endblock %}

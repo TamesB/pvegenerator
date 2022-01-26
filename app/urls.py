@@ -170,7 +170,22 @@ urlpatterns = [
         views.EditCommentPermissionsOverview,
         name="editcommentpermissionsoverview",
     ),
-    
+        path(
+        "commentpermissions/<int:version_pk>/<int:active>/<str:status_str>/<int:type>/activate",
+        views.detailReqButton,
+        name="detailReqButton",
+    ),
+        path(
+        "commentpermissions/<int:version_pk>/<str:status_str>/<int:type>/activate",
+        views.makeReqActive,
+        name="makeReqActive",
+    ),
+    path(
+        "commentpermissions/<int:version_pk>/<str:status_str>/<int:type>/deactivate",
+        views.makeReqInactive,
+        name="makeReqInactive",
+    ),
+
     path("heatmap", views.projectHeatmap, name="projectheatmap"),
     path("accounts", views.AccountOverview, name="accountoverview"),
 ]

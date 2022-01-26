@@ -1,105 +1,60 @@
-{% extends "layout.html" %} {% load i18n %} {% load semanticui %} {% block main %}
+{% extends "layout.html" %} {% load custom_tags %}
+{% load i18n %} {% load semanticui %} {% block main %}
 {% language 'nl' %}
 <input type="button" class="ui primary button d-inline" onclick="javascript:window.location='{% url 'pvebewerkoverview' version_pk %}'" value="< Overview: {{ version.client }}: {{ version.version }}" />
 <h1 class="ui header center aligned">Bewerk opmerkingstoestemmingen</h1>
-{% if qs.comment_allowed.all %}
 <div>
 	<table class="ui fixed multiple line blue table">
 		<thead>
 			<tr>
 				<th>
-          Opmerkingen toegestaan bij
-					<div class="d-inline" style="float: right;">
-						<span class="float right"><a href="#"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
-					</div>				
-			</th>
+          			Status
+				</th>
+				<th>
+          			Opmerkingen toegestaan
+				</th>
+				<th>
+					Opmerkingen verplicht
+				</th>
+				<th>
+					Bijlagen toegestaan
+				</th>
+				<th>
+          			Bijlagen verplicht
+				</th>
+				<th>
+          			Kosten toegestaan
+				</th>
+				<th>
+          			Kosten verplicht
+				</th>
 			</tr>
+
 		</thead>
 		<tbody>
-            {% for item in qs.comment_allowed.all %}
-            <tr>
-            <td> 
-                <span>{{ item }}&nbsp; 
-                    <div class="d-inline" style="float: right;">
-                    <span><a href="#"><button class="ui icon basic red button"><i class="icon trash"></i></button></a></span>
-                </div></span>
+			{% for key in status_dict.keys %}
+		<tr>
+
+            <td>
+               <p>{{ key }}</p>
             </td>
-            </tr>
-            {% endfor %}
+			{% with dict=status_dict|get_item:key %}
+			{% for key_two, value in dict.items %}
+			<td>
+				{% with version_pk=version.id %}
+				{% with status_str=key %}
+				{% with type=forloop.counter %}
+				{% with active=value %}
+				{% include 'partials/detailCommentReqButton.html' %}
+				{% endwith %} {% endwith %} {% endwith %} {% endwith %} 
+			 </td>
+{% endfor %} 
+{% endwith %}
+		</tr>
+		{% endfor %}
     </tbody>
 	</table>
-{% else %}
-<p>Voeg statussen toe waar opmerkingen toegestaan bij zijn.</p>
-<div class="d-inline" style="float: left;">
-	<span class="float right"><a href="#"><button class="ui green button"><i class="icon plus"></i>Voeg toe</button></a></span>
-					</div>
-{% endif %}
-{% if qs.comment_required.all %}
-<div>
-	<table class="ui fixed multiple line blue table">
-		<thead>
-			<tr>
-				<th>
-                    Opmerkingen verplicht bij
-					<div class="d-inline" style="float: right;">
-						<span class="float right"><a href="#"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
-					</div>				
-			</th>
-			</tr>
-		</thead>
-		<tbody>
-				{% for item in qs.comment_required.all %}
-				<tr>
-				<td> 
-					<span>{{ item }}&nbsp; 
-                        <div class="d-inline" style="float: right;">
-						<span><a href="#"><button class="ui icon basic red button"><i class="icon trash"></i></button></a></span>
-					</div></span>
-				</td>
-				</tr>
-				{% endfor %}
-		</tbody>
-	</table>
-{% else %}
-<p>Voeg statussen toe waar opmerkingen verplicht bij zijn</p>
-<div class="d-inline" style="float: left;">
-	<span class="float right"><a href="#"><button class="ui green button"><i class="icon plus"></i>Voeg toe</button></a></span>
-					</div>
-{% endif %}
-
-{% if qs.attachment_allowed.all %}
-<div>
-	<table class="ui fixed multiple line blue table">
-		<thead>
-			<tr>
-				<th>
-                    Bijlagen toegestaan bij
-					<div class="d-inline" style="float: right;">
-						<span class="float right"><a href="#"><button class="ui icon green button"><i class="icon plus"></i></button></a></span>
-					</div>				
-			</th>
-			</tr>
-		</thead>
-		<tbody>
-				{% for item in qs.attachment_allowed.all %}
-				<tr>
-				<td> 
-					<span>{{ item }}&nbsp; 
-					<div class="d-inline" style="float: right;">
-						<span><a href="#"><button class="ui icon basic red button"><i class="icon trash"></i></button></a></span>
-					</div></span>
-				</td>
-				</tr>
-				{% endfor %}
-		</tbody>
-	</table>
-{% else %}
-<p>Voeg statussen toe waar bijlages toegestaan bij zijn</p>
-<div class="d-inline" style="float: left;">
-	<span class="float right"><a href="#"><button class="ui green button"><i class="icon plus"></i>Voeg toe</button></a></span>
-					</div>
-{% endif %}
-
+</div>
 <script>feather.replace()</script>
 {% endlanguage %}
 {% endblock %}

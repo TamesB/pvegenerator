@@ -18,7 +18,7 @@ from django.core.mail import send_mail
 from django.views import View
 from django.views.generic import FormView, TemplateView
 from pvetool.views.utils import GetAWSURL
-from pvetool.models import CommentRequirement
+from pvetool.models import CommentRequirement, CommentStatus
 from project.models import Beleggers, Project, BeheerdersUitnodiging
 from utils import writeExcel
 from users.models import CustomUser
@@ -1694,9 +1694,85 @@ def AccountOverview(request):
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def EditCommentPermissionsOverview(request, version_pk):
-    qs = CommentRequirement.objects.get(version__id=version_pk)
+    qs = CommentRequirement.objects.prefetch_related("comment_allowed").prefetch_related("comment_required").prefetch_related("attachment_allowed").prefetch_related("attachment_required").prefetch_related("costs_allowed").prefetch_related("costs_required").get(version__id=version_pk)
+    
+    statuses = CommentStatus.objects.all()
+    status_dict = {}
+    
+    for status in statuses:
+        status_dict[status.status] = {
+            "comment_allowed": True if status in qs.comment_allowed.all() else False,
+            "comment_required": True if status in qs.comment_required.all() else False,
+            "attachment_allowed": True if status in qs.attachment_allowed.all() else False,
+            "attachment_required": True if status in qs.attachment_required.all() else False,
+            "costs_allowed": True if status in qs.costs_allowed.all() else False,
+            "costs_required": True if status in qs.costs_required.all() else False
+        }
+
+    print(status_dict)
     context = {}
     context["version_pk"] = version_pk
     context["version"] = models.PVEVersie.objects.get(id=version_pk)
-    context["qs"] = qs
+    context["status_dict"] = status_dict
     return render(request, "editCommentPermissionsOverview.html", context)
+
+@staff_member_required(login_url=reverse_lazy("logout"))
+def detailReqButton(request, version_pk, active, status_str, type):
+    context = {}
+    context["active"] = active
+    context["version_pk"] = version_pk
+    context["status_str"] = status_str
+    context["type"] = type
+    return render(request, 'partials/detailCommentReqButton.html', context)
+
+
+@staff_member_required(login_url=reverse_lazy("logout"))
+def makeReqActive(request, version_pk, status_str, type):
+    qs = CommentRequirement.objects.prefetch_related("comment_allowed").prefetch_related("comment_required").prefetch_related("attachment_allowed").prefetch_related("attachment_required").prefetch_related("costs_allowed").prefetch_related("costs_required").get(version__id=version_pk)
+
+    status = CommentStatus.objects.get(status=status_str)
+    if type == 1:
+        qs.comment_allowed.add(status)
+    if type == 2:
+        qs.comment_required.add(status)
+    if type == 3:
+        qs.attachment_allowed.add(status)
+    if type == 4:
+        qs.attachment_required.add(status)
+    if type == 5:
+        qs.costs_allowed.add(status)
+    if type == 6:
+        qs.costs_required.add(status)
+        
+    context = {}
+    context["active"] = 1
+    context["version_pk"] = version_pk
+    context["status_str"] = status_str
+    context["type"] = type
+    return render(request, 'partials/detailCommentReqButton.html', context)
+
+@staff_member_required(login_url=reverse_lazy("logout"))
+def makeReqInactive(request, version_pk, status_str, type):
+    qs = CommentRequirement.objects.prefetch_related("comment_allowed").prefetch_related("comment_required").prefetch_related("attachment_allowed").prefetch_related("attachment_required").prefetch_related("costs_allowed").prefetch_related("costs_required").get(version__id=version_pk)
+
+    status = CommentStatus.objects.get(status=status_str)
+    
+    if type == 1:
+        qs.comment_allowed.remove(status)
+    if type == 2:
+        qs.comment_required.remove(status)
+    if type == 3:
+        qs.attachment_allowed.remove(status)
+    if type == 4:
+        qs.attachment_required.remove(status)
+    if type == 5:
+        qs.costs_allowed.remove(status)
+    if type == 6:
+        qs.costs_required.remove(status)
+        
+    context = {}
+    context["active"] = 0
+    context["version_pk"] = version_pk
+    context["status_str"] = status_str
+    context["type"] = type
+    return render(request, 'partials/detailCommentReqButton.html', context)
