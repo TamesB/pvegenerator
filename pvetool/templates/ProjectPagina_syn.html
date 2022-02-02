@@ -66,7 +66,7 @@
 {% if not project.fullyFrozen %}
   {% if project.frozenLevel >= 1 %}
     <div class="project_progress_bar">
-      <label for="file"><p>Status: Checklist afwerking ({{ frozencomments_accepted }}/{{ frozencomments_total }} akkoord) (Kostenverschil: &#8364;{{ totale_kosten }})</p></label>
+      <label for="file"><p>Status: Overleg afwerking ({{ frozencomments_accepted }}/{{ frozencomments_total }} akkoord) (Kostenverschil: &#8364;{{ totale_kosten }})</p></label>
       <div class="progress_bar"><div class="ui blue progress" data-percent="{{ frozencomments_percentage }}" id="example1"><div class="bar"></div></div>
       </div>
     </div>
@@ -115,14 +115,14 @@
             {% if request.user.type_user == project.first_annotate %}
               <div class="actie_item" onClick="javascript:location.href='{% url 'commentscheck_syn' client_pk project.id %}'">
                 <img class="actie-img" src="{% static 'pvetool/svg/edit-3-blue-big.svg' %}"></img>
-                <p class="subtext">Checklist</p>
+                <p class="subtext">PvE Overleg</p>
               </div>
             {% endif %}
           {% else %}
             {% if request.user.type_user != project.first_annotate %}
               <div class="actie_item" onClick="javascript:location.href='{% url 'commentscheck_syn' client_pk project.id %}'">
                 <img class="actie-img" src="{% static 'pvetool/svg/edit-3-blue-big.svg' %}"></img>
-                <p class="subtext">Checklist</p>
+                <p class="subtext">PvE Overleg</p>
               </div>
             {% endif %}
           {% endif %}
@@ -211,7 +211,7 @@
             {% endif %}
             {% if not project.fullyFrozen %}
               {% if project.frozenLevel >= 1 %}
-                Checklist afwerking
+              PvE Overleg afwerking
               {% endif %}
             {% else %}
               First freeze

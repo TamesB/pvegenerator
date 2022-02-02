@@ -18,13 +18,13 @@
   <i class="right chevron icon divider"></i>
   <a class="section" href="{% url 'viewproject_syn' client_pk project.id %}">Project: {{ project.name }}</a>
   <i class="right chevron icon divider"></i>
-  <div class="active section">Checklist</div>
+  <div class="active section">PvE Overleg</div>
 </div>
 
 <div class="opmerking_form">
 
   <div class="general_title"><img src="{% static 'pvetool/svg/edit-3-blue-big.svg' %}" class="title_img"></img>
-    <p>Checklist (Huidige reactielaag: {{ commentphase.level }}) (Huidig kostenverschil: &#8364;{{ totale_kosten }})
+    <p>PvE Overleg (Huidige reactielaag: {{ commentphase.level }}) (Huidig kostenverschil: &#8364;{{ totale_kosten }})
       <input type="submit" class="submit_button" onClick="javascript:location.href='{% url 'sendreplies_syn' client_pk project.id %}';" 
       value="Stuur door >"></input>
 </p></div>
