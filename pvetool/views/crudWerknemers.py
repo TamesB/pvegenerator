@@ -11,7 +11,7 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.urls import reverse_lazy
 
-from project.models import Project, Beleggers
+from project.models import Project, Client
 from pvetool import forms
 from users.forms import AcceptInvitationForm
 from users.models import CustomUser, Invitation
@@ -30,10 +30,10 @@ utc = pytz.UTC
     )
 )
 def ManageWerknemers(request, client_pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -73,10 +73,10 @@ def ManageWerknemers(request, client_pk):
     )
 )
 def AddAccount(request, client_pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -194,10 +194,10 @@ def AddAccount(request, client_pk):
 
 
 def AcceptInvite(request, client_pk, key):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -310,10 +310,10 @@ def AcceptInvite(request, client_pk, key):
     )
 )
 def InviteUsersToProject(request, client_pk, pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)

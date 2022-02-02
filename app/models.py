@@ -2,14 +2,14 @@
 
 from django.db import models
 
-from project.models import Beleggers
+from project.models import Client
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 import inspect
 
 from users.models import CustomUser
 class PVEVersie(models.Model):
-    client = models.ForeignKey(Beleggers, on_delete=models.SET_NULL, null=True, related_name='version')
+    client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, related_name='version')
     version = models.CharField(max_length=50, null=True, blank=True)
     public = models.BooleanField(default=False, null=True, blank=True)
 
@@ -20,7 +20,7 @@ class PVEVersie(models.Model):
 
 
 class ActieveVersie(models.Model):
-    client = models.ForeignKey(Beleggers, on_delete=models.SET_NULL, null=True, related_name='actieve_versie')
+    client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, related_name='actieve_versie')
     version = models.ForeignKey(PVEVersie, on_delete=models.CASCADE, related_name='actieve_versie')
 
     def __str__(self):

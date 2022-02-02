@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 
 from app import models
-from project.models import BijlageToAnnotation, Project, PVEItemAnnotation, Beleggers
+from project.models import BijlageToAnnotation, Project, PVEItemAnnotation, Client
 from pvetool import forms
 from pvetool.models import BijlageToReply, CommentReply, FrozenComments, CommentStatus
 from utils import createBijlageZip, writePdf
@@ -17,10 +17,10 @@ import decimal
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def ViewProjectOverview(request, client_pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -58,10 +58,10 @@ def ViewProjectOverview(request, client_pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def ViewProject(request, client_pk, pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -154,10 +154,10 @@ def ViewProject(request, client_pk, pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def KiesPVE(request, client_pk, pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -209,10 +209,10 @@ def KiesPVE(request, client_pk, pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def ConnectPVE(request, client_pk, pk, version_pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -465,10 +465,10 @@ def ConnectPVE(request, client_pk, pk, version_pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def download_pve_overview(request, client_pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -498,10 +498,10 @@ def download_pve_overview(request, client_pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def download_pve(request, client_pk, pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -693,10 +693,10 @@ def download_pve(request, client_pk, pk):
         
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def final_pve_download_choice(request, client_pk, pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)

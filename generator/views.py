@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from pvetool.views.utils import GetAWSURL
-from project.models import Beleggers
+from project.models import Client
 from app import models
 from utils import createBijlageZip, writeDiffPdf, writePdf, writeExcel
 
@@ -19,7 +19,7 @@ from . import forms
 @staff_member_required
 def GeneratePVEView(request, client_pk, version_pk):
     pve_versie = models.PVEVersie.objects.get(id=version_pk)
-    client = Beleggers.objects.get(id=client_pk)
+    client = Client.objects.get(id=client_pk)
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -353,7 +353,7 @@ def download_attachments(request, zipFilename):
 @staff_member_required
 def compareFormView(request, version_pk):
     version = models.PVEVersie.objects.get(id=version_pk)
-    client = Beleggers.objects.get(id=version.client.id)
+    client = Client.objects.get(id=version.client.id)
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)

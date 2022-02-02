@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 
 from app import models
-from project.models import BijlageToAnnotation, Project, PVEItemAnnotation, Beleggers
+from project.models import BijlageToAnnotation, Project, PVEItemAnnotation, Client
 from pvetool.forms import (
     FirstBijlageForm,
     FirstAnnotationForm,
@@ -28,10 +28,10 @@ exists = {
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def AddCommentOverview(request, client_pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -61,10 +61,10 @@ def AddCommentOverview(request, client_pk):
 def AddComment(request, client_pk, pk):
     context = {}
 
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -152,11 +152,11 @@ def AddComment(request, client_pk, pk):
 def GetParagravenFirstAnnotate(request, client_pk, pk, chapter_pk):
     context = {}
 
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
-    if project.client != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Client.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -203,11 +203,11 @@ def GetParagravenFirstAnnotate(request, client_pk, pk, chapter_pk):
 def GetItemsFirstAnnotate(request, client_pk, pk, chapter_pk, paragraph_id):
     context = {}
 
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=pk)
-    if project.client != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Client.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -245,11 +245,11 @@ def GetItemsFirstAnnotate(request, client_pk, pk, chapter_pk, paragraph_id):
 def DetailItemFirst(request, client_pk, project_pk, item_pk):
     context = {}
 
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.client != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Client.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -290,11 +290,11 @@ def DetailItemFirst(request, client_pk, project_pk, item_pk):
 def DetailStatusFirst(request, client_pk, project_pk, item_pk):
     context = {}
 
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.client != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Client.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -323,11 +323,11 @@ def DetailStatusFirst(request, client_pk, project_pk, item_pk):
 def DetailAnnotationFirst(request, client_pk, project_pk, item_pk):
     context = {}
 
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.client != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Client.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -375,11 +375,11 @@ def DetailAnnotationFirst(request, client_pk, project_pk, item_pk):
 def DetailKostenverschilFirst(request, client_pk, project_pk, item_pk):
     context = {}
 
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.client != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Client.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -408,11 +408,11 @@ def DetailKostenverschilFirst(request, client_pk, project_pk, item_pk):
 def AddBijlageFirst(request, client_pk, project_pk, item_pk, annotation_pk, attachment_id):
     context = {}
 
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.client != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Client.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -490,11 +490,11 @@ def AddBijlageFirst(request, client_pk, project_pk, item_pk, annotation_pk, atta
 def AddStatusFirst(request, client_pk, project_pk, item_pk):
     context = {}
 
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.client != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Client.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -560,11 +560,11 @@ def AddStatusFirst(request, client_pk, project_pk, item_pk):
 def AddKostenverschilFirst(request, client_pk, project_pk, item_pk):
     context = {}
 
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.client != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Client.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -622,11 +622,11 @@ def AddKostenverschilFirst(request, client_pk, project_pk, item_pk):
 def AddAnnotationFirst(request, client_pk, project_pk, item_pk):
     context = {}
 
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.client != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Client.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -678,11 +678,11 @@ def AddAnnotationFirst(request, client_pk, project_pk, item_pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def DeleteKostenverschilFirst(request, client_pk, project_pk, item_pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.client != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Client.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -722,11 +722,11 @@ def DeleteKostenverschilFirst(request, client_pk, project_pk, item_pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def DeleteAnnotationFirst(request, client_pk, project_pk, item_pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.client != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Client.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -770,11 +770,11 @@ def DeleteAnnotationFirst(request, client_pk, project_pk, item_pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def DeleteStatusFirst(request, client_pk, project_pk, item_pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.client != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Client.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:
@@ -819,11 +819,11 @@ def DeleteStatusFirst(request, client_pk, project_pk, item_pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def DeleteBijlageFirst(request, client_pk, project_pk, annotation_pk, pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     project = get_object_or_404(Project, pk=project_pk)
-    if project.client != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Client.objects.filter(pk=client_pk).first():
         return redirect("logout_syn", client_pk=client_pk)
 
     if request.user.type_user != project.first_annotate:

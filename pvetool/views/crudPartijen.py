@@ -6,7 +6,7 @@ from django.http.response import HttpResponse
 from pvetool import forms
 from pvetool.forms import AddOrganisatieForm
 from users.models import Organisatie
-from project.models import Beleggers
+from project.models import Client
 from pvetool.views.utils import GetAWSURL
 from users.models import CustomUser
 from django.db.models import Q
@@ -15,10 +15,10 @@ from project.models import Project
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def ManageOrganisaties(request, client_pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -47,10 +47,10 @@ def ManageOrganisaties(request, client_pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def AddOrganisatie(request, client_pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -95,10 +95,10 @@ def AddOrganisatie(request, client_pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def DeleteOrganisatie(request, client_pk, pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -132,10 +132,10 @@ def DeleteOrganisatie(request, client_pk, pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def AddUserOrganisatie(request, client_pk, pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -220,10 +220,10 @@ def AddUserOrganisatie(request, client_pk, pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def GetUsersInOrganisatie(request, client_pk, pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -257,10 +257,10 @@ def GetUsersInOrganisatie(request, client_pk, pk):
     return render(request, "partials/organisatie_detail.html", context)
 
 def OrganisatieRemoveFromProject(request, client_pk, organisatie_pk, project_pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
 
     if request.user.client:
         if (
@@ -295,10 +295,10 @@ def OrganisatieRemoveFromProject(request, client_pk, organisatie_pk, project_pk)
     return HttpResponse("")
 
 def GebruikerRemoveFromOrganisatie(request, client_pk, organisatie_pk, user_pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
 
     if request.user.client:
         if (

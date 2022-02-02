@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 
 from .models import (
-    Beleggers,
+    Client,
+    BeheerdersUitnodiging,
     BijlageToAnnotation,
     ContractStatus,
     Project,
@@ -26,9 +27,10 @@ class CustomGeoAdmin(ModelAdmin):
     }
 
 admin.site.register(Abbonement)
+admin.site.register(BeheerdersUitnodiging)
 admin.site.register(Project, CustomGeoAdmin)
 admin.site.register(ContractStatus)
-admin.site.register(Beleggers)
+admin.site.register(Client)
 admin.site.register(PVEItemAnnotation)
 admin.site.register(BijlageToAnnotation)
 admin.site.register(CostType)

@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 import decimal
 from app import models
-from project.models import Project, PVEItemAnnotation, Beleggers
+from project.models import Project, PVEItemAnnotation, Client
 from pvetool import forms
 from pvetool.models import BijlageToReply, CommentReply, FrozenComments, CommentRequirement, CommentStatus
 from pvetool.views.utils import GetAWSURL
@@ -35,10 +35,10 @@ exists = {
 # whether the user is permitted to the project,
 # and the current phase allows the usertype to see the page.
 def passed_commentcheck_guardclauses(request, client_pk, project_pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return False, False
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
 
     if request.user.client:
         if (
@@ -54,7 +54,7 @@ def passed_commentcheck_guardclauses(request, client_pk, project_pk):
 
     project = Project.objects.get(pk=project_pk)
 
-    if project.client != Beleggers.objects.filter(pk=client_pk).first():
+    if project.client != Client.objects.filter(pk=client_pk).first():
         return False, False
 
     if request.user not in project.permitted.all():
@@ -93,7 +93,7 @@ def CheckComments(request, client_pk, proj_id):
     if not project:
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)

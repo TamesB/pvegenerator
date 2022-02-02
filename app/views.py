@@ -19,7 +19,7 @@ from django.views import View
 from django.views.generic import FormView, TemplateView
 from pvetool.views.utils import GetAWSURL
 from pvetool.models import CommentRequirement, CommentStatus
-from project.models import Beleggers, Project, BeheerdersUitnodiging
+from project.models import Client, Project, BeheerdersUitnodiging
 from utils import writeExcel
 from users.models import CustomUser
 from . import forms, models, mixins
@@ -57,7 +57,7 @@ class LoginPageView(View):
                 login(request, user)
                 return redirect("dashboard")
             else:
-                messages.warning(request, "Foute login credentials.")
+                messages.warning(request, "Er is een fout, probeer het nog eens.")
         else:
             messages.warning(request, "Vul de verplichte velden in.")
             
@@ -66,7 +66,9 @@ class LoginPageView(View):
     
 class LogoutView(View):
     def get(self, request, *args, **kwargs):
-        logout(request)
+        if not request.user.is_anonymous:
+            logout(request)
+            
         return redirect("login")
     
 class DashboardView(mixins.LogoutIfNotStaffMixin, TemplateView):
@@ -113,7 +115,7 @@ class DashboardView(mixins.LogoutIfNotStaffMixin, TemplateView):
             
         return pve_activities, client_activities, project_activities
     
-class KlantOverzicht(mixins.LogoutIfNotStaffMixin, TemplateView):
+class ClientOverview(mixins.LogoutIfNotStaffMixin, TemplateView):
     template_name = "clientsOverzicht.html"
     
     def get(self, request, *args, **kwargs):
@@ -125,9 +127,9 @@ class KlantOverzicht(mixins.LogoutIfNotStaffMixin, TemplateView):
         return context
     
     def clients(self):
-        return Beleggers.objects.all()
+        return Client.objects.all()
         
-class KlantVerwijderen(mixins.LogoutIfNotStaffMixin, TemplateView):    
+class DeleteClient(mixins.LogoutIfNotStaffMixin, TemplateView):    
     def post(self, request, *args, **kwargs):
         if request.headers["HX-Prompt"] == "VERWIJDEREN":
             client = self.client()
@@ -144,7 +146,7 @@ class KlantVerwijderen(mixins.LogoutIfNotStaffMixin, TemplateView):
             return HttpResponse("")
     
     def client(self, **kwargs):
-        return Beleggers.objects.get(pk=self.kwargs['client_pk'])
+        return Client.objects.get(pk=self.kwargs['client_pk'])
 
 class GetLogo(mixins.LogoutIfNotStaffMixin, TemplateView):
     template_name = 'partials/getlogoclient.html'
@@ -159,7 +161,7 @@ class GetLogo(mixins.LogoutIfNotStaffMixin, TemplateView):
         return context
         
     def get_logo(self, **kwargs):
-        client = Beleggers.objects.get(id=self.kwargs['client_pk'])
+        client = Client.objects.get(id=self.kwargs['client_pk'])
 
         logo_url = None
         
@@ -168,15 +170,15 @@ class GetLogo(mixins.LogoutIfNotStaffMixin, TemplateView):
             
         return client, logo_url
 
-def LogoKlantForm(request, client_pk):
-    client = Beleggers.objects.get(id=client_pk)
+def ClientLogoForm(request, client_pk):
+    client = Client.objects.get(id=client_pk)
 
     logo_url = None
     
     if client.logo:
         logo_url = GetAWSURL(client)
 
-    form = forms.LogoKlantForm(request.POST or None, request.FILES or None, instance=client)
+    form = forms.ClientLogoForm(request.POST or None, request.FILES or None, instance=client)
     if client.logo:
         form.fields["logo"].initial = client.logo
 
@@ -197,8 +199,8 @@ def LogoKlantForm(request, client_pk):
     return render(request, "partials/logoclientform.html", context)
     
 @staff_member_required(login_url=reverse_lazy("logout"))
-def GetBeheerderKlant(request, client_pk):
-    client = Beleggers.objects.get(id=client_pk)
+def GetAdminClient(request, client_pk):
+    client = Client.objects.get(id=client_pk)
 
     invitation = None
     if BeheerdersUitnodiging.objects.filter(client=client):
@@ -211,10 +213,10 @@ def GetBeheerderKlant(request, client_pk):
     return render(request, "partials/getbeheerderclient.html", context)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
-def BeheerderKlantForm(request, client_pk):
-    client = Beleggers.objects.get(id=client_pk)
+def ClientAdminForm(request, client_pk):
+    client = Client.objects.get(id=client_pk)
 
-    form = forms.BeheerderKlantForm(request.POST or None)
+    form = forms.ClientAdminForm(request.POST or None)
 
     context = {}
     context["client_pk"] = client_pk
@@ -310,12 +312,12 @@ def PveVersieEditName(request, version_pk):
     return render(request, "partials/pveversioneditname.html", context)
 
 @staff_member_required(login_url=reverse_lazy("logout"))
-def KlantToevoegen(request):
+def AddClient(request):
     form = forms.BeleggerForm(request.POST or None, request.FILES or None)
 
     if request.method == "POST":
         if form.is_valid():
-            new_client = Beleggers()
+            new_client = Client()
             new_client.name = form.cleaned_data["name"]
             new_client.subscription = form.cleaned_data["subscription"]
             new_client.logo = form.cleaned_data["logo"]
@@ -352,7 +354,7 @@ def KlantToevoegen(request):
     
 @staff_member_required(login_url=reverse_lazy("logout"))
 def PVEBeleggerVersieOverview(request):
-    clients = Beleggers.objects.all()
+    clients = Client.objects.all()
 
     BeleggerVersieQuerySet = {}
 
@@ -376,7 +378,7 @@ def AddBelegger(request):
             return redirect("clientversieoverview")
 
     # View below modal
-    clients = Beleggers.objects.all()
+    clients = Client.objects.all()
 
     BeleggerVersieQuerySet = {}
 
@@ -392,7 +394,7 @@ def AddBelegger(request):
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def AddPvEVersie(request, client_pk):
-    client = Beleggers.objects.get(id=client_pk)
+    client = Client.objects.get(id=client_pk)
     # form
     form = forms.PVEVersieForm(request.POST or None, initial={"client": client})
 
@@ -598,7 +600,7 @@ def AddPvEVersie(request, client_pk):
 
 @staff_member_required(login_url=reverse_lazy('logout'))
 def BeleggerVersieTable(request, client_pk):
-    key = Beleggers.objects.get(id=client_pk)
+    key = Client.objects.get(id=client_pk)
     queryset = models.PVEVersie.objects.filter(client__id=key.id)
     context = {}
     context["queryset"] = queryset
@@ -1686,7 +1688,7 @@ def projectHeatmap(request):
 
 @staff_member_required(login_url=reverse_lazy("logout"))
 def AccountOverview(request):
-    clients = Beleggers.objects.all()
+    clients = Client.objects.all()
     context = {}
     context["clients"] = clients
     return render(request, "accountOverview.html", context)

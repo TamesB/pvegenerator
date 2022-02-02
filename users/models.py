@@ -7,7 +7,7 @@ from users.managers import CustomUserManager
 
 class Organisatie(models.Model):
     name = models.CharField(max_length=500, null=True)
-    client = models.ForeignKey("project.Beleggers", on_delete=models.CASCADE, null=True, blank=True, related_name="stakeholder")
+    client = models.ForeignKey("project.Client", on_delete=models.CASCADE, null=True, blank=True, related_name="stakeholder")
     users = models.ManyToManyField(
         "users.CustomUser", default=None, related_name="in_organisatie"
     )
@@ -57,7 +57,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     type_user = models.CharField(max_length=3, choices=type_choices, default="SD")
 
     stakeholder = models.ForeignKey(Organisatie, on_delete=models.SET_NULL, null=True, blank=True, related_name="user")
-    client = models.ForeignKey("project.Beleggers", on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name="employee")
+    client = models.ForeignKey("project.Client", on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name="employee")
     objects = CustomUserManager()
 
     USERNAME_FIELD = "username"
@@ -97,7 +97,7 @@ class Invitation(models.Model):
         Organisatie, on_delete=models.CASCADE, null=True, blank=True
     )
     client = models.ForeignKey(
-        "project.Beleggers", on_delete=models.CASCADE, null=True, blank=True
+        "project.Client", on_delete=models.CASCADE, null=True, blank=True
          )
     project = models.ForeignKey(
         "project.Project", on_delete=models.CASCADE, null=True, blank=True

@@ -4,7 +4,7 @@ from django.core.mail import send_mail
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from project.models import Project, PVEItemAnnotation, Beleggers
+from project.models import Project, PVEItemAnnotation, Client
 from pvetool.forms import FirstFreezeForm
 from pvetool.models import CommentReply, FrozenComments, CommentRequirement
 from pvetool.views.utils import GetAWSURL
@@ -12,10 +12,10 @@ from pvetool.views import hardcoded_values
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def FirstFreeze(request, client_pk, pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -173,10 +173,10 @@ def FirstFreeze(request, client_pk, pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def SendReplies(request, client_pk, pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
@@ -387,10 +387,10 @@ def SendReplies(request, client_pk, pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def FinalFreeze(request, client_pk, pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)

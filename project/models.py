@@ -17,11 +17,10 @@ class Abbonement(models.Model):
     def __str__(self):
         return f"{self.soort} - €{self.kosten} p/m - Projecten: {self.projectlimiet} - Werknemers: {self.werknemerlimiet}"
 
-class Beleggers(models.Model):
+class Client(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
-    beheerder = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
-    subscription = models.ForeignKey(Abbonement, on_delete=models.CASCADE, null=True, blank=True)
-
+    beheerder = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name="owner_to_client")
+    subscription = models.ForeignKey(Abbonement, on_delete=models.SET_NULL, null=True, blank=True)
     logo = models.FileField(blank=True, null=True, upload_to="KlantLogos")
 
     def __str__(self):
@@ -30,7 +29,7 @@ class Beleggers(models.Model):
 class BeheerdersUitnodiging(models.Model):
     invitee = models.EmailField()
     client = models.ForeignKey(
-        "project.Beleggers", on_delete=models.CASCADE, null=True, blank=True
+        "project.Client", on_delete=models.CASCADE, null=True, blank=True, related_name="pending_invitation"
          )
     expires = models.DateTimeField(auto_now=False)
     key = models.CharField(max_length=100)
@@ -55,7 +54,7 @@ class Project(models.Model):
     pensioenfonds = models.CharField(max_length=100, default=None)
     statuscontract = models.ForeignKey(ContractStatus, on_delete=models.SET_NULL, null=True, related_name="project")
     date_aangemaakt = models.DateTimeField(auto_now=True)
-    client = models.ForeignKey(Beleggers, on_delete=models.SET_NULL, null=True, related_name="project")
+    client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, related_name="project")
 
     date_recent_verandering = models.DateTimeField(
         "recente_verandering", auto_now=True
@@ -212,8 +211,8 @@ class BijlageToAnnotation(models.Model):
     def __str__(self):
         return f"{self.name}"
     
-@receiver(pre_save, sender=Beleggers)
-def on_change(sender, instance: Beleggers, **kwargs):
+@receiver(pre_save, sender=Client)
+def on_change(sender, instance: Client, **kwargs):
 
     for frame_record in inspect.stack():
         if frame_record[3] == 'get_response':
@@ -232,7 +231,7 @@ def on_change(sender, instance: Beleggers, **kwargs):
     if instance.id is None: # new object will be created
         activity.update = f"Nieuwe client aangemaakt: { instance.name }."
     else:
-        previous = Beleggers.objects.get(id=instance.id)
+        previous = Client.objects.get(id=instance.id)
         if previous.name != instance.name: # field will be updated
             activity.update = f"Klantname { previous.name } veranderd naar { instance.name }."
         if previous.beheerder != instance.beheerder: # field will be updated

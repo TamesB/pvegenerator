@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 
-from app.models import Beleggers
+from app.models import Client
 from project.models import Project
 
 from project.models import BijlageToAnnotation
@@ -106,7 +106,7 @@ def DownloadReplyAttachment(request, client_pk, pk, reply_id, attachment_id):
 
 @login_required(login_url=reverse_lazy("logout"))
 def DownloadExcelProject(request, client_pk, pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
     if not Project.objects.filter(pk=pk).exists():

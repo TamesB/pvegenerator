@@ -8,13 +8,13 @@ from . import views
 urlpatterns = [
     path("", views.LoginPageView.as_view(), name="login"),
     path("dashboard", views.DashboardView.as_view(), name="dashboard"),
-    path("clients", views.KlantOverzicht.as_view(), name="clientoverzicht"),
-    path("clients/add", views.KlantToevoegen, name="clienttoevoegen"),
-    path("clients/<int:client_pk>/delete", views.KlantVerwijderen.as_view(), name="clientverwijderen"),
+    path("clients", views.ClientOverview.as_view(), name="clientoverzicht"),
+    path("clients/add", views.AddClient, name="clienttoevoegen"),
+    path("clients/<int:client_pk>/delete", views.DeleteClient.as_view(), name="clientverwijderen"),
     path("clients/logo/<int:client_pk>", views.GetLogo.as_view(), name="logoclientdetail"),
-    path("clients/logo/<int:client_pk>/add", views.LogoKlantForm, name="logoclientform"),
-    path("clients/beheerder/<int:client_pk>", views.GetBeheerderKlant, name="getbeheerderclient"),
-    path("clients/beheerder/<int:client_pk>/add", views.BeheerderKlantForm, name="beheerderclientform"),
+    path("clients/logo/<int:client_pk>/add", views.ClientLogoForm, name="logoclientform"),
+    path("clients/beheerder/<int:client_pk>", views.GetAdminClient, name="getbeheerderclient"),
+    path("clients/beheerder/<int:client_pk>/add", views.ClientAdminForm, name="beheerderclientform"),
     path("logout", views.LogoutView.as_view(), name="logout"),
 
     path(

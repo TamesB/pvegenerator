@@ -3,7 +3,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from project.models import Beleggers
+from project.models import Client
 from users.models import CustomUser
 
 from .models import (
@@ -41,19 +41,19 @@ class LoginForm(forms.Form):
 class KiesParameterForm(forms.Form):
     parameter = forms.CharField(label="Parameter:", max_length=100)
 
-class LogoKlantForm(ModelForm):
+class ClientLogoForm(ModelForm):
     class Meta: 
-        model = Beleggers
+        model = Client
         fields = ("logo",)
         labels = {"logo": ""}
 
-class BeheerderKlantForm(forms.Form):
+class ClientAdminForm(forms.Form):
     email = forms.EmailField(label="E-mail Beheerder")
 class BeleggerForm(ModelForm):
     email = forms.EmailField(required=False)
 
     class Meta:
-        model = Beleggers
+        model = Client
         fields = ("name", "subscription", "logo")
         labels = {
             "name": "Naam:",

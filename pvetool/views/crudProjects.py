@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Q
-from project.models import Beleggers, Project
+from project.models import Client, Project
 from users.models import CustomUser
 from pvetool import forms
 from pvetool.forms import StartProjectForm
@@ -25,7 +25,7 @@ geopy.geocoders.options.default_ssl_context = ctx
 # minimal gatekeeping for partial templates.
 def GateKeepingMinimal(request, client_pk):
     # Belegger is the client, checks if this subwebsite exists.
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return False
 
     # this viewset requires the user to be of the client, and a form of admin (either total admin B or subwebsite admin SB)
@@ -42,11 +42,11 @@ def GateKeepingMinimal(request, client_pk):
 # initial account-type gatekeeping the pages. Also returns the logo_url and client object, for full pages
 def GateKeepingVerbose(request, client_pk):
     # check if the client exists
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return False, None, None
 
     # get the logo from the client object
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
 
     logo_url = None
     if client.logo:
@@ -206,7 +206,7 @@ def AddProjectManagerToProject(request, client_pk, pk):
     if not user_allowed:
         return render(request, "partials/tests_error.html")
 
-    client = Beleggers.objects.get(id=client_pk)
+    client = Client.objects.get(id=client_pk)
 
     project = Project.objects.get(id=pk)
     
@@ -351,10 +351,10 @@ def AddOrganisatieToProject(request, client_pk, pk):
 
 @login_required(login_url=reverse_lazy("login_syn",  args={1,},))
 def SOGAddDerdenToProj(request, client_pk, pk):
-    if not Beleggers.objects.filter(pk=client_pk).exists():
+    if not Client.objects.filter(pk=client_pk).exists():
         return redirect("logout_syn", client_pk=client_pk)
 
-    client = Beleggers.objects.filter(pk=client_pk).first()
+    client = Client.objects.filter(pk=client_pk).first()
     logo_url = None
     if client.logo:
         logo_url = GetAWSURL(client)
