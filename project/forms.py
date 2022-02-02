@@ -46,8 +46,6 @@ class StartProjectForm(ModelForm):
                 }
             )
         }
-
-
 class SearchPVEItemForm(forms.Form):
     inhoud = forms.CharField(label="(Deel)inhoud", max_length=1000)
 

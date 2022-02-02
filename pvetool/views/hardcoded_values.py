@@ -1,3 +1,5 @@
+# Some hardcoded values that maps names of statuses to their id's, and defines the "Later" status category.
+
 def later_status_category():
     return ["uitwerken in TO", "uitwerken in UO", "uitwerken in DO", "ontwerp uitgangspunt"]
 

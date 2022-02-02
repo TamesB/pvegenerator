@@ -18,11 +18,7 @@ from pvetool.models import BijlageToReply
 from utils.writeExcelProject import WriteExcelProject
 
 @login_required(login_url="login_syn")
-def DownloadAnnotationAttachment(request, client_pk, projid, annid, attachment_id):
-    access_key = settings.AWS_ACCESS_KEY_ID
-    secret_key = settings.AWS_SECRET_ACCESS_KEY
-    bucket_name = settings.AWS_STORAGE_BUCKET_NAME
-    region = settings.AWS_S3_REGION_NAME
+def DownloadAnnotationAttachment(request, client_pk, projid, annid, attachment_id):    
     if annid != 0:
         item = BijlageToAnnotation.objects.filter(
             ann__project__id=projid, ann__id=annid, id=attachment_id
@@ -34,8 +30,8 @@ def DownloadAnnotationAttachment(request, client_pk, projid, annid, attachment_i
     expiration = 10000
     s3_client = boto3.client(
         "s3",
-        aws_access_key_id=access_key,
-        aws_secret_access_key=secret_key,
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
         region_name=settings.AWS_S3_REGION_NAME,
         config=botocore.client.Config(
             signature_version=settings.AWS_S3_SIGNATURE_VERSION
@@ -44,7 +40,7 @@ def DownloadAnnotationAttachment(request, client_pk, projid, annid, attachment_i
     try:
         response = s3_client.generate_presigned_url(
             "get_object",
-            Params={"Bucket": bucket_name, "Key": str(item.attachment)},
+            Params={"Bucket": settings.AWS_STORAGE_BUCKET_NAME, "Key": str(item.attachment)},
             ExpiresIn=expiration,
         )
     except ClientError as e:
@@ -56,16 +52,12 @@ def DownloadAnnotationAttachment(request, client_pk, projid, annid, attachment_i
 
 
 def GetAWSURL(client):
-    access_key = settings.AWS_ACCESS_KEY_ID
-    secret_key = settings.AWS_SECRET_ACCESS_KEY
-    bucket_name = settings.AWS_STORAGE_BUCKET_NAME
-    region = settings.AWS_S3_REGION_NAME
     expiration = 10000
     s3_client = boto3.client(
         "s3",
-        aws_access_key_id=access_key,
-        aws_secret_access_key=secret_key,
-        region_name=region,
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        region_name=settings.AWS_S3_REGION_NAME,
         config=botocore.client.Config(
             signature_version=settings.AWS_S3_SIGNATURE_VERSION
         ),
@@ -73,7 +65,7 @@ def GetAWSURL(client):
     try:
         response = s3_client.generate_presigned_url(
             "get_object",
-            Params={"Bucket": bucket_name, "Key": str(client.logo)},
+            Params={"Bucket": settings.AWS_STORAGE_BUCKET_NAME, "Key": str(client.logo)},
             ExpiresIn=expiration,
         )
     except ClientError as e:
@@ -86,16 +78,13 @@ def GetAWSURL(client):
 
 @login_required
 def DownloadReplyAttachment(request, client_pk, pk, reply_id, attachment_id):
-    access_key = settings.AWS_ACCESS_KEY_ID
-    secret_key = settings.AWS_SECRET_ACCESS_KEY
-    bucket_name = settings.AWS_STORAGE_BUCKET_NAME
-    region = settings.AWS_S3_REGION_NAME
     item = BijlageToReply.objects.filter(reply__id=reply_id, id=attachment_id).first()
+    
     expiration = 10000
     s3_client = boto3.client(
         "s3",
-        aws_access_key_id=access_key,
-        aws_secret_access_key=secret_key,
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
         region_name=settings.AWS_S3_REGION_NAME,
         config=botocore.client.Config(
             signature_version=settings.AWS_S3_SIGNATURE_VERSION
@@ -105,7 +94,7 @@ def DownloadReplyAttachment(request, client_pk, pk, reply_id, attachment_id):
     try:
         response = s3_client.generate_presigned_url(
             "get_object",
-            Params={"Bucket": bucket_name, "Key": str(item.attachment)},
+            Params={"Bucket": settings.AWS_STORAGE_BUCKET_NAME, "Key": str(item.attachment)},
             ExpiresIn=expiration,
         )
     except ClientError as e:
@@ -126,7 +115,6 @@ def DownloadExcelProject(request, client_pk, pk):
     project = Project.objects.get(pk=pk)
     client = project.client
     
-    logo_url = None
     if client.logo:
         logo_obj = client.logo
         
@@ -141,7 +129,6 @@ def DownloadExcelProject(request, client_pk, pk):
     except OSError:
         raise Http404("404")
 
-    print(fl)
     response = HttpResponse(
         fl,
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

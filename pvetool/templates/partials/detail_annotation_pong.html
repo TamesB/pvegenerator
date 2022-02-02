@@ -25,7 +25,7 @@
                     <button class="ui icon basic red button"><i class="feather-20" data-feather="x" style="stroke: red;"></i></button></a></span></p></span>
             {% elif comment_allowed is True %}
                 <button hx-get="{% url 'addreplypong' client_pk project_pk item_pk type %}" class="ui basic icon button">
-                    <i class="feather-20" data-feather="plus" style="stroke: #0085B7"></i></button>
+                    <i class="feather-20" data-feather="message-circle" style="stroke: #0085B7"></i></button>
             {% endif %}
         </div>
         <div class="attachments">
@@ -45,7 +45,7 @@
                 {% endif %}
                 {% if attachment_allowed is True %}
                 <button hx-get="{% url 'addattachmentpong' client_pk project_pk item_pk 0 type 1 0 %}" class="ui basic icon button">
-                    <i class="feather-20" data-feather="plus" style="stroke: #0085B7"></i></button>
+                    <i class="feather-20" data-feather="paperclip" style="stroke: #0085B7"></i></button>
                 {% endif %}
             </p>
         </div>

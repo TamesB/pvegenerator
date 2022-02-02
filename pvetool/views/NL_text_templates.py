@@ -15,9 +15,6 @@ REPLY = "reactie"
 STATUS = "status"
 COSTS = "kosten"
 
-FIRST_STATUS_ADD = "Eerste statusaanwijzing"
-REPLY = "Uw beurt"
-
 def DELETE_SUCCESS(obj): return f"{obj} succesvol verwijderd."
 def DELETE_ERROR(obj): return f"Fout met {obj} verwijderen."
 

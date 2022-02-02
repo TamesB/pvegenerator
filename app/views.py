@@ -1059,7 +1059,7 @@ def editItemView(request, version_pk, pk):
         raise Http404("Item does not exist.")
     
     form = forms.PVEItemEditForm(request.POST or None, request.FILES or None, instance=PVEItem)
-    form.fields["BestaandeBijlage"].queryset = models.ItemBijlages.objects.filter(
+    form.fields["existing_attachment"].queryset = models.ItemBijlages.objects.filter(
         version__id=version_pk
     ).all()
     form.fields["Bouwsoort"].queryset = models.Bouwsoort.objects.filter(
@@ -1102,8 +1102,8 @@ def editItemView(request, version_pk, pk):
                 attachment_item.name = f"Bijlage {attachment_item.pk}"
                 attachment_item.save()
 
-            if form.cleaned_data["BestaandeBijlage"]:
-                existing_attachment = form.cleaned_data["BestaandeBijlage"]
+            if form.cleaned_data["existing_attachment"]:
+                existing_attachment = form.cleaned_data["existing_attachment"]
                 existing_attachment.items.add(PVEItem)
 
             # and reverse
@@ -1123,7 +1123,7 @@ def addItemView(request, version_pk, chapter_id, paragraph_id):
     paragraph_id = int(paragraph_id)
 
     form = forms.PVEItemEditForm(request.POST or None, request.FILES or None)
-    form.fields["BestaandeBijlage"].queryset = models.ItemBijlages.objects.filter(
+    form.fields["existing_attachment"].queryset = models.ItemBijlages.objects.filter(
         version__id=version_pk
     ).all()
     form.fields["Bouwsoort"].queryset = models.Bouwsoort.objects.filter(
@@ -1175,8 +1175,8 @@ def addItemView(request, version_pk, chapter_id, paragraph_id):
                 attachment_item.name = f"Bijlage {attachment_item.pk}"
                 attachment_item.save()
                 
-            if form.cleaned_data["BestaandeBijlage"]:
-                existing_attachment = form.cleaned_data["BestaandeBijlage"]
+            if form.cleaned_data["existing_attachment"]:
+                existing_attachment = form.cleaned_data["existing_attachment"]
                 existing_attachment.items.add(PVEItem)
 
             pk = PVEItem.id

@@ -37,7 +37,7 @@
   </div>
   <div class="flex-item" onClick="tooltip.pop(this, '#add_opmerking_menu', {position:0, cssClass:'no-padding'})">
     <img class="flex-img" src="{% static 'pvetool/svg/edit-3-blue-big.svg' %}"></img>
-    <p>To Do Checklist</p>
+    <p>PvE Overleg</p>
   </div>
 </div>
 
@@ -51,7 +51,7 @@
         <th><p>Aantal VHE</p></th>
         <th><p>Fase</p></th>
         <th><p>Projectmanager</p></th>
-        <th><p>Checklist</p></th>
+        <th><p>PvE Overleg</p></th>
         <th><p>Download</p></th>
       </tr>
       {% if projects %}
@@ -70,9 +70,9 @@
             {% if derden_toegevoegd|index:forloop.counter0 %}
               {% if request.user.type_user == first_annotate|index:forloop.counter0 %}
                 <a href="{% url 'plusopmerking_syn' client_pk project.id %}">
-                  <button class="ui basic button">CONCEPT v{{ project.frozenLevel }}<i class="right arrow icon"></i></button></a>
+                  <button class="ui basic button">CONCEPT v1<i class="right arrow icon"></i></button></a>
               {% else %}
-                <i>CONCEPT v{{ project.frozenLevel }}</i>
+                <i>CONCEPT v1</i>
               {% endif %}
             {% else %}
               {% if request.user.type_user == "SOG" %}
