@@ -188,15 +188,16 @@ a {
   color: black;
   height: 10vh;
   background-color: #ffffff;
+  position: absolute;
 }
 
 #main .header .logo_bg {
   float: left;
   height: 50%;
-  padding-left: 0.5em;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  min-height: 70px;
+  padding-left: 1em;
+  padding-top: 1em;
+  padding-bottom: 1.5em;
+  min-height: 80px;
 }
 
 #main .header .menu_right {
@@ -265,6 +266,8 @@ a {
       -ms-flex-pack: space-evenly;
           justify-content: space-evenly;
   height: 90vh;
+  position: absolute;
+  margin-top: 10vh;
 }
 
 #main .layerOneInner .menu_left {

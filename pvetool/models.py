@@ -103,4 +103,4 @@ class CommentRequirement(models.Model):
     costs_required = models.ManyToManyField(CommentStatus, related_name="costs_required")
     
     def __str__(self):
-        return f"{self.version}: Comment allowed: {self.comment_allowed}, Attachment allowed: {self.attachment_allowed}, Comment required: {self.comment_required}"
+        return f"CommentRequirements: {self.version}"

@@ -585,6 +585,7 @@ def AddPvEVersie(request, client_pk):
                 
                 new_comment_requirements = CommentRequirement()
                 new_comment_requirements.version = new_version_obj
+                new_comment_requirements.save()
                 new_comment_requirements.comment_allowed.add(*[obj for obj in old_comment_requirements.comment_allowed.all()])
                 new_comment_requirements.comment_required.add(*[obj for obj in old_comment_requirements.comment_required.all()])
                 new_comment_requirements.attachment_allowed(*[obj for obj in old_comment_requirements.attachment_allowed.all()])
