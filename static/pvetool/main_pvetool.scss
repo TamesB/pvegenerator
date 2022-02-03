@@ -82,6 +82,12 @@ a {
   }
   
 
+/* put breadcrumbs at the left of the content */
+.ui.breadcrumb {
+  width: 100%;
+  text-align: left;
+}
+
 .centered_div {
   display: flex;
   width: 100vw;
@@ -173,51 +179,40 @@ a {
   width: 100vw;
 
   .header {
-    
+    display: flex;
+    justify-content: space-between;
     width: 100%;
     color: hsl(0, 0%, 0%);
     height: 10vh;
     background-color: #ffffff;
     position: absolute;
 
-    .logo_bg {
-      float: left;
-      height: 50%;
-      padding-left: 1em;
-      padding-top: 1em;
-      padding-bottom: 1.5em;
-      min-height: 80px;
+    .logo_container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .logo_bg {
+        height: 50%;
+        margin-left: 0.5em;
+      }
     }
 
-    .menu_right {
-      padding: 1vw;
-      padding-top: 2.5vh;
+    .top_menu_right {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
       font-family: "Montserrat";
       font-weight: bold;
 
-      ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-      }
+      .menu_item {
+        padding: 0.5em;
+        border-right: 1px black solid;
 
-      li {
-        display: inline;
-        float: right;
-        border-right: 0.1vw solid #99beb9;
-        padding: 0.5vw;
-      }
-
-      li a {
-        display: block;
-        padding: 0;
-        
-        color: black;
-        cursor: pointer;
-      }
-      li::before {
-        content: "";
+        a {
+          color: black;
+        }
       }
     }
   }
@@ -227,10 +222,11 @@ a {
       visibility: hidden;
       height: 0;
       max-height: 0;
-
+      .logo_container {
       .logo_bg {
         min-height: 0;
       }
+    }
 
 
     }
@@ -247,45 +243,63 @@ a {
   .layerOneInner {
     width: 100%;
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
     height: 90vh;
     position:absolute;
     margin-top: 10vh;
 
 
-    .menu_left {
-      clear: left;
-      text-align: center;
+    .menu_left {   
       font-family: "Montserrat";
-      
-      
-      flex: 0 0 3%;
+      flex: 0 0 2%;
       background-image: linear-gradient(bottom right, #0078ae, #66acd1);
-      top: 10vh;
-      height: 100%;
-      max-height: 90vh;
-      transition: 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
-      overflow-x: hidden;
-      overflow-y: auto;
       min-width: 40px;
+      max-width: 40px;
+      
 
-      .hamburger {
-        visibility: visible;
-        width: 2vw;
-        min-width: 30px;
-        margin-left: 0.5vw;
-        margin-top: 1.5vh;
-        z-index: 3;
+      .duo_hamburger_x {
+        display: flex;
+        justify-content: space-between;
+
+        .hamburger {
+          margin-left: 0.5em;
+          margin-top: 1em;
+          cursor: pointer;
+        }
+
+        .close_x {
+          margin-right: 0.5em;
+          margin-top: 1em;
+          cursor: pointer;
+          display: none;
+        }
+      }
+      
+      .icon_text_menu_link {
+        display: flex;
+        align-items: center;
+
+        .feather {
+          margin-left: 0.5em;
+          min-width: 24px;
+        }
+
+        .menu_link {
+          margin-left: 1em;
+          font-weight: bold;
+          display: none;
+        }
+      }  
+
+      .bottom_menu_link {
+        position: absolute;
+        bottom: 2em;
         cursor: pointer;
       }
 
       a {
         color: white;
         display: block;
-        margin-top: 4vh;
-        margin-bottom: 4vh;
-        text-decoration: none;
+        margin-top: 2em;
         cursor: pointer;
 
         p {
@@ -319,11 +333,11 @@ a {
           }
           a:first-child {
             border-right: 0.3vw solid white;
-            padding-left: 5vw;
+            padding-left: 4em;
             text-align: left;
           }
           a:last-child {
-            padding-right: 5vw;
+            padding-right: 4em;
             text-align: right;
           }
         }
@@ -401,10 +415,13 @@ a {
         padding-top: 5vh;
         padding-bottom: 5vh;
         z-index: 3;
-
-        .hamburger {
-          display: none;
+        
+        .duo_hamburger_x {
+          .hamburger {
+            display: none;
+          }
         }
+
         a {
           visibility: visible;
 
@@ -437,7 +454,7 @@ a {
       background-image: linear-gradient(top left, #ffffff, #d1d1d1);
       max-height: 90vh;
       overflow-y: auto;
-      flex: 0 0 97%;
+      flex: 0 0 98%;
 
       .article_content {
         margin-top: 3vh;

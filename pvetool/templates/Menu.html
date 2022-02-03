@@ -1,26 +1,31 @@
 {% load static %}
 
-<div class="hamburger" id="hamburger"><img src="{% static 'pvetool/svg/hamburger.svg' %}" ></img></div>
+<div class="duo_hamburger_x">
+    <div class="hamburger" id="hamburger"><i data-feather="menu" stroke="white"></i></div>
+    <div class="close_x" id="x_menu_button_1"><i data-feather="x" stroke="white"></i></div>
+</div>
+
 <div class="hori-menu-logout">
     <div class="links">
         <a href="{% url 'dashboard_syn' client_pk %}"><p>Ingelogd als {{ request.user }}</p></a>
         <a href="{% url 'logout_syn' client_pk %}"><p>Afmelden</p></a>
     </div>
 </div>
-<div class="menu_item"><a href="{% url 'dashboard_syn' client_pk %}" class="{{ 1|default:"" }}"><span><i data-feather="monitor"></i><p class="menu_link">Dashboard</p></span></a></div>
+<div class="menu_item"><a href="{% url 'dashboard_syn' client_pk %}" class="{{ 1|default:"" }}"><span class="icon_text_menu_link"><i data-feather="monitor"></i><p class="menu_link">Dashboard</p></span></a></div>
 {% if type == 'derde' %}
-<div class="menu_item"><a href="{% url 'viewprojectoverview_syn' client_pk %}" class="{{ 1|default:"" }}"><span><i data-feather="map"></i><p class="menu_link">Mijn Projecten</p></span></a></div>
-    <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' client_pk %}" class="{{ 3|default:"" }}"><span><i data-feather="download"></i><p class="menu_link">Download PVE</p></span></a></div>
+<div class="menu_item"><a href="{% url 'viewprojectoverview_syn' client_pk %}" class="{{ 1|default:"" }}"><span class="icon_text_menu_link"><i data-feather="map"></i><p class="menu_link">Mijn Projecten</p></span></a></div>
+    <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' client_pk %}" class="{{ 3|default:"" }}"><span class="icon_text_menu_link"><i data-feather="download"></i><p class="menu_link">Download PVE</p></span></a></div>
 {% elif type == 'manager' %}
-<div class="menu_item"><a href="{% url 'viewprojectoverview_syn' client_pk %}" class="{{ 1|default:"" }}"><span><i data-feather="map"></i><p class="menu_link">Mijn Projecten</p></span></a></div>
-    <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' client_pk %}" class="{{ 4|default:"" }}"><span><i data-feather="download"></i><p class="menu_link">Download PVE</p></span></a></div>
+<div class="menu_item"><a href="{% url 'viewprojectoverview_syn' client_pk %}" class="{{ 1|default:"" }}"><span class="icon_text_menu_link"><i data-feather="map"></i><p class="menu_link">Mijn Projecten</p></span></a></div>
+    <div class="menu_item"><a href="{% url 'downloadPveOverview_syn' client_pk %}" class="{{ 4|default:"" }}"><span class="icon_text_menu_link"><i data-feather="download"></i><p class="menu_link">Download PVE</p></span></a></div>
 {% elif type == 'beheerder' %}
-    <div class="menu_item"><a href="{% url 'managewerknemers_syn' client_pk %}" class="{{ 2|default:"" }}"><span><i data-feather="users"></i><p class="menu_link">Beheer Werknemers</p></span></a></div>
-    <div class="menu_item"><a href="{% url 'manageorganisaties_syn' client_pk %}" class="{{ 3|default:"" }}"><span><i data-feather="layers"></i><p class="menu_link">Beheer Stakeholders</p></span></a></div>
-    <div class="menu_item"><a href="{% url 'manageprojecten_syn' client_pk %}" class="{{ 4|default:"" }}"><span><i data-feather="map"></i><p class="menu_link">Beheer Projecten</p></span></a></div>
-    <div class="menu_item"><a href="{% url 'kiespvegenerate' client_pk %}" class="{{ 7|default:"" }}"><span><i data-feather="book"></i><p class="menu_link">Genereer PVE</p></span></a></div>
+    <div class="menu_item"><a href="{% url 'managewerknemers_syn' client_pk %}" class="{{ 2|default:"" }}"><span class="icon_text_menu_link"><i data-feather="users"></i><p class="menu_link">Beheer Werknemers</p></span></a></div>
+    <div class="menu_item"><a href="{% url 'manageorganisaties_syn' client_pk %}" class="{{ 3|default:"" }}"><span class="icon_text_menu_link"><i data-feather="layers"></i><p class="menu_link">Beheer Stakeholders</p></span></a></div>
+    <div class="menu_item"><a href="{% url 'manageprojecten_syn' client_pk %}" class="{{ 4|default:"" }}"><span class="icon_text_menu_link"><i data-feather="map"></i><p class="menu_link">Beheer Projecten</p></span></a></div>
+    <div class="menu_item"><a href="{% url 'kiespvegenerate' client_pk %}" class="{{ 7|default:"" }}"><span class="icon_text_menu_link"><i data-feather="book"></i><p class="menu_link">Genereer PVE</p></span></a></div>
 {% elif type == 'checker' %}
     &nbsp;
 {% endif %}
 
-<div class="menu_item"><a href="{% url 'faq_syn' client_pk %}" class="{{ 4|default:"" }}"><p>FAQ</p></a></div>
+<div class="menu_item"><a href="{% url 'faq_syn' client_pk %}" class="{{ 4|default:"" }}"><span class="icon_text_menu_link"><i data-feather="help-circle"></i><p class="menu_link">FAQ</p></span></a></div>
+<div class="bottom_menu_link"><a href="{% url 'logout_syn' client_pk %}" class="{{ 4|default:"" }}"><span class="icon_text_menu_link"><i data-feather="power" stroke="white"></i><p class="menu_link">Log Uit</p></span></a></div>

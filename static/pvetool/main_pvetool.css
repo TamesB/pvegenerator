@@ -80,6 +80,12 @@ a {
   height: 20px;
 }
 
+/* put breadcrumbs at the left of the content */
+.ui.breadcrumb {
+  width: 100%;
+  text-align: left;
+}
+
 .centered_div {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -184,6 +190,12 @@ a {
 }
 
 #main .header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   width: 100%;
   color: black;
   height: 10vh;
@@ -191,45 +203,44 @@ a {
   position: absolute;
 }
 
-#main .header .logo_bg {
-  float: left;
-  height: 50%;
-  padding-left: 1em;
-  padding-top: 1em;
-  padding-bottom: 1.5em;
-  min-height: 80px;
+#main .header .logo_container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
-#main .header .menu_right {
-  padding: 1vw;
-  padding-top: 2.5vh;
+#main .header .logo_container .logo_bg {
+  height: 50%;
+  margin-left: 0.5em;
+}
+
+#main .header .top_menu_right {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   font-family: "Montserrat";
   font-weight: bold;
 }
 
-#main .header .menu_right ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
+#main .header .top_menu_right .menu_item {
+  padding: 0.5em;
+  border-right: 1px black solid;
 }
 
-#main .header .menu_right li {
-  display: inline;
-  float: right;
-  border-right: 0.1vw solid #99beb9;
-  padding: 0.5vw;
-}
-
-#main .header .menu_right li a {
-  display: block;
-  padding: 0;
+#main .header .top_menu_right .menu_item a {
   color: black;
-  cursor: pointer;
-}
-
-#main .header .menu_right li::before {
-  content: "";
 }
 
 @media screen and (max-width: 768px) {
@@ -238,7 +249,7 @@ a {
     height: 0;
     max-height: 0;
   }
-  #main .header .logo_bg {
+  #main .header .logo_container .logo_bg {
     min-height: 0;
   }
 }
@@ -258,53 +269,74 @@ a {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
   height: 90vh;
   position: absolute;
   margin-top: 10vh;
 }
 
 #main .layerOneInner .menu_left {
-  clear: left;
-  text-align: center;
   font-family: "Montserrat";
   -webkit-box-flex: 0;
-      -ms-flex: 0 0 3%;
-          flex: 0 0 3%;
+      -ms-flex: 0 0 2%;
+          flex: 0 0 2%;
   background-image: -webkit-gradient(linear, right bottom, left top, from(#0078ae), to(#66acd1));
   background-image: linear-gradient(bottom right, #0078ae, #66acd1);
-  top: 10vh;
-  height: 100%;
-  max-height: 90vh;
-  -webkit-transition: 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
-  transition: 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
-  overflow-x: hidden;
-  overflow-y: auto;
   min-width: 40px;
+  max-width: 40px;
 }
 
-#main .layerOneInner .menu_left .hamburger {
-  visibility: visible;
-  width: 2vw;
-  min-width: 30px;
-  margin-left: 0.5vw;
-  margin-top: 1.5vh;
-  z-index: 3;
+#main .layerOneInner .menu_left .duo_hamburger_x {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+#main .layerOneInner .menu_left .duo_hamburger_x .hamburger {
+  margin-left: 0.5em;
+  margin-top: 1em;
+  cursor: pointer;
+}
+
+#main .layerOneInner .menu_left .duo_hamburger_x .close_x {
+  margin-right: 0.5em;
+  margin-top: 1em;
+  cursor: pointer;
+  display: none;
+}
+
+#main .layerOneInner .menu_left .icon_text_menu_link {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#main .layerOneInner .menu_left .icon_text_menu_link .feather {
+  margin-left: 0.5em;
+  min-width: 24px;
+}
+
+#main .layerOneInner .menu_left .icon_text_menu_link .menu_link {
+  margin-left: 1em;
+  font-weight: bold;
+  display: none;
+}
+
+#main .layerOneInner .menu_left .bottom_menu_link {
+  position: absolute;
+  bottom: 2em;
   cursor: pointer;
 }
 
 #main .layerOneInner .menu_left a {
   color: white;
   display: block;
-  margin-top: 4vh;
-  margin-bottom: 4vh;
-  text-decoration: none;
+  margin-top: 2em;
   cursor: pointer;
 }
 
@@ -346,12 +378,12 @@ a {
 
 #main .layerOneInner .menu_left .hori-menu-logout .links a:first-child {
   border-right: 0.3vw solid white;
-  padding-left: 5vw;
+  padding-left: 4em;
   text-align: left;
 }
 
 #main .layerOneInner .menu_left .hori-menu-logout .links a:last-child {
-  padding-right: 5vw;
+  padding-right: 4em;
   text-align: right;
 }
 
@@ -434,7 +466,7 @@ a {
     padding-bottom: 5vh;
     z-index: 3;
   }
-  #main .layerOneInner .menu_left:hover .hamburger {
+  #main .layerOneInner .menu_left:hover .duo_hamburger_x .hamburger {
     display: none;
   }
   #main .layerOneInner .menu_left:hover a {
@@ -466,8 +498,8 @@ a {
   max-height: 90vh;
   overflow-y: auto;
   -webkit-box-flex: 0;
-      -ms-flex: 0 0 97%;
-          flex: 0 0 97%;
+      -ms-flex: 0 0 98%;
+          flex: 0 0 98%;
 }
 
 #main .layerOneInner .article .article_content {

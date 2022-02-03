@@ -21,17 +21,18 @@
     <body>
         <div id="main">
               <div class="header">
+                <div class="logo_container">
+                  <img src="{{ logo_url }}" class="logo_bg"></a>
+                </div>
 
-                <img src="{{ logo_url }}" class="logo_bg"></a>
-
-                <ul class="menu_right">
-                {% if user.is_authenticated %}
-                    <li><a href="{% url 'logout_syn' client_pk %}">Afmelden</a></li>
-                    <li><a href="{% url 'dashboard_syn' client_pk %}">Ingelogd als {{ request.user }}</a></li>
-                {% else %}
-                    <li><a href="#">Afgemeld</a></li>
-                {% endif %}
-                </ul>
+                <div class="top_menu_right">
+                  {% if user.is_authenticated %}
+                      <div class="menu_item"><a href="{% url 'dashboard_syn' client_pk %}"><p>Welkom, {{ request.user }}</p></a></div>
+                      <div class="menu_item"><a href="{% url 'logout_syn' client_pk %}"><i data-feather="power" stroke="black" style="width: 15px;"></i></a></div>
+                  {% else %}
+                      <div class="menu_item"><a href="#">Afgemeld</a></div>
+                  {% endif %}
+                </div>
             </div>
             <div class="layerOneInner">
                 <div class="menu_left" id="menu_left">{% block menu %}{% endblock %}</div> 
