@@ -852,7 +852,8 @@ a {
 }
 
 #main .layerOneInner .article .article_content .general_title input {
-  float: right;
+  margin: 0.5em;
+  margin-left: auto;
 }
 
 @media screen and (max-width: 880px) {
@@ -873,7 +874,6 @@ a {
   border-style: none;
   color: white;
   position: relative;
-  bottom: 0.3em;
   cursor: pointer;
 }
 
@@ -1210,6 +1210,7 @@ a {
   letter-spacing: 0.1vw;
   color: white;
   font-weight: bold;
+  background-color: #0078ae;
 }
 
 #main .layerOneInner .article .article_content .invite-container .box form {
@@ -1372,13 +1373,13 @@ a {
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .arrow-down {
   display: block;
   float: right;
-  max-height: 1em;
+  max-height: 0.8em;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .arrow-up {
   display: none;
   float: right;
-  max-height: 1em;
+  max-height: 0.8em;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .chapter {
@@ -1386,9 +1387,9 @@ a {
   color: white;
   font-weight: bold;
   cursor: pointer;
-  padding-top: 1em;
-  padding-bottom: 1em;
-  padding-left: 1vw;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-left: 0.3em;
   width: 100%;
   border: none;
   text-align: left;
@@ -1411,9 +1412,9 @@ a {
   background-color: #66acd1;
   color: white;
   cursor: pointer;
-  padding-top: 1em;
-  padding-bottom: 1em;
-  padding-left: 2vw;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-left: 1.4em;
   padding-right: 18px;
   width: 100%;
   font-weight: bold;
