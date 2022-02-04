@@ -6,7 +6,7 @@
     <div class="werknemer_list" style="margin:0.5em;">
 {% if stakeholder.users.all %}
     {% for user in stakeholder.users.all %}
-    <div class="usergroup" style="display:flex; justify-content: center; align-items:center;">
+    <div class="usergroup">
         <p style="margin:0;">{{ user }} <!-- {% if user.email %}({{ user.email }}) {% endif %} --></p>
         <a hx-post="{% url 'userremovefromorganisatie' client_pk stakeholder.id user.id %}" hx-confirm="U staat op het punt {{ user }} te verwijderen van organisatie {{ stakeholder.name }}. Weet u het zeker?" 
         hx-target="closest div" hx-swap="outerHTML"><i data-feather="trash-2" style="height:14px;" stroke="#0085B7"></i></a>

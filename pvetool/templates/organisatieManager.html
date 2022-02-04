@@ -37,9 +37,9 @@
             {% include 'partials/organisatie_detail.html' %}</td>
     
           <td>{% if stakeholder.projecten.all %}
-            <div class="projectgroup" style="display: flex; flex-wrap:wrap; flex-direction:row; justify-content: center; margin: 0.5em;margin:0.5em;">
+            <div class="projectgroup">
             {% for project in stakeholder.projecten.all %}
-            <span style="display:flex; justify-content:center; align-items:center; margin-right: 0.5em;">
+            <span class="projectentity">
               <p style="margin:0;">{{ project }}</p> 
               <a hx-post="{% url 'organisatieremovefromproject' client_pk stakeholder.id project.id %}" hx-confirm="U staat op het punt {{ stakeholder.name }} te verwijderen uit project {{ project }}. Weet u het zeker?" hx-target="closest span" hx-swap="outerHTML">
                 <i data-feather="trash-2" stroke="#0085B7" style="height:14px;"></i>

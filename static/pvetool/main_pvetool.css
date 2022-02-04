@@ -652,6 +652,54 @@ a {
   min-width: 100%;
 }
 
+#main .layerOneInner .article .article_content .base_info_table table tbody tr .werknemer_list .usergroup {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: lightgrey;
+  padding: 0.15em;
+  border-radius: 5px;
+  margin: 0.1em;
+}
+
+#main .layerOneInner .article .article_content .base_info_table table tbody tr .projectgroup {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin: 0.5em;
+}
+
+#main .layerOneInner .article .article_content .base_info_table table tbody tr .projectgroup .projectentity {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 0.15em;
+  background-color: lightgrey;
+  border-radius: 4px;
+  padding: 0.15em;
+}
+
 #main .layerOneInner .article .article_content .base_info_table table caption {
   margin-top: 1.8vh;
   caption-side: top;
@@ -836,16 +884,7 @@ a {
   font-family: "Montserrat";
   padding: 0.5em;
   font-weight: bold;
-  height: 2.5em;
-  min-width: 90px;
-  margin-bottom: 1vh;
-  margin-left: 1vw;
-  margin-right: 1vw;
-  padding-left: 1vw;
-  padding-right: 1vw;
   background-color: #026189;
-  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
-  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   outline: none;
   border-style: none;
   color: white;
@@ -1305,22 +1344,6 @@ a {
 #main .layerOneInner .article .article_content .opmerking_form .general_title {
   font-size: 16px;
   font-weight: bold;
-}
-
-#main .layerOneInner .article .article_content .opmerking_form .general_title .submit_button {
-  font-family: "Montserrat";
-  padding: 0;
-  height: 100%;
-  width: 8vw;
-  min-width: 90px;
-  margin-right: 2vw;
-  background-color: #026189;
-  -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
-  box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
-  outline: none;
-  border-style: none;
-  color: white;
-  cursor: pointer;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .general_title .submit_button:hover {

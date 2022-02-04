@@ -585,6 +585,36 @@ a {
 
               tr {
                 min-width: 100%;
+
+                .werknemer_list {
+                      .usergroup {
+                        display:flex; 
+                        justify-content: center; 
+                        align-items:center;
+                        background-color: lightgrey;
+                        padding: 0.15em;
+                        border-radius: 5px;
+                        margin: 0.1em;
+                    }
+                  }
+
+                .projectgroup {
+                  display: flex; 
+                  flex-wrap:wrap; 
+                  flex-direction:row; 
+                  justify-content: center; 
+                  margin: 0.5em;
+                  
+                  .projectentity {
+                    display:flex; 
+                    justify-content:center;
+                    align-items:center; 
+                    margin: 0.15em; 
+                    background-color: lightgrey; 
+                    border-radius: 4px; 
+                    padding: 0.15em;
+                  }
+                }
               }
             }
 
@@ -774,17 +804,7 @@ a {
             font-family: "Montserrat";
             padding: 0.5em;
             font-weight: bold;
-            height: 2.5em;
-            min-width: 90px;
-            margin-bottom: 1vh;
-            margin-left: 1vw;
-            margin-right: 1vw;
-            padding-left: 1vw;
-            padding-right: 1vw;
             background-color: #026189;
-            -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
-            -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
-          box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
             outline: none;
             border-style: none;
             color: white;
@@ -1225,24 +1245,6 @@ a {
             font-size: 16px;
             font-weight: bold;
             
-            .submit_button {
-              font-family: "Montserrat";
-              padding: 0;
-              
-              height: 100%;
-              width: 8vw;
-              min-width: 90px;
-              margin-right: 2vw;
-              background-color: #026189;
-              -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
-              -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
-            box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
-              outline: none;
-              border-style: none;
-              color: white;
-              
-              cursor: pointer;
-            }
             .submit_button:hover {
               opacity: 0.7;
             }
@@ -2174,7 +2176,6 @@ a {
             }
 
             .table_content {
-              
               word-wrap: break-word;
 
               .inhoud_box {
