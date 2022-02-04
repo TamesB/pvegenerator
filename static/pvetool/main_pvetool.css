@@ -797,9 +797,9 @@ a {
 #main .layerOneInner .article .article_content .profile_box .profile_bottom {
   font-weight: bold;
   text-align: left;
-  padding-top: 1em;
+  padding-top: 0.5em;
   padding-left: 2em;
-  padding-bottom: 1em;
+  padding-bottom: 0.5em;
   width: 100%;
   color: white;
   letter-spacing: 0.2vw;
@@ -1882,10 +1882,7 @@ a {
           justify-content: space-between;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  padding-top: 2em;
-  padding-left: 2vw;
-  padding-right: 2vw;
-  padding-bottom: 2em;
+  padding: 1em;
   height: 90%;
   border-top-left-radius: 1em;
   border-top-right-radius: 1em;
@@ -2205,8 +2202,9 @@ a {
   -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   background: #f7f7f7;
-  margin-top: 2em;
-  overflow-x: scroll;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  overflow: hidden;
   border-top-left-radius: 1em;
   border-top-right-radius: 1em;
 }
@@ -2259,7 +2257,8 @@ a {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  margin-top: 2em;
+  margin-top: 1em;
+  margin-bottom: 1em;
   min-width: 40%;
   max-width: 40%;
   min-height: 40%;
@@ -2325,19 +2324,17 @@ a {
   background: #f7f7f8;
   -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
-  margin-bottom: 2em;
-  margin-top: 2em;
+  margin-bottom: 1em;
+  margin-top: 1em;
   display: inline-block;
   width: 100%;
   font-weight: bold;
+  padding: 1.5em;
 }
 
 #main .layerOneInner .article .article_content .project_progress_bar label {
   text-align: left;
   float: left;
-  padding: 1.6em;
-  width: 65%;
-  padding-right: 2vw;
   color: #0078ae;
 }
 
@@ -2349,8 +2346,19 @@ a {
   float: right;
   width: 30%;
   margin-right: 2vw;
-  margin-top: 2.5em;
   height: 30%;
+}
+
+#main .layerOneInner .article .article_content .project_progress_bar .ui.progress {
+  margin: 0;
+}
+
+#main .layerOneInner .article .article_content .project_progress_bar .ui.progress:last-child {
+  margin: 0;
+}
+
+#main .layerOneInner .article .article_content .project_progress_bar .ui.progress:first-child {
+  margin: 0;
 }
 
 #main .layerOneInner .article .article_content .opmerkingtable_wrapper {
