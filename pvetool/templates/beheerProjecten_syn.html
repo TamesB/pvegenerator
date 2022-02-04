@@ -21,7 +21,7 @@
 
 <div class="opmerking_project_list">
   <div class="general_title"><img src="{% static 'pvetool/svg/map-blue-big.svg' %}" class="title_img"></img>
-    <p>Projecten <a href="{% url 'plusproject_syn' client_pk %}"><button class="ui icon green button"><i class="icon plus"></i>Start Project</button></a></p> </div>
+    <p>Projecten</p> <a href="{% url 'plusproject_syn' client_pk %}"><button class="ui icon green button"><i class="icon plus"></i>Start Project</button></a></div>
 
 <div class="ui top attached tabular menu">
   <a class="item active" data-tab="todo_projects">TODO Projecten</a>
@@ -59,11 +59,11 @@
             {% include 'partials/projectpartijen_detail.html' %}</td>
               <td>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="img" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>{% else %}<a href="{% url 'kiespveversie' client_pk project.id %}"><button class="ui icon basic button"><i class="icon plus"></i>Verbind PvE</button></a>{% endif %}</td>
               <td>
-              <span><button hx-post="{% url 'deleteproject' client_pk project.id %}"
+              <span><a hx-post="{% url 'deleteproject' client_pk project.id %}"
                       hx-target="closest tr"
                       hx-swap="outerHTML"
           hx-prompt="Vul 'VERWIJDEREN' in om project {{ project.name }} te verwijderen."
-          class="ui icon basic red button"><i class="feather-20" data-feather="x" style="stroke: red;"></i></button></span>
+          class="ui icon basic red button"><i class="feather-20" data-feather="x" style="stroke: red;"></i></a></span>
 
               </td>
         </tr>
@@ -118,11 +118,11 @@
           {% include 'partials/projectpartijen_detail.html' %}</td>
             <td>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="img" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>{% else %}<a href="{% url 'kiespveversie' client_pk project.id %}"><button class="ui icon basic button"><i class="icon plus"></i>Verbind PvE</button></a>{% endif %}</td>
                     <td>
-              <span><button hx-post="{% url 'deleteproject' client_pk project.id %}"
+              <span><a hx-post="{% url 'deleteproject' client_pk project.id %}"
                       hx-target="closest tr"
                       hx-swap="outerHTML"
           hx-prompt="Vul 'VERWIJDEREN' in om project {{ project.name }} te verwijderen."
-          class="ui icon basic red button"><i class="feather-20" data-feather="x" style="stroke: red;"></i></button></span>
+          ><i class="feather-20" data-feather="trash-2" style="stroke: red;"></i></a></span>
 
               </td>
 

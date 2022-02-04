@@ -5,12 +5,6 @@
     <div class="close_x" id="x_menu_button_1"><i data-feather="x" stroke="white"></i></div>
 </div>
 
-<div class="hori-menu-logout">
-    <div class="links">
-        <a href="{% url 'dashboard_syn' client_pk %}"><p>Ingelogd als {{ request.user }}</p></a>
-        <a href="{% url 'logout_syn' client_pk %}"><p>Afmelden</p></a>
-    </div>
-</div>
 <div class="menu_item"><a href="{% url 'dashboard_syn' client_pk %}" class="{{ 1|default:"" }}"><span class="icon_text_menu_link"><i data-feather="monitor"></i><p class="menu_link">Dashboard</p></span></a></div>
 {% if type == 'derde' %}
 <div class="menu_item"><a href="{% url 'viewprojectoverview_syn' client_pk %}" class="{{ 1|default:"" }}"><span class="icon_text_menu_link"><i data-feather="map"></i><p class="menu_link">Mijn Projecten</p></span></a></div>

@@ -24,10 +24,10 @@
 <div class="opmerking_form">
 
   <div class="general_title"><img src="{% static 'pvetool/svg/edit-3-blue-big.svg' %}" class="title_img"></img>
-    <p>PvE Overleg (Huidige reactielaag: {{ commentphase.level }}) (Huidig kostenverschil: &#8364;{{ totale_kosten }})
+    <p>PvE Overleg (Huidige reactielaag: {{ commentphase.level }}) (Huidig kostenverschil: &#8364;{{ totale_kosten }})</p>
       <input type="submit" class="submit_button" onClick="javascript:location.href='{% url 'sendreplies_syn' client_pk project.id %}';" 
       value="Stuur door >"></input>
-</p></div>
+</div>
 
 <div class="ui top attached tabular menu">
   <a class="item active" data-tab="todo_comments">Geen status ({{ todo_replies.count }} / {{ todo_comments.count }})</a>
