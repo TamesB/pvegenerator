@@ -622,13 +622,9 @@ a {
 
             .table_content {
               width: 100%;
-              letter-spacing: 0.1em;
               border-bottom: 3px solid rgb(0, 0, 0);
-              margin-bottom: 3px;
 
               td {
-                padding-top: 0.5vh;
-                padding-bottom: 0.5vh;
                 background-color: white;
               }
               td:nth-of-type(even) {
@@ -646,7 +642,7 @@ a {
           }
         }
         .searchable_table_input {
-          background-image: url("/css/searchicon.png");
+          background-image: url("/static/pvetool/svg/search.svg");
           background-position: 10px 10px;
           background-repeat: no-repeat;
           width: 100%;

@@ -25,22 +25,29 @@
 <tbody>
 <tr class="table_title">
           <th><p>Stakeholder</p></th>
-          <th><p>Projecten</p></th>
           <th><p>Werknemers</p></th>
+          <th><p>Behoort tot projecten</p></th>
           <th><p>Acties</p></th>
         </tr>
         {% if organisaties %}
             {% for stakeholder in organisaties %}
         <tr class="table_content" hx-target="this" hx-swap="outerHTML">
           <td><p>{{ stakeholder.name }}</p></td>
-          <td><p>{% if stakeholder.projecten.all %}
+          <td>
+            {% include 'partials/organisatie_detail.html' %}</td>
+    
+          <td>{% if stakeholder.projecten.all %}
+            <div class="projectgroup" style="display: flex; flex-wrap:wrap; flex-direction:row; justify-content: center; margin: 0.5em;margin:0.5em;">
             {% for project in stakeholder.projecten.all %}
-            <span>{{ project }} <a hx-post="{% url 'organisatieremovefromproject' client_pk stakeholder.id project.id %}" hx-confirm="Weet u het zeker?" hx-target="closest span" hx-swap="outerHTML">
-              <i class="icon times"></i></a>,</span>
+            <span style="display:flex; justify-content:center; align-items:center; margin-right: 0.5em;">
+              <p style="margin:0;">{{ project }}</p> 
+              <a hx-post="{% url 'organisatieremovefromproject' client_pk stakeholder.id project.id %}" hx-confirm="U staat op het punt {{ stakeholder.name }} te verwijderen uit project {{ project }}. Weet u het zeker?" hx-target="closest span" hx-swap="outerHTML">
+                <i data-feather="trash-2" stroke="#0085B7" style="height:14px;"></i>
+              </a>
+            </span>
               {% endfor %}
-              {% else %}<i>Geen</i>{% endif %}</p></td>
-        <td>
-        <p>{% include 'partials/organisatie_detail.html' %}</p></td>
+          </div>
+              {% else %}<i>Geen</i>{% endif %}</td>
         <td>
               <span><button hx-post="{% url 'deleteorganisatie_syn' client_pk stakeholder.id %}"
                       hx-target="closest tr"

@@ -2,16 +2,19 @@
 
 {% block main %}
 
-<div hx-target="this" hx-swap="outerHTML">
-    <p>
+<div hx-target="this" hx-swap="outerHTML" style="display:flex; justify-content: center; align-items:center;">
+    <div class="werknemer_list" style="margin:0.5em;">
 {% if stakeholder.users.all %}
     {% for user in stakeholder.users.all %}
-        {{ user }} {% if user.email %}({{ user.email }}) {% endif %}
-        <a hx-post="{% url 'userremovefromorganisatie' client_pk stakeholder.id user.id %}" hx-confirm="Weet u het zeker?" 
-        hx-target="closest span" hx-swap="outerHTML"><i class="icon times"></i></a>, 
+    <div class="usergroup" style="display:flex; justify-content: center; align-items:center;">
+        <p style="margin:0;">{{ user }} <!-- {% if user.email %}({{ user.email }}) {% endif %} --></p>
+        <a hx-post="{% url 'userremovefromorganisatie' client_pk stakeholder.id user.id %}" hx-confirm="U staat op het punt {{ user }} te verwijderen van organisatie {{ stakeholder.name }}. Weet u het zeker?" 
+        hx-target="closest div" hx-swap="outerHTML"><i data-feather="trash-2" style="height:14px;" stroke="#0085B7"></i></a>
+    </div>
     {% endfor %}
 {% endif %}
-<span><a hx-get="{% url 'addusersorganisatie' client_pk stakeholder.id %}"><i class="feather-20" data-feather="plus" style="stroke: #0085B7"></i></span></p>
+    </div>
+<div><a hx-get="{% url 'addusersorganisatie' client_pk stakeholder.id %}"><i class="feather-20" data-feather="plus" style="stroke: #0085B7"></i></div>
 </div>
 {% include 'partials/_render_icons.html' %}
 

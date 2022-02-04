@@ -682,14 +682,10 @@ a {
 
 #main .layerOneInner .article .article_content .base_info_table table .table_content {
   width: 100%;
-  letter-spacing: 0.1em;
   border-bottom: 3px solid black;
-  margin-bottom: 3px;
 }
 
 #main .layerOneInner .article .article_content .base_info_table table .table_content td {
-  padding-top: 0.5vh;
-  padding-bottom: 0.5vh;
   background-color: white;
 }
 
@@ -706,7 +702,7 @@ a {
 }
 
 #main .layerOneInner .article .article_content .searchable_table_input {
-  background-image: url("/css/searchicon.png");
+  background-image: url("/static/pvetool/svg/search.svg");
   background-position: 10px 10px;
   background-repeat: no-repeat;
   width: 100%;

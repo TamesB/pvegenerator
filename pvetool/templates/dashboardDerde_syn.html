@@ -32,7 +32,7 @@
 <div class="flex-container">
   <div class="flex-item tooltip" onClick="tooltip.pop(this, '#download_pve_menu', {position:0, cssClass:'no-padding'})">
     <img class="flex-img" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img>
-    <p>Download PVE</p>
+    <p>Download PvE</p>
   </div>
   <div class="flex-item" onClick="tooltip.pop(this, '#add_opmerking_menu', {position:0, cssClass:'no-padding'})">
     <img class="flex-img" src="{% static 'pvetool/svg/edit-3-blue-big.svg' %}"></img>
@@ -51,7 +51,7 @@
           <th><p>Fase</p></th>
           <th><p>Projectmanager</p></th>
           <th><p>PvE Overleg</p></th>
-          <th><p>Download</p></th>
+          <th><p>Download Overleg</p></th>
         </tr>
         {% if projects %}
         {% for project in projects %}
@@ -98,7 +98,7 @@
               {% endif %}
             {% endif %}
             </p></td>           
-            <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>
+            <td><p>{% if project.pveconnected %}<a href="{% url 'downloadexcelproject' client_pk project.id %}" target="_blank"><img src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>
             {% else %}Nog geen PvE{% endif %}</p></td>
         </tr>
         {% endfor %}
@@ -132,7 +132,7 @@
         {% for project in projects %}
           <tr>
             <td><p>{{ project.name }}</p></td>
-            <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}">
+            <td><p>{% if project.pveconnected %}<a href="{% url 'downloadexcelproject' client_pk project.id %}" target="_blank">
               <img class="dimg" style="align-self: right; max-height: 2vh;" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>
               {% else %}Niet beschikbaar{% endif %}</p></td>
           </tr>

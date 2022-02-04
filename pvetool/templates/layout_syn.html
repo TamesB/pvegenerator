@@ -28,7 +28,7 @@
                 <div class="top_menu_right">
                   {% if user.is_authenticated %}
                       <div class="menu_item"><a href="{% url 'dashboard_syn' client_pk %}"><p>Welkom, {{ request.user }}</p></a></div>
-                      <div class="menu_item"><a href="{% url 'logout_syn' client_pk %}"><i data-feather="power" stroke="black" style="width: 15px;"></i></a></div>
+                      <div class="menu_item"><a href="{% url 'logout_syn' client_pk %}"><i data-feather="log-out" stroke="black" style="width: 15px;"></i></a></div>
                   {% else %}
                       <div class="menu_item"><a href="#">Afgemeld</a></div>
                   {% endif %}
@@ -38,7 +38,7 @@
                 <div class="menu_left" id="menu_left">{% block menu %}{% endblock %}</div> 
                 <div class="article" id ="article">
                 <div class="loader" style="display: none;"></div>
-                <div class="article_content">
+                <div class="article_content" id="main_article">
                 {% block main %}{% endblock %}
                 {% block modal %}{% endblock %}
                 </div>

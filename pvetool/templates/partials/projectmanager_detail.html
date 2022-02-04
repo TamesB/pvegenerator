@@ -3,12 +3,12 @@
 
 {% block main %}
 
-<div hx-target="this" hx-swap="outerHTML">
+<div hx-target="this" hx-swap="outerHTML" style="display: flex; justify-content: center; align-items: center;">
 {% if project.projectmanager %}
-    {{ project.projectmanager }}
-<button hx-get="{% url 'addprojmanagertoproject_syn' client_pk project.id %}" class="ui icon basic button"><i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></button>
+    <p style="margin: 0;">{{ project.projectmanager }}</p>
+<button style="margin-left: 0.5em;" hx-get="{% url 'addprojmanagertoproject_syn' client_pk project.id %}" class="ui icon basic button"><i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></button>
 {% else %}
-<button hx-get="{% url 'addprojmanagertoproject_syn' client_pk project.id %}" class="ui icon basic button"><i class="feather-20" data-feather="plus" style="stroke: #0085B7"></i></button>
+<button style="margin-left: 0.5em;" hx-get="{% url 'addprojmanagertoproject_syn' client_pk project.id %}" class="ui icon basic button"><i class="feather-20" data-feather="plus" style="stroke: #0085B7"></i></button>
 {% endif %}
 </div>
 {% include 'partials/_render_icons.html' %}

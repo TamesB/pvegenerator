@@ -3,11 +3,11 @@
 
 {% block main %}
 
-<div hx-target="this" hx-swap="outerHTML">
+<div hx-target="this" hx-swap="outerHTML" style="display: flex; justify-content: center; align-items: center;">
 {% if project.organisaties.all %}
-    {% for stakeholder in project.organisaties.all %}{{ stakeholder }}, {% endfor %}
-    {% endif %}
-<button hx-get="{% url 'projectaddpartijform' client_pk project.id %}" class="ui icon basic button"><i class="feather-20" data-feather="plus" style="stroke: #0085B7"></i></button>
+    <p style="margin: 0;">{% for stakeholder in project.organisaties.all %}{{ stakeholder }}, {% endfor %}
+    {% endif %}</p>
+<button style="margin-left: 0.5em;" hx-get="{% url 'projectaddpartijform' client_pk project.id %}" class="ui icon basic button"><i class="feather-20" data-feather="plus" style="stroke: #0085B7"></i></button>
 </div>
 {% include 'partials/_render_icons.html' %}
 

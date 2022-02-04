@@ -105,9 +105,19 @@ class WriteExcelProject:
         # write the author of the first self.annotations
         self.column = 4
         ann_objs = PVEItemAnnotation.objects.select_related("status").select_related("item").filter(project=project)
-        first_annotate_group = ann_objs.first().user.stakeholder if ann_objs.first().user.stakeholder else ann_objs.first().user.client
+        
+        if ann_objs.first():
+            if ann_objs.first().user:
+                first_annotate_group = ann_objs.first().user.stakeholder if ann_objs.first().user.stakeholder else ann_objs.first().user.client
+            else:
+                first_annotate_group = None
+        else:
+            first_annotate_group = None
+               
         header_list = []
-        header_list.append(f"{first_annotate_group.name} ({ann_objs.first().date.strftime('%Y-%m-%d %H:%M')})")
+        
+        if first_annotate_group:
+            header_list.append(f"{first_annotate_group.name} ({ann_objs.first().date.strftime('%Y-%m-%d %H:%M')})")
         
 
         self.column = 0

@@ -54,10 +54,10 @@
           <td><p>{{ project.vhe }}</p></td>
           <td><p>{{ project.statuscontract }}</p></td>
             <td>
-            <p>{% include 'partials/projectmanager_detail.html' %}</p></td>
+            {% include 'partials/projectmanager_detail.html' %}</td>
             <td>
-            <p>{% include 'partials/projectpartijen_detail.html' %}</p></td>
-              <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="img" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>{% else %}<a href="{% url 'kiespveversie' client_pk project.id %}"><button class="ui icon basic button"><i class="icon plus"></i>Verbind PvE</button></a>{% endif %}</p></td>
+            {% include 'partials/projectpartijen_detail.html' %}</td>
+              <td>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="img" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>{% else %}<a href="{% url 'kiespveversie' client_pk project.id %}"><button class="ui icon basic button"><i class="icon plus"></i>Verbind PvE</button></a>{% endif %}</td>
               <td>
               <span><button hx-post="{% url 'deleteproject' client_pk project.id %}"
                       hx-target="closest tr"
@@ -113,10 +113,10 @@
         <td><p>{{ project.vhe }}</p></td>
         <td><p>{{ project.statuscontract }}</p></td>
           <td>
-          <p>{% include 'partials/projectmanager_detail.html' %}</p></td>
+          {% include 'partials/projectmanager_detail.html' %}</td>
           <td>
-          <p>{% include 'partials/projectpartijen_detail.html' %}</p></td>
-            <td><p>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="img" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>{% else %}<a href="{% url 'kiespveversie' client_pk project.id %}"><button class="ui icon basic button"><i class="icon plus"></i>Verbind PvE</button></a>{% endif %}</p></td>
+          {% include 'partials/projectpartijen_detail.html' %}</td>
+            <td>{% if project.pveconnected %}<a href="{% url 'download_pve_syn' client_pk project.id %}"><img class="img" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>{% else %}<a href="{% url 'kiespveversie' client_pk project.id %}"><button class="ui icon basic button"><i class="icon plus"></i>Verbind PvE</button></a>{% endif %}</td>
                     <td>
               <span><button hx-post="{% url 'deleteproject' client_pk project.id %}"
                       hx-target="closest tr"
