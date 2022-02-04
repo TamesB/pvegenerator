@@ -248,7 +248,8 @@ class WriteExcelProject:
         if item.id in self.annotations.keys():
             if self.annotations[item.id].status:
                 self.column = 1
-                
+                style = self.cell_format_blue
+
                 if "n.v.t." in f"{self.annotations[item.id].status}":
                     style = self.bold_red
                 if "akkoord" in f"{self.annotations[item.id].status}":
