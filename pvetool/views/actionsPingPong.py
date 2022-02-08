@@ -70,19 +70,29 @@ def FirstFreeze(request, client_pk, pk):
 
                     string_list = []
                     for comment in false_comments:
-                        string = f"{comment.item.chapter.chapter}: "
+                        if comment.status:
+                            string = f"STATUS: {comment.status}. "
+                        else:
+                            string = f"STATUS: Geen. "
+                            
+                        string += "ONDERDEEL: "
+                        string += f"{comment.item.chapter.chapter}. "
                         
                         if comment.item.paragraph:
-                            string += f"{comment.item.paragraph.paragraph}: "
+                            string += f"{comment.item.paragraph.paragraph}."
+                                                
+                        string_safe = ""
                         
-                        string += f"{comment.item.inhoud} "
-                        string_list.append(string)
-
+                        for char in string:
+                            if char != "`" and char != "'":
+                                string_safe += char
+                        
+                        string_safe += " /// "
+                        string_list.append(string_safe)
+                        
                     
-                    messages.warning(request, f"""Een aantal regels met een opmerkingsplicht hebben nog geen opmerkingen. Check de volgende regels:
-                                   {" / ".join([string for string in string_list])}.
-                                   """)
-                    
+                    messages.warning(request, f"""Een aantal regels met een opmerkingsplicht hebben nog geen opmerkingen. Check de volgende onderdelen: 
+                                     {"".join([string for string in string_list])}""")
                     return redirect("plusopmerking_syn", client_pk=client_pk, pk=pk)
 
                 # freeze opmerkingen op niveau 1
@@ -251,18 +261,29 @@ def SendReplies(request, client_pk, pk):
 
                     string_list = []
                     for comment in false_comments:
-                        string = f"{comment.onComment.item.chapter.chapter}: "
+                        
+                        if comment.onComment.status:
+                            string = f"STATUS: {comment.onComment.status}. "
+                        else:
+                            string = f"STATUS: Geen. "
+                            
+                        string += "ONDERDEEL: "
+                        string += f"{comment.onComment.item.chapter.chapter}. "
                         
                         if comment.onComment.item.paragraph:
-                            string += f"{comment.onComment.item.paragraph.paragraph}: "
+                            string += f"{comment.onComment.item.paragraph.paragraph}."
+                                                
+                        string_safe = ""
                         
-                        string += f"{comment.onComment.item.inhoud} "
-                        string_list.append(string)
-
-                    
-                    messages.warning(request, f"""Een aantal regels met een opmerkingsplicht hebben nog geen opmerkingen. Check de volgende regels:
-                                   {" / ".join([string for string in string_list])}.
-                                   """)
+                        for char in string:
+                            if char != "`" and char != "'":
+                                string_safe += char
+                        
+                        string_safe += " /// "
+                        string_list.append(string_safe)
+                        
+                    messages.warning(request, f"""Een aantal regels met een opmerkingsplicht hebben nog geen opmerkingen. Check de volgende onderdelen: 
+                                     {"".join([string for string in string_list])}""")
                     
                     return redirect("commentscheck_syn", client_pk=client_pk, proj_id=pk)
 

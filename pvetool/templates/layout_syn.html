@@ -45,7 +45,7 @@
                 </div> 
             </div>
         </div>
-        <script src="https://unpkg.com/htmx.org@1.5.0"></script>
+        <script src="https://unpkg.com/htmx.org@1.6.1"></script>
         <script src="{% static 'semantic.min.js' %}"></script>  
       <script type="text/javascript" src="{% static 'Semantic-UI-Alert.js' %}"></script>
         <script src="{% static 'pvetool/main_pvetool.js' %}"></script>
@@ -55,8 +55,8 @@
           $(document).ready(function() {
           $.uiAlert({
           textHead: 'Info', // header
-          text: '{{ message }}', // Text
-          bgcolor: '#55a9ee', // background-color
+          text: `{{ message }}`, // Text
+        bgcolor: '#55a9ee', // background-color
           textcolor: '#fff', // color
           position: 'bottom-left',// position . top And bottom ||  left / center / right
           icon: 'info circle', // icon in semantic-UI

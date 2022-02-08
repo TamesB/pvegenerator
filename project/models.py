@@ -6,6 +6,7 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 import inspect
 import app.models as appmodels
+
 class Abbonement(models.Model):
     soort = models.CharField(max_length=255, blank=True, null=True)
 
@@ -232,7 +233,7 @@ def on_change(sender, instance: Client, **kwargs):
         activity.update = f"Nieuwe client aangemaakt: { instance.name }."
     else:
         previous = Client.objects.get(id=instance.id)
-        if previous.name != instance.name: # field will be updated
+        if previous.name != instance.name: # field will be updatedssssssssssss
             activity.update = f"Klantname { previous.name } veranderd naar { instance.name }."
         if previous.beheerder != instance.beheerder: # field will be updated
             activity.update = f"Beheerder van { instance.name } veranderd naar { instance.beheerder }."
