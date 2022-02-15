@@ -1246,12 +1246,6 @@ a {
   margin-bottom: 3em;
 }
 
-#main .layerOneInner .article .article_content .invite-container .box form #id_plaats_div_map {
-  margin-bottom: 3em;
-  margin-left: 2vw;
-  margin-right: 2vw;
-}
-
 #main .layerOneInner .article .article_content .invite-container .box form #id_plaats_div_map .clear_features {
   display: none;
 }

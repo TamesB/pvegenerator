@@ -2,11 +2,14 @@
 
 
 {% block main %}
-    <form hx-target="this" hx-swap="outerHTML" class="ui form" method="POST" enctype="multipart/form-data">
+<form hx-target="this" hx-swap="outerHTML" class="ui form" method="POST" enctype="multipart/form-data">
+<a hx-get="{% url 'getprojectmanager_syn' client_pk project.id %}" hx-trigger="click, keyup[key=='Escape'] from:select"><i class="feather-20" data-feather="x" style="stroke: #0085B7"></i></a>
+
+    <div style="display:flex; flex-direction:column;">
     {% csrf_token %}
         {{ form }}
-        <button hx-get="{% url 'getprojectmanager_syn' client_pk project.id %}" hx-trigger="click, keyup[key=='Escape'] from:select" style="float: left;" class="ui icon basic button"><i class="feather-20" data-feather="x" style="stroke: #0085B7"></i></button>
         <button hx-post="{% url 'addprojmanagertoproject_syn' client_pk project.id %}" hx-trigger="click, change from:select" type="submit" class="ui icon basic button"><i class="feather-20" data-feather="check" style="stroke: #0085B7"></i></button>
+    </div>
     </form>  
 
     {% include 'partials/_render_icons.html' %}

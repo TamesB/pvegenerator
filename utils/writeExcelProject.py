@@ -45,15 +45,15 @@ class WriteExcelProject:
         self.bold.set_text_wrap()
 
         self.bold_red = workbook.add_format({"bold": True})
-        self.bold_red.set_bg_color("red")
+        self.bold_red.set_bg_color("#FB6962")
         self.bold_red.set_border(1)
         self.bold_red.set_border_color("#FB6962")
         self.bold_yellow = workbook.add_format({"bold": True})
-        self.bold_yellow.set_bg_color("yellow")
+        self.bold_yellow.set_bg_color("#FCFC99")
         self.bold_yellow.set_border(1)
         self.bold_yellow.set_border_color("#FCFC99")
         self.bold_green = workbook.add_format({"bold": True})
-        self.bold_green.set_bg_color("green")
+        self.bold_green.set_bg_color("#79DE79")
         self.bold_green.set_border(1)
         self.bold_green.set_border_color("#79DE79")
 
@@ -85,7 +85,7 @@ class WriteExcelProject:
         self.cell_format_blue.set_text_wrap()
         
         accepted_cell = workbook.add_format()
-        accepted_cell.set_bg_color("green")
+        accepted_cell.set_bg_color("#79DE79")
         accepted_cell.set_text_wrap()
 
         self.grey_bg = workbook.add_format({'bold': True, 'bg_color': '#D3D3D3'})
