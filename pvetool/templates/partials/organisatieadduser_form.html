@@ -12,5 +12,10 @@
     </form>  
     {% include 'partials/_render_icons.html' %}
 
-{% endblock %}
+    <script>
+        $(document).ready(function(){        
+                $('option[value=""]').html("Kies gebruiker...")
+        });
+        </script>
+    {% endblock %}
 

@@ -14,5 +14,10 @@
     </form>  
     {% include 'partials/_render_icons.html' %}
 
+    <script>
+        $(document).ready(function(){        
+                $('option[value=""]').html("Kies stakeholder...")
+        });
+        </script>
 {% endblock %}
 

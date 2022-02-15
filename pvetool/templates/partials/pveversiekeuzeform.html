@@ -10,5 +10,10 @@
 
     {% include 'partials/_render_icons.html' %}
 
+    <script>
+        $(document).ready(function(){        
+                $('option[value=""]').html("Kies versie...")
+        });
+        </script>
 {% endblock %}
 

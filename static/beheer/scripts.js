@@ -29,7 +29,7 @@ $(document).ready(function(){
        })
      ;
     
-     $('.item[data-value=""]').remove();
+     $('.item[data-value=""]').innerHTML = "Kiezen..."
 });
 var win = $(this); //this = window
 if (win.width()< 900) { $('#menu').removeClass('visible'); }

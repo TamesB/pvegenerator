@@ -17,5 +17,11 @@
         </span>
     </form>
     {% include 'partials/_render_icons.html' %}
-
+    <script>
+        $('textarea').keypress(function(event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+            }
+        });
+    </script>        
     {% endblock %}
