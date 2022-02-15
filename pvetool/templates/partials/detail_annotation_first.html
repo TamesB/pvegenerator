@@ -38,7 +38,7 @@
         </div>
         <div class="comment">
             {% if annotation.annotation %}
-                <span><p style="color:#0085B7;">{{ annotation.annotation }} <span>
+                <span><p style="color:#0085B7;">{{ annotation.annotation }}</p><span>
                     <a hx-get="{% url 'addannotationfirst' client_pk project_pk item_pk %}">
                     <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></a></span>
                 <span><a hx-delete="{% url 'deleteannotationfirst' client_pk project_pk item_pk %}">
@@ -52,11 +52,17 @@
             <p>
                 {% if annotation %}
                 {% if attachments %}
-                <span style="color:#0085B7;">
+                <span style="color:#0085B7;
+                display: flex;
+                align-items: flex-start;
+                flex-wrap: wrap;">
                 {% for attachment in attachments %}
                 {% if attachment.attachment %}
-                <a href="{% url 'downloadattachmentaanopmerking_syn' client_pk project_pk annotation.id attachment.id %}" target="_blank">
-                    {{ attachment }}<img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>
+                <a href="{% url 'downloadattachmentaanopmerking_syn' client_pk project_pk annotation.id attachment.id %}" target="_blank" style="display: flex;
+                flex-wrap: wrap;
+                align-content: center;
+                align-items: center;">
+                    <span>{{ attachment }}</span><img class="dimg" style="align-self: right; max-height: 1.5vh;" src="{% static 'pvetool/svg/download-blue-big.svg' %}"></img></a>
                 <span><a hx-get="{% url 'addattachmentfirst' client_pk project_pk item_pk annotation.id attachment.id %}">
                     <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></a></span>
                     <span><a hx-delete="{% url 'deleteattachmentfirst' client_pk project_pk annotation.id attachment.id %}">
