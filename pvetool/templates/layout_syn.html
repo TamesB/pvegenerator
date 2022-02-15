@@ -1,70 +1,71 @@
 <!DOCTYPE html>
 <html lang="nl">
-    <head>
-        <meta name="viewport" content="initial-scale=1, width=device-width">
-        {% load static %}
-        {{ form.media }}
-        <script src="https://unpkg.com/htmx.org@1.5.0"></script>
-        <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-        <link rel="shortcut icon" type="image/png" href="{% static 'pvetool/favicon.ico' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'pvetool/main_pvetool.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'Semantic-UI-Alert.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'pvetool/tooltip.css' %}">
-        <script src="{% static 'pvetool/feathers.js' %}"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="{% static 'pvetool/fadeArticle.js' %}"></script>
-              {% block head %}{% endblock %}
-              {% block topscripts %}{% endblock %}
-        <title>PvE Tool - {{ client }}</title>
-    </head>
-    <body>
-        <div id="main">
-              <div class="header">
-                <div class="logo_container">
-                  <img src="{{ logo_url }}" class="logo_bg"></a>
-                </div>
-
-                <div class="top_menu_right">
-                  {% if user.is_authenticated %}
-                      <div class="menu_item"><a href="{% url 'dashboard_syn' client_pk %}"><p>Welkom, {{ request.user }}</p></a></div>
-                      <div class="menu_item"><a href="{% url 'logout_syn' client_pk %}"><i data-feather="log-out" stroke="black" style="width: 15px;"></i></a></div>
-                  {% else %}
-                      <div class="menu_item"><a href="#">Afgemeld</a></div>
-                  {% endif %}
-                </div>
+  <head>
+      <meta name="viewport" content="initial-scale=1, width=device-width">
+      {% load static %}
+      {{ form.media }}
+      <script src="https://unpkg.com/htmx.org@1.5.0"></script>
+      <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+      <link rel="shortcut icon" type="image/png" href="{% static 'pvetool/favicon.ico' %}"/>
+      <link rel="stylesheet" type="text/css" href="{% static 'pvetool/main_pvetool.css' %}">
+      <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
+      <link rel="stylesheet" type="text/css" href="{% static 'Semantic-UI-Alert.css' %}">
+      <link rel="stylesheet" type="text/css" href="{% static 'pvetool/tooltip.css' %}">
+      <script src="{% static 'pvetool/feathers.js' %}"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="{% static 'pvetool/fadeArticle.js' %}"></script>
+      {% block head %}{% endblock %}
+      {% block topscripts %}{% endblock %}
+      <title>PvE Tool - {{ client }}</title>
+  </head>
+  <body>
+    <div id="main">
+          <div class="header">
+            <div class="logo_container">
+              <img src="{{ logo_url }}" class="logo_bg"></img>
             </div>
-            <div class="layerOneInner">
-                <div class="menu_left" id="menu_left">{% block menu %}{% endblock %}</div> 
-                <div class="article" id ="article">
-                <div class="loader" style="display: none;"></div>
-                <div class="article_content" id="main_article">
-                {% block main %}{% endblock %}
-                {% block modal %}{% endblock %}
-                </div>
-                </div> 
+            <div class="top_menu_right">
+              {% if user.is_authenticated %}
+                  <div class="menu_item"><a href="{% url 'dashboard_syn' client_pk %}"><p>Welkom, {{ request.user }}</p></a></div>
+                  <div class="menu_item"><a href="{% url 'logout_syn' client_pk %}"><i data-feather="log-out" stroke="black" style="width: 15px;"></i></a></div>
+              {% else %}
+                  <div class="menu_item"><a href="#">Afgemeld</a></div>
+              {% endif %}
             </div>
         </div>
-        <script src="https://unpkg.com/htmx.org@1.6.1"></script>
-        <script src="{% static 'semantic.min.js' %}"></script>  
-      <script type="text/javascript" src="{% static 'Semantic-UI-Alert.js' %}"></script>
-        <script src="{% static 'pvetool/main_pvetool.js' %}"></script>
-        <script src="{% static 'pvetool/tooltip.js' %}"></script>
-      <script>
-        {% for message in messages %}
-          $(document).ready(function() {
-          $.uiAlert({
-          textHead: 'Info', // header
-          text: `{{ message }}`, // Text
-        bgcolor: '#55a9ee', // background-color
-          textcolor: '#fff', // color
-          position: 'bottom-left',// position . top And bottom ||  left / center / right
-          icon: 'info circle', // icon in semantic-UI
-          time: 8, // time
-            })
-          });
-        {% endfor %}
-      </script>
+        <div class="layerOneInner">
+            <div class="menu_left" id="menu_left">
+              {% block menu %}{% endblock %}
+            </div>
+            <div class="article" id="article">
+              <div class="loader" style="display: none;"></div>
+              <div class="article_content" id="main_article">
+                {% block main %}{% endblock %}
+                {% block modal %}{% endblock %}
+              </div>
+            </div> 
+        </div>
+    </div>
+    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
+    <script src="{% static 'semantic.min.js' %}"></script>  
+    <script type="text/javascript" src="{% static 'Semantic-UI-Alert.js' %}"></script>
+    <script src="{% static 'pvetool/main_pvetool.js' %}"></script>
+    <script src="{% static 'pvetool/tooltip.js' %}"></script>
+    <script>
+      {% for message in messages %}
+        $(document).ready(function() {
+        $.uiAlert({
+        textHead: 'Info', // header
+        text: `{{ message }}`, // Text
+      bgcolor: '#55a9ee', // background-color
+        textcolor: '#fff', // color
+        position: 'bottom-left',// position . top And bottom ||  left / center / right
+        icon: 'info circle', // icon in semantic-UI
+        time: 8, // time
+          })
+        });
+      {% endfor %}
+    </script>
     <script>
       document.body.addEventListener("htmx:configRequest", (event) => {
         event.detail.headers["X-CSRFToken"] = "{{ csrf_token }}";
@@ -74,6 +75,6 @@
     <script>      
       feather.replace()
     </script>
-        {% block scripts %}{% endblock %}
-    </body>
+    {% block scripts %}{% endblock %}
+  </body>
 </html>

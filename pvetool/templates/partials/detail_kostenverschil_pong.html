@@ -1,55 +1,71 @@
 {% block main %}
-<span hx-target="this" hx-swap="outerHTML">
-  {% if last_reply.consequentCosts %}
-  <p>
-    <b
-      >€{{ last_reply.consequentCosts }} {% if last_reply.costtype %}{{ last_reply.costtype }}{% endif %}</b
-    >
-  </p>
-  {% elif annotation.consequentCosts %}
-  <p><b>€{{ annotation.consequentCosts }} {% if annotation.costtype %}{{ annotation.costtype }}{% endif %}</b></p>
+<span hx-target="this" hx-swap="outerHTML" class="kostenverschil_display">
+  <!-- normal text if not changed, striked text if changed costs -->
+  {% if current_reply %}
+  {% if current_reply.consequentCosts %}
+    <!--striked here -->
+    {% if last_reply.consequentCosts %}
+    <p><b>
+      <strike
+        >€{{ last_reply.consequentCosts }} {% if last_reply.costtype %}{{ last_reply.costtype }}{% endif %}</strike>
+    </b></p>
+    {% elif annotation.consequentCosts %}
+    <p><b><strike>€{{ annotation.consequentCosts }} {% if annotation.costtype %}{{ annotation.costtype }}{% endif %}</strike></b></p>
+    {% else %}
+    <p><b><strike>€ 0</strike></b></p>
+    {% endif %}
   {% else %}
-  <p><b>€ 0</b></p>
-  {% endif %} 
+    <!-- unstriked here -->
+    {% if last_reply.consequentCosts %}
+    <p>
+      <b
+        >€{{ last_reply.consequentCosts }} {% if last_reply.costtype %}{{ last_reply.costtype }}{% endif %}</b
+      >
+    </p>
+    {% elif annotation.consequentCosts %}
+    <p><b>€{{ annotation.consequentCosts }} {% if annotation.costtype %}{{ annotation.costtype }}{% endif %}</b></p>
+    {% else %}
+    <p><b>€ 0</b></p>
+    {% endif %}
+  {% endif %}
+  {% endif %}
   
   {% if current_reply %} {% if current_reply.accept is False %} {% if current_reply.consequentCosts %}
+  <i class="feather-20" data-feather="arrow-right" style="stroke: #0085B7;"></i>
   <p style="color:#0085B7;">
   <b
-    >Voorgesteld: €{{ current_reply.consequentCosts }} {% if current_reply.costtype %}{{ current_reply.costtype }}{% endif %}
+    > €{{ current_reply.consequentCosts }} {% if current_reply.costtype %}{{ current_reply.costtype }}{% endif %}</b></p>
     <span
-      ><button
+      ><a
         hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
-        class="ui basic icon button"
       >
-      <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></button
+      <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></a
     ></span>
     <span
       ><a
         hx-delete="{% url 'deletekostenverschilpong' client_pk project_pk item_pk type %}"
-        ><button class="ui icon basic red button">
-          <i class="feather-20" data-feather="x" style="stroke: red;"></i></button></a></span
+        >
+          <i class="feather-20" data-feather="x" style="stroke: red;"></i></a></span
   ></b>
         </p>
   {% else %}
   {% if annotation.status or current_reply.status %}
   <p>
-    <button
+    <a
       hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
-      class="ui basic icon button"
     >
     <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i>
-    </button>
+    </a>
   </p>
   {% endif %}
   {% endif %} {% endif %} {% else %} {% if type == 0 %} {% if annotation.status or current_reply.status %}
   {% if costs_allowed is True %}
   <p>
-    <button
+    <a
       hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"
-      class="ui basic icon button"
     >
     <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i>
-    </button>
+    </a>
   </p>
   {% endif %}
   {% endif %} {% endif %} {% endif %}

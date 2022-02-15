@@ -1,36 +1,52 @@
 {% block main %}
 <span hx-target="this" hx-swap="outerHTML">
-{% if status_reply %}
-    <div class="status_added" id="status-{{ item.id }}">
-    <p>{{ status_reply.status }}
-{% elif annotation.status %}
-    <div class="status_added" id="status-{{ item.id }}">
-    <p>{{ annotation.status }}
+
+{% if not current_reply.status %}
+<!-- normal text if no statuschange -->
+    {% if status_reply %}
+        <div class="status_added" id="status-{{ item.id }}">
+        <p>{{ status_reply.status }}</p>
+    {% elif annotation.status %}
+        <div class="status_added" id="status-{{ item.id }}">
+        <p>{{ annotation.status }}</p>
+    {% else %}
+        <div class="status_not_added" id="status-{{ item.id }}">
+            <p><span><i>Geen status</i></span></p>
+    {% endif %}
 {% else %}
-    <div class="status_not_added" id="status-{{ item.id }}">
-        <p><span><i>Geen status</i></span>
+    <!-- striked text if user changed status -->
+    {% if status_reply %}
+        <div class="status_added" id="status-{{ item.id }}">
+            <p><strike>{{ status_reply.status }}</strike></p>
+    {% elif annotation.status %}
+        <div class="status_added" id="status-{{ item.id }}">
+            <p><strike>{{ annotation.status }}</strike></p>
+    {% else %}
+        <div class="status_not_added" id="status-{{ item.id }}">
+            <p><strike>Geen status</strike></p>
+    {% endif %}
 {% endif %}
 
 {% if current_reply %}
 {% if current_reply.accept is False %}
 {% if current_reply.status %}
-    <p style="color:#0085B7">Voorgesteld: {{ current_reply.status }}
-    <span><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" hx-confirm="Let op: Verandering van status verwijderd uw opmerking/bijlagen." class="ui basic icon button"><i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></i></button>
+    <p style="color:#0085B7"><span><i class="feather-20" data-feather="arrow-right" style="stroke: #0085B7;"></i></span><p style="display:inline; color:#0085B7">{{ current_reply.status }}</p>
+    <span><a hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" hx-confirm="Let op: Verandering van status verwijderd uw opmerking/bijlagen."><i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></a>
     </span>
         <span><a hx-delete="{% url 'deletestatuspong' client_pk project_pk item_pk type %}" hx-confirm="Weet u het zeker?" hx-target="#item-{{ item_pk}}">
-            <button class="ui icon basic red button"><i class="feather-20" data-feather="x" style="stroke: red;"></i></button></a></span></p>
+            <i class="feather-20" data-feather="x" style="stroke: red;"></i></a></span></p>
 {% else %}
-    <p><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" 
+    <p style="margin-left: 0.2em;"><a hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" 
         hx-confirm="Let op: Status geeft aan of iets wel/niet onderdeel is van het project. 
         'Voldoet' is iets wat gerekend is door derden. 'Voldoet niet' is iets wat niet gerekend is. Vraag bij wijziging eventueel om verrekening. 
-        Bij statusverandering wordt uw huidige opmerking/bijlages automatisch verwijderd." class="ui basic icon button">
-        <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></button></p>
+        Bij statusverandering wordt uw huidige opmerking/bijlages automatisch verwijderd.">
+        <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></a></p>
 {% endif %}
 {% endif %}
 {% else %}
 {% if type == 0 %}
-    <p><button hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}" class="ui basic icon button">
-        <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></button></p>
+    <p style="margin-left: 0.2em;"><a hx-get="{% url 'addstatuspong' client_pk project_pk item_pk type %}">
+        <i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></a></p>
 {% endif %}
 {% endif %}
 </span>

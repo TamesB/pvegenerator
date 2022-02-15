@@ -19,6 +19,7 @@ body {
 a:hover {
   outline: none;
   text-decoration: none;
+  opacity: 0.8;
 }
 
 h1,
@@ -974,10 +975,11 @@ a {
       justify-content: space-around;
   overflow-x: auto;
   margin-top: 3em;
-  height: 20em;
+  height: 22em;
 }
 
 #main .layerOneInner .article .article_content .generator_form form .parameter_container .parameter_item {
+  margin-bottom: 2em;
   width: 15em;
   min-width: 225px;
   background: #b2dbdd;
@@ -1121,6 +1123,7 @@ a {
   cursor: pointer;
   -webkit-transition-duration: 0.5s;
           transition-duration: 0.5s;
+  padding: 0.5em;
 }
 
 #main .layerOneInner .article .article_content .generator_form form .genereer_button:hover {
@@ -1201,8 +1204,9 @@ a {
   font-family: "Montserrat";
   -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
   box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(80%, #f7f7f8), color-stop(80%, #0078ae));
-  background: linear-gradient(0deg, #f7f7f8 80%, #0078ae 80%);
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(95%, #f7f7f8), color-stop(95%, #0078ae));
+  background: linear-gradient(0deg, #f7f7f8 95%, #0078ae 95%);
+  min-width: 700px;
 }
 
 #main .layerOneInner .article .article_content .invite-container .box .description {
@@ -1594,12 +1598,49 @@ a {
   }
 }
 
+#main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .text_right .kostenverschil_display {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .status_added {
   padding-top: 1em;
   font-weight: bold;
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content .item_deeper .status_not_added {
@@ -1608,6 +1649,23 @@ a {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 #main .layerOneInner .article .article_content .opmerking_form .item_opmerking_list .item_content:nth-child(even) {

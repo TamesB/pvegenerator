@@ -16,9 +16,11 @@ body {
   outline: none;
 }
 
+// make links blink a bit
 a:hover {
   outline: none;
   text-decoration: none;
+  opacity: 0.8;
 }
 
 h1,
@@ -882,9 +884,10 @@ a {
               justify-content: space-around;
               overflow-x: auto;
               margin-top: 3em;
-              height: 20em;
+              height: 22em;
 
               .parameter_item {
+                margin-bottom: 2em;
                 width: 15em;
                 min-width: 225px;
                 background: rgb(178, 219, 221);
@@ -1021,6 +1024,7 @@ a {
             box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
               cursor: pointer;
               transition-duration: 0.5s;
+              padding: 0.5em;
             }
             .genereer_button:hover {
               opacity: 0.7;
@@ -1090,8 +1094,8 @@ a {
             -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
             -moz-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
           box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
-            background: linear-gradient(0deg, #f7f7f8 80%, #0078ae 80%);
-
+            background: linear-gradient(0deg, #f7f7f8 95%, #0078ae 95%);
+            min-width: 700px;
             .title {
               
               
@@ -1429,17 +1433,40 @@ a {
                       flex-direction: column;
                     }
                   }
+
+                  .kostenverschil_display {
+                    display: flex;
+                    flex-wrap: wrap;
+                    flex-direction: row;
+                    align-content: center;
+                    align-items: stretch;
+                    justify-content: center;
+                  }
                 }
                 .status_added {
                   padding-top: 1em;
                   font-weight: bold;
                   flex: 1;
+                  display: flex;
+                  flex-direction: row;
+                  align-content: center;
+                  flex-wrap: wrap;
+                  align-items: stretch;
+                  justify-content: center;
+              
                   
                 }
                 .status_not_added {
                   font-weight: bold;
                   padding-top: 1em;
                   flex: 1;
+                  display: flex;
+                  flex-direction: row;
+                  align-content: center;
+                  flex-wrap: wrap;
+                  align-items: stretch;
+                  justify-content: center;
+              
                   
                 }
               }
