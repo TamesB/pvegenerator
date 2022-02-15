@@ -231,7 +231,7 @@
   </div>
   
   <div class="project_locatie">
-      <div class="title"><p style="margin-left: 2.5em;">Locatie<a style="float:right;margin-right:1em;" href="https://www.google.com/maps/search/?api=1&query={{ project.plaats.y|unlocalize }},{{ project.plaats.x|unlocalize }}" target="_blank"><img style="height:2em;" src="{% static 'pvetool/img/googlemaps.png' %}"></img></a></p></div>
+      <div class="title"><p style="margin-left: 2.5em;">Locatie<a style="float:right;margin-right:1em;" href="https://www.google.com/maps/search/?api=1&query={{ project.plaats.y|unlocalize }},{{ project.plaats.x|unlocalize }}" target="_blank"><img style="height:2em;" src="{% static 'pvetool/img/googlemaps.png' %}" alt="Open op Google Maps..."></img></a></p></div>
     {% leaflet_map "card" callback="map_init" %}
   </div>
 
