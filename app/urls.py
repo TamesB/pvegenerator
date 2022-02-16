@@ -188,4 +188,5 @@ urlpatterns = [
 
     path("heatmap", views.projectHeatmap, name="projectheatmap"),
     path("accounts", views.AccountOverview, name="accountoverview"),
+    path("accounts/add", views.GeneralAccountAdd, name="generalaccountadd"),
 ]

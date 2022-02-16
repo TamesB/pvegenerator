@@ -85,6 +85,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         send_mail(subject, message, from_email, [self.email])
 
 
+class LoginDetails(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name="login_details")
+    ip_address = models.GenericIPAddressField()
+    device_type = models.CharField(max_length=500, null=True, blank=True)
+    date = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.user}: IP: {self.ip_address}, Date: {self.date}"
+    
+
 # Create your models here.
 class Invitation(models.Model):
     type_choices = (

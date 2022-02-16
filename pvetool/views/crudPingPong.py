@@ -1075,7 +1075,6 @@ def AddStatusPong(request, client_pk, project_pk, item_pk, type):
                     reply.attachmenttoreply.all().delete()
                     
                 reply.status = form.cleaned_data["status"]
-                
                 reply.save()
             else:
                 reply = CommentReply()

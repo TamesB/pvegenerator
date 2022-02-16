@@ -20,6 +20,24 @@ from django.http import Http404
 from project.models import BijlageToAnnotation, Project
 from pvetool.models import BijlageToReply
 
+# Save login details (IP, username, date of login)
+def process_login_request(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[-1].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    
+    device_type = request.META['HTTP_USER_AGENT']
+    
+    if ip:
+        details = LoginDetails()
+        details.user = request.user
+        details.ip_address = ip
+        details.device_type = device_type
+        details.save()
+    return
+
 def LoginView(request, client_pk):
     if not Client.objects.filter(pk=client_pk):
         raise Http404("404")
@@ -60,6 +78,7 @@ def LoginView(request, client_pk):
             if user is not None:
                 if user.client == client and user.type_user != "B":
                     login(request, user)
+                    process_login_request(request)
                     return redirect("dashboard_syn", client_pk=client_pk)
 
                 messages.warning(request, "Invalid login credentials")
@@ -75,7 +94,6 @@ def LoginView(request, client_pk):
     context["client"] = client
     context["logo_url"] = logo_url
     return render(request, "login_syn.html", context)
-
 
 def BeheerdersAcceptUitnodiging(request, client_pk, key):
     if not Client.objects.filter(pk=client_pk).exists():

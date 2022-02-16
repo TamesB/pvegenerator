@@ -26,6 +26,7 @@ from . import forms, models, mixins
 import secrets
 from django.utils import timezone
 import time
+from users.models import LoginDetails
 class LoginPageView(View):
     form_class = forms.LoginForm
     template_name = "login.html"
@@ -55,6 +56,7 @@ class LoginPageView(View):
             
             if user:
                 login(request, user)
+                self.process_request(request)
                 return redirect("dashboard")
             else:
                 messages.warning(request, "Er is een fout, probeer het nog eens.")
@@ -62,7 +64,24 @@ class LoginPageView(View):
             messages.warning(request, "Vul de verplichte velden in.")
             
         return render(request, self.template_name, context={"form": self.form_class})
+
+    def process_request(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[-1].strip()
+        else:
+            ip = request.META.get('REMOTE_ADDR')
     
+        device_type = request.META['HTTP_USER_AGENT']
+    
+        if ip:
+            details = LoginDetails()
+            details.user = request.user
+            details.ip_address = ip
+            details.device_type = device_type
+            details.save()
+        return
+
     
 class LogoutView(View):
     def get(self, request, *args, **kwargs):
@@ -1779,3 +1798,13 @@ def makeReqInactive(request, version_pk, status_str, type):
     context["status_str"] = status_str
     context["type"] = type
     return render(request, 'partials/detailCommentReqButton.html', context)
+
+@staff_member_required(login_url=reverse_lazy("logout"))
+def GeneralAccountAdd(request):
+    context = {}
+    
+    form = forms.GeneralAccountForm(request.POST or None)
+    
+    
+    context["form"] = form
+    return render(request, "AccountGeneralAdd.html", context)

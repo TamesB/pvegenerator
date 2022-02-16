@@ -8,6 +8,7 @@ from users.models import (
     ForgotPassInvite,
     Invitation,
     Organisatie,
+    LoginDetails
 )
 
 
@@ -42,3 +43,4 @@ admin.site.register(CommentCheckInvitation)
 admin.site.register(Invitation)
 admin.site.register(Organisatie)
 admin.site.register(ForgotPassInvite)
+admin.site.register(LoginDetails)

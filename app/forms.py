@@ -281,3 +281,7 @@ class PVEItemEditForm(ModelForm):
         super(PVEItemEditForm, self).__init__(*args, **kwargs)
         self.fields['attachment'].required = False
         self.fields['existing_attachment'].required = False
+
+
+class GeneralAccountAdd(forms.Form):
+    pass
