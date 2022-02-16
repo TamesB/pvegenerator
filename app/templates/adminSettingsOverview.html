@@ -1,0 +1,13 @@
+{% extends "_baselayout.html" %} {% load i18n %} {% load semanticui %} {% block main %}
+<h1 class="ui header">Admin Instellingen</h1>
+<i>Verander hier de instellingen van uw beheerders account.</i>
+<div class="ui divider"></div>
+<div>
+    <h1 class="ui header">Gebruikersnaam</h1>
+    <div hx-get="{% url 'adminuserform' %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load" style="width: 30%;"></div>
+    <div class="ui divider"></div>
+
+    <h1 class="ui header">Wachtwoord</h1>
+    <div hx-get="{% url 'adminpassform' %}" hx-target="this" hx-swap="innerHTML" hx-trigger="load" style="width: 30%;"></div>
+</div>
+{% endblock %}

@@ -170,17 +170,17 @@ def on_change(sender, instance: PVEVersie, **kwargs):
     activity.save()
     
     if instance.id is None: # new object will be created
-        activity.update = f"Nieuwe PvE version { instance.version } van client { instance.client }."
+        activity.update = f"Nieuwe PvE versie '{ instance.version }' van klant '{ instance.client }'."
     else:
         previous = PVEVersie.objects.get(id=instance.id)
         if previous.version != instance.version: # field will be updated
-            activity.update = f"{ previous.version } name veranderd naar { instance.version } van client { instance.client }."
+            activity.update = f"Versienaam '{ previous.version }' veranderd naar '{ instance.version }' van klant '{ instance.client }'."
         if previous.public != instance.public: # field will be updated
             if instance.public == True:
                 activatie = "geactiveerd"
             else:
                 activatie = "gedeactiveerd"
 
-            activity.update = f"{ instance.version } van client { instance.client } { activatie }."
+            activity.update = f"PvE Versie '{ instance.version }' van klant '{ instance.client }' { activatie }."
     
     activity.save()

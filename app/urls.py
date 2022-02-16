@@ -189,4 +189,7 @@ urlpatterns = [
     path("heatmap", views.projectHeatmap, name="projectheatmap"),
     path("accounts", views.AccountOverview, name="accountoverview"),
     path("accounts/add", views.GeneralAccountAdd, name="generalaccountadd"),
+    path("settings", views.AdminSettingsOverview, name="adminsettings"),
+    path("settings/changepass", views.AdminChangePass, name="adminpassform"),
+    path("settings/changeusername", views.AdminChangeUsername, name="adminuserform"),
 ]

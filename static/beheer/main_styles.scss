@@ -264,3 +264,20 @@ article {
 	0% {transform: scale(1);}
 	100% {transform: scale(0.9);}
 } 
+
+.menu-bottom-combo {
+  position: absolute;
+    width: 100%;
+    display: flex;
+    bottom: 1em;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1em;
+    padding-right: 1em;
+
+  a:hover {
+    opacity: 0.8;
+    cursor: pointer;
+  }
+}

@@ -285,3 +285,11 @@ class PVEItemEditForm(ModelForm):
 
 class GeneralAccountAdd(forms.Form):
     pass
+
+class AdminUserForm(forms.Form):
+    username = forms.CharField(label="Nieuwe gebruikersnaam:", required=True, widget=forms.TextInput(attrs={"class": "form-control"}))
+    
+    class Meta:
+        labels = {
+            "username": "Nieuwe gebruikersnaam:",
+        }

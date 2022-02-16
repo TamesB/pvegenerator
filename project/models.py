@@ -230,18 +230,17 @@ def on_change(sender, instance: Client, **kwargs):
     activity.save()
     
     if instance.id is None: # new object will be created
-        activity.update = f"Nieuwe client aangemaakt: { instance.name }."
+        activity.update = f"Nieuwe klant aangemaakt: '{ instance.client }'."
     else:
         previous = Client.objects.get(id=instance.id)
         if previous.name != instance.name: # field will be updatedssssssssssss
-            activity.update = f"Klantname { previous.name } veranderd naar { instance.name }."
+            activity.update = f"Klantnaam '{ previous.name }' veranderd naar '{ instance.client }'."
         if previous.beheerder != instance.beheerder: # field will be updated
-            activity.update = f"Beheerder van { instance.name } veranderd naar { instance.beheerder }."
+            activity.update = f"Beheerder van '{ instance.client }' veranderd naar '{ instance.beheerder }'."
         if previous.logo != instance.logo: # field will be updated
-            activity.update = f"Logo veranderd van client { instance.name }."
+            activity.update = f"Logo veranderd van klant '{ instance.client }'."
         if previous.subscription != instance.subscription: # field will be updated
-            activity.update = f"Abonnement veranderd van client { instance.name }."
-
+            activity.update = f"Abonnement veranderd van klant '{ instance.client }'."
     
     activity.save()
 
@@ -263,19 +262,19 @@ def on_change(sender, instance: Project, **kwargs):
     activity.save()
     
     if instance.id is None: # new object will be created
-        activity.update = f"Nieuw project van client { request.user.client }: '{ instance.name }'."
+        activity.update = f"Nieuw project van klant '{ request.user.client }': '{ instance.client }'."
     else:
         previous = Project.objects.get(id=instance.id)
         if previous.name != instance.name: # field will be updated
-            activity.update = f"{ previous.name } van client { instance.client }: Projectname veranderd naar { instance.name }."
+            activity.update = f"Projectnaam '{ previous.name }' van klant '{ instance.client }' veranderd naar '{ instance.client }'."
         if previous.pveconnected != instance.pveconnected: # field will be updated
-            activity.update = f"{ instance.name } van client { instance.client }: PvE verbonden aan project (PvE Versie: { instance.pve_versie })."
+            activity.update = f"Project '{ instance.name }' van klant '{ instance.client }': PvE verbonden (PvE Versie: '{ instance.pve_versie }')."
         if previous.fullyFrozen != instance.fullyFrozen: # field will be updated
-            activity.update = f"{ instance.name } van client { instance.client }: Opmerkingen bevroren."
+            activity.update = f"Project '{ instance.name }' van klant '{ instance.client }': Opmerkingen bevroren."
         if previous.frozenLevel < instance.frozenLevel: # field will be updated
-            activity.update = f"{ instance.name } van client { instance.client }: Opmerkingen doorgestuurd (naar opmerkingsniveau {instance.frozenLevel})."
+            activity.update = f"Project '{ instance.name }' van klant '{ instance.client }': Opmerkingen doorgestuurd (naar opmerkingsniveau '{instance.frozenLevel}')."
         if previous.projectmanager != instance.projectmanager: # field will be updated
-            activity.update = f"{ instance.name } van client { instance.client }: Projectmanager veranderd naar { instance.projectmanager }."
+            activity.update = f"Project '{ instance.name }' van klant '{ instance.client }': Projectmanager veranderd naar '{ instance.projectmanager }'."
             
         if list(previous.organisaties.all()) != list(instance.organisaties.all()): # field will be updated
             huidige_orgas = list(instance.organisaties.all())
@@ -283,8 +282,8 @@ def on_change(sender, instance: Project, **kwargs):
             verschil = list(set(huidige_orgas) - set(previous_orgas))
             if not verschil:
                 negatief_verschil = list(set(previous_orgas) - set(huidige_orgas))
-                activity.update = f"{ instance.name } van client { instance.client }: Organisatie(s) verwijderd; { ', '.join(negatief_verschil) }."
+                activity.update = f"Project '{ instance.name }' van klant '{ instance.client }': Organisatie(s) verwijderd; '{ ', '.join(negatief_verschil) }'."
             else:
-                activity.update = f"{ instance.name } van client { instance.client }: Organisatie(s) toegevoegd; { ', '.join(verschil) }."
+                activity.update = f"Project '{ instance.name }' van klant '{ instance.client }': Organisatie(s) toegevoegd; '{ ', '.join(verschil) }'."
 
     activity.save()

@@ -1,83 +1,45 @@
 <!DOCTYPE html>
 
 <html lang="nl">
-    <head>
-        <meta name="viewport" content="initial-scale=1, width=device-width">
-        {% load static %}
-        {% load leaflet_tags %}
-        {{ form.media }}
-        <link rel="shortcut icon" type="image/png" href="{% static 'beheer/favicon.ico' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'beheer/styles.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'beheer/main_styles.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'Semantic-UI-Alert.css' %}">
-        {% leaflet_css %}
-        {% leaflet_js %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
-<script src="{% static 'pvetool/feathers.js' %}"></script>
+  <head>
+    <title>PvE Tool - Beheer</title>
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    {% load static %}
+    {% load leaflet_tags %}
+    {{ form.media }}
+    <link rel="shortcut icon" type="image/png" href="{% static 'beheer/favicon.ico' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'beheer/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'beheer/main_styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'semantic.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Semantic-UI-Alert.css' %}">
+    {% leaflet_css %}
+    {% leaflet_js %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+    <script src="{% static 'pvetool/feathers.js' %}"></script>
+    {% block head %}{% endblock %}
+  </head>
+  <body>
 
-        {% block head %}{% endblock %}
-        <title>PvE Tool - Beheer</title>
-    </head>
-    <body>
     <div style="height: 100%;">
-    {% include '_menu.html' %}
+      {% include '_menu.html' %}
       <div id="main">
-            {% block main %}{% endblock %}
+        {% block main %}{% endblock %}
       </div>
       <div id="pageloader" class="ui inverted dimmer" style="z-index: 10;">
-    <div class="ui text loader">Laden</div>
-  </div>
-
+        <div class="ui text loader">Laden</div>
       </div>
-              <script src="https://unpkg.com/htmx.org@1.5.0"></script>
-              <script src="https://unpkg.com/hyperscript.org@0.8.2"></script>
-      <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
-      <script src="{% static 'semantic.min.js' %}"></script>
-      <script type="text/javascript" src="{% static 'Semantic-UI-Alert.js' %}"></script>
-      <script src="{% static 'beheer/scripts.js' %}"></script>
-      <script>
-        {% for message in messages %}
-        function() {
-        $.uiAlert({
-        textHead: 'Info', // header
-        text: '{{ message }}', // Text
-        bgcolor: '#55a9ee', // background-color
-        textcolor: '#fff', // color
-        position: 'top-center',// position . top And bottom ||  left / center / right
-        icon: 'info circle', // icon in semantic-UI
-        time: 5, // time
-          })
-        };
-        {% endfor %}
-      </script>
-    <script>
-      document.body.addEventListener("htmx:configRequest", (event) => {
-        event.detail.headers["X-CSRFToken"] = "{{ csrf_token }}";
-      });
-    </script>
-<script>
-   document.body.addEventListener('htmx:load', function(evt) {
-        var element = document.getElementById("pageloader");
-            element.classList.remove("active");
+    </div>
 
-   });
-
-   document.body.addEventListener('htmx:beforeRequest', function(evt) {
-        var element = document.getElementById("pageloader");
-            element.classList.add("active");
-
-   });
-   document.body.addEventListener('htmx:afterRequest', function(evt) {
-        var element = document.getElementById("pageloader");
-            element.classList.remove("active");
-
-   });
-   </script>
-   <script>      
-    feather.replace()
-  </script>
-
-            {% block scripts %}{% endblock %}
-    </body>
+    <script src="https://unpkg.com/htmx.org@1.5.0"></script>
+    <script src="https://unpkg.com/hyperscript.org@0.8.2"></script>
+    <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'semantic.min.js' %}"></script>
+    <script src="{% static 'beheer/scripts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'Semantic-UI-Alert.js' %}"></script>
+    {% include "partials/messages_beheer.html" %}
+    {% include "partials/_CSRFToken.html" %}
+    {% include "partials/_LoadingSpinner.html" %}
+    {% include "partials/_FeatherIcons.html" %}
+    {% block scripts %}{% endblock %}
+  </body>
 </html>

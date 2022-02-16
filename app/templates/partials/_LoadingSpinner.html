@@ -1,0 +1,18 @@
+<script>
+    document.body.addEventListener('htmx:load', function(evt) {
+            var element = document.getElementById("pageloader");
+                element.classList.remove("active");
+
+    });
+
+    document.body.addEventListener('htmx:beforeRequest', function(evt) {
+            var element = document.getElementById("pageloader");
+                element.classList.add("active");
+
+    });
+    document.body.addEventListener('htmx:afterRequest', function(evt) {
+            var element = document.getElementById("pageloader");
+                element.classList.remove("active");
+
+    });
+</script>

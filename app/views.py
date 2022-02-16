@@ -2,9 +2,9 @@
 
 import datetime
 import logging
-
 import boto3
 import botocore
+
 from botocore.exceptions import ClientError
 from django.conf import settings
 from django.contrib import messages
@@ -17,6 +17,7 @@ from django.urls import reverse, reverse_lazy
 from django.core.mail import send_mail
 from django.views import View
 from django.views.generic import FormView, TemplateView
+from platformdirs import user_cache_dir
 from pvetool.views.utils import GetAWSURL
 from pvetool.models import CommentRequirement, CommentStatus
 from project.models import Client, Project, BeheerdersUitnodiging
@@ -27,6 +28,9 @@ import secrets
 from django.utils import timezone
 import time
 from users.models import LoginDetails
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+
 class LoginPageView(View):
     form_class = forms.LoginForm
     template_name = "login.html"
@@ -82,7 +86,6 @@ class LoginPageView(View):
             details.save()
         return
 
-    
 class LogoutView(View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_anonymous:
@@ -1713,25 +1716,29 @@ def AccountOverview(request):
     context["clients"] = clients
     return render(request, "accountOverview.html", context)
 
-
 @staff_member_required(login_url=reverse_lazy("logout"))
 def EditCommentPermissionsOverview(request, version_pk):
-    qs = CommentRequirement.objects.prefetch_related("comment_allowed").prefetch_related("comment_required").prefetch_related("attachment_allowed").prefetch_related("attachment_required").prefetch_related("costs_allowed").prefetch_related("costs_required").get(version__id=version_pk)
+    qs = CommentRequirement.objects.prefetch_related("comment_allowed").prefetch_related("comment_required").prefetch_related("attachment_allowed").prefetch_related("attachment_required").prefetch_related("costs_allowed").prefetch_related("costs_required").filter(version__id=version_pk)
     
+    if qs:
+        qs = qs.first()
+    else:
+        qs = None
+        
     statuses = CommentStatus.objects.all()
     status_dict = {}
     
-    for status in statuses:
-        status_dict[status.status] = {
-            "comment_allowed": True if status in qs.comment_allowed.all() else False,
-            "comment_required": True if status in qs.comment_required.all() else False,
-            "attachment_allowed": True if status in qs.attachment_allowed.all() else False,
-            "attachment_required": True if status in qs.attachment_required.all() else False,
-            "costs_allowed": True if status in qs.costs_allowed.all() else False,
-            "costs_required": True if status in qs.costs_required.all() else False
-        }
+    if qs:
+        for status in statuses:
+            status_dict[status.status] = {
+                "comment_allowed": True if status in qs.comment_allowed.all() else False,
+                "comment_required": True if status in qs.comment_required.all() else False,
+                "attachment_allowed": True if status in qs.attachment_allowed.all() else False,
+                "attachment_required": True if status in qs.attachment_required.all() else False,
+                "costs_allowed": True if status in qs.costs_allowed.all() else False,
+                "costs_required": True if status in qs.costs_required.all() else False
+            }
 
-    print(status_dict)
     context = {}
     context["version_pk"] = version_pk
     context["version"] = models.PVEVersie.objects.get(id=version_pk)
@@ -1808,3 +1815,58 @@ def GeneralAccountAdd(request):
     
     context["form"] = form
     return render(request, "AccountGeneralAdd.html", context)
+
+@staff_member_required(login_url=reverse_lazy("logout"))
+def AdminSettingsOverview(request):
+    context = {}
+    return render(request, "adminSettingsOverview.html", context)
+    
+@staff_member_required(login_url=reverse_lazy("logout"))
+def AdminChangeUsername(request):
+    form = forms.AdminUserForm(request.POST or None, initial={'username':request.user.username})
+
+    if request.method == "POST":
+        # get user entered form
+
+        # check validity
+        if form.is_valid():
+            user = request.user
+
+            if form.cleaned_data["username"]:
+                user.username = form.cleaned_data["username"]
+                user.save()
+                update_session_auth_hash(request, user)
+                messages.info(request, "Gebruikersnaam veranderd.")
+                
+            return HttpResponseRedirect(
+                reverse("adminuserform")
+            )
+        else:
+            print(form.errors)
+
+    context = {}
+    context["form"] = form
+    return render(request, "partials/changeAdminUsernameForm.html", context)
+
+
+@staff_member_required(login_url=reverse_lazy("logout"))
+def AdminChangePass(request):
+    form = PasswordChangeForm(request.user, request.POST)
+
+    if request.method == "POST":
+        # get user entered form
+
+        # check validity
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.info(request, "Wachtwoord veranderd.")
+            return HttpResponseRedirect(
+                reverse("adminpassform")
+            )
+        else:
+            print(form.errors)
+
+    context = {}
+    context["form"] = form
+    return render(request, "partials/changeAdminPasswordForm.html", context)

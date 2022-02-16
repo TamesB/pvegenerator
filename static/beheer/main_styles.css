@@ -353,4 +353,30 @@ article {
             transform: scale(0.9);
   }
 }
+
+.menu-bottom-combo {
+  position: absolute;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  bottom: 1em;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.menu-bottom-combo a:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
 /*# sourceMappingURL=main_styles.css.map */

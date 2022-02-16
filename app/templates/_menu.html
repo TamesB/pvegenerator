@@ -12,7 +12,13 @@
   <a class="item" href="{% url 'allprojects' %}"><span><i class="map marker alternate icon"></i> Projecten </span></a>
   <a class="item" href="{% url 'projectheatmap' %}"><span><i class="map outline icon"></i> Project Heatmap </span></a>
   <a class="item" hx-get="{% url 'accountoverview' %}" hx-target="#main" hx-swap="innerHTML"><span><i class="address card outline icon"></i> Accounts</span></a>
-  <a class="item" href="{% url 'logout' %}"><span><i class="power off icon"></i> Log Uit </span></a>
+
+  <span class="menu-bottom-combo">
+    <a class="lower-left" hx-get="{% url 'adminsettings' %}" hx-target="#main" hx-swap="innerHTML"><i data-feather="settings" class="feather-20" style="stroke: white;"></i></a>
+    <a class="lower-right" href="{% url 'logout' %}"><i data-feather="log-out" class="feather-20" style="stroke: white;"></i></a>
+  </span>
 </div>
 
-<script></script>
+<script>
+  feather.replace()
+</script>

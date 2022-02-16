@@ -1,15 +1,15 @@
 <script>
 {% for message in messages %}
-    $(document).ready(function() {
+    function() {
     $.uiAlert({
     textHead: 'Info', // header
     text: '{{ message }}', // Text
     bgcolor: '#55a9ee', // background-color
     textcolor: '#fff', // color
-    position: 'bottom-left',// position . top And bottom ||  left / center / right
+    position: 'top-center',// position . top And bottom ||  left / center / right
     icon: 'info circle', // icon in semantic-UI
-    time: 8, // time
+    time: 5, // time
     })
-    });
+    };
 {% endfor %}
 </script>
