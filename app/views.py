@@ -74,7 +74,7 @@ class LoginPageView(View):
     
         device_type = request.META['HTTP_USER_AGENT']
     
-        if ip:
+        if ip and str(ip) != "127.0.0.1":
             details = LoginDetails()
             details.user = request.user
             details.ip_address = ip

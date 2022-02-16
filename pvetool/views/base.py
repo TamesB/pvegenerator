@@ -12,7 +12,7 @@ from pvetool import forms
 from pvetool.models import FAQ
 from utils import createBijlageZip, writePdf
 from pvetool.views.utils import GetAWSURL
-from users.models import CustomUser
+from users.models import CustomUser, LoginDetails
 from users.forms import AcceptInvitationForm
 from django.utils import timezone
 from django.core.mail import send_mail
@@ -30,7 +30,7 @@ def process_login_request(request):
     
     device_type = request.META['HTTP_USER_AGENT']
     
-    if ip:
+    if ip and str(ip) != "127.0.0.1":
         details = LoginDetails()
         details.user = request.user
         details.ip_address = ip
