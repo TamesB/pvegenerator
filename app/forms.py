@@ -36,8 +36,6 @@ class LoginForm(forms.Form):
             }
         ))
 
-
-
 class KiesParameterForm(forms.Form):
     parameter = forms.CharField(label="Parameter:", max_length=100)
 
@@ -284,12 +282,15 @@ class PVEItemEditForm(ModelForm):
 
 
 class GeneralAccountAdd(forms.Form):
+    # for adding non-admin accounts, all types (add to client,
+    # projectmanager checkbox, add to stakeholder)
+    # see GeneralAccountAdd in views
     pass
 
 class AdminUserForm(forms.Form):
-    username = forms.CharField(label="Nieuwe gebruikersnaam:", required=True, widget=forms.TextInput(attrs={"class": "form-control"}))
+    username = forms.CharField(label="Nieuw gebruikersnaam:", required=True, widget=forms.TextInput(attrs={"class": "form-control"}))
     
     class Meta:
         labels = {
-            "username": "Nieuwe gebruikersnaam:",
+            "username": "Nieuw gebruikersnaam:",
         }

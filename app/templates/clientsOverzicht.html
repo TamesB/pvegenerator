@@ -42,7 +42,7 @@
 				<td><a href="{% url 'login_syn' client.id %}" target="_blank"><button class="ui basic icon button"><i class="desktop icon"></i>Bezoek</button></a></td>
 				<td><button class="ui icon basic red button"
 				hx-post="{% url 'clientverwijderen' client.id %}"
-                    hx-prompt="Vul 'VERWIJDEREN' in om client {{ client.name }} te verwijderen."
+                    hx-prompt="Vul 'VERWIJDEREN' in om klant {{ client.name }} te verwijderen."
 					hx-target="closest tr"><i class="icon trash"></i></button></td>
 			</tr>
       {% endfor %}

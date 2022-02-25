@@ -48,7 +48,7 @@
 					<td>{% if user.projectspermitted.all %}{% for project in user.projectspermitted.all %}{{ project.name }}, {% endfor %}{% else %}&nbsp;{% endif %}</td>
 					<td>
 					<span><button hx-post="#"
-						hx-prompt="Vul 'VERWIJDEREN' in om de user {{ user.username }} te verwijderen."
+						hx-prompt="Vul 'VERWIJDEREN' in om de gebruiker {{ user.username }} te verwijderen."
 						hx-target="closest tr"
 						class="ui icon basic red button"><i data-feather="x" style="stroke: red;"></i></button></span>
 					</td>

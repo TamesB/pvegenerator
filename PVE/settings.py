@@ -49,7 +49,6 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-
 # register pdf fonts
 pdfmetrics.registerFont(TTFont("Calibri", os.path.join(BASE_DIR, "utils/calibri.ttf")))
 pdfmetrics.registerFont(
