@@ -101,6 +101,11 @@ def AddAccount(request, client_pk):
             form = forms.PlusAccountForm(request.POST)
         else:
             form = forms.KoppelDerdeUserForm(request.POST)
+
+        form.fields["stakeholder"].queryset = Organisatie.objects.filter(
+            client=client
+        )
+        
         # check validity
         if form.is_valid():
             if form.cleaned_data["rang"] == "SOG" and form.cleaned_data["stakeholder"]:
@@ -336,6 +341,10 @@ def InviteUsersToProject(request, client_pk, pk):
 
     if request.method == "POST":
         form = forms.InviteProjectStartForm(request.POST)
+        form.fields["organisaties"].queryset = Organisatie.objects.filter(
+            client=client
+        )
+
         # check whether it's valid:
         if form.is_valid():
             stakeholders = form.cleaned_data["organisaties"]

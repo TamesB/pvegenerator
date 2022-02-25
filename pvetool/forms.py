@@ -138,7 +138,7 @@ class PVEParameterForm(ModelForm):
 
 class KoppelDerdeUserForm(ModelForm):
     stakeholder = forms.ModelChoiceField(
-        queryset=Organisatie.objects.none(), label="Stakeholder:"
+        queryset=Organisatie.objects.none(), label="Stakeholder:", required=False
     )
     
     widgets = {
@@ -154,6 +154,11 @@ class KoppelDerdeUserForm(ModelForm):
         labels = {
             "invitee": "E-Mail:",
         }
+        
+    def __init__(self, *args, **kwargs):
+        super(PlusAccountForm, self).__init__(*args, **kwargs)
+        self.fields["stakeholder"].required = False
+
 class PlusAccountForm(ModelForm):
     type_choices = (
         ("SOG", "Projectmanager"),

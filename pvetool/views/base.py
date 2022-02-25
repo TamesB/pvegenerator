@@ -60,7 +60,8 @@ def LoginView(request, client_pk):
                 form.cleaned_data["username"],
                 form.cleaned_data["password"],
             )
-
+            
+            user = None
             if "@" in username:
                 email = username.split("@")
                 email = email[0]
