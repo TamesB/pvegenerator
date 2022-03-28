@@ -1,7 +1,7 @@
 {% block main %}
 <span>
   <div class="accept_buttons_pong">
-    {% if type != 2 and last_reply_organisation != current_reply_organisation %}}
+    {% if type != 2 and last_reply_organisation != current_reply_organisation %}
   <button
     hx-post="{% url 'acceptitempong' client_pk project_pk item_pk type %}"
     class="ui green button icon"

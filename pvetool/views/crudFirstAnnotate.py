@@ -397,6 +397,16 @@ def DetailKostenverschilFirst(request, client_pk, project_pk, item_pk):
             project=project, item__id=item_pk
         ).first()
 
+    context["cost_allowed"] = False
+
+    if annotation:
+        if annotation.status:
+            requirement_obj = CommentRequirement.objects.get(version__pk=project.pve_versie.pk)
+            costs_allowed = [obj.status for obj in requirement_obj.costs_allowed.all()]
+
+            if annotation.status.status in costs_allowed:
+                context["cost_allowed"] = True
+
     context["client_pk"] = client_pk
     context["project_pk"] = project_pk
     context["item_pk"] = item_pk

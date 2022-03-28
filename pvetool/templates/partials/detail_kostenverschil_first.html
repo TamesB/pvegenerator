@@ -7,7 +7,7 @@
 {% else %}
     <p><b>€ 0</b></p>
 {% if annotation.status %}
-    {% if costs_allowed is True %}
+    {% if cost_allowed is True %}
         <a hx-get="{% url 'addkostenverschilfirst' client_pk project_pk item_pk %}"><i class="feather-20" data-feather="edit-3" style="stroke: #0085B7"></i></a>
     {% endif %}
 {% endif %}

