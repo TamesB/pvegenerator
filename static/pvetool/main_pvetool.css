@@ -2044,6 +2044,7 @@ a {
 }
 
 #main .layerOneInner .article .article_content .flex_projectpagina .project_acties .acties .opacity_disabled {
+  cursor: no-drop;
   height: 6em;
   background: white;
   -webkit-box-shadow: 0.1em 0.2em 0.25em -0.01em rgba(0, 0, 0, 0.41);

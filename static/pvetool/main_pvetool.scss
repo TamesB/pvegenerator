@@ -1796,6 +1796,7 @@ a {
               }
 
               .opacity_disabled {
+                cursor: no-drop;
                 height: 6em;
                 background: white;
                 -webkit-box-shadow: 0.1em 0.20em 0.25em -0.01em rgba(0, 0, 0, 0.41);
