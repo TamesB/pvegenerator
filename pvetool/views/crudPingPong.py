@@ -709,14 +709,14 @@ def DetailKostenverschilPong(request, client_pk, project_pk, item_pk, type):
     context["cost_allowed"] = False
     
     # manual input as to what statuses allow costs-change    
-    if reply:
-        if reply.status:
+    if current_reply:
+        if current_reply.status:
             requirement_obj = CommentRequirement.objects.get(version__pk=project.pve_versie.pk)
             costs_allowed = [obj.status for obj in requirement_obj.costs_allowed.all()]
 
-            if reply.status.status in costs_allowed:
+            if current_reply.status.status in costs_allowed:
                 context["cost_allowed"] = True
-        elif not reply.accept:
+        elif not current_reply.accept:
             context["cost_allowed"] = True
 
     context["client_pk"] = client_pk
