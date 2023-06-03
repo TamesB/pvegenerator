@@ -50,7 +50,7 @@ python-dateutil==2.8.2
 python-dotenv==0.19.2
 python-magic==0.4.24
 pytz==2021.3
-reportlab==3.6.5
+reportlab==3.6.13
 s3transfer==0.5.0
 setuptools==60.5.0; python_version >= '3.7'
 six==1.16.0
