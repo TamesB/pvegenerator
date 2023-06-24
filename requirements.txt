@@ -52,10 +52,10 @@ python-magic==0.4.24
 pytz==2021.3
 reportlab==3.6.5
 s3transfer==0.5.0
-setuptools==60.5.0; python_version >= '3.7'
+setuptools==65.5.1; python_version >= '3.7'
 six==1.16.0
 soupsieve==2.3.1
-sqlparse==0.4.2
+sqlparse==0.4.4
 tzdata==2021.5
 urllib3==1.26.8
 virtualenv-clone==0.5.7
